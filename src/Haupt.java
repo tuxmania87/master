@@ -1,5 +1,7 @@
 import java.beans.Expression;
 import java.io.ByteArrayInputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
 
@@ -7,6 +9,7 @@ import org.gibello.zql.ParseException;
 import org.gibello.zql.ZConstant;
 import org.gibello.zql.ZExp;
 import org.gibello.zql.ZExpression;
+import org.gibello.zql.ZFromItem;
 import org.gibello.zql.ZQuery;
 import org.gibello.zql.ZStatement;
 import org.gibello.zql.ZqlParser;
@@ -14,7 +17,19 @@ import org.gibello.zql.ZqlParser;
 
 public class Haupt {
 
+	public static HashMap<String, String> Zuordnung;
 	public static String orderList[] = { "<=", ">=", "=", "IS NULL", "IS NOT NULL", "OR", "AND"};
+	public static ArrayList<Table> tables;
+	
+	private static boolean isTableInFromClause(String table, Vector<ZFromItem> fromClause) {
+		Iterator<ZFromItem> it = fromClause.iterator();
+		while(it.hasNext()) {
+			ZFromItem z = it.next();
+			if(table.equals(z.getTable()))
+				return true;
+		}
+		return false;
+	}
 	
 	public static String getFlippedOperator(String op) {
 		if(op.equals(">=")) {
@@ -142,6 +157,61 @@ public class Haupt {
 		return result;
 	}
 	
+	public static ZExp makeAliases(ZExp exp, Vector<ZFromItem> fromItems) throws Exception {
+		if(exp instanceof ZConstant && ((ZConstant) exp).getType() == ZConstant.COLUMNNAME) {
+			
+			//TODO:
+			String a = ((ZConstant) exp).toString();
+			
+			String[] split = a.split("\\.");
+			
+			//do we already have alias? then just change it!
+			if(split.length > 1) {
+				return new ZConstant(Zuordnung.get(split[0])+"."+split[1], ((ZConstant) exp).getType());
+			} else if(split.length == 1) {
+				String targetTable = null;
+				//lookup tables
+				Iterator<Table> it = tables.iterator();
+				while(it.hasNext()) {
+					Table t = it.next();
+					Iterator<Column> it2  = t.columns.iterator();
+					while(it2.hasNext()) {
+						if(split[0].equals(it2.next().name)) {
+							if(isTableInFromClause(t.name, fromItems)) {
+								if(targetTable == null) {
+									targetTable = t.name;
+								}else {
+									throw new Exception("Tupelvariable in mehreren Tabellen vorhanden! Ambigious!");
+								}
+							} 
+						}
+					}
+				}
+				//we found alias, located in targetTable
+				if(targetTable == null) {
+					throw new Exception("Das Tupel "+split[0]+" konnte in keiner der Tabellen in der FROM Klausel gefunden werden!");
+				}
+				return new ZConstant(Zuordnung.get(targetTable)+"."+split[0],ZConstant.COLUMNNAME);
+				
+			}
+		}
+		if(exp instanceof ZConstant)
+			return exp;
+		
+		if(exp instanceof ZExpression) {
+			ZExpression zexp = (ZExpression) exp;
+			Iterator<ZExp> it = zexp.getOperands().iterator();
+			ZExpression ret = new ZExpression(zexp.getOperator());
+			while(it.hasNext()) {
+				ret.addOperand(makeAliases(it.next(), fromItems));
+			}
+			return ret;
+		}
+		
+		
+		
+		return null;
+	}
 	
 	public static ZExp operatorCompression(ZExp exp, ZExp parent) {
 		
@@ -388,12 +458,12 @@ public class Haupt {
 	
 	/**
 	 * @param args
-	 * @throws ParseException 
+	 * @throws Exception 
 	 */
-	public static void main(String[] args) throws ParseException {
+	public static void main(String[] args) throws Exception {
 		ZqlParser zp = new ZqlParser();
-		//zp.initParser(new ByteArrayInputStream("select * from test where b > z and a > z;".getBytes()));
-		zp.initParser(new ByteArrayInputStream("select * from test where arg between 4/2 and 3+2 and bla like 'foo' and not (x>=a or b is not null) and ( g > 5 and s >2 );".getBytes()));
+		zp.initParser(new ByteArrayInputStream("select * from emp e, dept where ename = 'bla' and dname = 'arg';".getBytes()));
+		//zp.initParser(new ByteArrayInputStream("select * from test where arg between 4/2 and 3+2 and bla like 'foo' and not (x>=a or b is not null) and ( g > 5 and s >2 );".getBytes()));
 		//zp.initParser(new ByteArrayInputStream("CREATE TABLE customer (First_Name char(50),	Last_Name char(50),	Address char(50),City char(50),	Country char(25),Birth_Date date)".getBytes()));
 		ZStatement zs = zp.readStatement();
 		System.out.println(zs);
@@ -403,13 +473,37 @@ public class Haupt {
 		ZQuery q = (ZQuery) zs;
 		
 		
+		Zuordnung = new HashMap<String, String>();
+		tables = new ArrayList<Table>();
+		
+		tables.add(new Table("emp","create table emp (empno int, ename varchar(500), job varchar(500), mgr int, hiredate datetime, sal int, comm int, deptno int)"));
+		tables.add(new Table("dept", "create table dept (deptno int, dname varchar(500), location varchar(500))"));
+		
+		Iterator<ZFromItem> zfrom = q.getFrom().iterator();
+		char alias = 'a';
+		while(zfrom.hasNext()) {
+			ZFromItem z = zfrom.next();
+			if(z.getAlias() != null) {
+				Zuordnung.put(z.getAlias(), String.valueOf(alias));
+			}
+			Zuordnung.put(z.getTable(), String.valueOf(alias));
+			z.setAlias(String.valueOf(alias));
+			alias++;
+			//TODO: muss noch ordentlich gemacht werden mit den automatischen alias
+			//TODO: Hashmap verwenden bei zuordnungen und zuweisen der aliase
+		}
+		
+		
+		
 		
 		ZExpression zexp = (ZExpression) q.getWhere();
 		//System.out.println(zexp.getOperand(2));
 		
 		
-		ZExpression test = (ZExpression) sortedTree(operatorCompression(dfs_work(dfs_work(dfs_orderPairs(zexp))),null));
-		//ZExpression test = (ZExpression) operatorCompression(zexp,null);
+		
+		
+		//ZExpression test = (ZExpression) sortedTree(operatorCompression(dfs_work(dfs_work(dfs_orderPairs(zexp))),null));
+		ZExpression test = (ZExpression) makeAliases(zexp, q.getFrom());
 		
 		
 		ZQuery neu = new ZQuery();
@@ -419,6 +513,9 @@ public class Haupt {
 		
 		System.out.println(neu);
 	
+		//Table c = new Table("test","create table test (id INT, bla VARCHAR(20));");
+		//System.out.println(c);
+		
 	}
 
 }
