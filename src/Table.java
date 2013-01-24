@@ -22,8 +22,9 @@ public class Table {
 		return -1;
 	}
 
-	Table(String n,String sqlStatement) {
-		name = n;
+	Table(String sqlStatement) {
+		//TODO: Parse if valid statement
+		name = sqlStatement.trim().replaceAll("\\s+", " ").split(" ")[2];
 		columns = new ArrayList<Column>();
 		String content = sqlStatement.substring(sqlStatement.indexOf('(') + 1,
 				getIndexOfLastParenthesis(sqlStatement));
