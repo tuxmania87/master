@@ -1,0 +1,83 @@
+%\documentclass[11pt]{scrartcl}
+
+
+%ronny
+\documentclass[12pt]{scrreprt}
+
+\usepackage{primaer}
+\usepackage{setspace}
+\usepackage{txfonts}
+\usepackage{algorithm}
+\usepackage[ngerman]{babel}
+%\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{tikz}
+\usetikzlibrary{trees}
+\usetikzlibrary{shapes}
+\usetikzlibrary{automata}
+\usetikzlibrary{backgrounds}
+\usetikzlibrary{plotmarks}
+\usetikzlibrary{arrows}
+%ende ronny
+
+%\geometry{a4paper,left=25mm,right=50mm, top=13mm, bottom=20mm}
+%\geometry{a4paper,right=50mm,left=25mm}
+\newcommand{\ff}{\triangleright}
+\newcommand{\pref}[1]{\mathit{pref{#1}}}
+\renewcommand{\min}{\mathit{Min}\;}
+
+\newtheorem{def1}{Definition}
+\newtheorem{satz}{Satz}
+\newtheorem{lem}{Lemma}
+\newtheorem{bew}{Beweis} 
+\newtheorem{gleich}{Gleichung}[section]
+\newtheorem{eigen}{Eigenschaft}
+\newtheorem{folg}{Folgerung}
+\theoremstyle{remark}
+\newtheorem{beispiel}{Beispiel}
+
+\author{Robert Hartmann}
+\title{"Uber die Operation Fortsetzung bei formalen Sprachen}
+\date{24. September 2010}
+\parindent 0pt
+\begin{document}
+
+\input{titlepage}
+%\include{dedication}
+
+\pagestyle{plain}
+\tableofcontents
+
+\onehalfspacing
+
+\chapter{Einleitung}
+\input{einleitung}
+
+\chapter{Theoretische Betrachtungen}
+\input{theorie}
+
+\chapter{Verwendete Software}
+\input{software}
+%Parser, Java Version, Eigener Parser, Anbindung an fremde DB Oracle, Mysql, etc.
+
+\chapter{Praktische Umsetzung}
+\input{praxis}
+
+\chapter{Ergebnisse}
+\input{ergebnisse}
+
+\chapter{Ausblick}
+\input{ausblick}
+
+%\chapter{Quellenverzeichnis}
+\begin{thebibliography}{9}
+\bibitem[St87]{St87}L. Staiger, Sequential Mappings of $\omega$-Languages, 1987, pp. 148--170.
+\bibitem[St97]{St97}L. Staiger, $\omega$-Languages. in: Handbook of Formal Languages, (G. Rozenberg and A. Salomaa Eds.), Springer-Verlag, Berlin 1997, Vol. 3, pp. 339--387.
+\bibitem[Wg94]{Wg94}K. Wagner, Einf"uhrung in die theoretische Informatik, Springer-Verlag, Berlin 1994.
+
+\end{thebibliography}
+
+
+\include{erklaerung}
+
+\end{document}

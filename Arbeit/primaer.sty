@@ -1,0 +1,89 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{primaer}
+
+%\RequirePackage{german}
+\RequirePackage[T1]{fontenc}
+\RequirePackage{ae}
+%\RequirePackage[latin1]{inputenc}
+\RequirePackage[utf8]{inputenc}
+\RequirePackage{a4}
+\RequirePackage{parskip}
+
+%Mathe Sachen
+\RequirePackage{amsmath,amssymb,amsthm}
+
+% Standardeinzug setzen
+%\setlength\parindent{11pt}
+\setlength\parindent{0pt}
+
+\RequirePackage{graphicx}
+
+% Literaturverweise auf deutsch
+%\RequirePackage{bibgerm}
+%\RequirePackage{times} % ich verwende momentan lieber Palatino
+\RequirePackage{palatino}
+\RequirePackage{mathpazo}
+\RequirePackage{fancyhdr}
+
+\RequirePackage{color}
+
+% bessere Standardfarben
+\definecolor{green}{rgb}{0,.5,0}
+\definecolor{blue}{rgb}{0,0,.8}
+\definecolor{gray}{rgb}{.753,.753,.753}
+\definecolor{yellow}{rgb}{0.98,0.917,.73}
+\definecolor{red}{rgb}{.8,0,0}
+\definecolor{black}{rgb}{0,0,0}
+
+\RequirePackage[pdftex,
+  colorlinks=true,
+  pagebackref=true,
+  linkcolor=black,anchorcolor=black,citecolor=black,urlcolor=black,pagecolor=black,
+  pdfauthor=Robert Hartmann,
+  bookmarks=true,
+%  pdfpagemode=NoThumbs,
+% pdfpagemode=FullScreen,
+  pdfstartview=Fit]{hyperref}
+
+
+% keine Schusterjungen und Hurenkinder; in jedem Fall
+\clubpenalty=10000
+\widowpenalty=10000
+\displaywidowpenalty=10000
+
+
+% Einstellungen für Floats
+\renewcommand{\textfraction}{0.15}
+\renewcommand{\topfraction}{0.85}
+\renewcommand{\bottomfraction}{0.65}
+\renewcommand{\floatpagefraction}{0.60}
+
+%
+% Kopf- und Fußzeilen
+%
+\pagestyle{fancy}
+
+% nur Section darstellen, keine Subsections
+\renewcommand{\sectionmark}[1]{\markright{\thesection.\ #1}}
+\renewcommand{\subsectionmark}[1]{}
+\lhead{\rightmark}
+\chead{}
+\rhead{\oldstylenums{\thepage}}
+\lfoot{}
+\cfoot{}
+\rfoot{}
+
+
+% Namen für Abbildungen, ...
+%\def\figurename{Abb.}
+%\def\tablename{Tab.}%  % oder: Tafel
+\def\tablename{}
+
+\newcommand{\abb}[1]{Abbildung~\ref{#1}}
+\newcommand{\tab}[1]{Tabelle~\ref{#1}}
+
+
+
+
+
+\endinput
