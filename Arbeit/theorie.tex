@@ -1,0 +1,86 @@
+Um die Frage zu beantworten wie man zwei SQL Anfragen miteinander vergleichen kann, muss man sich zunächst die Struktur einer solchen Anfrage betrachten. Exemplarisch betrachten wir im folgenden \verb|SELECT| Anfragen. Es werden mehrere Ansätze in diesem Teil der Arbeit verfolgt, wie man die Gleichheit von zwei Anfragen zeigen kann. Offensichtlich sind zwei SQL-Anfragen semantisch äquivalent, wenn sie ebenfalls syntaktisch korrekt sind. Interessanter sind daher Anfragen, die zunächst nicht syntaktisch dekungsgleich sind. 
+
+Ein Ansatz besteht darin beide SQL-Anfragen einer Standardisierung zu unterziehen. Wie genau so etwas durchgeführt werden kann, wird im Folgenden noch erläutert. Wir würden dann zwei standardisierte SQL-Anfragen erhalten. Sind diese syntaktisch äquivalent, so handelt es sich um identische Anfragen. Dieser Ansatz wird uns mit einigen Problemen konfrontieren und daraus entwickeln wir einen zweiten Ansatz. 
+
+Dieser versucht durch gleichartige Umformungen, die zwei Anfragen zu unifizieren (gleich zu machen). Bei diesem Ansatz würden wir also versuchen die geparsten Operatorbäume miteinander zu vergleichen. Auch diese Lösung birgt Vorteile aber auch Probleme mit sich, die im Folgenden besprochen werden.
+
+\section{Standardisierung von SQL-Anfragen}
+
+Es gibt syntaktisch unterschiedliche Anfragen, die jedoch semantisch äquivalent sind. So liefern die folgenden Anfragen die gleichen Ergebnisse, sind aber nicht syntaktisch äquivalent.
+
+\begin{verbatim}
+SELECT * FROM emp e WHERE e.enr > 5
+\end{verbatim}
+
+\begin{verbatim}
+SELECT * FROM emp e WHERE 5 < e.enr
+\end{verbatim}
+
+\begin{verbatim}
+SELECT * FROM emp e WHERE e.enr >= 6
+\end{verbatim}
+
+In diesem kurzem Beispiel sieht man einige Probleme auf die man trifft, wenn man versucht SQL-Anfragen syntaktisch zu standardisieren. Folgende Schritte sind notwendig um eine Standardisierung durchzuführen, welche zum Ziel hat, dass unterschiedliche syntaktischen Anfragen, die auf allen Datenbankzuständen die gleichen Tupel liefern, zu vereinheitlichen (SATZ UEBERARBEITEN! TODO).
+
+\subsection*{Schritte zur Standardisierung von SQL-Anfragen}
+
+\begin{enumerate}
+\item Entfernung syntaktischer Details wie mehrere Leerzeichen
+    hintereinander, Zeilenumbrueche, Kommentare,
+    unnoetige Klammern: Das macht schon der Parser.
+\item Ersetzung von syntaktischen Varianten,
+    z.B. X BETWEEN Y AND Z durch X >= Y AND X <= Z.
+    Hierzu koennte man vielleicht auch die Beseitigung von NOT
+    und die Umwandlung in DNF rechnen.
+    Wahrscheinlich koennte man hier auch unnoetige Schluesselworte
+    entfernen, z.B. SELECT ALL oder ORDER BY ... ASC
+\item Hinzufuegen einfacher Implikationen,
+    z.B. transitiv implizierte Gleichungen/Ungleichungen,
+    Wenn A = B AND B = C dann auch A = C,
+    entsprechend mit < und gemischt.
+\item Sortierung, Standardisierung 
+\end{enumerate}
+
+\section{Entfernen von syntaktischen Details}
+
+Das Entfernen von syntaktischen Details übernimmt zum großen Teil bereits der Parser. Er entfernt unnötige Leerzeichen, Kommentare sowie unnötige Klammern. Allerdings treten beim benutzten Parser einige spezielle Eigenheiten auf, die im Bereich >> verwendeter SQL-Parser << näher erläutert werden.
+
+\section{Ersetzung von syntaktischen Varianten}
+
+Um eine Anfrage zu standardisieren müssen wir den syntaktischen Zucker entfernen. Dies geschieht, in dem man nur eine syntaktische Schreibweise anerkennt und alle anderen Schreibweisen werden in die zulässige umgewandelt. Zu erwähnen sind folgende Ersetzungen, die durchgeführt werden sollen um syntaktisch vielfältige, aber semantisch äquivalente Ausdrücke zu minimieren.
+
+\begin{tabular}{ccl}
+\verb|A BETWEEN B AND C| & $\to$  & \verb|A >= B AND A <= C|\\
+\verb|NOT(A AND B)| & $\to$  & \verb|NOT(A) OR NOT(B)|\\
+\verb|A > B| & $\to$  & \verb|A >= (B + 1)|, wenn \verb|A| und \verb|B| numerisch\\
+\verb|A < B| & $\to$  & \verb|A <= (B - 1)|, wenn \verb|A| und \verb|B| numerisch\\
+... & $\to$ & ...\\
+\end{tabular}
+
+Einige andere syntaktische Varianten finden sich im Abschnitt >>Sortierung<<. Begründet wird das damit, dass \verb|A > B| und \verb|B < A| ebenfalls syntaktische Varianten sind, die sich aber dadurch eliminieren lassen, dass man gewisse Sortierungskriterien festlegt.
+
+Es existieren auch Teile in SQL-Ausdrücken, die redundant bzw. unnötig sind. Ohne diese Angaben würden immer, die gleichen Ergebnisse erzielt werden. Diese Teile blähen SQL-Anfragen nur unnötig auf und erschweren das unifizieren/standardisieren. Das Entfernen solcher Bestandteile soll aber nicht ohne Hinweise geschehen. Der Lernende soll ein Feedback erhalten, dass einige von ihm aufgeschriebene Teile der SQL-Anfrage, diese unnötig verkomplizieren. Dazu gehören folgende Teile:
+
+\begin{tabular}{ccl}
+\verb|SELECT ALL| & $\to$ & \verb|SELECT|\\
+\verb|SELECT DISTINCT| & $\to$ & \verb|SELECT|, bei unnötigem \verb|DISTINCT| vgl. TODO\\
+\verb|ORDER BY VAR ASC| &  $\to$ & \verb|ORDER BY VAR|\\
+\verb|A = NULL| & $\to$ & \verb|NULL/UNKNOWN/SYNTAX ERROR|\\
+\verb|EXISTS (SELECT A,B,C ...)| & $\to$ & \verb|EXISTS (SELECT 1 ...)|\\
+... & $\to$ & ...\\
+\end{tabular}
+
+Bei Anwendung dieser Ersetzungsregeln, soll dem Lernenden ein klares Feedback gegeben werden. Es soll verdeutlicht werden, dass eine korrekte Anfrage dennoch Mängel aufweist, da unnötige Formulierungen benutzt wurden.
+
+Eventuell ist es hier auch bereits möglich Terme, die nur aus numerischen Konstanten bestehen zu Ersetzen durch das jeweilige Ergebnisse. So könnten arithmetische Operationen bereits ausgeführt und Vergleiche, die nur aus numerischen Konstanten bestehen, durch entsprechende Wahrheitswerte ersetzt werden.
+
+
+
+\section{Hinzufügen einfacher Implikationen (transitiv)}
+
+Die Anfrage des Lernenden kann trotz zahlreicher Umformungen noch einige komplizierte Bedingungen enthalten, die wir mit bisherigen Methoden nicht entdecken konnten. Ein wichtiger Teil dabei sind transitiv-implizierte Bedingungen. Finden wir beispielsweise in der Musterlösung die Bedingung \verb|A = C AND B = C| und der Student schreibt \verb|A = B AND B = C|, so handelt es sich um semantisch äquivalente Aussagen. Damit unser Ansatz funktioniert, ist es also notwendig transitiv-implizierte Formeln immer hinzuzufügen. Wir bilden also im gewissen Sinne den transitiven Abschluss über den Operatoren $\{=,>,<\}$.
+
+Beim Ansatz der Standardisierung mit Sortierung ist ein Betrachten von symetrischen Implikationen unnötig. Wie im Abschnitt Sortierung noch erläutert wird, werden zwei Bedingungen \verb|A = B| und \verb|B = A| nach Sortierungsregeln beide zu \verb|A = B| standardisiert. 
+
+\section{Sortierung (TODO, innerhalb der Terme)}
+

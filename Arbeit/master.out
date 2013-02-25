@@ -1,6 +1,11 @@
-\BOOKMARK [0][-]{chapter.1}{Einleitung}{}% 1
+\BOOKMARK [0][-]{chapter.1}{Einleitung / Motivation}{}% 1
 \BOOKMARK [0][-]{chapter.2}{Theoretische Betrachtungen}{}% 2
-\BOOKMARK [0][-]{chapter.3}{Verwendete Software}{}% 3
-\BOOKMARK [0][-]{chapter.4}{Praktische Umsetzung}{}% 4
-\BOOKMARK [0][-]{chapter.5}{Ergebnisse}{}% 5
-\BOOKMARK [0][-]{chapter.6}{Ausblick}{}% 6
+\BOOKMARK [1][-]{section.2.1}{Standardisierung von SQL-Anfragen}{chapter.2}% 3
+\BOOKMARK [1][-]{section.2.2}{Entfernen von syntaktischen Details}{chapter.2}% 4
+\BOOKMARK [1][-]{section.2.3}{Ersetzung von syntaktischen Varianten}{chapter.2}% 5
+\BOOKMARK [1][-]{section.2.4}{Hinzuf\374gen einfacher Implikationen \(transitiv\)}{chapter.2}% 6
+\BOOKMARK [1][-]{section.2.5}{Sortierung \(TODO, innerhalb der Terme\)}{chapter.2}% 7
+\BOOKMARK [0][-]{chapter.3}{Verwendete Software}{}% 8
+\BOOKMARK [0][-]{chapter.4}{Praktische Umsetzung}{}% 9
+\BOOKMARK [0][-]{chapter.5}{Ergebnisse}{}% 10
+\BOOKMARK [0][-]{chapter.6}{Ausblick}{}% 11

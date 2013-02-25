@@ -1,7 +1,12 @@
 \select@language {ngerman}
-\contentsline {chapter}{\numberline {1}Einleitung}{3}{chapter.1}
-\contentsline {chapter}{\numberline {2}Theoretische Betrachtungen}{4}{chapter.2}
-\contentsline {chapter}{\numberline {3}Verwendete Software}{5}{chapter.3}
-\contentsline {chapter}{\numberline {4}Praktische Umsetzung}{6}{chapter.4}
-\contentsline {chapter}{\numberline {5}Ergebnisse}{7}{chapter.5}
-\contentsline {chapter}{\numberline {6}Ausblick}{8}{chapter.6}
+\contentsline {chapter}{\numberline {1}Einleitung / Motivation}{3}{chapter.1}
+\contentsline {chapter}{\numberline {2}Theoretische Betrachtungen}{5}{chapter.2}
+\contentsline {section}{\numberline {2.1}Standardisierung von SQL-Anfragen}{5}{section.2.1}
+\contentsline {section}{\numberline {2.2}Entfernen von syntaktischen Details}{6}{section.2.2}
+\contentsline {section}{\numberline {2.3}Ersetzung von syntaktischen Varianten}{6}{section.2.3}
+\contentsline {section}{\numberline {2.4}Hinzuf\IeC {\"u}gen einfacher Implikationen (transitiv)}{7}{section.2.4}
+\contentsline {section}{\numberline {2.5}Sortierung (TODO, innerhalb der Terme)}{8}{section.2.5}
+\contentsline {chapter}{\numberline {3}Verwendete Software}{9}{chapter.3}
+\contentsline {chapter}{\numberline {4}Praktische Umsetzung}{10}{chapter.4}
+\contentsline {chapter}{\numberline {5}Ergebnisse}{11}{chapter.5}
+\contentsline {chapter}{\numberline {6}Ausblick}{12}{chapter.6}
