@@ -1,11 +1,27 @@
 \BOOKMARK [0][-]{chapter.1}{Einleitung / Motivation}{}% 1
-\BOOKMARK [0][-]{chapter.2}{Theoretische Betrachtungen}{}% 2
-\BOOKMARK [1][-]{section.2.1}{Standardisierung von SQL-Anfragen}{chapter.2}% 3
-\BOOKMARK [1][-]{section.2.2}{Entfernen von syntaktischen Details}{chapter.2}% 4
-\BOOKMARK [1][-]{section.2.3}{Ersetzung von syntaktischen Varianten}{chapter.2}% 5
-\BOOKMARK [1][-]{section.2.4}{Hinzuf\374gen einfacher Implikationen \(transitiv\)}{chapter.2}% 6
-\BOOKMARK [1][-]{section.2.5}{Sortierung \(TODO, innerhalb der Terme\)}{chapter.2}% 7
-\BOOKMARK [0][-]{chapter.3}{Verwendete Software}{}% 8
-\BOOKMARK [0][-]{chapter.4}{Praktische Umsetzung}{}% 9
-\BOOKMARK [0][-]{chapter.5}{Ergebnisse}{}% 10
-\BOOKMARK [0][-]{chapter.6}{Ausblick}{}% 11
+\BOOKMARK [0][-]{chapter.2}{Forschungsstand und Einordnung}{}% 2
+\BOOKMARK [1][-]{section.2.1}{Einleitung [in das Chapter]}{chapter.2}% 3
+\BOOKMARK [1][-]{section.2.2}{SQL-Tutor}{chapter.2}% 4
+\BOOKMARK [1][-]{section.2.3}{SQL-Exploratorium}{chapter.2}% 5
+\BOOKMARK [2][-]{subsection.2.3.1}{Interactive Examples}{section.2.3}% 6
+\BOOKMARK [2][-]{subsection.2.3.2}{SQL Knowledge Tester}{section.2.3}% 7
+\BOOKMARK [2][-]{subsection.2.3.3}{Weiteres}{section.2.3}% 8
+\BOOKMARK [1][-]{section.2.4}{WIN-RBDI}{chapter.2}% 9
+\BOOKMARK [0][-]{chapter.3}{Theoretische Betrachtungen}{}% 10
+\BOOKMARK [1][-]{section.3.1}{Standardisierung von SQL-Anfragen}{chapter.3}% 11
+\BOOKMARK [1][-]{section.3.2}{Entfernen von syntaktischen Details}{chapter.3}% 12
+\BOOKMARK [1][-]{section.3.3}{Ersetzung von syntaktischen Varianten}{chapter.3}% 13
+\BOOKMARK [1][-]{section.3.4}{Hinzuf\374gen einfacher Implikationen \(transitiv\)}{chapter.3}% 14
+\BOOKMARK [1][-]{section.3.5}{Sortierung \(TODO, innerhalb der Terme\)}{chapter.3}% 15
+\BOOKMARK [0][-]{chapter.4}{Verwendete Software}{}% 16
+\BOOKMARK [1][-]{section.4.1}{SQL Parser}{chapter.4}% 17
+\BOOKMARK [2][-]{subsection.4.1.1}{\374ber den SQL Parser: ZQL}{section.4.1}% 18
+\BOOKMARK [2][-]{subsection.4.1.2}{Parserb\344ume}{section.4.1}% 19
+\BOOKMARK [2][-]{subsection.4.1.3}{Grenzen des Parsers}{section.4.1}% 20
+\BOOKMARK [1][-]{section.4.2}{Java Server Pages}{chapter.4}% 21
+\BOOKMARK [2][-]{subsection.4.2.1}{\334berblick}{section.4.2}% 22
+\BOOKMARK [2][-]{subsection.4.2.2}{Einbettung in JSP}{section.4.2}% 23
+\BOOKMARK [2][-]{subsection.4.2.3}{Log}{section.4.2}% 24
+\BOOKMARK [0][-]{chapter.5}{Praktische Umsetzung}{}% 25
+\BOOKMARK [0][-]{chapter.6}{Ergebnisse}{}% 26
+\BOOKMARK [0][-]{chapter.7}{Ausblick}{}% 27

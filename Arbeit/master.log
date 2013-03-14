@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.3-1.40.12 (MiKTeX 2.9) (preloaded format=pdflatex 2012.8.27)  25 FEB 2013 17:20
+This is pdfTeX, Version 3.1415926-2.3-1.40.12 (MiKTeX 2.9) (preloaded format=pdflatex 2012.8.27)  14 MAR 2013 14:56
 entering extended mode
 **master.tex
 (E:\Users\Robert\Desktop\Arbeit\master\Arbeit\master.tex
@@ -1258,7 +1258,7 @@ LaTeX Font Info:    Try loading font information for U+txsyc on input line 29.
 (E:\Users\Robert\AppData\Roaming\MiKTeX\2.9\tex\latex\txfonts\utxsyc.fd
 File: utxsyc.fd 2000/12/15 v3.1
 )
-<Bilder/siegel.pdf, id=50, 731.73375pt x 380.42125pt>
+<Bilder/siegel.pdf, id=114, 731.73375pt x 380.42125pt>
 File: Bilder/siegel.pdf Graphic file (type pdf)
  <use Bilder/siegel.pdf>
 Package pdftex.def Info: Bilder/siegel.pdf used on input line 30.
@@ -1299,72 +1299,104 @@ Class scrreprt Warning: \float@addtolists detected!
 
 ]) [4]
 Kapitel 2.
-(E:\Users\Robert\Desktop\Arbeit\master\Arbeit\theorie.tex
-LaTeX Font Info:    Try loading font information for T1+txtt on input line 1.
+(E:\Users\Robert\Desktop\Arbeit\master\Arbeit\alteszeug.tex
+LaTeX Font Info:    Font shape `T1/txss/bx/n' will be
+(Font)              scaled to size 16.41594pt on input line 1.
 
+
+LaTeX Warning: Reference `sqltutor1' on page 5 undefined on input line 9.
+
+LaTeX Font Info:    Try loading font information for T1+txtt on input line 9.
 (E:\Users\Robert\AppData\Roaming\MiKTeX\2.9\tex\latex\txfonts\t1txtt.fd
 File: t1txtt.fd 2000/12/15 v3.1
 )
-LaTeX Font Info:    Font shape `T1/txss/bx/n' will be
-(Font)              scaled to size 16.41594pt on input line 7.
-
 [5
 
 ]
-LaTeX Font Info:    Font shape `T1/txss/bx/n' will be
-(Font)              scaled to size 13.67995pt on input line 25.
+Overfull \hbox (8.61086pt too wide) in paragraph at lines 17--18
+[]\T1/txr/m/n/12 Der SQL-Tutor lässt au-ÿer-dem auch den ein-ge-sen-de-ten Lö-s
+ungs-vor-schlag auf ei-ner SQL-Datenbank
+ []
 
+LaTeX Font Info:    Font shape `T1/txss/bx/n' will be
+(Font)              scaled to size 13.67995pt on input line 19.
+
+LaTeX Warning: Reference `eplora1' on page 6 undefined on input line 25.
+
+
+LaTeX Warning: Reference `eploralit1' on page 6 undefined on input line 25.
+
+
+LaTeX Warning: Reference `eploralit2' on page 6 undefined on input line 25.
+
+[6]
+LaTeX Font Info:    Try loading font information for OMS+txr on input line 30.
+ (E:\Users\Robert\AppData\Roaming\MiKTeX\2.9\tex\latex\txfonts\omstxr.fd
+File: omstxr.fd 2000/12/15 v3.1
+)
+LaTeX Font Info:    Font shape `OMS/txr/m/n' in size <12> not available
+(Font)              Font shape `OMS/txsy/m/n' tried instead on input line 30.
+
+
+LaTeX Warning: Reference `webex1' on page 7 undefined on input line 39.
+
+[7]
+
+LaTeX Warning: Reference `winrbdi1' on page 8 undefined on input line 67.
+
+[8]) [9]
+Kapitel 3.
+(E:\Users\Robert\Desktop\Arbeit\master\Arbeit\theorie.tex [10
+
+]
 Overfull \hbox (4.36224pt too wide) in paragraph at lines 37--41
 []\T1/txr/m/n/12 Hinzufuegen ein-fa-cher Im-pli-ka-tio-nen, z.B. tran-si-tiv im
 -pli-zier-te Glei-chun-gen/Ungleichungen,
  []
 
-[6]) [7] [8]
-Kapitel 3.
-(E:\Users\Robert\Desktop\Arbeit\master\Arbeit\software.tex) [9
-
-]
+[11]) [12] [13]
 Kapitel 4.
-(E:\Users\Robert\Desktop\Arbeit\master\Arbeit\praxis.tex) [10
+(E:\Users\Robert\Desktop\Arbeit\master\Arbeit\software.tex) [14
 
 ]
 Kapitel 5.
-(E:\Users\Robert\Desktop\Arbeit\master\Arbeit\ergebnisse.tex) [11
+(E:\Users\Robert\Desktop\Arbeit\master\Arbeit\praxis.tex) [15
 
 ]
 Kapitel 6.
-(E:\Users\Robert\Desktop\Arbeit\master\Arbeit\ausblick.tex)
-(E:\Users\Robert\Desktop\Arbeit\master\Arbeit\master.brf)
-\tf@brf=\write6
- [12
-
-] [13
+(E:\Users\Robert\Desktop\Arbeit\master\Arbeit\ergebnisse.tex) [16
 
 ]
-(E:\Users\Robert\Desktop\Arbeit\master\Arbeit\erklaerung.tex) [14
+Kapitel 7.
+(E:\Users\Robert\Desktop\Arbeit\master\Arbeit\ausblick.tex) [17
 
 ]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 83.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 83.
+(E:\Users\Robert\Desktop\Arbeit\master\Arbeit\erklaerung.tex) [18
+
+]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 85.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 85.
 
 (E:\Users\Robert\Desktop\Arbeit\master\Arbeit\master.aux
 (E:\Users\Robert\Desktop\Arbeit\master\Arbeit\erklaerung.aux))
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 83.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 83.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 85.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 85.
 Package rerunfilecheck Info: File `master.out' has not changed.
-(rerunfilecheck)             Checksum: D84B4DE74B867FC467FA0070653C06B4;755.
-Package rerunfilecheck Info: File `master.brf' has not changed.
-(rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 83.
+(rerunfilecheck)             Checksum: ADE7C103A8BF1CBCFA0013F9328F6D70;1833.
+
+
+LaTeX Warning: There were undefined references.
+
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 85.
  ) 
 Here is how much of TeX's memory you used:
- 19694 strings out of 494045
- 366275 string characters out of 3145966
- 479206 words of memory out of 3000000
- 22456 multiletter control sequences out of 15000+200000
- 54409 words of font info for 83 fonts, out of 3000000 for 9000
+ 19755 strings out of 494045
+ 367260 string characters out of 3145966
+ 481162 words of memory out of 3000000
+ 22489 multiletter control sequences out of 15000+200000
+ 57458 words of font info for 86 fonts, out of 3000000 for 9000
  715 hyphenation exceptions out of 8191
- 65i,10n,71p,754b,343s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 65i,10n,71p,1014b,337s stack positions out of 5000i,500n,10000p,200000b,50000s
 {C:/Program Files (x86)/MiKTeX 2.9/fonts/enc/dvips/fontname/8r.enc}<C:/Progra
 m Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr10.pfb><E:/Users/Rob
 ert/AppData/Roaming/MiKTeX/2.9/fonts/type1/public/txfonts/rtxmi.pfb><E:/Users/R
@@ -1373,10 +1405,11 @@ Robert/AppData/Roaming/MiKTeX/2.9/fonts/type1/public/txfonts/rtxsc.pfb><E:/User
 s/Robert/AppData/Roaming/MiKTeX/2.9/fonts/type1/public/txfonts/t1xtt.pfb><E:/Us
 ers/Robert/AppData/Roaming/MiKTeX/2.9/fonts/type1/public/txfonts/txsy.pfb><C:/P
 rogram Files (x86)/MiKTeX 2.9/fonts/type1/urw/helvetic/uhvb8a.pfb><C:/Program F
-iles (x86)/MiKTeX 2.9/fonts/type1/urw/times/utmr8a.pfb>
-Output written on master.pdf (14 pages, 103592 bytes).
+iles (x86)/MiKTeX 2.9/fonts/type1/urw/times/utmb8a.pfb><C:/Program Files (x86)/
+MiKTeX 2.9/fonts/type1/urw/times/utmr8a.pfb>
+Output written on master.pdf (18 pages, 133027 bytes).
 PDF statistics:
- 178 PDF objects out of 1000 (max. 8388607)
- 36 named destinations out of 1000 (max. 500000)
- 106 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 286 PDF objects out of 1000 (max. 8388607)
+ 58 named destinations out of 1000 (max. 500000)
+ 234 words of extra memory for PDF output out of 10000 (max. 10000000)
 
