@@ -19,12 +19,12 @@
 \contentsline {chapter}{\numberline {4}Verwendete Software}{14}{chapter.4}
 \contentsline {section}{\numberline {4.1}SQL Parser}{14}{section.4.1}
 \contentsline {subsection}{\numberline {4.1.1}\IeC {\"u}ber den SQL Parser: ZQL}{14}{subsection.4.1.1}
-\contentsline {subsection}{\numberline {4.1.2}Parserb\IeC {\"a}ume}{14}{subsection.4.1.2}
-\contentsline {subsection}{\numberline {4.1.3}Grenzen des Parsers}{14}{subsection.4.1.3}
-\contentsline {section}{\numberline {4.2}Java Server Pages}{14}{section.4.2}
-\contentsline {subsection}{\numberline {4.2.1}\IeC {\"U}berblick}{14}{subsection.4.2.1}
-\contentsline {subsection}{\numberline {4.2.2}Einbettung in JSP}{14}{subsection.4.2.2}
-\contentsline {subsection}{\numberline {4.2.3}Log}{14}{subsection.4.2.3}
-\contentsline {chapter}{\numberline {5}Praktische Umsetzung}{15}{chapter.5}
-\contentsline {chapter}{\numberline {6}Ergebnisse}{16}{chapter.6}
-\contentsline {chapter}{\numberline {7}Ausblick}{17}{chapter.7}
+\contentsline {subsection}{\numberline {4.1.2}Funktionsweise des Parsers}{14}{subsection.4.1.2}
+\contentsline {subsection}{\numberline {4.1.3}Grenzen des Parsers}{15}{subsection.4.1.3}
+\contentsline {section}{\numberline {4.2}Java Server Pages}{15}{section.4.2}
+\contentsline {subsection}{\numberline {4.2.1}\IeC {\"U}berblick}{15}{subsection.4.2.1}
+\contentsline {subsection}{\numberline {4.2.2}Einbettung in JSP}{15}{subsection.4.2.2}
+\contentsline {subsection}{\numberline {4.2.3}Log}{15}{subsection.4.2.3}
+\contentsline {chapter}{\numberline {5}Praktische Umsetzung}{16}{chapter.5}
+\contentsline {chapter}{\numberline {6}Ergebnisse}{17}{chapter.6}
+\contentsline {chapter}{\numberline {7}Ausblick}{18}{chapter.7}

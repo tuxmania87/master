@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.3-1.40.12 (MiKTeX 2.9) (preloaded format=pdflatex 2012.8.27)  14 MAR 2013 14:56
+This is pdfTeX, Version 3.1415926-2.3-1.40.12 (MiKTeX 2.9) (preloaded format=pdflatex 2012.8.27)  14 MAR 2013 15:45
 entering extended mode
 **master.tex
 (E:\Users\Robert\Desktop\Arbeit\master\Arbeit\master.tex
@@ -1151,44 +1151,44 @@ File: pgflibraryarrows.code.tex 2008/10/27 v2.10 (rcs-revision 1.9)
 \c@beispiel=\count145
  (E:\Users\Robert\Desktop\Arbeit\master\Arbeit\master.aux
 (E:\Users\Robert\Desktop\Arbeit\master\Arbeit\erklaerung.aux))
-LaTeX Font Info:    Checking defaults for OML/txmi/m/it on input line 43.
-LaTeX Font Info:    Try loading font information for OML+txmi on input line 43.
+LaTeX Font Info:    Checking defaults for OML/txmi/m/it on input line 44.
+LaTeX Font Info:    Try loading font information for OML+txmi on input line 44.
 
 
 (E:\Users\Robert\AppData\Roaming\MiKTeX\2.9\tex\latex\txfonts\omltxmi.fd
 File: omltxmi.fd 2000/12/15 v3.1
 )
-LaTeX Font Info:    ... okay on input line 43.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 43.
-LaTeX Font Info:    ... okay on input line 43.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 43.
-LaTeX Font Info:    ... okay on input line 43.
-LaTeX Font Info:    Checking defaults for OMS/txsy/m/n on input line 43.
-LaTeX Font Info:    Try loading font information for OMS+txsy on input line 43.
+LaTeX Font Info:    ... okay on input line 44.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 44.
+LaTeX Font Info:    ... okay on input line 44.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 44.
+LaTeX Font Info:    ... okay on input line 44.
+LaTeX Font Info:    Checking defaults for OMS/txsy/m/n on input line 44.
+LaTeX Font Info:    Try loading font information for OMS+txsy on input line 44.
 
 
 (E:\Users\Robert\AppData\Roaming\MiKTeX\2.9\tex\latex\txfonts\omstxsy.fd
 File: omstxsy.fd 2000/12/15 v3.1
 )
-LaTeX Font Info:    ... okay on input line 43.
-LaTeX Font Info:    Checking defaults for OMX/txex/m/n on input line 43.
-LaTeX Font Info:    Try loading font information for OMX+txex on input line 43.
+LaTeX Font Info:    ... okay on input line 44.
+LaTeX Font Info:    Checking defaults for OMX/txex/m/n on input line 44.
+LaTeX Font Info:    Try loading font information for OMX+txex on input line 44.
 
 
 (E:\Users\Robert\AppData\Roaming\MiKTeX\2.9\tex\latex\txfonts\omxtxex.fd
 File: omxtxex.fd 2000/12/15 v3.1
 )
-LaTeX Font Info:    ... okay on input line 43.
-LaTeX Font Info:    Checking defaults for U/txexa/m/n on input line 43.
-LaTeX Font Info:    Try loading font information for U+txexa on input line 43.
+LaTeX Font Info:    ... okay on input line 44.
+LaTeX Font Info:    Checking defaults for U/txexa/m/n on input line 44.
+LaTeX Font Info:    Try loading font information for U+txexa on input line 44.
 
 (E:\Users\Robert\AppData\Roaming\MiKTeX\2.9\tex\latex\txfonts\utxexa.fd
 File: utxexa.fd 2000/12/15 v3.1
 )
-LaTeX Font Info:    ... okay on input line 43.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 43.
-LaTeX Font Info:    ... okay on input line 43.
-LaTeX Font Info:    Try loading font information for T1+txr on input line 43.
+LaTeX Font Info:    ... okay on input line 44.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 44.
+LaTeX Font Info:    ... okay on input line 44.
+LaTeX Font Info:    Try loading font information for T1+txr on input line 44.
 
 (E:\Users\Robert\AppData\Roaming\MiKTeX\2.9\tex\latex\txfonts\t1txr.fd
 File: t1txr.fd 2000/12/15 v3.1
@@ -1208,7 +1208,7 @@ File: t1txr.fd 2000/12/15 v3.1
 \everyMPtoPDFconversion=\toks41
 )
 \AtBeginShipoutBox=\box63
-Package hyperref Info: Link coloring ON on input line 43.
+Package hyperref Info: Link coloring ON on input line 44.
  ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\hyperref\nameref.sty"
 Package: nameref 2010/04/30 v2.40 Cross-referencing by name of section
 
@@ -1217,9 +1217,9 @@ Package: gettitlestring 2010/12/03 v1.4 Cleanup title references (HO)
 )
 \c@section@level=\count152
 )
-LaTeX Info: Redefining \ref on input line 43.
-LaTeX Info: Redefining \pageref on input line 43.
-LaTeX Info: Redefining \nameref on input line 43.
+LaTeX Info: Redefining \ref on input line 44.
+LaTeX Info: Redefining \pageref on input line 44.
+LaTeX Info: Redefining \nameref on input line 44.
 
 (E:\Users\Robert\Desktop\Arbeit\master\Arbeit\master.out)
 (E:\Users\Robert\Desktop\Arbeit\master\Arbeit\master.out)
@@ -1268,17 +1268,17 @@ Package pdftex.def Info: Bilder/siegel.pdf used on input line 30.
 
 {E:/Users/Robert/AppData/Local/MiKTeX/2.9/pdftex/config/pdftex.map} <E:/Users/R
 obert/Desktop/Arbeit/master/Arbeit/Bilder/siegel.pdf>])
-LaTeX Font Info:    Try loading font information for T1+txss on input line 49.
+LaTeX Font Info:    Try loading font information for T1+txss on input line 50.
 
 (E:\Users\Robert\AppData\Roaming\MiKTeX\2.9\tex\latex\txfonts\t1txss.fd
 File: t1txss.fd 2000/12/15 v3.1
 )
 LaTeX Font Info:    Font shape `T1/txss/m/n' will be
-(Font)              scaled to size 11.39996pt on input line 49.
+(Font)              scaled to size 11.39996pt on input line 50.
 LaTeX Font Info:    Font shape `T1/txss/bx/n' will be
-(Font)              scaled to size 11.39996pt on input line 49.
+(Font)              scaled to size 11.39996pt on input line 50.
 LaTeX Font Info:    Font shape `T1/txss/bx/n' will be
-(Font)              scaled to size 23.63593pt on input line 49.
+(Font)              scaled to size 23.63593pt on input line 50.
 
 (E:\Users\Robert\Desktop\Arbeit\master\Arbeit\master.toc)
 \tf@toc=\write5
@@ -1356,47 +1356,59 @@ Overfull \hbox (4.36224pt too wide) in paragraph at lines 37--41
 
 [11]) [12] [13]
 Kapitel 4.
-(E:\Users\Robert\Desktop\Arbeit\master\Arbeit\software.tex) [14
+(E:\Users\Robert\Desktop\Arbeit\master\Arbeit\software.tex [14
 
 ]
+Overfull \hbox (36.2345pt too wide) in paragraph at lines 36--41
+[][] 
+ []
+
+) [15]
 Kapitel 5.
-(E:\Users\Robert\Desktop\Arbeit\master\Arbeit\praxis.tex) [15
+(E:\Users\Robert\Desktop\Arbeit\master\Arbeit\praxis.tex) [16
 
 ]
 Kapitel 6.
-(E:\Users\Robert\Desktop\Arbeit\master\Arbeit\ergebnisse.tex) [16
+(E:\Users\Robert\Desktop\Arbeit\master\Arbeit\ergebnisse.tex) [17
 
 ]
 Kapitel 7.
-(E:\Users\Robert\Desktop\Arbeit\master\Arbeit\ausblick.tex) [17
+(E:\Users\Robert\Desktop\Arbeit\master\Arbeit\ausblick.tex)
+(E:\Users\Robert\Desktop\Arbeit\master\Arbeit\master.brf)
+\tf@brf=\write6
+ [18
+
+] [19
 
 ]
-(E:\Users\Robert\Desktop\Arbeit\master\Arbeit\erklaerung.tex) [18
+(E:\Users\Robert\Desktop\Arbeit\master\Arbeit\erklaerung.tex) [20
 
 ]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 85.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 85.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 87.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 87.
 
 (E:\Users\Robert\Desktop\Arbeit\master\Arbeit\master.aux
 (E:\Users\Robert\Desktop\Arbeit\master\Arbeit\erklaerung.aux))
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 85.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 85.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 87.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 87.
 Package rerunfilecheck Info: File `master.out' has not changed.
-(rerunfilecheck)             Checksum: ADE7C103A8BF1CBCFA0013F9328F6D70;1833.
+(rerunfilecheck)             Checksum: 6939DE02AFC55044BAAA51E8AAADCFEE;1845.
+Package rerunfilecheck Info: File `master.brf' has not changed.
+(rerunfilecheck)             Checksum: 37929C9D355EA553972BDFB657DA53AC;101.
 
 
 LaTeX Warning: There were undefined references.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 85.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 87.
  ) 
 Here is how much of TeX's memory you used:
- 19755 strings out of 494045
- 367260 string characters out of 3145966
- 481162 words of memory out of 3000000
- 22489 multiletter control sequences out of 15000+200000
- 57458 words of font info for 86 fonts, out of 3000000 for 9000
+ 19775 strings out of 494045
+ 367521 string characters out of 3145966
+ 481180 words of memory out of 3000000
+ 22499 multiletter control sequences out of 15000+200000
+ 59411 words of font info for 88 fonts, out of 3000000 for 9000
  715 hyphenation exceptions out of 8191
- 65i,10n,71p,1014b,337s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 65i,10n,71p,1014b,385s stack positions out of 5000i,500n,10000p,200000b,50000s
 {C:/Program Files (x86)/MiKTeX 2.9/fonts/enc/dvips/fontname/8r.enc}<C:/Progra
 m Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr10.pfb><E:/Users/Rob
 ert/AppData/Roaming/MiKTeX/2.9/fonts/type1/public/txfonts/rtxmi.pfb><E:/Users/R
@@ -1406,10 +1418,11 @@ s/Robert/AppData/Roaming/MiKTeX/2.9/fonts/type1/public/txfonts/t1xtt.pfb><E:/Us
 ers/Robert/AppData/Roaming/MiKTeX/2.9/fonts/type1/public/txfonts/txsy.pfb><C:/P
 rogram Files (x86)/MiKTeX 2.9/fonts/type1/urw/helvetic/uhvb8a.pfb><C:/Program F
 iles (x86)/MiKTeX 2.9/fonts/type1/urw/times/utmb8a.pfb><C:/Program Files (x86)/
-MiKTeX 2.9/fonts/type1/urw/times/utmr8a.pfb>
-Output written on master.pdf (18 pages, 133027 bytes).
+MiKTeX 2.9/fonts/type1/urw/times/utmr8a.pfb><C:/Program Files (x86)/MiKTeX 2.9/
+fonts/type1/urw/times/utmri8a.pfb>
+Output written on master.pdf (20 pages, 150330 bytes).
 PDF statistics:
- 286 PDF objects out of 1000 (max. 8388607)
- 58 named destinations out of 1000 (max. 500000)
+ 309 PDF objects out of 1000 (max. 8388607)
+ 63 named destinations out of 1000 (max. 500000)
  234 words of extra memory for PDF output out of 10000 (max. 10000000)
 

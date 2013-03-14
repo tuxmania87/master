@@ -2,9 +2,48 @@
 
 \subsection{über den SQL Parser: ZQL}
 
-\subsection{Parserbäume}
+Auf der Webseite vom \cite{zql1} Projekt ist der Open-Source-Parser ZQL zu finden, welcher in der Lage ist SQL zu parsen und in Datenstrukturen zu überführen. Der Parser selbst ist mit \cite{javacc1} geschrieben, einem  Java-Parsergenerator (zu vergleichen mit dem populärem Unix yacc Generator).
+
+ZQL bietet Unterstützung für \verb|SELECT-|,\verb|INSERT-|,\verb|DELETE-|,\verb|COMMIT-|,\verb|ROLLBACK-|,\verb|UPDATE-| und \verb|SET TRANSACTION-|Ausdrücke. Wichtig für diese Arbeit sind dabei insbesondere \verb|SELECT-| und \verb|UPDATE-|Ausdrücke, sowie -- die leider nicht enthaltenen -- \verb|CREATE TABLE-|Ausdrücke.
+
+\subsection{Funktionsweise des Parsers}
+
+ZQL kennt zwei grundlegende Interfaces \verb|ZExp| und \verb|ZStatement|. 
+
+Das Interface \verb|ZStatement| bildet eine abstrakte Oberklasse für alle möglichen Arten von SQL-Statements. Folgende Klassen implementieren dieses Interface in ZQL:
+
+\begin{itemize}
+\item \verb|ZDelete| - repräsentiert ein \verb|DELETE| Statement
+\item \verb|ZInsert| - repräsentiert ein \verb|INSERT| Statement
+\item \verb|ZUpdate| - repräsentiert ein \verb|UPDATE| Statement
+\item \verb|ZLockTable| - repräsentiert ein \verb|SQL LOCK TABLE| Statement
+\item \verb|ZQuery| - repräsentiert ein \verb|SELECT| Statement
+\end{itemize}
+
+Das Interface \verb|ZExp| bildet eine abstrakte Oberklasse für drei verschiedene Arten von Ausdrücken:
+
+\begin{itemize}
+\item \verb|ZConstant| - Konstanten vom Typ \verb|COLUMNAME, NULL, NUMBER, STRING| oder \verb|UNKNOWN|
+\item \verb|ZExpression| - Ein SQL-Ausdruck bestehend aus einem Operator und einen oder mehreren Operanden
+\item \verb|ZQuery| - Eine \verb|SELECT| Anfrage ist auch ein Ausdruck
+\end{itemize}
+
+Da die \verb|SELECT| Anfragen die wohl am häufigsten gebrauchte Form der Anfragen ist, wird sich die Erklärung der Funktionsweise des Parsers beispielhaft auf diese Art der Anfragen beziehen. Wie die anderen Statements geparst werden ist dann analog schnell zu verstehen.
+
+Eine gewöhnliches Select-Statement wird wie folgt vom Parser zerlegt:
+\begin{verbatim}SELECT e.name FROM emp e WHERE e.sal > 1000 ORDER BY e.sal DESC\end{verbatim}
+
+\begin{tabular}{ll}
+\verb|SELECT e.name| & \textit{Vector} von \textit{ZSelectItem} enthält \verb|e.name| \\ 
+\verb|FROM emp e| & \textit{Vector} von \textit{ZFromItem} enthält \verb|emp| mit Alias \verb|e| \\
+\verb|WHERE e.sal > 1000| & \textit{ZExpression} mit Operator \verb|>| und Operanden\textit{Vector} der Form \{\verb|e.sal|, \verb|1000|\} \\
+\end{tabular}
+
+TODO: Parsebäume nicht binär
 
 \subsection{Grenzen des Parsers}
+
+TODO: CREATE TABLE
 
 \section{Java Server Pages}
 
