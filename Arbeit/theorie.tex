@@ -41,11 +41,18 @@ In diesem kurzem Beispiel sieht man einige Probleme auf die man trifft, wenn man
 \item Sortierung, Standardisierung 
 \end{enumerate}
 
-\section{Entfernen von syntaktischen Details}
+\subsection{Entfernen von syntaktischen Details}
 
-Das Entfernen von syntaktischen Details übernimmt zum großen Teil bereits der Parser. Er entfernt unnötige Leerzeichen, Kommentare sowie unnötige Klammern. Allerdings treten beim benutzten Parser einige spezielle Eigenheiten auf, die im Bereich >> verwendeter SQL-Parser << näher erläutert werden.
+Das Entfernen von syntaktischen Details übernimmt zum großen Teil bereits der Parser. Er entfernt unnötige Leerzeichen, Kommentare sowie unnötige Klammern. Aufgrund der Arbeitsweise des Parsers gibt es allerdings Situationen, in dem der Parser scheinbar nicht alle unnötigen Klammern entfernt. Wie im Abschnitt >>Verwendeter Parser<< erläutert wird, sind die geparsten Bäume nicht binär. Ein Baum wie in Abbildung \ref{baum1} zu sehen, ist daher zu vermeiden. 
 
-\section{Ersetzung von syntaktischen Varianten}
+Es ist daher wünschenswert, wenn ein Operator X einen Ausdruck als Kindknoten besitzt, in dem X ebenfalls der Operator ist, den Operator X im Kindknoten zu eliminieren und alle Kinder vom eliminierten Kindknoten an den verbleibenden Operatorknoten X zu hängen. Damit hätte man den Ausdruck vereinfacht, da die assoziative Klammerung wegfällt. Wir nennen dieses Vorgehen im Folgenden Operatorkompression.
+
+Gegeben sei der ZQL-Parsebaum $B=(V,E)$. Es sei $child(v) = \{ w : w\in V \wedge (v,w)\in E\}$, also die Menge aller Kindknoten von $v$. Gibt es einen Knoten $w\in child(v)$ mit $v=w$, so wird Knoten $w$ eliminiert und alle Kindknoten von $w$ werden zu Kindknoten von $v$, also $child(v) = child(v) \cup child(w)$. 
+$E=E\backslash \{ (w,x) : x\in child(w)\} \cup \{(v,x) x\in child(w)\}$ und $V=V\backslash \{w\}$.
+
+Mit dem Parser und der Operatorkompression können alle unnötigen Klammern entfernt werden. Es ist für die Auswertung des Studenten wichtig abzuspeichern wie oft die Operatorkompression durchgeführt wurde. Es ist zwar kein harter Fehler, aber für die Lösung waren die Klammern einfach unnötig und dies muss dem Studenten auch mitgeteilt werden, selbst wenn seine Lösung mit der Musterlösung am Ende der Standardisierung übereinstimmt.
+
+\subsection{Ersetzung von syntaktischen Varianten}
 
 Um eine Anfrage zu standardisieren müssen wir den syntaktischen Zucker entfernen. Dies geschieht, in dem man nur eine syntaktische Schreibweise anerkennt und alle anderen Schreibweisen werden in die zulässige umgewandelt. Zu erwähnen sind folgende Ersetzungen, die durchgeführt werden sollen um syntaktisch vielfältige, aber semantisch äquivalente Ausdrücke zu minimieren.
 
@@ -76,11 +83,37 @@ Eventuell ist es hier auch bereits möglich Terme, die nur aus numerischen Konst
 
 
 
-\section{Hinzufügen einfacher Implikationen (transitiv)}
+\subsection{Hinzufügen einfacher Implikationen (transitiv)}
 
 Die Anfrage des Lernenden kann trotz zahlreicher Umformungen noch einige komplizierte Bedingungen enthalten, die wir mit bisherigen Methoden nicht entdecken konnten. Ein wichtiger Teil dabei sind transitiv-implizierte Bedingungen. Finden wir beispielsweise in der Musterlösung die Bedingung \verb|A = C AND B = C| und der Student schreibt \verb|A = B AND B = C|, so handelt es sich um semantisch äquivalente Aussagen. Damit unser Ansatz funktioniert, ist es also notwendig transitiv-implizierte Formeln immer hinzuzufügen. Wir bilden also im gewissen Sinne den transitiven Abschluss über den Operatoren $\{=,>,<\}$.
 
 Beim Ansatz der Standardisierung mit Sortierung ist ein Betrachten von symetrischen Implikationen unnötig. Wie im Abschnitt Sortierung noch erläutert wird, werden zwei Bedingungen \verb|A = B| und \verb|B = A| nach Sortierungsregeln beide zu \verb|A = B| standardisiert. 
 
-\section{Sortierung (TODO, innerhalb der Terme)}
+\subsection{Sortierung)}
+
+Im aktuell betrachteten Ansatz möchten wir zwei Anfragen dadurch vergleichen, dass wir sowohl die Musterlösung, als auch die Studentenlösung einer Standardisierung unterziehen. Ein ganz wesentlicher Aspekt dabei ist, die Art der Sortierung. Sind die ZQL-Parserbäume isomorph zueinander, dann lässt sich das leicht zeigen, in dem man beide nach gleichartigen Kriterien sortiert und dann einen direkten Abgleich vornimmt.
+
+Dabei unterscheiden wir zwei Arten von Sortierung. Hat ein Operator als Operanden nur Ausdrücke und keine Konstanten oder Variablen dann sortieren wir die Kindknoten, welche jeweils wieder eigene Terme bilden.
+
+Hat ein Operator als Operand mindestens eine Konstante oder Variable, so Sortieren wir das innere dieses Terms.
+
+\subsubsection{Sortierung von Termen}
+
+Hat ein Operator \textit{OP1} als Kindknoten nur weitere Operatoren \textit{OP2,OP3}, dann muss anhand dieser Operatoren die Reihenfolge im Baum festegelegt werden. Dies geschieht, in dem wir uns einfach eine Reihenfolge der Operatoren ausdenken. Wir überlegen uns folgende Ordnung $order:\textit{Relation}\to\mathbb{N}$, in der eine Relation $r$ vor einer Relation $s$ im standardisierten Parserbaum erscheint, wenn $order(r) < order(s)$.
+
+$order:$\\
+
+\begin{tabular}{|lllllll|}
+\hline
+$<=$ & $>=$ & $=$ & IS NULL & IS NOT NULL & OR & AND \\
+1 & 2 & 3 & 4 & 5 & 6 & 7 \\
+\hline
+\end{tabular}
+
+\subsubsection{Sortierung im Inneren der Terme}
+
+
+\section{Anpassung durch elementare Transformationen}
+
+s
 

@@ -37,13 +37,47 @@ Eine gewöhnliches Select-Statement wird wie folgt vom Parser zerlegt:
 \verb|SELECT e.name| & \textit{Vector} von \textit{ZSelectItem} enthält \verb|e.name| \\ 
 \verb|FROM emp e| & \textit{Vector} von \textit{ZFromItem} enthält \verb|emp| mit Alias \verb|e| \\
 \verb|WHERE e.sal > 1000| & \textit{ZExpression} mit Operator \verb|>| und Operanden\textit{Vector} der Form \{\verb|e.sal|, \verb|1000|\} \\
+\verb|ORDER BY e.sal DESC| & \textit{ZOrderBy}-Objekt mit enthaltenem \verb|ORDER BY| Sortierausdruck und Reihenfolge
 \end{tabular}
 
-TODO: Parsebäume nicht binär
+%TODO: Parsebäume nicht binär
+Eine Besonderheit des ZQL-Parsers sind seine Parserbäume. Ein üblicher Syntaxbaum ist binär, wobei die Wurzel den Operator mit der höchsten Priorität darstellt. Alle Teilbäume sind wieder als Ausdrücke zu verstehen, jeweils mit Operator als Wurzelknoten und Operanden als Kindknoten. Dabei kann ein Operand auch ein weiterer Ausdruck sein. Generell wird dabei das Prinzip der Assoziativität benutzt um z.B.: für gleichrangige Operatoren eine Auswertungsreihenfolge festzulegen.
+
+So würde der \verb|WHERE|-Teil von folgender SQL-Anfrage:
+\begin{verbatim}
+SELECT * FROM emp e WHERE e.sal > 1000 AND e.sal < 2000 AND e.id > 1234
+\end{verbatim}
+
+zu folgendem geklammerten Ausdruck:
+\begin{verbatim}
+(((e.sal > 1000) AND (e.sal < 2000)) AND (e.id > 1234))
+\end{verbatim}
+
+\begin{figure}
+\label{baum1}
+\includegraphics[scale=0.7]{Bilder/where_syntax.png}
+\caption{WHERE-Bedingung in üblichen Syntaxbäumen}
+\end{figure}
+
+Der ZQL-Parser funktioniert so allerdings nicht. Wird keine spezielle Klammerung benutzt so werden gleichrangige Operatoren nicht assoziativ geklammert, sondern befinden sich auf einer Ebene des Baumes. Somit handelt es sich nicht um einen binären Baum. 
+
+Wir erhalten also aus obigen \verb|WHERE|-Ausdruck:
+\begin{verbatim}
+((e.sal > 1000) AND (e.sal < 2000) AND (e.id > 1234))
+\end{verbatim}
+
+\begin{figure}
+\includegraphics[scale=0.7]{Bilder/with_zql.png}
+\caption{WHERE-Bedingung geparst mit ZQL}
+\end{figure}
+
+Wie schon erwähnt werden Operanden daher in einer \textit{Vector} Struktur gespeichert.
 
 \subsection{Grenzen des Parsers}
 
-TODO: CREATE TABLE
+Der Parser kann keine \verb|CREATE TABLE| Statements parsen. Somit ist es im Rahmen dieser Arbeit notwendig, den Parser zu erweitern, damit Tabellen in eigene Datenstrukturen geparst werden können. Für die Arbeit ist es zunächst nur notwendig Name und Datentyp der Spalten in eine interne Datenstruktur zu überführen. Dabei wird nur zwischen Zahlen und Sonstigem (Text) unterschieden. Unser Programm soll in der Lage sein, einfache arithmetische Operationen durchzuführen. Dazu ist das wissen um Datentypen der Variablen von Nöten.
+
+%TODO: CREATE TABLE
 
 \section{Java Server Pages}
 
