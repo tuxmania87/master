@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.3-1.40.12 (MiKTeX 2.9) (preloaded format=pdflatex 2012.8.27)  26 MAR 2013 17:29
+This is pdfTeX, Version 3.1415926-2.3-1.40.12 (MiKTeX 2.9) (preloaded format=pdflatex 2012.8.27)  8 APR 2013 18:00
 entering extended mode
 **master.tex
 (E:\Users\Robert\Desktop\Arbeit\master\Arbeit\master.tex
@@ -1258,7 +1258,7 @@ LaTeX Font Info:    Try loading font information for U+txsyc on input line 29.
 (E:\Users\Robert\AppData\Roaming\MiKTeX\2.9\tex\latex\txfonts\utxsyc.fd
 File: utxsyc.fd 2000/12/15 v3.1
 )
-<Bilder/siegel.pdf, id=118, 731.73375pt x 380.42125pt>
+<Bilder/siegel.pdf, id=170, 731.73375pt x 380.42125pt>
 File: Bilder/siegel.pdf Graphic file (type pdf)
  <use Bilder/siegel.pdf>
 Package pdftex.def Info: Bilder/siegel.pdf used on input line 30.
@@ -1280,13 +1280,13 @@ LaTeX Font Info:    Font shape `T1/txss/bx/n' will be
 LaTeX Font Info:    Font shape `T1/txss/bx/n' will be
 (Font)              scaled to size 23.63593pt on input line 50.
 
-(E:\Users\Robert\Desktop\Arbeit\master\Arbeit\master.toc)
+(E:\Users\Robert\Desktop\Arbeit\master\Arbeit\master.toc [2
+
+
+
+])
 \tf@toc=\write5
- [2
-
-
-
-]
+ [3]
 Kapitel 1.
 
 Class scrreprt Warning: \float@addtolists detected!
@@ -1295,22 +1295,23 @@ Class scrreprt Warning: \float@addtolists detected!
 (scrreprt)              Support for \float@addtolists may be removed from
 (scrreprt)              `scrreprt' soon .
 
-(E:\Users\Robert\Desktop\Arbeit\master\Arbeit\einleitung.tex [3
+(E:\Users\Robert\Desktop\Arbeit\master\Arbeit\einleitung.tex
+LaTeX Font Info:    Font shape `T1/txss/bx/n' will be
+(Font)              scaled to size 16.41594pt on input line 8.
+ [4
 
-]) [4]
+] [5]) [6]
+[7]
 Kapitel 2.
 (E:\Users\Robert\Desktop\Arbeit\master\Arbeit\alteszeug.tex
-LaTeX Font Info:    Font shape `T1/txss/bx/n' will be
-(Font)              scaled to size 16.41594pt on input line 1.
 
-
-LaTeX Warning: Reference `sqltutor1' on page 5 undefined on input line 9.
+LaTeX Warning: Reference `sqltutor1' on page 8 undefined on input line 9.
 
 LaTeX Font Info:    Try loading font information for T1+txtt on input line 9.
 (E:\Users\Robert\AppData\Roaming\MiKTeX\2.9\tex\latex\txfonts\t1txtt.fd
 File: t1txtt.fd 2000/12/15 v3.1
 )
-[5
+[8
 
 ]
 Overfull \hbox (8.61086pt too wide) in paragraph at lines 17--18
@@ -1321,15 +1322,15 @@ ungs-vor-schlag auf ei-ner SQL-Datenbank
 LaTeX Font Info:    Font shape `T1/txss/bx/n' will be
 (Font)              scaled to size 13.67995pt on input line 19.
 
-LaTeX Warning: Reference `eplora1' on page 6 undefined on input line 25.
+LaTeX Warning: Reference `eplora1' on page 9 undefined on input line 25.
 
 
-LaTeX Warning: Reference `eploralit1' on page 6 undefined on input line 25.
+LaTeX Warning: Reference `eploralit1' on page 9 undefined on input line 25.
 
 
-LaTeX Warning: Reference `eploralit2' on page 6 undefined on input line 25.
+LaTeX Warning: Reference `eploralit2' on page 9 undefined on input line 25.
 
-[6]
+[9]
 LaTeX Font Info:    Try loading font information for OMS+txr on input line 30.
  (E:\Users\Robert\AppData\Roaming\MiKTeX\2.9\tex\latex\txfonts\omstxr.fd
 File: omstxr.fd 2000/12/15 v3.1
@@ -1338,48 +1339,134 @@ LaTeX Font Info:    Font shape `OMS/txr/m/n' in size <12> not available
 (Font)              Font shape `OMS/txsy/m/n' tried instead on input line 30.
 
 
-LaTeX Warning: Reference `webex1' on page 7 undefined on input line 39.
+LaTeX Warning: Reference `webex1' on page 10 undefined on input line 39.
 
-[7]
+[10]
 
-LaTeX Warning: Reference `winrbdi1' on page 8 undefined on input line 67.
+LaTeX Warning: Reference `winrbdi1' on page 11 undefined on input line 67.
 
-[8]) [9]
+[11]) [12]
 Kapitel 3.
-(E:\Users\Robert\Desktop\Arbeit\master\Arbeit\theorie.tex [10
+(E:\Users\Robert\Desktop\Arbeit\master\Arbeit\theorie.tex [13
 
 ]
-Overfull \hbox (4.36224pt too wide) in paragraph at lines 37--41
-[]\T1/txr/m/n/12 Hinzufuegen ein-fa-cher Im-pli-ka-tio-nen, z.B. tran-si-tiv im
--pli-zier-te Glei-chun-gen/Ungleichungen,
+Overfull \hbox (67.8486pt too wide) in paragraph at lines 33--34
+\T1/txr/m/n/12 von al-len syn-tak-ti-schen De-tails ist. Da-zu ge-hö-ren Leer-z
+ei-chen, Tabs, Zei-le-num-brü-che und Groÿ/Kleinschreibung
  []
 
-[11] [12]
-LaTeX Font Info:    Try loading font information for U+fplmbb on input line 102
+
+Underfull \hbox (badness 10000) in paragraph at lines 44--45
+
+ []
+
+
+Overfull \hbox (5.8739pt too wide) in paragraph at lines 46--47
+[]\T1/txtt/m/n/12 SELECT a2.id, a2.name, a1.region FROM dep a1, emp a2 WHERE a2
+.depid = a1.id 
+ []
+
+[14pdfTeX warning (ext4): destination with the same identifier (name{figure.3.1
+}) has been already used, duplicate ignored
+
+\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+                                                  \fi \fi 
+l.53 
+     ] <Bilder/not_graph1.png, id=290, 468.75125pt x 444.66125pt>
+File: Bilder/not_graph1.png Graphic file (type png)
+
+<use Bilder/not_graph1.png>
+Package pdftex.def Info: Bilder/not_graph1.png used on input line 72.
+(pdftex.def)             Requested size: 234.37505pt x 222.33008pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 71--73
+
+ []
+
+[15] <Bilder/not_graph2.png, id=301, 468.75125pt x 444.66125pt>
+File: Bilder/not_graph2.png Graphic file (type png)
+
+<use Bilder/not_graph2.png>
+Package pdftex.def Info: Bilder/not_graph2.png used on input line 75.
+(pdftex.def)             Requested size: 234.37505pt x 222.33008pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 74--76
+
+ []
+
+[16 <E:/Users/Robert/Desktop/Arbeit/master/Arbeit/Bilder/not_graph1.png> <E:/Us
+ers/Robert/Desktop/Arbeit/master/Arbeit/Bilder/not_graph2.png>]
+<Bilder/not_graph3.png, id=308, 468.75125pt x 444.66125pt>
+File: Bilder/not_graph3.png Graphic file (type png)
+
+<use Bilder/not_graph3.png>
+Package pdftex.def Info: Bilder/not_graph3.png used on input line 79.
+(pdftex.def)             Requested size: 234.37505pt x 222.33008pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 78--80
+
+ []
+
+<Bilder/not_graph4.png, id=309, 468.75125pt x 348.30125pt>
+File: Bilder/not_graph4.png Graphic file (type png)
+
+<use Bilder/not_graph4.png>
+Package pdftex.def Info: Bilder/not_graph4.png used on input line 82.
+(pdftex.def)             Requested size: 234.37505pt x 174.15019pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 81--83
+
+ []
+
+[17 <E:/Users/Robert/Desktop/Arbeit/master/Arbeit/Bilder/not_graph3.png> <E:/Us
+ers/Robert/Desktop/Arbeit/master/Arbeit/Bilder/not_graph4.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 106--108
+
+ []
+
+[18pdfTeX warning (ext4): destination with the same identifier (name{figure.3.2
+}) has been already used, duplicate ignored
+
+\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+                                                  \fi \fi 
+l.121 
+      pdfTeX warning (ext4): destination with the same identifier (name{figure.
+3.3}) has been already used, duplicate ignored
+
+\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+                                                  \fi \fi 
+l.121 
+      ] [19]
+LaTeX Font Info:    Try loading font information for U+fplmbb on input line 144
 .
  ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\psnfss\ufplmbb.fd"
 File: ufplmbb.fd 2003/10/30 Fontinst v1.914 font definitions for U/fplmbb.
 )
-Underfull \hbox (badness 10000) in paragraph at lines 104--105
+Underfull \hbox (badness 10000) in paragraph at lines 146--147
 
  []
 
-[13]) [14]
+
+Underfull \hbox (badness 10000) in paragraph at lines 148--154
+
+ []
+
+[20]) [21]
 Kapitel 4.
-(E:\Users\Robert\Desktop\Arbeit\master\Arbeit\software.tex [15
+(E:\Users\Robert\Desktop\Arbeit\master\Arbeit\software.tex [22
 
 ]
 Overfull \hbox (57.65454pt too wide) in paragraph at lines 36--42
 [][] 
  []
 
-<Bilder/where_syntax.png, id=244, 369.38pt x 251.94125pt>
+<Bilder/where_syntax.png, id=350, 369.38pt x 251.94125pt>
 File: Bilder/where_syntax.png Graphic file (type png)
 
 <use Bilder/where_syntax.png>
 Package pdftex.def Info: Bilder/where_syntax.png used on input line 58.
 (pdftex.def)             Requested size: 258.56422pt x 176.35767pt.
- [16pdfTeX warning (ext4): destination with the same identifier (name{figure.4.
+ [23pdfTeX warning (ext4): destination with the same identifier (name{figure.4.
 1}) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
@@ -1387,13 +1474,13 @@ Package pdftex.def Info: Bilder/where_syntax.png used on input line 58.
 l.64 W
       ir erhalten also aus obigen \verb|WHERE|-Ausdruck: <E:/Users/Robert/Deskt
 op/Arbeit/master/Arbeit/Bilder/where_syntax.png>]
-<Bilder/with_zql.png, id=252, 488.82625pt x 155.58125pt>
+<Bilder/with_zql.png, id=357, 488.82625pt x 155.58125pt>
 File: Bilder/with_zql.png Graphic file (type png)
 
 <use Bilder/with_zql.png>
 Package pdftex.def Info: Bilder/with_zql.png used on input line 70.
 (pdftex.def)             Requested size: 342.17603pt x 108.90611pt.
-) [17pdfTeX warning (ext4): destination with the same identifier (name{figure.4
+) [24pdfTeX warning (ext4): destination with the same identifier (name{figure.4
 .2}) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
@@ -1402,23 +1489,23 @@ l.67 \chapter
              {Praktische Umsetzung} <E:/Users/Robert/Desktop/Arbeit/master/Arbe
 it/Bilder/with_zql.png>]
 Kapitel 5.
-(E:\Users\Robert\Desktop\Arbeit\master\Arbeit\praxis.tex) [18
+(E:\Users\Robert\Desktop\Arbeit\master\Arbeit\praxis.tex) [25
 
 ]
 Kapitel 6.
-(E:\Users\Robert\Desktop\Arbeit\master\Arbeit\ergebnisse.tex) [19
+(E:\Users\Robert\Desktop\Arbeit\master\Arbeit\ergebnisse.tex) [26
 
 ]
 Kapitel 7.
 (E:\Users\Robert\Desktop\Arbeit\master\Arbeit\ausblick.tex)
 (E:\Users\Robert\Desktop\Arbeit\master\Arbeit\master.brf)
 \tf@brf=\write6
- [20
+ [27
 
-] [21
+] [28
 
 ]
-(E:\Users\Robert\Desktop\Arbeit\master\Arbeit\erklaerung.tex) [22
+(E:\Users\Robert\Desktop\Arbeit\master\Arbeit\erklaerung.tex) [29
 
 ]
 Package atveryend Info: Empty hook `BeforeClearDocument' on input line 87.
@@ -1428,40 +1515,49 @@ Package atveryend Info: Empty hook `AfterLastShipout' on input line 87.
 (E:\Users\Robert\Desktop\Arbeit\master\Arbeit\erklaerung.aux))
 Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 87.
 Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 87.
-Package rerunfilecheck Info: File `master.out' has not changed.
-(rerunfilecheck)             Checksum: D2E56AFAB2E47F3ED27E68A6622C00D4;1936.
-Package rerunfilecheck Info: File `master.brf' has not changed.
-(rerunfilecheck)             Checksum: 94678747B34DF500CB5F0584B40EBD2F;101.
 
+
+Package rerunfilecheck Warning: File `master.out' has changed.
+(rerunfilecheck)                Rerun to get outlines right
+(rerunfilecheck)                or use package `bookmark'.
+
+Package rerunfilecheck Info: Checksums for `master.out':
+(rerunfilecheck)             Before: 26D8773B8DC091F5050691DB86ED4C98;2880
+(rerunfilecheck)             After:  176656DFD626297DA0933BC3F2510675;2754.
+Package rerunfilecheck Info: File `master.brf' has not changed.
+(rerunfilecheck)             Checksum: 6D82AAB72DCF88581AE97718F4B0B514;101.
 
 LaTeX Warning: There were undefined references.
 
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 87.
  ) 
 Here is how much of TeX's memory you used:
- 19817 strings out of 494045
- 368271 string characters out of 3145966
- 481242 words of memory out of 3000000
- 22528 multiletter control sequences out of 15000+200000
- 66502 words of font info for 95 fonts, out of 3000000 for 9000
+ 19877 strings out of 494045
+ 369244 string characters out of 3145966
+ 485249 words of memory out of 3000000
+ 22557 multiletter control sequences out of 15000+200000
+ 69194 words of font info for 99 fonts, out of 3000000 for 9000
  715 hyphenation exceptions out of 8191
- 65i,10n,71p,1014b,385s stack positions out of 5000i,500n,10000p,200000b,50000s
-{C:/Program Files (x86)/MiKTeX 2.9/fonts/enc/dvips/fontname/8r.enc}<C:/Progra
-m Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr10.pfb><E:/Users/Rob
-ert/AppData/Roaming/MiKTeX/2.9/fonts/type1/public/mathpazo/fplmbb.pfb><E:/Users
-/Robert/AppData/Roaming/MiKTeX/2.9/fonts/type1/public/txfonts/rtxmi.pfb><E:/Use
-rs/Robert/AppData/Roaming/MiKTeX/2.9/fonts/type1/public/txfonts/rtxr.pfb><E:/Us
-ers/Robert/AppData/Roaming/MiKTeX/2.9/fonts/type1/public/txfonts/rtxsc.pfb><E:/
-Users/Robert/AppData/Roaming/MiKTeX/2.9/fonts/type1/public/txfonts/t1xtt.pfb><E
-:/Users/Robert/AppData/Roaming/MiKTeX/2.9/fonts/type1/public/txfonts/txsy.pfb><
-C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/urw/helvetic/uhvb8a.pfb><C:/Progr
-am Files (x86)/MiKTeX 2.9/fonts/type1/urw/palatino/uplr8a.pfb><C:/Program Files
- (x86)/MiKTeX 2.9/fonts/type1/urw/times/utmb8a.pfb><C:/Program Files (x86)/MiKT
-eX 2.9/fonts/type1/urw/times/utmr8a.pfb><C:/Program Files (x86)/MiKTeX 2.9/font
-s/type1/urw/times/utmri8a.pfb>
-Output written on master.pdf (22 pages, 194215 bytes).
+ 65i,10n,71p,1014b,461s stack positions out of 5000i,500n,10000p,200000b,50000s
+pdfTeX warning (dest): name{subsection.3.2.7} has been referenced but does no
+t exist, replaced by a fixed one
+
+{C:/Program Files (x86)/MiKTeX 2.9/fonts/enc/dvips/fontname/8r.enc}<C:/Program 
+Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr10.pfb><E:/Users/Rober
+t/AppData/Roaming/MiKTeX/2.9/fonts/type1/public/mathpazo/fplmbb.pfb><E:/Users/R
+obert/AppData/Roaming/MiKTeX/2.9/fonts/type1/public/txfonts/rtxmi.pfb><E:/Users
+/Robert/AppData/Roaming/MiKTeX/2.9/fonts/type1/public/txfonts/rtxr.pfb><E:/User
+s/Robert/AppData/Roaming/MiKTeX/2.9/fonts/type1/public/txfonts/rtxsc.pfb><E:/Us
+ers/Robert/AppData/Roaming/MiKTeX/2.9/fonts/type1/public/txfonts/t1xtt.pfb><E:/
+Users/Robert/AppData/Roaming/MiKTeX/2.9/fonts/type1/public/txfonts/txsy.pfb><C:
+/Program Files (x86)/MiKTeX 2.9/fonts/type1/urw/helvetic/uhvb8a.pfb><C:/Program
+ Files (x86)/MiKTeX 2.9/fonts/type1/urw/palatino/uplr8a.pfb><C:/Program Files (
+x86)/MiKTeX 2.9/fonts/type1/urw/times/utmb8a.pfb><C:/Program Files (x86)/MiKTeX
+ 2.9/fonts/type1/urw/times/utmr8a.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/
+type1/urw/times/utmri8a.pfb>
+Output written on master.pdf (29 pages, 279061 bytes).
 PDF statistics:
- 341 PDF objects out of 1000 (max. 8388607)
- 70 named destinations out of 1000 (max. 500000)
- 252 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 451 PDF objects out of 1000 (max. 8388607)
+ 93 named destinations out of 1000 (max. 500000)
+ 376 words of extra memory for PDF output out of 10000 (max. 10000000)
 
