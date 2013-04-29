@@ -77,6 +77,10 @@ Wie schon erwähnt werden Operanden daher in einer \textit{Vector} Struktur gesp
 
 Der Parser kann keine \verb|CREATE TABLE| Statements parsen. Somit ist es im Rahmen dieser Arbeit notwendig, den Parser zu erweitern, damit Tabellen in eigene Datenstrukturen geparst werden können. Für die Arbeit ist es zunächst nur notwendig Name und Datentyp der Spalten in eine interne Datenstruktur zu überführen. Dabei wird nur zwischen Zahlen und Sonstigem (Text) unterschieden. Unser Programm soll in der Lage sein, einfache arithmetische Operationen durchzuführen. Dazu ist das wissen um Datentypen der Variablen von Nöten.
 
+Weiterhin ist der ZQL-Parser nicht in der Lage \verb|JOINS| über die Schlüsselworte \\\verb#ON [LEFT OUTER|RIGHT OUTER|INNER] JOIN# zu realisieren. Der Parser erkennt nur innere \verb|JOINS|, die im \verb|WHERE|-Teil formuliert worden. Das soll für diese Arbeit ohne weitere Bedeutung sein, da dennoch Strategien entwickelt werden, wie man mit derartigen \verb|JOINS| umgeht. Es muss an der Stelle nur erwähnt werden, dass das Programm, welches im rahmen dieser Arbeit entsteht, mit derartigen \verb|JOINS| nicht umgehen kann.
+
+Trotz dieser Einschränkungen sind alle Konzepte, die in dieser Arbeit vorgestellt werden einfach auf jedweden SQL-Parser übertragbar.
+
 %TODO: CREATE TABLE
 
 \section{Java Server Pages}

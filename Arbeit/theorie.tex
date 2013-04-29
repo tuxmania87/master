@@ -22,6 +22,22 @@ SELECT * FROM emp e WHERE e.enr >= 6
 
 Wie man leicht sieht, sind die Anfragen ähnlich. Im folgenden werden zwei Strategien besprochen, welche beide zum Ziel haben, zwei SQL-Anfragen miteinander zu vergleichen.
 
+Neben solchen syntaktischen Varianten, kann es auch sein, dass unnötige Bedingungen aufgeschrieben werden, die das Ergebnis nur unnötig kompliziert machen. Eine Möglichkeit ist folgende Anfrage, in der offensichtlich die letzte Bedingung überflüssig ist.
+\begin{verbatim}
+SELECT * FROM emp e WHERE e.enr > 5 AND e.enr <> 2
+\end{verbatim}
+
+Unser Programm müsste nun erkennen, dass das Attribut \verb|enr| bereits beschränkt ist, und der Wert 2 gar nicht mehr auftreten kann. Das Programm, was zu dieser Arbeit entwickelt wird, kann mit solchen redundanten Eigenschaften nicht umgehen. Es wäre auch mehr ein Problem für einen ``semantic checker'', da es hier gar nicht auf zwei verschiedene Anfragen ankommt. Hier ist bereits diese eine Anfrage in sich selbst zu kompliziert. Mit derlei Problemen beschäftigt sich das Projekt ``SQLLint'' der Martin-Luther-Universität Halle-Wittenberg, mehr dazu im Artikel \cite{brass1} und \cite{brass2}.
+
+Weitere Probleme sind Operatoren, die sich auf andere abbilden lassen. Man kann dann nie wissen, in welcher Art und Weise der Lernende die Aufgabe formulieren wird. Man betrachte sich dazu folgende zwei Anfragen:
+\begin{verbatim}
+SELECT * FROM emp e WHERE e.sal BETWEEN 10 AND 200
+
+SELECT * FROM emp e WHERE e.sal >= 10 AND e.sal <=200
+\end{verbatim}
+
+Offensichtlich sind die Anfragen äquivalent. Dies erreichen wir im wesentlichen, in dem wir bestimmte Operatoren wie \verb|BETWEEN| abschaffen und durch die äquivalenten Ungleichungen mit \verb|>=| und \verb|<=| ersetzen. Ähnliches gibt es für \verb|INNER JOIN| im \verb|FROM| Teil, mit Ersetzung durch Vergleiche im \verb|WHERE| Teil. 
+
 \section{Workflow}
 
 \begin{verbatim}
@@ -86,6 +102,10 @@ Unterscheiden sich Musterlösung und Lösung des Studenten in den mit * markiert
 \item ``Your solution is correct but the sample solution contains two less atomar formulas (formula1, formula2).''
 \item ``Your solution is correct but the sample solution does not contain DISTINCT. Reconsidder if it is really necessary.''
 \end{itemize}
+
+Zusammenfassend kann man Folgendes sagen: Das Preprocessing wird direkt nach dem Parsen einer SQL-Anfrage durchgeführt. Es sammelt Metainformationen über die Anfrage. Da wir zwei Anfragen vergleichen, werden diese Metainformationen einzeln für jede Anfrage gespeichert. Dann beginnen wir mit dem zweiten Schritt, dem Angleichen der SQL-Anfragen. Dazu verwenden wir Strategien, die in folgenden Kapiteln besprochen werden.
+
+Egal ob die Ergebnisse im zweiten Schritt erfolgreich waren oder nicht, wir geben danach einen Vergleich der Metainformationen aus. Beispiele wurden eben bereits genannt. Das soll dem Lernenden bei falscchen Lösungen Anhaltspunkte geben, wie eine richtige Lösung aussehen könnte. Bei einer korrekten Lösung, können solche Hinweise trotzdem nützlich sein, denn die Anfrage des Lernenden kann ja trotz Korrektheit zu lang bzw. komnpliziert sein. Dies würde bei einem Vergleich der gesammelten Metainformationen deutlich werden.
 
 \section{Standardisierung von SQL-Anfragen}
 
@@ -153,19 +173,75 @@ Im letzten Schritt haben wir die Formel \verb|((a <= 5) or ((b <= 5) and (c <= 5
 
 Um eine Anfrage zu standardisieren müssen wir den syntaktischen Zucker entfernen. Dies geschieht, in dem man nur eine syntaktische Schreibweise anerkennt und alle anderen Schreibweisen werden in die zulässige umgewandelt. Zu erwähnen sind folgende Ersetzungen, die durchgeführt werden sollen um syntaktisch vielfältige, aber semantisch äquivalente Ausdrücke zu minimieren.
 
-\begin{figure}
+\begin{figure}[h]
 \begin{tabular}{ccl}
 \verb|A BETWEEN B AND C| & $\to$  & \verb|A >= B AND A <= C|\\
 \verb|SELECT ALL| & $\to$ & \verb|SELECT|\\
 \verb|ORDER BY VAR ASC| &  $\to$ & \verb|ORDER BY VAR|\\
+\verb|A IN ('X', 'Y', 'Z')| & $\to$ & \verb|A = 'X' OR A = 'Y' OR A='Z'|\\
 \verb|EXISTS (SELECT A,B,C ...)| & $\to$ & \verb|EXISTS (SELECT 1 ...)|\\
 \end{tabular}
 \caption{Entfernen von syntaktischen Varianten}
 \end{figure}
 
+\subsubsection*{Unteranfragen}
+
+Es ist bekannt, dass sämtliche Typen von Unteranfragen eliminiert oder durch \verb|EXISTS| Anfragen ersetzt werden können. Streng genommen handelt es sich hier zwar um mehr als nur eine syntaktische Variante, aber dennoch wollen wir das Ersetzen von Unteranfragen in diesem Abschnitt betrachten.
+\subsubsection*{Ersetzen von ALL}
+
+\verb|... SAL >= ALL(1000, LOW_SAL)|  wird zu:\\
+\verb|... SAL >= 1000 AND SAL >= LOW_SAL|
+
+\subsubsection*{Ersetzen von ANY/SOME}
+
+\begin{verbatim}
+X.SAL >= ANY(SELECT Y.SAL FROM EMP Y 
+             WHERE Y.JOB = 'CLERK')
+\end{verbatim} zu
+\begin{verbatim}
+EXISTS(SELECT Y.SAL FROM EMP Y 
+       WHERE Y.JOB = 'CLERK' 
+       AND X.SAL >= Y.SAL)
+\end{verbatim}
+
+Befindet sich ein \verb|NOT| vor der Unteranfrage, so wird dieses nicht zur Unterabfrage ``durchgedrückt'' sondern bleibt davor.
+
+\subsubsection{Ersetzen von IN}
+
+Unter bestimmten Voraussetzungen kann jede IN-Unterabfrage in eine äquivalente EXISTS-Unteranfrage umgewandelt werden.
+
+Wir wandeln IN-Unteranfragen wie die folgende:
+
+\begin{lstlisting}[mathescape]
+$t_1$ IN (SELECT $t_2$
+      FROM $R_1\ X_1$, ..., $R_n\ X_n$
+      WHERE $\varphi$)
+\end{lstlisting}
+
+unter -- noch zu erläuternden -- Vorrausetzungen um in:
+
+\begin{lstlisting}[mathescape]
+EXISTS (SELECT *
+        FROM $R_1\ X_1$, ..., $R_n\ X_n$
+        WHERE ($\varphi$) AND $t_1 = t_2$)
+\end{lstlisting}
+
+Folgende Voraussetzungen müssen erfüllt sein, damit diese Umwandlung angewendet werden kann.
+
+\begin{itemize}
+\item Alle Tupelvariablen, die in $t_1$ vorkommen, müssen sich unterscheiden von allen $X_i$. Erreicht wird dies ggf. durch Umbenennung der $X_i$, da diese ja nicht für die eigentliche (Ober)anfrage wichtig sind.
+\item Wenn $t_1$ Attributreferenzen $A$ ohne Tupelvariable enthält, dann dürfen die $R_i$ kein Attribut $A$ haben. Erreicht wird dies, indem ggf. die Tupelvariable einführt.
+\item Die Unteranfrage für $t_2$ darf keine Nullwerte liefern.
+\end{itemize}
+
+\subsubsection{andere Unteranfragen}
+
+Ungewöhnliche Unterabfragen, wie z.B.: Unterabfragen unter \verb|FROM| werden hier nicht betrachtet. Im Allgemeinen werden solche Unterabfragen kaum gebraucht und machen die Anfrage meist nur viel komplexer als notwendig.
+
+\subsubsection{JOINS}
 Ein \verb|INNER JOIN| kann sowohl im \verb|FROM|, als auch im \verb|WHERE| Teil einer SQL-Anfrage formuliert werden. Damit Untersuchungen einheitlich geschehen können, formulieren wir solche JOINs im \verb|WHERE| Teil der SQL-Anfrage.
 
-\begin{figure}
+\begin{figure}[h]
 Eingabe:\\
 \verb|SELECT * FROM foo f INNER JOIN bar b ON f.id=b.id|\\
 
@@ -176,7 +252,91 @@ Umwandlung:\\
 
 Bei Anwendung dieser Ersetzungsregeln, soll dem Lernenden ein klares Feedback gegeben werden. Es soll verdeutlicht werden, dass eine korrekte Anfrage dennoch Mängel aufweist, da unnötige Formulierungen benutzt wurden.
 
-Eventuell ist es hier auch bereits möglich Terme, die nur aus numerischen Konstanten bestehen zu Ersetzen durch das jeweilige Ergebnisse. So könnten arithmetische Operationen bereits ausgeführt und Vergleiche, die nur aus numerischen Konstanten bestehen, durch entsprechende Wahrheitswerte ersetzt werden.
+Es ist hier bereits möglich Terme, die nur aus numerischen Konstanten bestehen, zu Ersetzen durch das jeweilige Ergebnis. So könnten arithmetische Operationen bereits ausgeführt und Vergleiche, die nur aus numerischen Konstanten bestehen, durch entsprechende Wahrheitswerte ersetzt werden.
+
+\subsection{JOIN Eliminierung}
+
+In einem weiteren Zwischenschritt möchten wir gern einige unnötige \verb|JOINS| eliminieren.
+
+\subsubsection{OUTER JOIN}
+
+Betrachten wir eine SQL-Anfrage mit einem \verb|OUTER JOIN|. Befinden sich im \verb|SELECT|-Teil keine Attribute der \verb|JOIN|-Tabelle, so ist der \verb|JOIN| unnötig, weil Daten von der \verb|JOIN|-Tabelle ohnehin nicht ausgegeben werden. Betrachten wir dazu folgendes Beispiel:
+
+\begin{figure}[h]\label{joinelem1}
+\begin{lstlisting}[mathescape]
+SELECT s.vorname, s.nachname 
+FROM studenten s LEFT JOIN klausur k ON s.id = k.id 
+WHERE k.wert <= 3
+\end{lstlisting}
+\caption{unnötiger OUTER JOIN}
+\end{figure}
+
+Im Beispiel in Abbildung \ref{joinelem1} sollen alle Studenten ausgegeben werden, die in einer Klausur die Note 3 oder besser bekommen haben. Da es sich hier um einen \verb|OUTER JOIN| handelt und wir nur Namen der Studenten ausgeben möchten, erhalten wir immer eine gesamte Liste der Studentennamen. Der Teil, der für den \verb|JOIN| interessant wäre, also Daten aus der Tabelle \verb|klausur k|, wird nicht ausgegeben. Damit wäre die folgende SQL-Anfrage mit der aus Abbildung \ref{joinelem1} äquivalent.
+
+\begin{figure}[h]\label{joinelem2}
+\begin{lstlisting}[mathescape]
+SELECT s.vorname, s.nachname 
+FROM studenten s 
+\end{lstlisting}
+\caption{unnötiger OUTER JOIN}
+\end{figure}
+
+Bei einem \verb|RIGHT JOIN| müsste man äquivalent überprüfen ob man Attribute im \verb|SELECT| Teil hat, die in der ``linken'' Tabelle sind und genauso verfahren.
+
+Möchte man tatsächlich nur die Studenten ausgeben, die eine 3 oder besser geschrieben haben, müsste man einen \verb|INNER JOIN| verwenden.
+
+\subsubsection{transitiv-implizierte INNER JOINs}
+
+Wenn nur Schlüsselattribute einer Tupelvariable X benutzt werden und diese mit Fremdschlüsselattributen einer anderen Tupelvariable Y verglichen werden, dann ist X überflüssig.
+
+In der Arbeit \cite{joinelem2} wird dazu ein Algorithmus angegeben, der im wesentliche oben genannte, überflüssige Tupelvariablen entfernt. Wir wandeln diesen Algorithmus leicht ab, erhalten aber die Grundidee.
+
+Im ersten Schritt erstellen transitiv-abgeschlossene Äquivalenzklassen der Attribute, die im \verb|WHERE|-Teil vorkommen. Haben wir also $X.A=Y.B$ und $Y.B=Z.C$, so befinden sich alle drei Attribute in einer Äquivalenzklasse: $\{X.A,Y.B,Z.C\}$. Dabei bemerken wir, dass Äquivalenzklassen der Mächtigkeit 1 einfache Vergleiche wie \verb|X.A Operator Konstante| sind. Klassen der Mächtigkeit 2 sind einfache, nicht transitive JOINs und Klassen der Mächtigkeit größer als 2 sind offensichtlich mehrfache, transitive JOINs.
+
+Jetzt gehen wir jede Äquivalenzklasse durch, die mindestens 3 Einträge haben. Für jeden Eintrag $e\in\mathit{Aequivalenzklasse}$ mit $e=T.A$ überprüfen wir, ob es andere Äquivalenklassen gibt, die nicht aus einem transitiven \verb|JOIN| entstanden sind (also weniger als 3 Einträge haben) und die ein Attribut der Tabelle $T$ enthalten. Ist dies nicht der Fall und die Tabelle $T$ kommt nicht im \verb|SELECT|-Teil vor, dann ist das Attribut $A$ in dem Vergleich, der durch die Äquivalenzklasse repräsentiert wird, unnötig und kann samt zugehöriger Bedingung im \verb|WHERE| Teil gestrichen werden. Hat die Äquivalenzklasse jetzt weniger als 3 Einträge dann wird die Arbeit an dieser Klasse abgebrochen.
+
+Im letzten Schritt müssen wir noch überprüfen ob es Tupelvariablen im \verb|FROM|-Teil gibt, die aber nun nicht mehr im \verb|WHERE| Teil auftauchen. Ist dies der Fall, dann streichen wir diese aus dem \verb|FROM|-Teil.
+
+Beispiel:
+\begin{lstlisting}[mathescape]
+SELECT ps.partkey, avg(ps.supplycost)
+FROM   supplier s, partsupp ps, customer c, orders o
+WHERE  s.suppkey = ps.suppkey 
+AND    s.suppkey = c.custkey
+AND    c.custkey = o_custkey
+AND    o_totalprice >= 100;
+\end{lstlisting}
+
+Zunächst erzeugen wir Alle Äquivalenzklassen:
+\begin{lstlisting}[mathescape]
+Klassen = $\{ \{$s.suppkey, ps.suppkey, c.custkey,o.custkey $\}, \{$o.totalprice$\} \}$
+\end{lstlisting}
+
+Die zweite Menge interessiert uns nicht, da sie nicht mehr als zwei Elemente enthält. Wir betrachten daher nur die erste Menge. Wir untersuchen nun jedes einzelne Element auf seine Gültigkeit. \verb|s.suppkey| kommt in keiner anderen Äquivalenzklasse vor und die Tabelle \verb|supplier s| erscheint nicht im \verb|SELECT| Teil, daher streichen wir \verb|s.suppkey|. Das nächste Attribut \verb|ps.suppkey| kann nicht gestrichen werden, da die Tabelle \verb|partsupp ps| im \verb|SELECT|-Teil erscheint. \verb|c.custkey| kann wiederm gestrichen werden, da es wieder nicht in einer anderen Äquivalenklasse auftaucht und die Tabelle \verb|customer c| nicht im \verb|SELECT|-Teil auftaucht. Dahingegen ist \verb|o.custkey| nicht zu streichen, da die Tabelle \verb|orders o| in einer Äquivalenzklasse auftaucht, welche nicht zu einem \verb|JOIN| gehört (weil sie weniger als 3 Elemente beinhaltet). Nun können wir auch die Tabellen \verb|supplier s| und \verb|customer c| streichen, da keine Bedingung mehr Attribute aus diesen Tabellen enthält.
+
+Daher erhalten wir nun folgende optimierte Anfrage:
+\begin{lstlisting}[mathescape]
+SELECT ps.partkey, avg(ps.supplycost)
+FROM   partsupp ps, orders o
+WHERE  o.custkey = ps.suppkey 
+AND    o.totalprice >= 100;
+\end{lstlisting}
+
+PSEUDOCODE:
+
+\begin{lstlisting}[mathescape]
+Alle Attribute im WHERE Teil in Aequivalenklassen E_i packen.
+foreach $e\in E_i$ mit $\vert e\vert \ge 3$ do
+  foreach $t.a\in e$ do
+    if $\vert e\vert \ge 3$ and $t \notin $SELECT and 
+    $\nexists b\in E_i$ mit $\vert b\vert < 3$ und b=t.*
+      e = e - {t.a}
+    end
+  done
+done
+
+Streiche unnoetige Tabellen aus FROM Teil 
+\end{lstlisting}
 
 \subsection{Operatorenvielfalt}
 
@@ -321,9 +481,52 @@ Wie im vorherigen Abschnitt bereits erklärt ist der ZQL-Parserbaum nicht binär
 
 \subsection{unnötiges DISTINCT}
 
-TODO: Algorithmus für unnötigen DISTINCT
+Eine interessante Frage ist, ob ein \verb|DISTINCT| wirklich notwendig ist. Dies ist natürlich wichtig für den Vergleich zweier SQL-Anfragen. In \cite{brass2} wurde im Rahmen des SQLLint Projektes bereits in den Prototypen ein Checker eingebaut, der prüft ob \verb|DISTINCT| wirklich notwendig ist. Aber auch im Rahmen dieser Arbeit ist es notwendig zu wissen, ob das \verb|DISTINCT| notwendig ist. 
+
+Auf den ersten Blick reicht es aus zu prüfen, ob die Musterlösung ein \verb|DISTINCT| enthält. Ist dies ist der Fall, so muss die Lösung des Lernenden dieses offensichtlich auch enthalten. Allerdings setzt dieser Denkansatz voraus, dass die eingetragene Musterlösung stets perfekt ist. Um Fehler vorzubeugen ist es besser, alle Anfragen auf unnötige \verb|DISTINCT| zu prüfen. So kann dem Korrektor beim Eintragen der Musterlösung bereits angezeigt werden, dass sein angegebenes \verb|DISTINCT| unnötig ist oder ob ein \verb|DISTINCT| notwendig wäre um Duplikate zu eliminieren. Auch wenn man sich weg bewegt vom Modell der Musterlösung und dem Vergleich mit dem Lernenden, ist dieser Check durchaus wichtig. Im Folgenden stellen wir daher einen Algorithmus vor, der erkennt ob die Lösung Duplikate enthalten kann oder nicht.
+
+\subsection{Algorithmus aus \cite{sql1folien}}
+
+Es sei unsere SQL-Anfrage der Form:
+
+\begin{lstlisting}[mathescape]
+SELECT $t_1$, ..., $t_k$
+FROM $R_1\ X_1$, ..., $R_n\ X_n$
+WHERE $\varphi$
+\end{lstlisting}
+
+Es sei $X=\{X_1, ..., X_n\}$ die Menge aller Tupelvariablen. Es sei $G=\{G_1, ..., G_m\}$ die Menge aller \verb|GROUP BY| Spalten.
+
+Die Einzelnen Attribute $t_i$ haben die Form $t = X.k$. Dabei ist $X$ eine Tupelvariable und $k$ ein Attribut. Wir bezeichnen die Menge aller $t_i$ mit $\mathcal{K}=\{t_1,...,t_k\}$.
+
+\begin{lstlisting}[mathescape]
+$\mathcal{K}$ = $\mathcal{K}\ \cup$ A, wenn $A=c\in$ WHERE-Bedingung
+do 
+  $\mathcal{K'}$ = $\mathcal{K}$
+  $\mathcal{K'}$ = $\mathcal{K'}\ \cup$ A, wenn $A=B\in$ WHERE-Bedingung und $B\in\mathcal{K}$
+  $\mathcal{K'}$ = $\mathcal{K'}\ \cup$ S mit $S=\{b\in X\}$, wenn $t\in \mathcal{K'}$ ein Schluessel ist und t=X.k
+while ($\mathcal{K}\ \neq\ \mathcal{K'}$)
+
+if Anfrage hat GROUP BY Statement:
+  foreach $x\in X$ do
+    if not ($\exists k\in \mathcal{K'}$ mit $k$ ist Schluessel von $x$)
+      break and answer NO
+    endif
+  done
+
+if not Anfrage hat GROUP BY Statement:
+  foreach $g\in G$ do
+    if $g\notin \mathcal{K'}$
+      break and answer NO
+    endif
+  done
+
+answer YES
+\end{lstlisting}
+
 
 \subsection{unnötiger JOIN}
 
 TODO: Algorithmus für unnötigen Join
 
+\cite{joinelem1}, bereits in theorie abgehandelt
