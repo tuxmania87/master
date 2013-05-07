@@ -291,11 +291,26 @@ Wenn nur Schlüsselattribute einer Tupelvariable X benutzt werden und diese mit 
 
 In der Arbeit \cite{joinelem2} wird dazu ein Algorithmus angegeben, der im wesentliche oben genannte, überflüssige Tupelvariablen entfernt. Wir wandeln diesen Algorithmus leicht ab, erhalten aber die Grundidee.
 
-Im ersten Schritt erstellen transitiv-abgeschlossene Äquivalenzklassen der Attribute, die im \verb|WHERE|-Teil vorkommen. Haben wir also $X.A=Y.B$ und $Y.B=Z.C$, so befinden sich alle drei Attribute in einer Äquivalenzklasse: $\{X.A,Y.B,Z.C\}$. Dabei bemerken wir, dass Äquivalenzklassen der Mächtigkeit 1 einfache Vergleiche wie \verb|X.A Operator Konstante| sind. Klassen der Mächtigkeit 2 sind einfache, nicht transitive JOINs und Klassen der Mächtigkeit größer als 2 sind offensichtlich mehrfache, transitive JOINs.
+Im ersten Schritt erstellen transitiv-abgeschlossene Äquivalenzklassen der Attribute, die im \verb|WHERE|-Teil vorkommen. Haben wir also $X.A=Y.B$ und $Y.B=Z.C$, so befinden sich alle drei Attribute in einer Äquivalenzklasse: $\{X.A,Y.B,Z.C\}$. Eine Äquivalenzklasse enthält nur Tupelvariablen und ist transitiv abgeschlossen über dem Operator $=$.
+Dabei bemerken wir, dass Äquivalenzklassen der Mächtigkeit 1 einfache Vergleiche wie \verb|X.A Operator Konstante| sind. Klassen der Mächtigkeit 2 sind einfache, nicht transitive JOINs und Klassen der Mächtigkeit größer als 2 sind offensichtlich mehrfache, transitive JOINs.
 
-Jetzt gehen wir jede Äquivalenzklasse durch, die mindestens 3 Einträge haben. Für jeden Eintrag $e\in\mathit{Aequivalenzklasse}$ mit $e=T.A$ überprüfen wir, ob es andere Äquivalenklassen gibt, die nicht aus einem transitiven \verb|JOIN| entstanden sind (also weniger als 3 Einträge haben) und die ein Attribut der Tabelle $T$ enthalten. Ist dies nicht der Fall und die Tabelle $T$ kommt nicht im \verb|SELECT|-Teil vor, dann ist das Attribut $A$ in dem Vergleich, der durch die Äquivalenzklasse repräsentiert wird, unnötig und kann samt zugehöriger Bedingung im \verb|WHERE| Teil gestrichen werden. Hat die Äquivalenzklasse jetzt weniger als 3 Einträge dann wird die Arbeit an dieser Klasse abgebrochen.
+Beispiel:
+\begin{lstlisting}[mathescape]
+SELECT t1.x 
+FROM   test1 t1, test2 t2, test3 t3
+WHERE  t1.x = t2.y
+AND    t1.x = t3.z
+AND    t1.y = t2.z
+AND    t1.z > 3;
+\end{lstlisting}
+
+Bei diesem Beispiel erhalten wir die Äquivalenzklasse \verb|{t1.x, t2.y, t3.z}| sowie die Klassen \verb|{t1.y,t2.z}| und \verb|{t1.z}|.
+
+Im nächsten Schritt gehen wir jede Äquivalenzklasse durch, die mindestens 3 Einträge haben. Für jeden Eintrag $e\in\mathit{Aequivalenzklasse}$ mit $e=T.A$ überprüfen wir, ob es andere Äquivalenklassen gibt, die nicht aus einem transitiven \verb|JOIN| entstanden sind (also weniger als 3 Einträge haben) und die ein Attribut der Tabelle $T$ enthalten. Ist dies nicht der Fall und die Tabelle $T$ kommt nicht im \verb|SELECT|-Teil vor, dann ist das Attribut $A$ in dem Vergleich, der durch die Äquivalenzklasse repräsentiert wird, unnötig und kann samt zugehöriger Bedingung im \verb|WHERE| Teil gestrichen werden. Hat die Äquivalenzklasse jetzt weniger als 3 Einträge dann wird die Arbeit an dieser Klasse abgebrochen.
 
 Im letzten Schritt müssen wir noch überprüfen ob es Tupelvariablen im \verb|FROM|-Teil gibt, die aber nun nicht mehr im \verb|WHERE| Teil auftauchen. Ist dies der Fall, dann streichen wir diese aus dem \verb|FROM|-Teil.
+
+NULL bearbeiten
 
 Beispiel:
 \begin{lstlisting}[mathescape]
@@ -325,7 +340,7 @@ AND    o.totalprice >= 100;
 PSEUDOCODE:
 
 \begin{lstlisting}[mathescape]
-Alle Attribute im WHERE Teil in Aequivalenklassen E_i packen.
+Alle Attribute im WHERE Teil in Aequivalenklassen $E_i$ packen.
 foreach $e\in E_i$ mit $\vert e\vert \ge 3$ do
   foreach $t.a\in e$ do
     if $\vert e\vert \ge 3$ and $t \notin $SELECT and 
@@ -372,11 +387,16 @@ $M_8$ & $\{\ A<X, A\leq X-\mathit{adjust}(A) \}$\\
 
 Beim Vergleich mit $>$ und $<$ ist es wichtig zu wissen, wie viel Nachkommastellen die numerischen Variablen $A$ und $B$ besitzen. Es sei $\mathit{places}(A)$ die Anzahl der Nachkommastellen der Zahl $A$. Dann bezeichnen wir mit $\mathit{adjust}(A) = 1 / (10^{\mathit{places}(A)})$, einen angepassten Wert, der sich nach der Stelligkeit der Variable A richtet.
 
-Finden wir Ausdrücke mit $>,<,\leq,\geq$, welche als Argumente Variablen oder Konstanten haben, so unterscheiden wir grundsätzlich 3 Fälle.
+Betrachten wir als Beispiel ein Attribut \verb|salery|, welches als \verb|NUMERIC(4,2)| definiert ist. Wir wissen also, dass \verb|salery| zwei Nachkommastellen hat. Betrachten wir nun die Aussage \verb|salery >= 5|.
+Wir haben auf einer Seite eine Variable (\verb|salery|) und auf der anderen Seite eine numerische Konstante (\verb|5|). Dieses Muster passt also auf $M_7$ und auf $M_6$. In $M_7$ heißt es $A\geq X+\mathit{adjust}(A)$. Bezogen auf unser Beispiel ist \verb|A=salery| und \verb|x+adjust(salery)=5|. Wir berechnen also: 
+$$\mathit{adjust}(\mathit{salery}) = 1 / (10^{2}) = 1/100 = 0,01$$
+Wir erhalten also \verb|x=4,99|, weil \verb|x+0,01=5|. Somit ergänzen wir unsere Ausgangsformel \verb|salery >= 5| konjunktiv mit \verb|salery > 4,99|. Weiterhin muss jetzt wegen $M_6$ \verb|5 <= salery| und wegen $M_5$ \verb|4,99 < salery| hinzugefügt werden.
 
-Fall 1 $(M_5,M_6)$: Beide Operanden sind Variablen. In diesem Fall ergänzen wir nur den jeweils symetrischen Operator. Da beide Operanden Variablen sind, macht es keinen Sinn jeweils $\leq,\geq$ oder $<,>$ zu ersetzen.
+Finden wir Ausdrücke mit $>,<,\leq,\geq$, welche als Argumente Variablen oder Konstanten haben, so unterscheiden wir also grundsätzlich 3 Fälle.
 
-Fall 2 $(M_7,M_8)$: Einer der beiden Operanden ist eine numerische Konstante. In diesem Fall fügen wir alle implizierten Gleichungen hinzu, also insbesondere die Operatoren $\leq,\geq,<,>$. Zu beachten ist hier, dass nicht nur Gleichungen der Form $A>X$ dazu führen, dass alle Ausdrücke von $M_7$ hinzugefügt werden. Auch wenn eine Gleichung der Form $Var1\geq 5.2$ auftaucht werden Ersetzungen durchgeführt. Diese Gleichung passt auf das Muster $A\geq X+\mathit{adjust}(A)$. Angenommen $Var1$ hat maximal eine Nachkommastelle, so würden dann folgende Gleichungen impliziert werden: $\{\ Var1>5.1\ ,\ 5.1<Var1\ ,\ 5.2 \leq Var1\ \}$.
+Fall 1 $(M_5,M_6)$: Beide Operanden sind Variablen oder Konstanten. In diesem Fall ergänzen wir nur den jeweils symetrischen Operator. Da beide Operanden Variablen sind, macht es keinen Sinn jeweils $\leq,\geq$ oder $<,>$ zu ersetzen.
+
+Fall 2 $(M_7,M_8)$: Einer der beiden Operanden ist eine numerische Konstante und der andere ist eine Variable. In diesem Fall fügen wir alle implizierten Gleichungen hinzu, also insbesondere die Operatoren $\leq,\geq,<,>$. Zu beachten ist hier, dass nicht nur Gleichungen der Form $A>X$ dazu führen, dass alle Ausdrücke von $M_7$ hinzugefügt werden. Auch wenn eine Gleichung der Form $Var1\geq 5.2$ auftaucht werden Ersetzungen durchgeführt. Diese Gleichung passt auf das Muster $A\geq X+\mathit{adjust}(A)$. Angenommen $Var1$ hat maximal eine Nachkommastelle, so würden dann folgende Gleichungen impliziert werden: $\{\ Var1>5.1\ ,\ 5.1<Var1\ ,\ 5.2 \leq Var1\ \}$.
 
 Fall 3: Beide Operanden sind numerische Konstanten. In dem Fall wird die logische Aussage ausgewertet und durch ihren Wahrheitswert ersetzt [0,1].
 
@@ -386,13 +406,19 @@ Dieser Teilschritt erfordert weiterhin eine Sortierung der einzelnen Terme.
 
 \subsubsection{Beschränkung der Operatorenvielfalt}
 
-Ein weiterer Ansatz das Problem der äquivalenten Formeln anzugehen ist es, bestimmte Operatoren zu >>verbieten<<. Das soll bedeuten, wir definieren verbotene Operatoren, welche am Ende der Umwandlungen nicht mehr in der SQL-Anfrage vorkommen dürfen. Dies wird erreicht, indem wir jeden verbotenen Operator umwandeln in einen nicht-verbotenen Operator. Das Prinzip ähnelt dem eben Vorgestelltem. Wir betrachten uns wieder die Mengen $M_i$. Des Weiteren hat jede Menge $M_i$ einen Repräsentanten $r(M_i)$. Finden wir nun in der zu bearbeitenden Anfrage eine Formel $f$, die auf eine der Ausdrücke $a\in M_i$ passt, so ersetzen wir $f$ mit $r(M_i)$. Folgende Tabelle soll die Mengen und deren Repräsentanten beschreiben:
+Ein weiterer Ansatz das Problem der äquivalenten Formeln anzugehen ist es, bestimmte Operatoren zu >>verbieten<<. Das soll bedeuten, wir definieren verbotene Operatoren, welche am Ende der Umwandlungen nicht mehr in der SQL-Anfrage vorkommen dürfen. Dies wird erreicht, indem wir jeden verbotenen Operator umwandeln in einen nicht-verbotenen Operator. Das Prinzip ähnelt dem eben Vorgestelltem. Wir betrachten uns wieder die Mengen $M_i$. Des Weiteren hat jede Menge $M_i$ einen Repräsentanten $r(M_i)$. Finden wir nun in der zu bearbeitenden Anfrage eine Formel $f$, die auf eine der Ausdrücke $a\in M_i$ passt, so ersetzen wir $f$ mit $r(M_i)$. Folgende Tabelle soll die Mengen und deren Repräsentanten beschreiben.
+
+Im folgenden sind alle Variablennamen $A,B,C$ keine (komplexe) Ausrücke. Es handelt sich also jeweils um Blattknoten im Parserbaum. Ferner bezeichnen wir $X,Y$ als numerische Konstanten.\\
 
 \begin{tabular}{lll}
 $i$ & $M_i$ & $r(M_i)$ \\
 $1$ & $\{\ A=B-C\ ,\ C=B-A\ ,\ B=A+C\ \}$ & $B=A+C$\\
 $2$ & $\{\ A=B\cdot C\ ,\ C=A / B\ ,\ B=A / C\ \}$ & $A=B\cdot C$\\
-$3$ & $\{\ A>B\ ,\ B<A,A\geq B+\mathit{adjust}(B)\ ,\ B\leq A - \mathit{adjust}(A)\ \}$ & TODO\\
+$4$ & $\{\ A>B-C\ ,\ C>B-A\ ,\ B<A+C\ \}$ & $A>B-C$ \\
+$5$ & $\{\ A<B-C\ ,\ C<B-A\ ,\ B>A+C\ \}$ & $A<B-C$\\
+$6$ & $\{\ A>B, B<A \}$ & $A>B$\\
+$7$ & $\{\ A\geq B, B\leq A \}$ & $A\geq B$\\
+$8$ & $\{\ A>X\ ,\ X<A,A\geq X+\mathit{adjust}(X)\ ,\ X\leq A - \mathit{adjust}(X)\ \}$ & $A>X$\\
 \end{tabular}
 
 Im Folgenden soll ein Beispiel die Prozedur verdeutlichen.\\
@@ -462,6 +488,17 @@ $$
 Aus den Teilbäumen mit gleicher Tiefe, werden solche Strings erzeugt und diese dann verglichen.
 Ist $\mathit{leaf\_string}(RT(O_1)) <  \mathit{leaf\_string}(RT(O_2))$, so wird der Teilbaum $RT(O_1)$ als erstes Kind im Baum auftauchen.
 
+\begin{figure}[h]
+\includegraphics[scale=0.5]{Bilder/same_depth1.png}         \includegraphics[scale=0.5]{Bilder/same_depth2.png}
+\caption{Beispiel von Bäumen mit gleicher Tiefe}\label{bsp1}
+\end{figure}
+
+Wir sehen in Abbildung \ref{bsp1}, auf der linken Seite, einen zwei Teilbäume mit Wurzelknoten $>$. Wir bezeichen den linken Teilbaum mit $RT(>_l)$ und den rechten mit $RT(>_r)$. Somit ergeben sich $\mathit{leaf\_string}(RT(>_1)) = \mathit{val}(b) \oplus  \mathit{val}(3) = 'b3'$ und 
+$\mathit{leaf\_string}(RT(>_2)) = \mathit{val}(b) \oplus  \mathit{val}(3) = 'a2'$. Wegen $\mathit{a2} < \mathit{b3}$ tauschen die Teilbäume ihre Position und ergeben das rechte Bild in Abbildung \ref{bsp1}. Da wir diesem Schritt die Tupelvariablen bereits durch automatische Variablennamen vereinheitlicht haben, kann der gesamte Name des Attributs samt Präfix der Tupelvariable als $\mathit{val()}$ angesehen werden.
+
+\subsection{Abschluss}
+
+Wir fassen die einzelnen Schritte noch einmal kurz zusammen. Zunächst haben wir den \verb|FROM| Teil der Anfrage vereinheitlicht, in dem wir einheitliche Tupelvariablen erzeugt haben, nachdem alle Tabellen im \verb|FROM| Teil lexikographisch sortiert wurden. Alle neu-erzeugten Variablennamen wurden im Rest der Anfrage korrekt eingesetzt bzw. ersetzt. Danach haben wir den \verb|WHERE| Teil bearbeitet. Wir haben zunächst unnötige Klammern entfernt und die Formeln in die KNF überführt. Danach haben wir einfache syntatkische Varianten ersetzt um eine einheitlichere Darstellung zu erhalten. Dazu gehörte es auch Unteranfragen aufzulösen oder, wenn nicht möglich, in eine \verb|EXISTS| Unteranfrage zu überführen. Danach haben wir innere Verbunde (JOIN), die im \verb|FROM| Teil formuliert wurden, in den \verb|WHERE| Teil überführt um anschließend unnötige äußere Verbunde und unnötige transitive, innere Verbunde  zu eliminieren. Eine der letzten Schritte war das Behandeln der Vielfalt der Operatoren. Dem ging zunächst eine Teilsortierung des Parserbaumes voraus. Mit einer der beiden vorgestellten Methoden haben wir nun alle implizierten Formeln hinzugefügt, oder die Operatoren gemäß ihrer Repräsentanten beschränkt. Schlussendlich haben wir den gesamten \verb|WHERE| Teil sortiert um eine Vereinheitlichung zu erreichen.
 
 \section{Anpassung durch elementare Transformationen}
 
@@ -524,9 +561,3 @@ if not Anfrage hat GROUP BY Statement:
 answer YES
 \end{lstlisting}
 
-
-\subsection{unnötiger JOIN}
-
-TODO: Algorithmus für unnötigen Join
-
-\cite{joinelem1}, bereits in theorie abgehandelt
