@@ -490,10 +490,11 @@ Ist $\mathit{leaf\_string}(RT(O_1)) <  \mathit{leaf\_string}(RT(O_2))$, so wird 
 
 \begin{figure}[h]
 \includegraphics[scale=0.5]{Bilder/same_depth1.png}         \includegraphics[scale=0.5]{Bilder/same_depth2.png}
-\caption{Beispiel von Bäumen mit gleicher Tiefe}\label{bsp1}
+\caption{Beispiel von Bäumen mit gleicher Tiefe}
+\label{fig:bsp1}
 \end{figure}
 
-Wir sehen in Abbildung \ref{bsp1}, auf der linken Seite, einen zwei Teilbäume mit Wurzelknoten $>$. Wir bezeichen den linken Teilbaum mit $RT(>_l)$ und den rechten mit $RT(>_r)$. Somit ergeben sich $\mathit{leaf\_string}(RT(>_1)) = \mathit{val}(b) \oplus  \mathit{val}(3) = 'b3'$ und 
+Wir sehen in Abbildung \ref{fig:bsp1}, auf der linken Seite, einen zwei Teilbäume mit Wurzelknoten $>$. Wir bezeichen den linken Teilbaum mit $RT(>_l)$ und den rechten mit $RT(>_r)$. Somit ergeben sich $\mathit{leaf\_string}(RT(>_1)) = \mathit{val}(b) \oplus  \mathit{val}(3) = 'b3'$ und 
 $\mathit{leaf\_string}(RT(>_2)) = \mathit{val}(b) \oplus  \mathit{val}(3) = 'a2'$. Wegen $\mathit{a2} < \mathit{b3}$ tauschen die Teilbäume ihre Position und ergeben das rechte Bild in Abbildung \ref{bsp1}. Da wir diesem Schritt die Tupelvariablen bereits durch automatische Variablennamen vereinheitlicht haben, kann der gesamte Name des Attributs samt Präfix der Tupelvariable als $\mathit{val()}$ angesehen werden.
 
 \subsection{Abschluss}

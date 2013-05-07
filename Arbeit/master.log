@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.3-1.40.12 (MiKTeX 2.9) (preloaded format=pdflatex 2012.8.27)  6 MAY 2013 16:18
+This is pdfTeX, Version 3.1415926-2.3-1.40.12 (MiKTeX 2.9) (preloaded format=pdflatex 2012.8.27)  7 MAY 2013 15:04
 entering extended mode
 **master.tex
 (E:\Users\Robert\Desktop\Arbeit\master\Arbeit\master.tex
@@ -1553,20 +1553,24 @@ File: Bilder/same_depth2.png Graphic file (type png)
 <use Bilder/same_depth2.png>
 Package pdftex.def Info: Bilder/same_depth2.png used on input line 492.
 (pdftex.def)             Requested size: 186.19516pt x 125.9703pt.
- [36pdfTeX warning (ext4): destination with the same identifier (name{figure.3.
-6}) has been already used, duplicate ignored
+
+
+LaTeX Warning: Reference `bsp1' on page 36 undefined on input line 498.
+
+[36pdfTeX warning (ext4): destination with the same identifier (name{figure.3.6
+}) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.502 
+l.503 
        <E:/Users/Robert/Desktop/Arbeit/master/Arbeit/Bilder/same_depth1.png> <E
 :/Users/Robert/Desktop/Arbeit/master/Arbeit/Bilder/same_depth2.png>] [37]
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\@ifnextchar' on input line 525.
+(hyperref)                removing `\@ifnextchar' on input line 526.
 
 
-Overfull \hbox (12.47072pt too wide) in paragraph at lines 544--545
+Overfull \hbox (12.47072pt too wide) in paragraph at lines 545--546
 [][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
  []
 
@@ -1575,56 +1579,117 @@ Kapitel 4.
 (E:\Users\Robert\Desktop\Arbeit\master\Arbeit\software.tex [40
 
 ]
-Overfull \hbox (57.65454pt too wide) in paragraph at lines 36--42
-[][] 
+Overfull \hbox (35.1228pt too wide) in paragraph at lines 36--37
+\T1/txr/m/n/12 ei-ne Wild-card []\T1/txtt/m/n/12 * \T1/txr/m/n/12 han-delt oder
+ ob das Item ei-ne Ag-gre-ga-tes-funk-ti-on ist. Bei []\T1/txtt/m/n/12 SELECT A
+VG(sal) FROM ...
  []
 
-<Bilder/where_syntax.png, id=607, 369.38pt x 251.94125pt>
+<Bilder/where_syntax.png, id=605, 369.38pt x 251.94125pt>
 File: Bilder/where_syntax.png Graphic file (type png)
 
 <use Bilder/where_syntax.png>
-Package pdftex.def Info: Bilder/where_syntax.png used on input line 58.
+Package pdftex.def Info: Bilder/where_syntax.png used on input line 55.
 (pdftex.def)             Requested size: 258.56422pt x 176.35767pt.
- [41pdfTeX warning (ext4): destination with the same identifier (name{figure.4.
-1}) has been already used, duplicate ignored
 
-\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
-                                                  \fi \fi 
-l.64 W
-      ir erhalten also aus obigen \verb|WHERE|-Ausdruck: <E:/Users/Robert/Deskt
-op/Arbeit/master/Arbeit/Bilder/where_syntax.png>]
-<Bilder/with_zql.png, id=614, 488.82625pt x 155.58125pt>
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[41] <Bilder/with_zql.png, id=610, 488.82625pt x 155.58125pt>
 File: Bilder/with_zql.png Graphic file (type png)
 
 <use Bilder/with_zql.png>
-Package pdftex.def Info: Bilder/with_zql.png used on input line 70.
+Package pdftex.def Info: Bilder/with_zql.png used on input line 67.
 (pdftex.def)             Requested size: 342.17603pt x 108.90611pt.
-) [42pdfTeX warning (ext4): destination with the same identifier (name{figure.4
-.2}) has been already used, duplicate ignored
+
+Overfull \hbox (60.66077pt too wide) in paragraph at lines 74--75
+\T1/txr/m/n/12 Kon-stan-te so wie den Typ. Als Ty-pen kom-men in Fra-ge: []\T1/
+txtt/m/n/12 COLUMNNAME, NULL, NUMBER, STRING, UNKNOWN\T1/txr/m/n/12 .
+ []
+
+[42pdfTeX warning (ext4): destination with the same identifier (name{figure.4.1
+}) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.74 \chapter
-             {Praktische Umsetzung} <E:/Users/Robert/Desktop/Arbeit/master/Arbe
-it/Bilder/with_zql.png>] [43]
+l.80 L
+      etztendlich vereinigt die Klasse \textbf{ZQuery} die eben vorgestellte...
+pdfTeX warning (ext4): destination with the same identifier (name{figure.4.2}) 
+has been already used, duplicate ignored
+
+\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+                                                  \fi \fi 
+l.80 L
+      etztendlich vereinigt die Klasse \textbf{ZQuery} die eben vorgestellte...
+ <E:/Users/Robert/Desktop/Arbeit/master/Arbeit/Bilder/where_syntax.png> <E:/Use
+rs/Robert/Desktop/Arbeit/master/Arbeit/Bilder/with_zql.png>]
+Overfull \hbox (18.07098pt too wide) in paragraph at lines 80--82
+[]\T1/txr/m/n/12 Letztendlich ver-ei-nigt die Klas-se \T1/txr/bx/n/12 ZQue-ry \
+T1/txr/m/n/12 die eben vor-ge-stell-ten Klas-sen. Die Funk-ti-on []\T1/txtt/m/n
+/12 getSelect()
+ []
+
+
+Overfull \hbox (18.47388pt too wide) in paragraph at lines 98--99
+[][]\T1/txtt/m/n/12 selItem1 = { [Table=e], [Column=name], [Expression=false], 
+[Wildcard=false] } 
+ []
+
+
+Overfull \hbox (31.07385pt too wide) in paragraph at lines 100--101
+[][]\T1/txtt/m/n/12 selItem2 = { [Table=null], [Column=sal], [Expression=false]
+, [Wildcard=false] } 
+ []
+
+
+Overfull \hbox (43.67383pt too wide) in paragraph at lines 102--103
+[][]\T1/txtt/m/n/12 selItem3 = { [Table=null], [Column=dname], [Expression=fals
+e], [Wildcard=false] } 
+ []
+
+[43]
+Overfull \hbox (20.75388pt too wide) in paragraph at lines 106--108
+[][]\T1/txtt/m/n/12 fromItem1 = { [Table=emp], [Alias=e] } []fromItem2 = { [Tab
+le=dept], [Alias=d] } 
+ []
+
+<Bilder/parserbaum.png, id=624, 968.61874pt x 373.395pt>
+File: Bilder/parserbaum.png Graphic file (type png)
+
+<use Bilder/parserbaum.png>
+Package pdftex.def Info: Bilder/parserbaum.png used on input line 112.
+(pdftex.def)             Requested size: 493.98903pt x 190.42892pt.
+
+Overfull \hbox (27.36385pt too wide) in paragraph at lines 112--113
+[][]
+ []
+
+[44pdfTeX warning (ext4): destination with the same identifier (name{figure.4.3
+}) has been already used, duplicate ignored
+
+\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+                                                  \fi \fi 
+l.129 \section
+              {Java Server Pages} <E:/Users/Robert/Desktop/Arbeit/master/Arbeit
+/Bilder/parserbaum.png>]) [45]
 Kapitel 5.
-(E:\Users\Robert\Desktop\Arbeit\master\Arbeit\praxis.tex) [44
+(E:\Users\Robert\Desktop\Arbeit\master\Arbeit\praxis.tex) [46
 
 ]
 Kapitel 6.
-(E:\Users\Robert\Desktop\Arbeit\master\Arbeit\ergebnisse.tex) [45
+(E:\Users\Robert\Desktop\Arbeit\master\Arbeit\ergebnisse.tex) [47
 
 ]
 Kapitel 7.
 (E:\Users\Robert\Desktop\Arbeit\master\Arbeit\ausblick.tex)
 (E:\Users\Robert\Desktop\Arbeit\master\Arbeit\master.brf)
 \tf@brf=\write6
- [46
+ [48
 
-] [47
+] [49
 
 ]
-(E:\Users\Robert\Desktop\Arbeit\master\Arbeit\erklaerung.tex) [48
+(E:\Users\Robert\Desktop\Arbeit\master\Arbeit\erklaerung.tex) [50
 
 ]
 Package atveryend Info: Empty hook `BeforeClearDocument' on input line 118.
@@ -1634,57 +1699,43 @@ Package atveryend Info: Empty hook `AfterLastShipout' on input line 118.
 (E:\Users\Robert\Desktop\Arbeit\master\Arbeit\erklaerung.aux))
 Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 118.
 Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 118.
+Package rerunfilecheck Info: File `master.out' has not changed.
+(rerunfilecheck)             Checksum: 830F3686838ACF135782F04636E94C1D;3501.
+Package rerunfilecheck Info: File `master.brf' has not changed.
+(rerunfilecheck)             Checksum: 060619B9FE53F3B89E87C17B5E8D4DB8;1047.
 
-
-Package rerunfilecheck Warning: File `master.out' has changed.
-(rerunfilecheck)                Rerun to get outlines right
-(rerunfilecheck)                or use package `bookmark'.
-
-Package rerunfilecheck Info: Checksums for `master.out':
-(rerunfilecheck)             Before: CF80000991512CCE908397BF39B7DAAB;3509
-(rerunfilecheck)             After:  830F3686838ACF135782F04636E94C1D;3501.
-
-Package rerunfilecheck Warning: File `master.brf' has changed.
-(rerunfilecheck)                Rerun to get bibliographical references right.
-
-Package rerunfilecheck Info: Checksums for `master.brf':
-(rerunfilecheck)             Before: 482DA1F619D68168CE5591DFE07D7BE6;1101
-(rerunfilecheck)             After:  060619B9FE53F3B89E87C17B5E8D4DB8;1047.
 
 LaTeX Warning: There were undefined references.
 
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 118.
  ) 
 Here is how much of TeX's memory you used:
- 21673 strings out of 494045
- 392977 string characters out of 3145966
- 516862 words of memory out of 3000000
- 24202 multiletter control sequences out of 15000+200000
+ 21682 strings out of 494045
+ 393127 string characters out of 3145966
+ 516938 words of memory out of 3000000
+ 24208 multiletter control sequences out of 15000+200000
  72024 words of font info for 105 fonts, out of 3000000 for 9000
  715 hyphenation exceptions out of 8191
  65i,11n,71p,1396b,1788s stack positions out of 5000i,500n,10000p,200000b,50000s
-pdfTeX warning (dest): name{subsection.3.6.5} has been referenced but does no
-t exist, replaced by a fixed one
-
-{C:/Program Files (x86)/MiKTeX 2.9/fonts/enc/dvips/fontname/8r.enc}<C:/Program 
-Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr10.pfb><E:/Users/Rober
-t/AppData/Roaming/MiKTeX/2.9/fonts/type1/public/mathpazo/fplmbb.pfb><E:/Users/R
-obert/AppData/Roaming/MiKTeX/2.9/fonts/type1/public/txfonts/rtxmi.pfb><E:/Users
-/Robert/AppData/Roaming/MiKTeX/2.9/fonts/type1/public/txfonts/rtxr.pfb><E:/User
-s/Robert/AppData/Roaming/MiKTeX/2.9/fonts/type1/public/txfonts/rtxsc.pfb><E:/Us
-ers/Robert/AppData/Roaming/MiKTeX/2.9/fonts/type1/public/txfonts/t1xtt.pfb><E:/
-Users/Robert/AppData/Roaming/MiKTeX/2.9/fonts/type1/public/txfonts/txex.pfb><E:
-/Users/Robert/AppData/Roaming/MiKTeX/2.9/fonts/type1/public/txfonts/txsy.pfb><E
-:/Users/Robert/AppData/Roaming/MiKTeX/2.9/fonts/type1/public/txfonts/txsyb.pfb>
-<E:/Users/Robert/AppData/Roaming/MiKTeX/2.9/fonts/type1/public/txfonts/txsyc.pf
-b><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/urw/helvetic/uhvb8a.pfb><C:/Pr
-ogram Files (x86)/MiKTeX 2.9/fonts/type1/urw/palatino/uplr8a.pfb><C:/Program Fi
-les (x86)/MiKTeX 2.9/fonts/type1/urw/times/utmb8a.pfb><C:/Program Files (x86)/M
-iKTeX 2.9/fonts/type1/urw/times/utmr8a.pfb><C:/Program Files (x86)/MiKTeX 2.9/f
-onts/type1/urw/times/utmri8a.pfb>
-Output written on master.pdf (48 pages, 398450 bytes).
+{C:/Program Files (x86)/MiKTeX 2.9/fonts/enc/dvips/fontname/8r.enc}<C:/Progra
+m Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr10.pfb><E:/Users/Rob
+ert/AppData/Roaming/MiKTeX/2.9/fonts/type1/public/mathpazo/fplmbb.pfb><E:/Users
+/Robert/AppData/Roaming/MiKTeX/2.9/fonts/type1/public/txfonts/rtxmi.pfb><E:/Use
+rs/Robert/AppData/Roaming/MiKTeX/2.9/fonts/type1/public/txfonts/rtxr.pfb><E:/Us
+ers/Robert/AppData/Roaming/MiKTeX/2.9/fonts/type1/public/txfonts/rtxsc.pfb><E:/
+Users/Robert/AppData/Roaming/MiKTeX/2.9/fonts/type1/public/txfonts/t1xtt.pfb><E
+:/Users/Robert/AppData/Roaming/MiKTeX/2.9/fonts/type1/public/txfonts/txex.pfb><
+E:/Users/Robert/AppData/Roaming/MiKTeX/2.9/fonts/type1/public/txfonts/txsy.pfb>
+<E:/Users/Robert/AppData/Roaming/MiKTeX/2.9/fonts/type1/public/txfonts/txsyb.pf
+b><E:/Users/Robert/AppData/Roaming/MiKTeX/2.9/fonts/type1/public/txfonts/txsyc.
+pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/urw/helvetic/uhvb8a.pfb><C:/
+Program Files (x86)/MiKTeX 2.9/fonts/type1/urw/palatino/uplr8a.pfb><C:/Program 
+Files (x86)/MiKTeX 2.9/fonts/type1/urw/times/utmb8a.pfb><C:/Program Files (x86)
+/MiKTeX 2.9/fonts/type1/urw/times/utmr8a.pfb><C:/Program Files (x86)/MiKTeX 2.9
+/fonts/type1/urw/times/utmri8a.pfb>
+Output written on master.pdf (50 pages, 426901 bytes).
 PDF statistics:
- 770 PDF objects out of 1000 (max. 8388607)
- 224 named destinations out of 1000 (max. 500000)
- 458 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 780 PDF objects out of 1000 (max. 8388607)
+ 226 named destinations out of 1000 (max. 500000)
+ 463 words of extra memory for PDF output out of 10000 (max. 10000000)
 
