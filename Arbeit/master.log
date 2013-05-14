@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.3-1.40.12 (MiKTeX 2.9) (preloaded format=pdflatex 2012.8.27)  7 MAY 2013 15:04
+This is pdfTeX, Version 3.1415926-2.3-1.40.12 (MiKTeX 2.9) (preloaded format=pdflatex 2012.8.27)  14 MAY 2013 13:44
 entering extended mode
 **master.tex
 (E:\Users\Robert\Desktop\Arbeit\master\Arbeit\master.tex
@@ -1285,7 +1285,7 @@ LaTeX Font Info:    Try loading font information for U+txsyc on input line 29.
 (E:\Users\Robert\AppData\Roaming\MiKTeX\2.9\tex\latex\txfonts\utxsyc.fd
 File: utxsyc.fd 2000/12/15 v3.1
 )
-<Bilder/siegel.pdf, id=206, 731.73375pt x 380.42125pt>
+<Bilder/siegel.pdf, id=210, 731.73375pt x 380.42125pt>
 File: Bilder/siegel.pdf Graphic file (type pdf)
  <use Bilder/siegel.pdf>
 Package pdftex.def Info: Bilder/siegel.pdf used on input line 30.
@@ -1332,9 +1332,6 @@ Overfull \hbox (3.78683pt too wide) in paragraph at lines 28--29
 \T1/txr/m/n/12 Im ak-tu-el-len Ka-pi-tel ha-ben wir ge-klärt warum es ei-ne Not
 -wen-dig-keit für das The-ma SQL-Vergleich
  []
-
-
-LaTeX Warning: Reference `chap:ausblick' on page 6 undefined on input line 30.
 
 [6] [7]) [8]
 Kapitel 2.
@@ -1414,14 +1411,14 @@ e.3.1}) has been already used, duplicate ignored
                                                   \fi \fi 
 l.151 \subsubsection
                     {NOT auflÃ¶sen}]
-<Bilder/not_graph1.png, id=408, 468.75125pt x 444.66125pt>
+<Bilder/not_graph1.png, id=414, 468.75125pt x 444.66125pt>
 File: Bilder/not_graph1.png Graphic file (type png)
 
 <use Bilder/not_graph1.png>
 Package pdftex.def Info: Bilder/not_graph1.png used on input line 158.
 (pdftex.def)             Requested size: 234.37505pt x 222.33008pt.
 
-<Bilder/not_graph2.png, id=410, 468.75125pt x 444.66125pt>
+<Bilder/not_graph2.png, id=416, 468.75125pt x 444.66125pt>
 File: Bilder/not_graph2.png Graphic file (type png)
 
 <use Bilder/not_graph2.png>
@@ -1432,14 +1429,14 @@ Overfull \hbox (48.7739pt too wide) in paragraph at lines 155--160
 [][] 
  []
 
-<Bilder/not_graph3.png, id=411, 468.75125pt x 444.66125pt>
+<Bilder/not_graph3.png, id=417, 468.75125pt x 444.66125pt>
 File: Bilder/not_graph3.png Graphic file (type png)
 
 <use Bilder/not_graph3.png>
 Package pdftex.def Info: Bilder/not_graph3.png used on input line 164.
 (pdftex.def)             Requested size: 234.37505pt x 222.33008pt.
 
-<Bilder/not_graph4.png, id=412, 468.75125pt x 348.30125pt>
+<Bilder/not_graph4.png, id=418, 468.75125pt x 348.30125pt>
 File: Bilder/not_graph4.png Graphic file (type png)
 
 <use Bilder/not_graph4.png>
@@ -1478,7 +1475,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 245--247
                                                   \fi \fi 
 l.261 \subsubsection
                     {OUTER JOIN}]
-Overfull \hbox (2.1315pt too wide) in paragraph at lines 294--296
+Overfull \hbox (2.1315pt too wide) in paragraph at lines 296--298
 []\T1/txr/m/n/12 Im ers-ten Schritt er-stel-len transitiv-abgeschlossene Äqui-v
 a-lenz-klas-sen der At-tri-bu-te, die im []\T1/txtt/m/n/12 WHERE\T1/txr/m/n/12 
 -
@@ -1489,94 +1486,96 @@ a-lenz-klas-sen der At-tri-bu-te, die im []\T1/txtt/m/n/12 WHERE\T1/txr/m/n/12
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.296 
+l.298 
       pdfTeX warning (ext4): destination with the same identifier (name{figure.
 3.5}) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.296 
+l.298 
       ] [28]
-Overfull \hbox (29.99548pt too wide) in paragraph at lines 327--328
+Overfull \hbox (29.99548pt too wide) in paragraph at lines 329--330
 [][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
  []
 
 [29] [30]
-Underfull \hbox (badness 10000) in paragraph at lines 374--375
+Underfull \hbox (badness 10000) in paragraph at lines 376--377
 
  []
 
 
-Overfull \hbox (3.98366pt too wide) in paragraph at lines 390--392
+Overfull \hbox (3.98366pt too wide) in paragraph at lines 392--394
 \T1/txr/m/n/12 sen al-so, dass []\T1/txtt/m/n/12 salery \T1/txr/m/n/12 zwei Nac
 h-kom-mas-tel-len hat. Be-trach-ten wir nun die Aus-sa-ge []\T1/txtt/m/n/12 sal
 ery >= 5\T1/txr/m/n/12 .
  []
 
 
-Overfull \hbox (17.13554pt too wide) in paragraph at lines 392--394
+Overfull \hbox (17.13554pt too wide) in paragraph at lines 394--396
 \T1/txr/m/n/12 Wir er-hal-ten al-so []\T1/txtt/m/n/12 x=4,99\T1/txr/m/n/12 , we
 il []\T1/txtt/m/n/12 x+0,01=5\T1/txr/m/n/12 . So-mit er-gän-zen wir un-se-re Au
 s-gangs-for-mel []\T1/txtt/m/n/12 salery >= 5
  []
 
 [31]
-Underfull \hbox (badness 10000) in paragraph at lines 411--412
+Underfull \hbox (badness 10000) in paragraph at lines 413--414
 
  []
 
 [32]
-Underfull \hbox (badness 10000) in paragraph at lines 424--425
+Underfull \hbox (badness 10000) in paragraph at lines 426--427
 
  []
 
 [33] [34]
-Underfull \hbox (badness 10000) in paragraph at lines 464--465
+Underfull \hbox (badness 10000) in paragraph at lines 466--467
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 466--472
+Underfull \hbox (badness 10000) in paragraph at lines 468--474
 
  []
 
-[35] <Bilder/same_depth1.png, id=544, 372.39125pt x 251.94125pt>
+[35] <Bilder/same_depth1.png, id=550, 372.39125pt x 251.94125pt>
 File: Bilder/same_depth1.png Graphic file (type png)
 
 <use Bilder/same_depth1.png>
-Package pdftex.def Info: Bilder/same_depth1.png used on input line 492.
+Package pdftex.def Info: Bilder/same_depth1.png used on input line 494.
 (pdftex.def)             Requested size: 186.19516pt x 125.9703pt.
 
-<Bilder/same_depth2.png, id=545, 372.39125pt x 251.94125pt>
+<Bilder/same_depth2.png, id=551, 372.39125pt x 251.94125pt>
 File: Bilder/same_depth2.png Graphic file (type png)
 
 <use Bilder/same_depth2.png>
-Package pdftex.def Info: Bilder/same_depth2.png used on input line 492.
+Package pdftex.def Info: Bilder/same_depth2.png used on input line 494.
 (pdftex.def)             Requested size: 186.19516pt x 125.9703pt.
-
-
-LaTeX Warning: Reference `bsp1' on page 36 undefined on input line 498.
-
-[36pdfTeX warning (ext4): destination with the same identifier (name{figure.3.6
-}) has been already used, duplicate ignored
+ [36pdfTeX warning (ext4): destination with the same identifier (name{figure.3.
+6}) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.503 
+l.505 
        <E:/Users/Robert/Desktop/Arbeit/master/Arbeit/Bilder/same_depth1.png> <E
 :/Users/Robert/Desktop/Arbeit/master/Arbeit/Bilder/same_depth2.png>] [37]
+Overfull \hbox (16.79897pt too wide) in paragraph at lines 522--523
+[]\T1/txr/m/n/12 Zum einen ha-ben wir kom-mu-ta-ti-ve Ope-ra-to-ren wie []\T1/t
+xtt/m/n/12 {+,*,AND,OR,=}\T1/txr/m/n/12 . Möch-ten wir zwei (Teil)bäume
+ []
+
+[38]
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\@ifnextchar' on input line 526.
+(hyperref)                removing `\@ifnextchar' on input line 548.
 
-
-Overfull \hbox (12.47072pt too wide) in paragraph at lines 545--546
+[39]
+Overfull \hbox (12.47072pt too wide) in paragraph at lines 567--568
 [][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
  []
 
-[38]) [39]
+) [40]
 Kapitel 4.
-(E:\Users\Robert\Desktop\Arbeit\master\Arbeit\software.tex [40
+(E:\Users\Robert\Desktop\Arbeit\master\Arbeit\software.tex [41
 
 ]
 Overfull \hbox (35.1228pt too wide) in paragraph at lines 36--37
@@ -1585,7 +1584,7 @@ Overfull \hbox (35.1228pt too wide) in paragraph at lines 36--37
 VG(sal) FROM ...
  []
 
-<Bilder/where_syntax.png, id=605, 369.38pt x 251.94125pt>
+<Bilder/where_syntax.png, id=616, 369.38pt x 251.94125pt>
 File: Bilder/where_syntax.png Graphic file (type png)
 
 <use Bilder/where_syntax.png>
@@ -1595,7 +1594,7 @@ Package pdftex.def Info: Bilder/where_syntax.png used on input line 55.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[41] <Bilder/with_zql.png, id=610, 488.82625pt x 155.58125pt>
+[42] <Bilder/with_zql.png, id=621, 488.82625pt x 155.58125pt>
 File: Bilder/with_zql.png Graphic file (type png)
 
 <use Bilder/with_zql.png>
@@ -1607,7 +1606,7 @@ Overfull \hbox (60.66077pt too wide) in paragraph at lines 74--75
 txtt/m/n/12 COLUMNNAME, NULL, NUMBER, STRING, UNKNOWN\T1/txr/m/n/12 .
  []
 
-[42pdfTeX warning (ext4): destination with the same identifier (name{figure.4.1
+[43pdfTeX warning (ext4): destination with the same identifier (name{figure.4.1
 }) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
@@ -1647,13 +1646,13 @@ Overfull \hbox (43.67383pt too wide) in paragraph at lines 102--103
 e], [Wildcard=false] } 
  []
 
-[43]
+[44]
 Overfull \hbox (20.75388pt too wide) in paragraph at lines 106--108
 [][]\T1/txtt/m/n/12 fromItem1 = { [Table=emp], [Alias=e] } []fromItem2 = { [Tab
 le=dept], [Alias=d] } 
  []
 
-<Bilder/parserbaum.png, id=624, 968.61874pt x 373.395pt>
+<Bilder/parserbaum.png, id=635, 968.61874pt x 373.395pt>
 File: Bilder/parserbaum.png Graphic file (type png)
 
 <use Bilder/parserbaum.png>
@@ -1664,59 +1663,55 @@ Overfull \hbox (27.36385pt too wide) in paragraph at lines 112--113
 [][]
  []
 
-[44pdfTeX warning (ext4): destination with the same identifier (name{figure.4.3
+[45pdfTeX warning (ext4): destination with the same identifier (name{figure.4.3
 }) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
 l.129 \section
               {Java Server Pages} <E:/Users/Robert/Desktop/Arbeit/master/Arbeit
-/Bilder/parserbaum.png>]) [45]
+/Bilder/parserbaum.png>]) [46]
 Kapitel 5.
-(E:\Users\Robert\Desktop\Arbeit\master\Arbeit\praxis.tex) [46
+(E:\Users\Robert\Desktop\Arbeit\master\Arbeit\praxis.tex) [47
 
 ]
 Kapitel 6.
-(E:\Users\Robert\Desktop\Arbeit\master\Arbeit\ergebnisse.tex) [47
+(E:\Users\Robert\Desktop\Arbeit\master\Arbeit\ergebnisse.tex) [48
 
 ]
 Kapitel 7.
 (E:\Users\Robert\Desktop\Arbeit\master\Arbeit\ausblick.tex)
 (E:\Users\Robert\Desktop\Arbeit\master\Arbeit\master.brf)
 \tf@brf=\write6
- [48
+ [49
 
-] [49
-
-]
-(E:\Users\Robert\Desktop\Arbeit\master\Arbeit\erklaerung.tex) [50
+] [50
 
 ]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 118.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 118.
+(E:\Users\Robert\Desktop\Arbeit\master\Arbeit\erklaerung.tex) [51
+
+]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 119.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 119.
 
 (E:\Users\Robert\Desktop\Arbeit\master\Arbeit\master.aux
 (E:\Users\Robert\Desktop\Arbeit\master\Arbeit\erklaerung.aux))
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 118.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 118.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 119.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 119.
 Package rerunfilecheck Info: File `master.out' has not changed.
-(rerunfilecheck)             Checksum: 830F3686838ACF135782F04636E94C1D;3501.
+(rerunfilecheck)             Checksum: C222A20FFE999FFDCCC7F71BC82AF2CC;3568.
 Package rerunfilecheck Info: File `master.brf' has not changed.
-(rerunfilecheck)             Checksum: 060619B9FE53F3B89E87C17B5E8D4DB8;1047.
-
-
-LaTeX Warning: There were undefined references.
-
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 118.
+(rerunfilecheck)             Checksum: 0E13B12E90F45E8012FD46C01449121B;1047.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 119.
  ) 
 Here is how much of TeX's memory you used:
- 21682 strings out of 494045
- 393127 string characters out of 3145966
- 516938 words of memory out of 3000000
+ 21684 strings out of 494045
+ 393170 string characters out of 3145966
+ 516987 words of memory out of 3000000
  24208 multiletter control sequences out of 15000+200000
  72024 words of font info for 105 fonts, out of 3000000 for 9000
  715 hyphenation exceptions out of 8191
- 65i,11n,71p,1396b,1788s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 65i,11n,71p,1396b,1124s stack positions out of 5000i,500n,10000p,200000b,50000s
 {C:/Program Files (x86)/MiKTeX 2.9/fonts/enc/dvips/fontname/8r.enc}<C:/Progra
 m Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr10.pfb><E:/Users/Rob
 ert/AppData/Roaming/MiKTeX/2.9/fonts/type1/public/mathpazo/fplmbb.pfb><E:/Users
@@ -1733,9 +1728,9 @@ Program Files (x86)/MiKTeX 2.9/fonts/type1/urw/palatino/uplr8a.pfb><C:/Program
 Files (x86)/MiKTeX 2.9/fonts/type1/urw/times/utmb8a.pfb><C:/Program Files (x86)
 /MiKTeX 2.9/fonts/type1/urw/times/utmr8a.pfb><C:/Program Files (x86)/MiKTeX 2.9
 /fonts/type1/urw/times/utmri8a.pfb>
-Output written on master.pdf (50 pages, 426901 bytes).
+Output written on master.pdf (51 pages, 431285 bytes).
 PDF statistics:
- 780 PDF objects out of 1000 (max. 8388607)
- 226 named destinations out of 1000 (max. 500000)
- 463 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 791 PDF objects out of 1000 (max. 8388607)
+ 228 named destinations out of 1000 (max. 500000)
+ 471 words of extra memory for PDF output out of 10000 (max. 10000000)
 

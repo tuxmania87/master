@@ -1,4 +1,4 @@
-Um die Frage zu beantworten wie man zwei SQL Anfragen miteinander vergleichen kann, muss man sich zunächst die Struktur einer solchen Anfrage betrachten. Exemplarisch betrachten wir im folgenden \verb|SELECT| Anfragen. Es werden mehrere Ansätze in diesem Teil der Arbeit verfolgt, wie man die Gleichheit von zwei Anfragen zeigen kann. Offensichtlich sind zwei SQL-Anfragen semantisch äquivalent, wenn sie ebenfalls syntaktisch korrekt sind. Interessanter sind daher Anfragen, die zunächst nicht syntaktisch dekungsgleich sind. 
+Um die Frage zu beantworten wie man zwei SQL Anfragen miteinander vergleichen kann, muss man sich zunächst die Struktur einer solchen Anfrage betrachten. Exemplarisch betrachten wir im folgenden \verb|SELECT| Anfragen. Es werden mehrere Ansätze in diesem Teil der Arbeit verfolgt, wie man die Gleichheit von zwei Anfragen zeigen kann. Offensichtlich sind zwei SQL-Anfragen semantisch äquivalent, wenn sie ebenfalls syntaktisch äquivalent sind. Interessanter sind daher Anfragen, die zunächst nicht syntaktisch dekungsgleich sind. 
 
 Ein Ansatz besteht darin beide SQL-Anfragen einer Standardisierung zu unterziehen. Wie genau so etwas durchgeführt werden kann, wird im Folgenden noch erläutert. Wir würden dann zwei standardisierte SQL-Anfragen erhalten. Sind diese syntaktisch äquivalent, so handelt es sich um identische Anfragen. Dieser Ansatz wird uns mit einigen Problemen konfrontieren und daraus entwickeln wir einen zweiten Ansatz. 
 
@@ -105,7 +105,7 @@ Unterscheiden sich Musterlösung und Lösung des Studenten in den mit * markiert
 
 Zusammenfassend kann man Folgendes sagen: Das Preprocessing wird direkt nach dem Parsen einer SQL-Anfrage durchgeführt. Es sammelt Metainformationen über die Anfrage. Da wir zwei Anfragen vergleichen, werden diese Metainformationen einzeln für jede Anfrage gespeichert. Dann beginnen wir mit dem zweiten Schritt, dem Angleichen der SQL-Anfragen. Dazu verwenden wir Strategien, die in folgenden Kapiteln besprochen werden.
 
-Egal ob die Ergebnisse im zweiten Schritt erfolgreich waren oder nicht, wir geben danach einen Vergleich der Metainformationen aus. Beispiele wurden eben bereits genannt. Das soll dem Lernenden bei falscchen Lösungen Anhaltspunkte geben, wie eine richtige Lösung aussehen könnte. Bei einer korrekten Lösung, können solche Hinweise trotzdem nützlich sein, denn die Anfrage des Lernenden kann ja trotz Korrektheit zu lang bzw. komnpliziert sein. Dies würde bei einem Vergleich der gesammelten Metainformationen deutlich werden.
+Egal ob die Ergebnisse im zweiten Schritt erfolgreich waren oder nicht, wir geben danach einen Vergleich der Metainformationen aus. Beispiele wurden eben bereits genannt. Das soll dem Lernenden bei falschen Lösungen Anhaltspunkte geben, wie eine richtige Lösung aussehen könnte. Bei einer korrekten Lösung, können solche Hinweise trotzdem nützlich sein, denn die Anfrage des Lernenden kann ja trotz Korrektheit zu lang bzw. komnpliziert sein. Dies würde bei einem Vergleich der gesammelten Metainformationen deutlich werden.
 
 \section{Standardisierung von SQL-Anfragen}
 
@@ -230,7 +230,7 @@ Folgende Voraussetzungen müssen erfüllt sein, damit diese Umwandlung angewende
 
 \begin{itemize}
 \item Alle Tupelvariablen, die in $t_1$ vorkommen, müssen sich unterscheiden von allen $X_i$. Erreicht wird dies ggf. durch Umbenennung der $X_i$, da diese ja nicht für die eigentliche (Ober)anfrage wichtig sind.
-\item Wenn $t_1$ Attributreferenzen $A$ ohne Tupelvariable enthält, dann dürfen die $R_i$ kein Attribut $A$ haben. Erreicht wird dies, indem ggf. die Tupelvariable einführt.
+\item Wenn $t_1$ Attributreferenzen $A$ ohne Tupelvariable enthält, dann dürfen die $R_i$ kein Attribut $A$ haben. Erreicht wird dies, indem ggf. die Tupelvariable eingeführt wird.
 \item Die Unteranfrage für $t_2$ darf keine Nullwerte liefern.
 \end{itemize}
 
@@ -262,23 +262,25 @@ In einem weiteren Zwischenschritt möchten wir gern einige unnötige \verb|JOINS
 
 Betrachten wir eine SQL-Anfrage mit einem \verb|OUTER JOIN|. Befinden sich im \verb|SELECT|-Teil keine Attribute der \verb|JOIN|-Tabelle, so ist der \verb|JOIN| unnötig, weil Daten von der \verb|JOIN|-Tabelle ohnehin nicht ausgegeben werden. Betrachten wir dazu folgendes Beispiel:
 
-\begin{figure}[h]\label{joinelem1}
+\begin{figure}[h]
 \begin{lstlisting}[mathescape]
 SELECT s.vorname, s.nachname 
 FROM studenten s LEFT JOIN klausur k ON s.id = k.id 
 WHERE k.wert <= 3
 \end{lstlisting}
-\caption{unnötiger OUTER JOIN}
+\caption{Unnötiger OUTER JOIN}
+\label{fig:joinelem1}
 \end{figure}
 
-Im Beispiel in Abbildung \ref{joinelem1} sollen alle Studenten ausgegeben werden, die in einer Klausur die Note 3 oder besser bekommen haben. Da es sich hier um einen \verb|OUTER JOIN| handelt und wir nur Namen der Studenten ausgeben möchten, erhalten wir immer eine gesamte Liste der Studentennamen. Der Teil, der für den \verb|JOIN| interessant wäre, also Daten aus der Tabelle \verb|klausur k|, wird nicht ausgegeben. Damit wäre die folgende SQL-Anfrage mit der aus Abbildung \ref{joinelem1} äquivalent.
+Im Beispiel in Abbildung \ref{fig:joinelem1} sollen alle Studenten ausgegeben werden, die in einer Klausur die Note 3 oder besser bekommen haben. Da es sich hier um einen \verb|OUTER JOIN| handelt und wir nur Namen der Studenten ausgeben möchten, erhalten wir immer eine gesamte Liste der Studentennamen. Der Teil, der für den \verb|JOIN| interessant wäre, also Daten aus der Tabelle \verb|klausur k|, wird nicht ausgegeben. Damit wäre die folgende SQL-Anfrage mit der aus Abbildung \ref{fig:joinelem1} äquivalent.
 
-\begin{figure}[h]\label{joinelem2}
+\begin{figure}[h]
 \begin{lstlisting}[mathescape]
 SELECT s.vorname, s.nachname 
 FROM studenten s 
 \end{lstlisting}
-\caption{unnötiger OUTER JOIN}
+\caption{Anfrage ohne JOIN}
+\label{fig:joinelem2}
 \end{figure}
 
 Bei einem \verb|RIGHT JOIN| müsste man äquivalent überprüfen ob man Attribute im \verb|SELECT| Teil hat, die in der ``linken'' Tabelle sind und genauso verfahren.
@@ -495,13 +497,33 @@ Ist $\mathit{leaf\_string}(RT(O_1)) <  \mathit{leaf\_string}(RT(O_2))$, so wird 
 \end{figure}
 
 Wir sehen in Abbildung \ref{fig:bsp1}, auf der linken Seite, einen zwei Teilbäume mit Wurzelknoten $>$. Wir bezeichen den linken Teilbaum mit $RT(>_l)$ und den rechten mit $RT(>_r)$. Somit ergeben sich $\mathit{leaf\_string}(RT(>_1)) = \mathit{val}(b) \oplus  \mathit{val}(3) = 'b3'$ und 
-$\mathit{leaf\_string}(RT(>_2)) = \mathit{val}(b) \oplus  \mathit{val}(3) = 'a2'$. Wegen $\mathit{a2} < \mathit{b3}$ tauschen die Teilbäume ihre Position und ergeben das rechte Bild in Abbildung \ref{bsp1}. Da wir diesem Schritt die Tupelvariablen bereits durch automatische Variablennamen vereinheitlicht haben, kann der gesamte Name des Attributs samt Präfix der Tupelvariable als $\mathit{val()}$ angesehen werden.
+$\mathit{leaf\_string}(RT(>_2)) = \mathit{val}(b) \oplus  \mathit{val}(3) = 'a2'$. Wegen $\mathit{a2} < \mathit{b3}$ tauschen die Teilbäume ihre Position und ergeben das rechte Bild in Abbildung \ref{fig:bsp1}. Da wir diesem Schritt die Tupelvariablen bereits durch automatische Variablennamen vereinheitlicht haben, kann der gesamte Name des Attributs samt Präfix der Tupelvariable als $\mathit{val()}$ angesehen werden.
 
 \subsection{Abschluss}
 
 Wir fassen die einzelnen Schritte noch einmal kurz zusammen. Zunächst haben wir den \verb|FROM| Teil der Anfrage vereinheitlicht, in dem wir einheitliche Tupelvariablen erzeugt haben, nachdem alle Tabellen im \verb|FROM| Teil lexikographisch sortiert wurden. Alle neu-erzeugten Variablennamen wurden im Rest der Anfrage korrekt eingesetzt bzw. ersetzt. Danach haben wir den \verb|WHERE| Teil bearbeitet. Wir haben zunächst unnötige Klammern entfernt und die Formeln in die KNF überführt. Danach haben wir einfache syntatkische Varianten ersetzt um eine einheitlichere Darstellung zu erhalten. Dazu gehörte es auch Unteranfragen aufzulösen oder, wenn nicht möglich, in eine \verb|EXISTS| Unteranfrage zu überführen. Danach haben wir innere Verbunde (JOIN), die im \verb|FROM| Teil formuliert wurden, in den \verb|WHERE| Teil überführt um anschließend unnötige äußere Verbunde und unnötige transitive, innere Verbunde  zu eliminieren. Eine der letzten Schritte war das Behandeln der Vielfalt der Operatoren. Dem ging zunächst eine Teilsortierung des Parserbaumes voraus. Mit einer der beiden vorgestellten Methoden haben wir nun alle implizierten Formeln hinzugefügt, oder die Operatoren gemäß ihrer Repräsentanten beschränkt. Schlussendlich haben wir den gesamten \verb|WHERE| Teil sortiert um eine Vereinheitlichung zu erreichen.
 
 \section{Anpassung durch elementare Transformationen}
+
+Der nun vorgestellte Ansatz stellt eine Alternative zur >>Anpassung durch Standardisierung<< dar. Beide Ansätze haben ähnliche Ideen, sind jedoch in ihrer Umsetzung verschieden. Beim Ansatz der Standardisierung haben wir zunächst eine SQL-Anfrage genommen und standardisiert. Dies geschah völlig unabhängig zu der zu vergleichenden, zweiten SQL-Anfrage. Es wurden gewisse allgemeine Regeln aufgestellt und nach diesen wurde jede SQL-Anfrage behandelt und angepasst. Der eigentliche Vergleich geschah dann Aufgrund eines Vergleichs der standardisierten Anfragen und dem Vergleich von Metadaten (Anzahl Joins, Anzahl atomarer Formeln, etc.). Ein Nachteil von diesem Ansatz ist, dass wir für jedes mögliches Konstrukt in der SQL-Anfrage auch Regeln im System haben, damit wir jene Konstrukte auch anpassen und standardisieren können. Außerdem findet der Vergleich erst im allerletzten Schritt statt.
+
+Die >>Anpassung durch elementare Transformationen<< stellt einen intuitiven Ansatz vor. Wir versuchen hier per Backtracking konkret eine Lösung der anderen anzugleichen. Damit haben wir gleich einen konkreten Unterschied zum bisherigen Ansatz. Wir vergleichen die Lösung direkt und umgehen die Vorverarbeitungen. Im Wesentlichen geben wir also ganz allgemeine Regeln an und in jedem Schritt versuchen wir durch Anwendung dieser Regeln die SQL-Anfrage so Anzupassen, dass sie auf unsere zu vergleichende Anfrage passt.
+
+\subsection{Backtracking}
+
+[Dieser Abschnitt ist experimentell]
+
+Für das Backtracking an sich bietet sich die Programmiersprache PROLOG gut an. Das liegt daran, dass unsere allgemeine Regeln einfach formuliert werden können und bereits den Großteil des Programms stellen. Außerdem benutzt PROLOG die SLD-Resolution um logische Anfragen auswerten zu können und das ist bereits ein Backtracking. Da wir in unserer Arbeit allerdings die Programmiersprache JAVA gewählt haben, können wir nicht auf PROLOG zurückgreifen. Viel mehr müssen wir das Backtracking selbst implementieren. 
+
+Wir operieren weiterhin auf Parserbäumen, die so entstehen wie im Abschnitt >>Funktionsweise des Parsers<< erklärt wird. Es seien unsere zwei zu vergleichenden SQL-Anfragen mit \textit{Query1} und \textit{Query2}. Die dazugehörenden Parserbäume bezeichnen wir mit \textit{RT(Query1)} und \textit{RT(Query2)}. Wir versuchen im Folgenden \textit{Query1} an \textit{Query2} anzupassen.
+
+Um nicht zu viele Regeln definieren zu müssen, werden wir Teile der Vorverarbeitung des ersten Ansatzes wieder verwenden. Wir formen beide Anfragen zunächst in die konjunktive Normalform um. Danach haben wir im wesentlichen die folgenden, unterschiedlichen Fälle.
+
+Zum einen haben wir kommutative Operatoren wie \verb|{+,*,AND,OR,=}|. Möchten wir zwei (Teil)bäume vergleichen, die einen solchen Operator als Wurzelknoten haben, so müssen uns im klaren sein, dass der gesuchte Operand an beliebiger Stelle auftauchen kann. Wir werden einen solchen Vergleich so angehen, dass wir uns den ersten Operanden aus Teilbaum 1 nehmen. Ist dieser Operand ein Ausdruck mit Operator $o_1$, dann suchen wir im zweiten Teilbaum nach einem Operanden, welcher auch ein Ausdruck ist mit Operator $o_2$ mit $o_1=o_2$. Ist dies gelungen, so wird verglichen ob die Teilbäume mit der Wurzel $o_1$ und $o_2$ gleich sind. Dies geschieht dann rekursiv. Ist dies erfolgreich, so streichen wir aus den Ursprungsbäumen die Teilbäume mit Wurzel $o_1$ und $o_2$ und fahren mit dem nächsten Operanden aus dem ersten Teilbaum fort.
+
+Operatoren, die nicht kommutativ sind, sind meistens Vergleichsoperatoren wie \verb|<=, < , > ,>=|. Haben wir zwei Teilbäume mit einem solchen Operator, so ist der Vergleich sehr einfach, denn die jeweiligen Teilbäume unter den Operatoren müssen absolut identisch sein. Dies wird wieder mittels Rekursion geprüft.
+
+Haben wir im ersten Baum einen Vergleichsoperator ausgewählt und können diesen im zweiten Baum nicht finden, so müssen wir auch nach dem umgedrehten Operator in Baum 2 suchen. Finden wir einen solchen, dann vergleichen wir die zugehörigen zwei Teilbäume weiter rekursiv. Zu beachten ist dabei, dass sich die Operandenreihenfolge vom ersten Teilbaum auch umdreht.
 
 \section{weitere Betrachtungen}
 
