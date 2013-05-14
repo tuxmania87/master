@@ -4,7 +4,7 @@
 \BOOKMARK [1][-]{section.1.3}{Aufbau der Arbeit}{chapter.1}% 4
 \BOOKMARK [1][-]{section.1.4}{Produkt}{chapter.1}% 5
 \BOOKMARK [0][-]{chapter.2}{Forschungsstand und Einordnung}{}% 6
-\BOOKMARK [1][-]{section.2.1}{Einleitung [in das Chapter]}{chapter.2}% 7
+\BOOKMARK [1][-]{section.2.1}{Einleitung}{chapter.2}% 7
 \BOOKMARK [1][-]{section.2.2}{SQL-Tutor}{chapter.2}% 8
 \BOOKMARK [1][-]{section.2.3}{SQL-Exploratorium}{chapter.2}% 9
 \BOOKMARK [2][-]{subsection.2.3.1}{Interactive Examples}{section.2.3}% 10
@@ -23,23 +23,23 @@
 \BOOKMARK [1][-]{section.3.3}{Preprocessing}{chapter.3}% 23
 \BOOKMARK [1][-]{section.3.4}{Standardisierung von SQL-Anfragen}{chapter.3}% 24
 \BOOKMARK [2][-]{subsection.3.4.1}{Entfernen von syntaktischen Details}{section.3.4}% 25
-\BOOKMARK [2][-]{subsection.3.4.2}{Vereinheitlichen der FROM Klausel}{section.3.4}% 26
-\BOOKMARK [2][-]{subsection.3.4.3}{Umwandlung der WHERE Bedingung in KNF}{section.3.4}% 27
+\BOOKMARK [2][-]{subsection.3.4.2}{Vereinheitlichen der FROM-Klausel}{section.3.4}% 26
+\BOOKMARK [2][-]{subsection.3.4.3}{Umwandlung der WHERE-Bedingung in KNF}{section.3.4}% 27
 \BOOKMARK [2][-]{subsection.3.4.4}{Ersetzung von syntaktischen Varianten}{section.3.4}% 28
-\BOOKMARK [2][-]{subsection.3.4.5}{JOIN Eliminierung}{section.3.4}% 29
+\BOOKMARK [2][-]{subsection.3.4.5}{JOIN-Eliminierung}{section.3.4}% 29
 \BOOKMARK [2][-]{subsection.3.4.6}{Operatorenvielfalt}{section.3.4}% 30
 \BOOKMARK [2][-]{subsection.3.4.7}{Sortierung}{section.3.4}% 31
 \BOOKMARK [2][-]{subsection.3.4.8}{Abschluss}{section.3.4}% 32
 \BOOKMARK [1][-]{section.3.5}{Anpassung durch elementare Transformationen}{chapter.3}% 33
 \BOOKMARK [2][-]{subsection.3.5.1}{Backtracking}{section.3.5}% 34
-\BOOKMARK [1][-]{section.3.6}{weitere Betrachtungen}{chapter.3}% 35
+\BOOKMARK [1][-]{section.3.6}{Weitere Betrachtungen}{chapter.3}% 35
 \BOOKMARK [2][-]{subsection.3.6.1}{Anzahl atomarer Formeln}{section.3.6}% 36
 \BOOKMARK [2][-]{subsection.3.6.2}{Anzahl der Operatorkompressionen}{section.3.6}% 37
 \BOOKMARK [2][-]{subsection.3.6.3}{unn\366tiges DISTINCT}{section.3.6}% 38
 \BOOKMARK [2][-]{subsection.3.6.4}{Algorithmus aus sql1folien}{section.3.6}% 39
 \BOOKMARK [0][-]{chapter.4}{Verwendete Software}{}% 40
-\BOOKMARK [1][-]{section.4.1}{SQL Parser}{chapter.4}% 41
-\BOOKMARK [2][-]{subsection.4.1.1}{\374ber den SQL Parser: ZQL}{section.4.1}% 42
+\BOOKMARK [1][-]{section.4.1}{SQL-Parser}{chapter.4}% 41
+\BOOKMARK [2][-]{subsection.4.1.1}{\374ber den SQL-Parser: ZQL}{section.4.1}% 42
 \BOOKMARK [2][-]{subsection.4.1.2}{Funktionsweise des Parsers}{section.4.1}% 43
 \BOOKMARK [2][-]{subsection.4.1.3}{Grenzen des Parsers}{section.4.1}% 44
 \BOOKMARK [1][-]{section.4.2}{Java Server Pages}{chapter.4}% 45

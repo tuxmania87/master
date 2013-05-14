@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.3-1.40.12 (MiKTeX 2.9) (preloaded format=pdflatex 2012.8.27)  14 MAY 2013 13:44
+This is pdfTeX, Version 3.1415926-2.3-1.40.12 (MiKTeX 2.9) (preloaded format=pdflatex 2012.8.27)  14 MAY 2013 23:53
 entering extended mode
 **master.tex
 (E:\Users\Robert\Desktop\Arbeit\master\Arbeit\master.tex
@@ -1328,12 +1328,12 @@ LaTeX Font Info:    Font shape `T1/txss/bx/n' will be
  [4
 
 ] [5]
-Overfull \hbox (3.78683pt too wide) in paragraph at lines 28--29
-\T1/txr/m/n/12 Im ak-tu-el-len Ka-pi-tel ha-ben wir ge-klärt warum es ei-ne Not
--wen-dig-keit für das The-ma SQL-Vergleich
+Overfull \hbox (0.11914pt too wide) in paragraph at lines 32--33
+[]\T1/txr/m/n/12 Die Fra-ge-stel-lung ``Sind zwei SQL-Anfragen äqui-va-lent'' i
+st nicht ent-scheid-bar. Aus die-sem Grund
  []
 
-[6] [7]) [8]
+[6]) [7] [8]
 Kapitel 2.
 (E:\Users\Robert\Desktop\Arbeit\master\Arbeit\alteszeug.tex
 LaTeX Font Info:    Try loading font information for T1+txtt on input line 9.
@@ -1344,16 +1344,12 @@ File: t1txtt.fd 2000/12/15 v3.1
 [9
 
 ]
-Overfull \hbox (8.61086pt too wide) in paragraph at lines 17--18
-[]\T1/txr/m/n/12 Der SQL-Tutor lässt au-ÿer-dem auch den ein-ge-sen-de-ten Lö-s
-ungs-vor-schlag auf ei-ner SQL-Datenbank
- []
-
 LaTeX Font Info:    Font shape `T1/txss/bx/n' will be
 (Font)              scaled to size 13.67995pt on input line 19.
-[10]
+ [10]
 LaTeX Font Info:    Try loading font information for OMS+txr on input line 30.
- (E:\Users\Robert\AppData\Roaming\MiKTeX\2.9\tex\latex\txfonts\omstxr.fd
+
+(E:\Users\Robert\AppData\Roaming\MiKTeX\2.9\tex\latex\txfonts\omstxr.fd
 File: omstxr.fd 2000/12/15 v3.1
 )
 LaTeX Font Info:    Font shape `OMS/txr/m/n' in size <12> not available
@@ -1366,40 +1362,40 @@ Overfull \hbox (11.2861pt too wide) in paragraph at lines 77--78
  []
 
 [13] [14]
+Overfull \hbox (6.24332pt too wide) in paragraph at lines 98--99
+\T1/txr/m/n/12 Unteranfragen. Al-le an-de-ren Un-ter-an-fra-gen ([]\T1/txtt/m/n
+/12 IN,>=ALL, \T1/txr/m/n/12 etc.) kön-nen auf die []\T1/txtt/m/n/12 EXISTS\T1/
+txr/m/n/12 -Unteranfrage
+ []
+
 LaTeX Font Info:    Try loading font information for U+fplmbb on input line 112
 .
- ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\psnfss\ufplmbb.fd"
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\psnfss\ufplmbb.fd"
 File: ufplmbb.fd 2003/10/30 Fontinst v1.914 font definitions for U/fplmbb.
-)
-[15]) [16]
+) [15])
+[16]
 Kapitel 3.
 (E:\Users\Robert\Desktop\Arbeit\master\Arbeit\theorie.tex [17
 
 ] [18]
-Overfull \hbox (43.67383pt too wide) in paragraph at lines 69--69
+Overfull \hbox (43.67383pt too wide) in paragraph at lines 67--67
 [] \T1/txtt/m/n/12 * Even if the solution was correct i.e. it was matched with 
 the sample solution,[] 
  []
 
 
-Overfull \hbox (56.2738pt too wide) in paragraph at lines 69--69
-[] \T1/txtt/m/n/12 * it may be that the students soltion contained unnecassary 
-joins, or formulas. */[] 
+Overfull \hbox (62.57379pt too wide) in paragraph at lines 67--67
+[] \T1/txtt/m/n/12 * it may be that the students solution contained unnecassary
+ joins, or formulas. */[] 
  []
 
 [19] [20]
-Overfull \hbox (19.4286pt too wide) in paragraph at lines 118--119
-\T1/txr/m/n/12 von al-len syn-tak-ti-schen De-tails ist. Da-zu ge-hö-ren Leer-z
-ei-chen, Tabs, Zei-le-num-brü-che und Groÿ/Klein-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 129--130
+Underfull \hbox (badness 10000) in paragraph at lines 127--128
 
  []
 
 
-Overfull \hbox (5.8739pt too wide) in paragraph at lines 131--132
+Overfull \hbox (5.8739pt too wide) in paragraph at lines 129--130
 []\T1/txtt/m/n/12 SELECT a2.id, a2.name, a1.region FROM dep a1, emp a2 WHERE a2
 .depid = a1.id 
  []
@@ -1409,23 +1405,23 @@ e.3.1}) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.151 \subsubsection
-                    {NOT auflÃ¶sen}]
+l.153 \begin{tabular}
+                     {ll}]
 <Bilder/not_graph1.png, id=414, 468.75125pt x 444.66125pt>
 File: Bilder/not_graph1.png Graphic file (type png)
 
 <use Bilder/not_graph1.png>
-Package pdftex.def Info: Bilder/not_graph1.png used on input line 158.
+Package pdftex.def Info: Bilder/not_graph1.png used on input line 156.
 (pdftex.def)             Requested size: 234.37505pt x 222.33008pt.
 
 <Bilder/not_graph2.png, id=416, 468.75125pt x 444.66125pt>
 File: Bilder/not_graph2.png Graphic file (type png)
 
 <use Bilder/not_graph2.png>
-Package pdftex.def Info: Bilder/not_graph2.png used on input line 158.
+Package pdftex.def Info: Bilder/not_graph2.png used on input line 156.
 (pdftex.def)             Requested size: 234.37505pt x 222.33008pt.
 
-Overfull \hbox (48.7739pt too wide) in paragraph at lines 155--160
+Overfull \hbox (48.7739pt too wide) in paragraph at lines 153--158
 [][] 
  []
 
@@ -1433,147 +1429,131 @@ Overfull \hbox (48.7739pt too wide) in paragraph at lines 155--160
 File: Bilder/not_graph3.png Graphic file (type png)
 
 <use Bilder/not_graph3.png>
-Package pdftex.def Info: Bilder/not_graph3.png used on input line 164.
+Package pdftex.def Info: Bilder/not_graph3.png used on input line 162.
 (pdftex.def)             Requested size: 234.37505pt x 222.33008pt.
 
 <Bilder/not_graph4.png, id=418, 468.75125pt x 348.30125pt>
 File: Bilder/not_graph4.png Graphic file (type png)
 
 <use Bilder/not_graph4.png>
-Package pdftex.def Info: Bilder/not_graph4.png used on input line 164.
+Package pdftex.def Info: Bilder/not_graph4.png used on input line 162.
 (pdftex.def)             Requested size: 234.37505pt x 174.15019pt.
 
-Overfull \hbox (50.0494pt too wide) in paragraph at lines 161--166
+Overfull \hbox (50.0494pt too wide) in paragraph at lines 159--164
 [][] 
  []
 
 [23 <E:/Users/Robert/Desktop/Arbeit/master/Arbeit/Bilder/not_graph1.png> <E:/Us
-ers/Robert/Desktop/Arbeit/master/Arbeit/Bilder/not_graph2.png>] [24pdfTeX warni
-ng (ext4): destination with the same identifier (name{figure.3.2}) has been alr
-eady used, duplicate ignored
+ers/Robert/Desktop/Arbeit/master/Arbeit/Bilder/not_graph2.png> <E:/Users/Robert
+/Desktop/Arbeit/master/Arbeit/Bilder/not_graph3.png> <E:/Users/Robert/Desktop/A
+rbeit/master/Arbeit/Bilder/not_graph4.png>] [24pdfTeX warning (ext4): destinati
+on with the same identifier (name{figure.3.2}) has been already used, duplicate
+ ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.190 \subsubsection
-                    *{Ersetzen von ALL} <E:/Users/Robert/Desktop/Arbeit/master/
-Arbeit/Bilder/not_graph3.png> <E:/Users/Robert/Desktop/Arbeit/master/Arbeit/Bil
-der/not_graph4.png>]
-Overfull \hbox (33.60687pt too wide) in paragraph at lines 211--212
+l.203 \end{verbatim}
+                    ]
+Overfull \hbox (33.60687pt too wide) in paragraph at lines 209--210
 \T1/txr/m/n/12 Unter be-stimm-ten Vor-aus-set-zun-gen kann je-de IN-Unterabfrag
 e in ei-ne äqui-va-len-te EXISTS-Unteranfrage
  []
 
-[25]
-Underfull \hbox (badness 10000) in paragraph at lines 245--247
+
+Underfull \hbox (badness 10000) in paragraph at lines 243--245
 
  []
 
-[26pdfTeX warning (ext4): destination with the same identifier (name{figure.3.3
-}) has been already used, duplicate ignored
+[25] [26pdfTeX warning (ext4): destination with the same identifier (name{figur
+e.3.3}) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.261 \subsubsection
-                    {OUTER JOIN}]
-Overfull \hbox (2.1315pt too wide) in paragraph at lines 296--298
-[]\T1/txr/m/n/12 Im ers-ten Schritt er-stel-len transitiv-abgeschlossene Äqui-v
-a-lenz-klas-sen der At-tri-bu-te, die im []\T1/txtt/m/n/12 WHERE\T1/txr/m/n/12 
--
- []
-
-[27pdfTeX warning (ext4): destination with the same identifier (name{figure.3.4
-}) has been already used, duplicate ignored
-
-\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
-                                                  \fi \fi 
-l.298 
+l.274 
       pdfTeX warning (ext4): destination with the same identifier (name{figure.
-3.5}) has been already used, duplicate ignored
+3.4}) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.298 
-      ] [28]
-Overfull \hbox (29.99548pt too wide) in paragraph at lines 329--330
-[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
+l.274 
+      ] [27pdfTeX warning (ext4): destination with the same identifier (name{fi
+gure.3.5}) has been already used, duplicate ignored
+
+\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+                                                  \fi \fi 
+l.309 I
+       m nÃ¤chsten Schritt gehen wir jede Ã„quivalenzklasse durch, die minde...
+] [28] [29]
+Underfull \hbox (badness 10000) in paragraph at lines 373--374
+
  []
 
-[29] [30]
-Underfull \hbox (badness 10000) in paragraph at lines 376--377
-
- []
-
-
-Overfull \hbox (3.98366pt too wide) in paragraph at lines 392--394
+[30]
+Overfull \hbox (3.98366pt too wide) in paragraph at lines 389--391
 \T1/txr/m/n/12 sen al-so, dass []\T1/txtt/m/n/12 salery \T1/txr/m/n/12 zwei Nac
 h-kom-mas-tel-len hat. Be-trach-ten wir nun die Aus-sa-ge []\T1/txtt/m/n/12 sal
 ery >= 5\T1/txr/m/n/12 .
  []
 
 
-Overfull \hbox (17.13554pt too wide) in paragraph at lines 394--396
+Overfull \hbox (17.13554pt too wide) in paragraph at lines 391--393
 \T1/txr/m/n/12 Wir er-hal-ten al-so []\T1/txtt/m/n/12 x=4,99\T1/txr/m/n/12 , we
 il []\T1/txtt/m/n/12 x+0,01=5\T1/txr/m/n/12 . So-mit er-gän-zen wir un-se-re Au
 s-gangs-for-mel []\T1/txtt/m/n/12 salery >= 5
  []
 
 [31]
-Underfull \hbox (badness 10000) in paragraph at lines 413--414
-
- []
-
-[32]
-Underfull \hbox (badness 10000) in paragraph at lines 426--427
-
- []
-
-[33] [34]
-Underfull \hbox (badness 10000) in paragraph at lines 466--467
+Underfull \hbox (badness 10000) in paragraph at lines 410--411
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 468--474
+Underfull \hbox (badness 10000) in paragraph at lines 423--424
 
  []
 
-[35] <Bilder/same_depth1.png, id=550, 372.39125pt x 251.94125pt>
+[32] [33]
+Underfull \hbox (badness 10000) in paragraph at lines 463--464
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 465--471
+
+ []
+
+[34] <Bilder/same_depth1.png, id=547, 372.39125pt x 251.94125pt>
 File: Bilder/same_depth1.png Graphic file (type png)
 
 <use Bilder/same_depth1.png>
-Package pdftex.def Info: Bilder/same_depth1.png used on input line 494.
+Package pdftex.def Info: Bilder/same_depth1.png used on input line 491.
 (pdftex.def)             Requested size: 186.19516pt x 125.9703pt.
 
-<Bilder/same_depth2.png, id=551, 372.39125pt x 251.94125pt>
+<Bilder/same_depth2.png, id=548, 372.39125pt x 251.94125pt>
 File: Bilder/same_depth2.png Graphic file (type png)
 
 <use Bilder/same_depth2.png>
-Package pdftex.def Info: Bilder/same_depth2.png used on input line 494.
+Package pdftex.def Info: Bilder/same_depth2.png used on input line 491.
 (pdftex.def)             Requested size: 186.19516pt x 125.9703pt.
- [36pdfTeX warning (ext4): destination with the same identifier (name{figure.3.
+ [35pdfTeX warning (ext4): destination with the same identifier (name{figure.3.
 6}) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.505 
-       <E:/Users/Robert/Desktop/Arbeit/master/Arbeit/Bilder/same_depth1.png> <E
-:/Users/Robert/Desktop/Arbeit/master/Arbeit/Bilder/same_depth2.png>] [37]
-Overfull \hbox (16.79897pt too wide) in paragraph at lines 522--523
-[]\T1/txr/m/n/12 Zum einen ha-ben wir kom-mu-ta-ti-ve Ope-ra-to-ren wie []\T1/t
-xtt/m/n/12 {+,*,AND,OR,=}\T1/txr/m/n/12 . Möch-ten wir zwei (Teil)bäume
- []
-
-[38]
+l.499 \subsection
+                 {Abschluss} <E:/Users/Robert/Desktop/Arbeit/master/Arbeit/Bild
+er/same_depth1.png> <E:/Users/Robert/Desktop/Arbeit/master/Arbeit/Bilder/same_d
+epth2.png>] [36] [37] [38]
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\@ifnextchar' on input line 548.
+(hyperref)                removing `\@ifnextchar' on input line 545.
 
-[39]
-Overfull \hbox (12.47072pt too wide) in paragraph at lines 567--568
+
+Overfull \hbox (12.47072pt too wide) in paragraph at lines 564--565
 [][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
  []
 
-) [40]
+[39]) [40]
 Kapitel 4.
 (E:\Users\Robert\Desktop\Arbeit\master\Arbeit\software.tex [41
 
@@ -1584,7 +1564,7 @@ Overfull \hbox (35.1228pt too wide) in paragraph at lines 36--37
 VG(sal) FROM ...
  []
 
-<Bilder/where_syntax.png, id=616, 369.38pt x 251.94125pt>
+<Bilder/where_syntax.png, id=617, 369.38pt x 251.94125pt>
 File: Bilder/where_syntax.png Graphic file (type png)
 
 <use Bilder/where_syntax.png>
@@ -1594,15 +1574,15 @@ Package pdftex.def Info: Bilder/where_syntax.png used on input line 55.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[42] <Bilder/with_zql.png, id=621, 488.82625pt x 155.58125pt>
+[42] <Bilder/with_zql.png, id=622, 488.82625pt x 155.58125pt>
 File: Bilder/with_zql.png Graphic file (type png)
 
 <use Bilder/with_zql.png>
 Package pdftex.def Info: Bilder/with_zql.png used on input line 67.
 (pdftex.def)             Requested size: 342.17603pt x 108.90611pt.
 
-Overfull \hbox (60.66077pt too wide) in paragraph at lines 74--75
-\T1/txr/m/n/12 Kon-stan-te so wie den Typ. Als Ty-pen kom-men in Fra-ge: []\T1/
+Overfull \hbox (58.08076pt too wide) in paragraph at lines 74--75
+\T1/txr/m/n/12 Kon-stan-te so-wie den Typ. Als Ty-pen kom-men in Fra-ge: []\T1/
 txtt/m/n/12 COLUMNNAME, NULL, NUMBER, STRING, UNKNOWN\T1/txr/m/n/12 .
  []
 
@@ -1652,7 +1632,7 @@ Overfull \hbox (20.75388pt too wide) in paragraph at lines 106--108
 le=dept], [Alias=d] } 
  []
 
-<Bilder/parserbaum.png, id=635, 968.61874pt x 373.395pt>
+<Bilder/parserbaum.png, id=636, 968.61874pt x 373.395pt>
 File: Bilder/parserbaum.png Graphic file (type png)
 
 <use Bilder/parserbaum.png>
@@ -1699,19 +1679,19 @@ Package atveryend Info: Empty hook `AfterLastShipout' on input line 119.
 Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 119.
 Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 119.
 Package rerunfilecheck Info: File `master.out' has not changed.
-(rerunfilecheck)             Checksum: C222A20FFE999FFDCCC7F71BC82AF2CC;3568.
+(rerunfilecheck)             Checksum: F94CCC665C5FF3AC548E769C2CDC0654;3551.
 Package rerunfilecheck Info: File `master.brf' has not changed.
-(rerunfilecheck)             Checksum: 0E13B12E90F45E8012FD46C01449121B;1047.
+(rerunfilecheck)             Checksum: C6084FE1AA5F0606DF9B31BC881C86F5;1047.
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 119.
  ) 
 Here is how much of TeX's memory you used:
- 21684 strings out of 494045
- 393170 string characters out of 3145966
- 516987 words of memory out of 3000000
+ 21686 strings out of 494045
+ 393209 string characters out of 3145966
+ 517987 words of memory out of 3000000
  24208 multiletter control sequences out of 15000+200000
  72024 words of font info for 105 fonts, out of 3000000 for 9000
- 715 hyphenation exceptions out of 8191
- 65i,11n,71p,1396b,1124s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 716 hyphenation exceptions out of 8191
+ 65i,11n,71p,1398b,1761s stack positions out of 5000i,500n,10000p,200000b,50000s
 {C:/Program Files (x86)/MiKTeX 2.9/fonts/enc/dvips/fontname/8r.enc}<C:/Progra
 m Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr10.pfb><E:/Users/Rob
 ert/AppData/Roaming/MiKTeX/2.9/fonts/type1/public/mathpazo/fplmbb.pfb><E:/Users
@@ -1728,9 +1708,9 @@ Program Files (x86)/MiKTeX 2.9/fonts/type1/urw/palatino/uplr8a.pfb><C:/Program
 Files (x86)/MiKTeX 2.9/fonts/type1/urw/times/utmb8a.pfb><C:/Program Files (x86)
 /MiKTeX 2.9/fonts/type1/urw/times/utmr8a.pfb><C:/Program Files (x86)/MiKTeX 2.9
 /fonts/type1/urw/times/utmri8a.pfb>
-Output written on master.pdf (51 pages, 431285 bytes).
+Output written on master.pdf (51 pages, 430358 bytes).
 PDF statistics:
- 791 PDF objects out of 1000 (max. 8388607)
- 228 named destinations out of 1000 (max. 500000)
+ 793 PDF objects out of 1000 (max. 8388607)
+ 229 named destinations out of 1000 (max. 500000)
  471 words of extra memory for PDF output out of 10000 (max. 10000000)
 
