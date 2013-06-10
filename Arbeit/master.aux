@@ -28,9 +28,10 @@
 \@writefile{loa}{\addvspace {10\p@ }}
 \newlabel{chap:introduction}{{1}{4}{Einleitung / Motivation\relax }{chapter.1}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {1.1}Motivation}{4}{section.1.1}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1.1}{\ignorespaces Beispiel: semantisch, aber nicht syntaktisch, \IeC {\"a}quivalente Anfragen}}{5}{figure.1.1}}
 \@writefile{toc}{\contentsline {section}{\numberline {1.2}Aufgabenstellung}{5}{section.1.2}}
-\@writefile{toc}{\contentsline {section}{\numberline {1.3}Aufbau der Arbeit}{6}{section.1.3}}
-\@writefile{toc}{\contentsline {section}{\numberline {1.4}Produkt}{7}{section.1.4}}
+\@writefile{toc}{\contentsline {section}{\numberline {1.3}Aufbau der Arbeit}{7}{section.1.3}}
+\@writefile{toc}{\contentsline {section}{\numberline {1.4}Produkt}{8}{section.1.4}}
 \citation{sqltut1}
 \@writefile{toc}{\contentsline {chapter}{\numberline {2}Forschungsstand und Einordnung}{9}{chapter.2}}
 \@writefile{lof}{\addvspace {10\p@ }}
@@ -90,97 +91,108 @@
 \@writefile{brf}{\backcite{brass1}{{18}{3.1}{section.3.1}}}
 \@writefile{brf}{\backcite{brass2}{{18}{3.1}{section.3.1}}}
 \@writefile{toc}{\contentsline {section}{\numberline {3.2}Workflow}{18}{section.3.2}}
-\@writefile{toc}{\contentsline {section}{\numberline {3.3}Preprocessing}{19}{section.3.3}}
-\@writefile{toc}{\contentsline {section}{\numberline {3.4}Standardisierung von SQL-Anfragen}{21}{section.3.4}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.1}Entfernen von syntaktischen Details}{21}{subsection.3.4.1}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.2}Vereinheitlichen der FROM-Klausel}{21}{subsection.3.4.2}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.1}{\ignorespaces Beispiel: Umwandlung des FROM-Teils einer SQL-Anfrage}}{22}{figure.3.1}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.3}Umwandlung der WHERE-Bedingung in KNF}{22}{subsection.3.4.3}}
-\@writefile{toc}{\contentsline {subsubsection}{Entfernung unn\IeC {\"o}tiger Klammerungen}{22}{section*.9}}
-\@writefile{toc}{\contentsline {subsubsection}{NOT aufl\IeC {\"o}sen}{23}{section*.10}}
-\@writefile{toc}{\contentsline {subsubsection}{Anwenden des Distributivgesetzes}{24}{section*.11}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.4}Ersetzung von syntaktischen Varianten}{24}{subsection.3.4.4}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.2}{\ignorespaces Entfernen von syntaktischen Varianten}}{24}{figure.3.2}}
-\@writefile{toc}{\contentsline {subsubsection}{Ersetzen von IN}{25}{section*.15}}
-\@writefile{toc}{\contentsline {subsubsection}{Andere Unteranfragen}{25}{section*.16}}
-\@writefile{toc}{\contentsline {subsubsection}{JOINS}{26}{section*.17}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.3}{\ignorespaces Umwandlung von INNER-JOIN}}{26}{figure.3.3}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.5}JOIN-Eliminierung}{26}{subsection.3.4.5}}
-\@writefile{toc}{\contentsline {subsubsection}{OUTER JOIN}{26}{section*.18}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.4}{\ignorespaces Unn\IeC {\"o}tiger OUTER JOIN}}{26}{figure.3.4}}
-\newlabel{fig:joinelem1}{{3.4}{26}{Unnötiger OUTER JOIN\relax }{figure.3.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.1}Standardisierung}{18}{subsection.3.2.1}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.2}Elementare Transformationen}{19}{subsection.3.2.2}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.3}Erwartungen}{19}{subsection.3.2.3}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.3}Preprocessing}{20}{section.3.3}}
+\newlabel{sec:preprocessing}{{3.3}{20}{Preprocessing\relax }{section.3.3}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.4}Standardisierung von SQL-Anfragen}{22}{section.3.4}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.1}Entfernen von syntaktischen Details}{22}{subsection.3.4.1}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.1}{\ignorespaces Beispiel: Umwandlung des FROM-Teils einer SQL-Anfrage}}{23}{figure.3.1}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.2}FROM-Teil}{23}{subsection.3.4.2}}
+\newlabel{subsec:from}{{3.4.2}{23}{FROM-Teil\relax }{subsection.3.4.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.3}WHERE-Teil}{23}{subsection.3.4.3}}
+\@writefile{toc}{\contentsline {subsubsection}{Entfernung unn\IeC {\"o}tiger Klammerungen}{24}{section*.9}}
+\@writefile{toc}{\contentsline {subsubsection}{NOT aufl\IeC {\"o}sen}{24}{section*.10}}
+\@writefile{toc}{\contentsline {subsubsection}{Anwenden des Distributivgesetzes}{25}{section*.11}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.4}Ersetzung von syntaktischen Varianten}{26}{subsection.3.4.4}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.2}{\ignorespaces Entfernen von syntaktischen Varianten}}{26}{figure.3.2}}
+\@writefile{toc}{\contentsline {subsubsection}{Ersetzen von IN}{27}{section*.15}}
+\@writefile{toc}{\contentsline {subsubsection}{Andere Unteranfragen}{27}{section*.16}}
+\@writefile{toc}{\contentsline {subsubsection}{JOINS}{27}{section*.17}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.3}{\ignorespaces Umwandlung von INNER-JOIN}}{28}{figure.3.3}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.5}JOIN-Eliminierung}{28}{subsection.3.4.5}}
+\@writefile{toc}{\contentsline {subsubsection}{OUTER JOIN}{28}{section*.18}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.4}{\ignorespaces Unn\IeC {\"o}tiger OUTER JOIN}}{28}{figure.3.4}}
+\newlabel{fig:joinelem1}{{3.4}{28}{Unnötiger OUTER JOIN\relax }{figure.3.4}{}}
 \citation{joinelem2}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.5}{\ignorespaces Anfrage ohne JOIN}}{27}{figure.3.5}}
-\newlabel{fig:joinelem2}{{3.5}{27}{Anfrage ohne JOIN\relax }{figure.3.5}{}}
-\@writefile{toc}{\contentsline {subsubsection}{Transitiv-implizierte INNER JOINs}{27}{section*.19}}
-\@writefile{brf}{\backcite{joinelem2}{{27}{3.4.5}{section*.19}}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.6}Operatorenvielfalt}{29}{subsection.3.4.6}}
-\@writefile{toc}{\contentsline {subsubsection}{Teilsortierung}{29}{section*.20}}
-\@writefile{toc}{\contentsline {subsubsection}{Hinzuf\IeC {\"u}gen implizierter Formeln}{30}{section*.21}}
-\@writefile{toc}{\contentsline {subsubsection}{Beschr\IeC {\"a}nkung der Operatorenvielfalt}{32}{section*.22}}
-\@writefile{toc}{\contentsline {subsubsection}{Einschr\IeC {\"a}nkungen bei arithmetischen Ausdr\IeC {\"u}cken}{33}{section*.23}}
-\newlabel{subsubsec:arithmetic}{{3.4.6}{33}{Einschränkungen bei arithmetischen Ausdrücken\relax }{section*.23}{}}
-\@writefile{toc}{\contentsline {subsubsection}{arithmetische Ausdr\IeC {\"u}cke -- Standardisierung}{33}{section*.24}}
-\@writefile{toc}{\contentsline {subsubsection}{arithmetische Ausdr\IeC {\"u}cke -- Operatorenbeschr\IeC {\"a}nkung}{34}{section*.25}}
-\@writefile{toc}{\contentsline {subsubsection}{Diskussion der beiden Ans\IeC {\"a}tze}{34}{section*.26}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.7}Sortierung}{35}{subsection.3.4.7}}
-\@writefile{toc}{\contentsline {subsubsection}{Sortierung im Inneren der Terme}{35}{section*.27}}
-\@writefile{toc}{\contentsline {subsubsection}{Sortierung von Termen}{36}{section*.28}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.6}{\ignorespaces Beispiel von B\IeC {\"a}umen mit gleicher Tiefe}}{37}{figure.3.6}}
-\newlabel{fig:bsp1}{{3.6}{37}{Beispiel von Bäumen mit gleicher Tiefe\relax }{figure.3.6}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.8}Abschluss}{37}{subsection.3.4.8}}
-\@writefile{toc}{\contentsline {section}{\numberline {3.5}Anpassung durch elementare Transformationen}{38}{section.3.5}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.5.1}Backtracking}{38}{subsection.3.5.1}}
-\@writefile{toc}{\contentsline {section}{\numberline {3.6}Weitere Betrachtungen}{39}{section.3.6}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.5}{\ignorespaces Anfrage ohne JOIN}}{29}{figure.3.5}}
+\newlabel{fig:joinelem2}{{3.5}{29}{Anfrage ohne JOIN\relax }{figure.3.5}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Transitiv-implizierte INNER JOINs}{29}{section*.19}}
+\@writefile{brf}{\backcite{joinelem2}{{29}{3.4.5}{section*.19}}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.6}Operatorenvielfalt}{31}{subsection.3.4.6}}
+\@writefile{toc}{\contentsline {subsubsection}{Teilsortierung}{31}{section*.20}}
+\@writefile{toc}{\contentsline {subsubsection}{Hinzuf\IeC {\"u}gen implizierter Formeln}{32}{section*.21}}
+\@writefile{toc}{\contentsline {subsubsection}{Beschr\IeC {\"a}nkung der Operatorenvielfalt}{34}{section*.22}}
+\@writefile{toc}{\contentsline {subsubsection}{Einschr\IeC {\"a}nkungen bei arithmetischen Ausdr\IeC {\"u}cken}{34}{section*.23}}
+\newlabel{subsubsec:arithmetic}{{3.4.6}{34}{Einschränkungen bei arithmetischen Ausdrücken\relax }{section*.23}{}}
+\@writefile{toc}{\contentsline {subsubsection}{arithmetische Ausdr\IeC {\"u}cke -- Standardisierung}{35}{section*.24}}
+\@writefile{toc}{\contentsline {subsubsection}{arithmetische Ausdr\IeC {\"u}cke -- Operatorenbeschr\IeC {\"a}nkung}{35}{section*.25}}
+\@writefile{toc}{\contentsline {subsubsection}{transitiv-implizierte Formeln}{36}{section*.26}}
+\@writefile{toc}{\contentsline {subsubsection}{implizierte Dom\IeC {\"a}nen}{36}{section*.27}}
+\@writefile{toc}{\contentsline {subsubsection}{Diskussion der beiden Ans\IeC {\"a}tze}{37}{section*.28}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.7}Sortierung}{38}{subsection.3.4.7}}
+\@writefile{toc}{\contentsline {subsubsection}{Sortierung im Inneren der Terme}{38}{section*.29}}
+\@writefile{toc}{\contentsline {subsubsection}{Sortierung von Termen}{39}{section*.30}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.6}{\ignorespaces Beispiel von B\IeC {\"a}umen mit gleicher Tiefe}}{40}{figure.3.6}}
+\newlabel{fig:bsp1}{{3.6}{40}{Beispiel von Bäumen mit gleicher Tiefe\relax }{figure.3.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.8}GROUP BY / HAVING}{40}{subsection.3.4.8}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.9}ORDER BY}{41}{subsection.3.4.9}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.10}Abschluss}{41}{subsection.3.4.10}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.5}Anpassung durch elementare Transformationen}{41}{section.3.5}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.5.1}Backtracking}{42}{subsection.3.5.1}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.6}Weitere Betrachtungen}{43}{section.3.6}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.6.1}Anzahl atomarer Formeln}{43}{subsection.3.6.1}}
 \citation{brass2}
 \citation{sql1folien}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.6.1}Anzahl atomarer Formeln}{40}{subsection.3.6.1}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.6.2}Anzahl der Operatorkompressionen}{40}{subsection.3.6.2}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.6.3}unn\IeC {\"o}tiges DISTINCT}{40}{subsection.3.6.3}}
-\@writefile{brf}{\backcite{brass2}{{40}{3.6.3}{subsection.3.6.3}}}
-\@writefile{brf}{\backcite{sql1folien}{{41}{3.6.4}{subsection.3.6.4}}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.6.4}Algorithmus aus \cite  {sql1folien}}{41}{subsection.3.6.4}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.6.2}Anzahl der Operatorkompressionen}{44}{subsection.3.6.2}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.6.3}unn\IeC {\"o}tiges DISTINCT}{44}{subsection.3.6.3}}
+\@writefile{brf}{\backcite{brass2}{{44}{3.6.3}{subsection.3.6.3}}}
+\@writefile{brf}{\backcite{sql1folien}{{44}{3.6.4}{subsection.3.6.4}}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.6.4}Algorithmus aus \cite  {sql1folien}}{44}{subsection.3.6.4}}
 \citation{zql1}
 \citation{javacc1}
-\@writefile{toc}{\contentsline {chapter}{\numberline {4}Verwendete Software}{42}{chapter.4}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {4}Verwendete Software}{46}{chapter.4}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \@writefile{lol}{\addvspace {10\p@ }}
 \@writefile{loa}{\addvspace {10\p@ }}
-\newlabel{chap:software}{{4}{42}{Verwendete Software\relax }{chapter.4}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {4.1}SQL-Parser}{42}{section.4.1}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.1.1}\IeC {\"u}ber den SQL-Parser: ZQL}{42}{subsection.4.1.1}}
-\@writefile{brf}{\backcite{zql1}{{42}{4.1.1}{subsection.4.1.1}}}
-\@writefile{brf}{\backcite{javacc1}{{42}{4.1.1}{subsection.4.1.1}}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.1.2}Funktionsweise des Parsers}{42}{subsection.4.1.2}}
-\newlabel{baum1}{{4.1.2}{44}{Funktionsweise des Parsers\relax }{subsection.4.1.2}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4.1}{\ignorespaces WHERE-Bedingung in \IeC {\"u}blichen Syntaxb\IeC {\"a}umen}}{44}{figure.4.1}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4.2}{\ignorespaces WHERE-Bedingung geparst mit ZQL}}{44}{figure.4.2}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4.3}{\ignorespaces Geparster Baum der WHERE Bedingung des Beispiels}}{46}{figure.4.3}}
-\newlabel{fig:parseTree}{{4.3}{46}{Geparster Baum der WHERE Bedingung des Beispiels\relax }{figure.4.3}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.1.3}Grenzen des Parsers}{46}{subsection.4.1.3}}
-\@writefile{toc}{\contentsline {section}{\numberline {4.2}Java Server Pages}{47}{section.4.2}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.1}\IeC {\"U}berblick}{47}{subsection.4.2.1}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.2}Einbettung in JSP}{47}{subsection.4.2.2}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.3}Log}{47}{subsection.4.2.3}}
-\@writefile{toc}{\contentsline {chapter}{\numberline {5}Praktische Umsetzung}{48}{chapter.5}}
+\newlabel{chap:software}{{4}{46}{Verwendete Software\relax }{chapter.4}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.1}SQL-Parser}{46}{section.4.1}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1.1}\IeC {\"u}ber den SQL-Parser: ZQL}{46}{subsection.4.1.1}}
+\@writefile{brf}{\backcite{zql1}{{46}{4.1.1}{subsection.4.1.1}}}
+\@writefile{brf}{\backcite{javacc1}{{46}{4.1.1}{subsection.4.1.1}}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1.2}Funktionsweise des Parsers}{46}{subsection.4.1.2}}
+\newlabel{baum1}{{4.1.2}{48}{Funktionsweise des Parsers\relax }{subsection.4.1.2}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.1}{\ignorespaces WHERE-Bedingung in \IeC {\"u}blichen Syntaxb\IeC {\"a}umen}}{48}{figure.4.1}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.2}{\ignorespaces WHERE-Bedingung geparst mit ZQL}}{48}{figure.4.2}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.3}{\ignorespaces Geparster Baum der WHERE Bedingung des Beispiels}}{50}{figure.4.3}}
+\newlabel{fig:parseTree}{{4.3}{50}{Geparster Baum der WHERE Bedingung des Beispiels\relax }{figure.4.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1.3}Grenzen des Parsers}{50}{subsection.4.1.3}}
+\newlabel{subsec:grenzenparser}{{4.1.3}{50}{Grenzen des Parsers\relax }{subsection.4.1.3}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.2}Java Server Pages}{51}{section.4.2}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.1}\IeC {\"U}berblick}{51}{subsection.4.2.1}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.2}Einbettung in JSP}{51}{subsection.4.2.2}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.3}Log}{51}{subsection.4.2.3}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {5}Praktische Umsetzung}{52}{chapter.5}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \@writefile{lol}{\addvspace {10\p@ }}
 \@writefile{loa}{\addvspace {10\p@ }}
-\newlabel{chap:praxis}{{5}{48}{Praktische Umsetzung\relax }{chapter.5}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {5.1}Anforderungen}{48}{section.5.1}}
-\@writefile{toc}{\contentsline {chapter}{\numberline {6}Ergebnisse}{49}{chapter.6}}
+\newlabel{chap:praxis}{{5}{52}{Praktische Umsetzung\relax }{chapter.5}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {5.1}Anforderungen}{52}{section.5.1}}
+\@writefile{toc}{\contentsline {section}{\numberline {5.2}Funktionsumfang}{52}{section.5.2}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {6}Ergebnisse}{53}{chapter.6}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \@writefile{lol}{\addvspace {10\p@ }}
 \@writefile{loa}{\addvspace {10\p@ }}
-\@writefile{toc}{\contentsline {chapter}{\numberline {7}Ausblick}{50}{chapter.7}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {7}Ausblick}{54}{chapter.7}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \@writefile{lol}{\addvspace {10\p@ }}
 \@writefile{loa}{\addvspace {10\p@ }}
-\newlabel{chap:ausblick}{{7}{50}{Ausblick\relax }{chapter.7}{}}
+\newlabel{chap:ausblick}{{7}{54}{Ausblick\relax }{chapter.7}{}}
 \bibcite{zql1}{1}
 \bibcite{javacc1}{2}
 \bibcite{sqltut1}{3}
@@ -193,7 +205,7 @@
 \bibcite{joinelem1}{10}
 \bibcite{joinelem2}{11}
 \bibcite{sql1folien}{12}
-\@writefile{toc}{\contentsline {chapter}{\numberline {8}Anhang}{52}{chapter.8}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {8}Anhang}{56}{chapter.8}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \@writefile{lol}{\addvspace {10\p@ }}
