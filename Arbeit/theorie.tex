@@ -264,123 +264,7 @@ Folgende Voraussetzungen müssen erfüllt sein, damit diese Umwandlung angewende
 
 Ungewöhnliche Unterabfragen, wie \mbox{z. B.} Unterabfragen unter \verb|FROM| werden hier nicht betrachtet. Im Allgemeinen werden solche Unterabfragen kaum gebraucht und machen die Anfrage meist nur viel komplexer als notwendig.
 
-\subsubsection{JOINS}
-Ein \verb|INNER JOIN| kann sowohl im \verb|FROM|-, als auch im \verb|WHERE|-Teil einer SQL-Anfrage formuliert werden. Damit Untersuchungen einheitlich geschehen können, formulieren wir solche JOINs im \verb|WHERE|-Teil der SQL-Anfrage.
 
-\begin{figure}[h]
-Eingabe:\\
-\verb|SELECT * FROM foo f INNER JOIN bar b ON f.id=b.id|\\
-
-Umwandlung:\\
-\verb|SELECT * FROM foo f, bar b WHERE f.id=b.id|\\
-\caption{Umwandlung von INNER-JOIN}
-\end{figure}
-
-Bei Anwendung dieser Ersetzungsregeln, soll dem Lernenden ein klares Feedback gegeben werden. Es soll verdeutlicht werden, dass eine korrekte Anfrage dennoch Mängel aufweist, da unnötige Formulierungen benutzt wurden.
-
-Es ist hier bereits möglich Terme, die nur aus numerischen Konstanten bestehen, zu ersetzen durch das jeweilige Ergebnis. So könnten arithmetische Operationen bereits ausgeführt und Vergleiche, die nur aus numerischen Konstanten bestehen, durch entsprechende Wahrheitswerte ersetzt werden.
-
-\subsection{JOIN-Eliminierung}
-
-In einem weiteren Zwischenschritt möchten wir gern einige unnötige \verb|JOINS| eliminieren.
-
-\subsubsection{OUTER JOIN}
-
-Betrachten wir eine SQL-Anfrage mit einem \verb|OUTER JOIN|. Befinden sich im \verb|SELECT|-Teil keine Attribute der \verb|JOIN|-Tabelle, so ist der \verb|JOIN| unnötig, weil Daten von der \verb|JOIN|-Tabelle ohnehin nicht ausgegeben werden. Betrachten wir dazu folgendes Beispiel:
-
-\begin{figure}[h]
-\begin{lstlisting}[mathescape]
-SELECT s.vorname, s.nachname 
-FROM studenten s LEFT JOIN klausur k ON s.id = k.id 
-WHERE k.wert <= 3
-\end{lstlisting}
-\caption{Unnötiger OUTER JOIN}
-\label{fig:joinelem1}
-\end{figure}
-
-Im Beispiel in Abbildung \ref{fig:joinelem1} sollen alle Studenten ausgegeben werden, die in einer Klausur die Note drei oder besser bekommen haben. Da es sich hier um einen \verb|OUTER JOIN| handelt und wir nur Namen der Studenten ausgeben möchten, erhalten wir immer eine gesamte Liste der Studentennamen. Der Teil, der für den \verb|JOIN| interessant wäre, also Daten aus der Tabelle \verb|klausur k|, wird nicht ausgegeben. Damit wäre die folgende SQL-Anfrage mit der aus Abbildung \ref{fig:joinelem1} äquivalent.
-
-\begin{figure}[h]
-\begin{lstlisting}[mathescape]
-SELECT s.vorname, s.nachname 
-FROM studenten s 
-\end{lstlisting}
-\caption{Anfrage ohne JOIN}
-\label{fig:joinelem2}
-\end{figure}
-
-Bei einem \verb|RIGHT JOIN| müsste man äquivalent überprüfen ob man Attribute im \verb|SELECT|-Teil hat, die in der ``linken'' Tabelle sind und genauso verfahren.
-
-Möchte man tatsächlich nur die Studenten ausgeben, die eine drei oder besser geschrieben haben, müsste man einen \verb|INNER JOIN| verwenden.
-
-\subsubsection{Transitiv-implizierte INNER JOINs}
-
-Wenn nur Schlüsselattribute einer Tupelvariable X benutzt werden und diese mit \hyphenation{Fremd-schlüs-sel-at-tri-but-en} einer anderen Tupelvariable Y verglichen werden, dann ist X überflüssig.
-
-In der Arbeit \cite{joinelem2} wird dazu ein Algorithmus angegeben, der im Wesentliche oben genannte, überflüssige Tupelvariablen entfernt. Wir wandeln diesen Algorithmus leicht ab, erhalten aber die Grundidee.
-
-Im ersten Schritt erstellen wir transitiv-abgeschlossene Äquivalenzklassen der Attribute, die im \verb|WHERE|-Teil vorkommen. Haben wir also $X.A=Y.B$ und $Y.B=Z.C$, so befinden sich alle drei Attribute in einer Äquivalenzklasse: $\{X.A,Y.B,Z.C\}$. Eine Äquivalenzklasse enthält nur Tupelvariablen und ist transitiv abgeschlossen über dem Operator $=$.
-Dabei bemerken wir, dass Äquivalenzklassen der Mächtigkeit 1 einfache Vergleiche wie \verb|X.A Operator Konstante| sind. Klassen der Mächtigkeit 2 sind einfache, nicht transitive JOINs und Klassen der Mächtigkeit größer als 2 sind offensichtlich mehrfache, transitive JOINs.
-
-Beispiel:
-\begin{lstlisting}[mathescape]
-SELECT t1.x 
-FROM   test1 t1, test2 t2, test3 t3
-WHERE  t1.x = t2.y
-AND    t1.x = t3.z
-AND    t1.y = t2.z
-AND    t1.z > 3;
-\end{lstlisting}
-
-Bei diesem Beispiel erhalten wir die Äquivalenzklasse \verb|{t1.x, t2.y, t3.z}| sowie die Klassen \verb|{t1.y,t2.z}| und \verb|{t1.z}|.
-
-Im nächsten Schritt gehen wir jede Äquivalenzklasse durch, die mindestens drei Einträge haben. Für jeden Eintrag $e\in\mathit{Aequivalenzklasse}$ mit $e=T.A$ überprüfen wir, ob es andere Äquivalenzklassen gibt, die nicht aus einem transitiven \verb|JOIN| entstanden sind (also weniger als drei Einträge haben) und die ein Attribut der Tabelle $T$ enthalten. Ist dies nicht der Fall und die Tabelle $T$ kommt nicht im \verb|SELECT|-Teil vor, dann ist das Attribut $A$ in dem Vergleich, der durch die Äquivalenzklasse repräsentiert wird, unnötig und kann samt zugehöriger Bedingung im \verb|WHERE|-Teil gestrichen werden. Hat die Äquivalenzklasse jetzt weniger als drei Einträge dann wird die Arbeit an dieser Klasse abgebrochen.
-
-Im letzten Schritt müssen wir noch überprüfen, ob es Tupelvariablen im \verb|FROM|-Teil gibt, die aber nun nicht mehr im \verb|WHERE|-Teil auftauchen. Ist dies der Fall, dann streichen wir diese aus dem \verb|FROM|-Teil.
-
-NULL bearbeiten
-
-Beispiel:
-\begin{lstlisting}[mathescape]
-SELECT ps.partkey, avg(ps.supplycost)
-FROM   supplier s, partsupp ps, customer c, orders o
-WHERE  s.suppkey = ps.suppkey 
-AND    s.suppkey = c.custkey
-AND    c.custkey = o_custkey
-AND    o_totalprice >= 100;
-\end{lstlisting}
-
-Zunächst erzeugen wir alle Äquivalenzklassen:
-\begin{lstlisting}[mathescape]
-Klassen = 
-$\{ \{$s.suppkey, ps.suppkey, c.custkey,o.custkey $\}, \{$o.totalprice$\} \}$
-\end{lstlisting}
-
-Die zweite Menge interessiert uns nicht, da sie nicht mehr als zwei Elemente enthält. Wir betrachten daher nur die erste Menge. Wir untersuchen nun jedes einzelne Element auf seine Gültigkeit. \verb|s.suppkey| kommt in keiner anderen Äquivalenzklasse vor und die Tabelle \verb|supplier s| erscheint nicht im \verb|SELECT|-Teil, daher streichen wir \verb|s.suppkey|. Das nächste Attribut \verb|ps.suppkey| kann nicht gestrichen werden, da die Tabelle \verb|partsupp ps| im \verb|SELECT|-Teil erscheint. \verb|c.custkey| kann wiederum gestrichen werden, da es wieder nicht in einer anderen Äquivalenklasse auftaucht und die Tabelle \verb|customer c| nicht im \verb|SELECT|-Teil auftaucht. Dahingegen ist \verb|o.custkey| nicht zu streichen, da die Tabelle \verb|orders o| in einer Äquivalenzklasse auftaucht, welche nicht zu einem \verb|JOIN| gehört (weil sie weniger als drei Elemente beinhaltet). Nun können wir auch die Tabellen \verb|supplier s| und \verb|customer c| streichen, da keine Bedingung mehr Attribute aus diesen Tabellen enthält.
-
-Daher erhalten wir nun die folgende, optimierte Anfrage:
-\begin{lstlisting}[mathescape]
-SELECT ps.partkey, avg(ps.supplycost)
-FROM   partsupp ps, orders o
-WHERE  o.custkey = ps.suppkey 
-AND    o.totalprice >= 100;
-\end{lstlisting}
-
-PSEUDOCODE:
-
-\begin{lstlisting}[mathescape]
-Alle Attribute im WHERE-Teil in Aequivalenklassen $E_i$ packen.
-foreach $e\in E_i$ mit $\vert e\vert \ge 3$ do
-  foreach $t.a\in e$ do
-    if $\vert e\vert \ge 3$ and $t \notin $SELECT and 
-    $\nexists b\in E_i$ mit $\vert b\vert < 3$ und b=t.*
-      e = e - {t.a}
-    end
-  done
-done
-
-Streiche unnoetige Tabellen aus FROM-Teil 
-\end{lstlisting}
 
 \subsection{Operatorenvielfalt}
 
@@ -580,35 +464,162 @@ Interessant für das Preprocessing sind allerdings andere Informationen über OR
 
 Wir fassen die einzelnen Schritte noch einmal kurz zusammen: Zunächst haben wir den \verb|FROM|-Teil der Anfrage vereinheitlicht, indem wir einheitliche Tupelvariablen erzeugt haben, nachdem alle Tabellen im \verb|FROM|-Teil lexikographisch sortiert wurden. Alle neu erzeugten Variablennamen wurden im Rest der Anfrage korrekt eingesetzt bzw. ersetzt. Danach haben wir den \verb|WHERE|-Teil bearbeitet. Wir haben zunächst unnötige Klammern entfernt und die Formeln in die KNF überführt. Danach haben wir einfache syntatkische Varianten ersetzt um eine einheitlichere Darstellung zu erhalten. Dazu gehörte es auch Unteranfragen aufzulösen oder, wenn nicht möglich, in eine \verb|EXISTS|-Unteranfrage zu überführen. Danach haben wir innere Verbunde (JOINs), die im \verb|FROM|-Teil formuliert wurden, in den \verb|WHERE|-Teil überführt, um anschließend unnötige äußere Verbunde und unnötige transitive, innere Verbunde  zu eliminieren. Eine der letzten Schritte war das Behandeln der Vielfalt der Operatoren. Dem ging zunächst eine Teilsortierung des Parserbaumes voraus. Mit einer der beiden vorgestellten Methoden haben wir nun alle implizierten Formeln hinzugefügt, oder die Operatoren gemäß ihrer Repräsentanten beschränkt. Schlussendlich haben wir den gesamten \verb|WHERE|-Teil sortiert, um eine Vereinheitlichung zu erreichen.
 
-\section{Anpassung durch elementare Transformationen}
-
-Der nun vorgestellte Ansatz stellt eine Alternative zur >>Anpassung durch Standardisierung<< dar. Beide Ansätze haben ähnliche Ideen, sind jedoch in ihrer Umsetzung verschieden. Beim Ansatz der Standardisierung haben wir zunächst eine SQL-Anfrage genommen und standardisiert. Dies geschah völlig unabhängig zu der zu vergleichenden, zweiten SQL-Anfrage. Es wurden gewisse allgemeine Regeln aufgestellt und nach diesen wurde jede SQL-Anfrage behandelt und angepasst. Der eigentliche Vergleich geschah dann aufgrund eines Vergleichs der standardisierten Anfragen und dem Vergleich von Metadaten (Anzahl Joins, Anzahl atomarer Formeln, etc.). Ein Nachteil von diesem Ansatz ist, dass wir für jedes mögliche Konstrukt in der SQL-Anfrage auch Regeln im System haben, damit wir jene Konstrukte auch anpassen und standardisieren können. Außerdem findet der Vergleich erst im allerletzten Schritt statt.
-
-Die >>Anpassung durch elementare Transformationen<< stellt einen intuitiven Ansatz vor. Wir versuchen hier per Backtracking konkret eine Lösung der anderen anzugleichen. Damit haben wir einen konkreten Unterschied zum bisherigen Ansatz. Wir vergleichen die Lösung direkt und umgehen die Vorverarbeitungen. Im Wesentlichen geben wir also ganz allgemeine Regeln an und in jedem Schritt versuchen wir durch Anwendung dieser Regeln die SQL-Anfrage so anzupassen, dass sie auf unsere zu vergleichende Anfrage passt.
-
-\subsection{Backtracking}
-
-[Dieser Abschnitt ist experimentell]
-
-Für das Backtracking an sich bietet sich die Programmiersprache PROLOG an. Das liegt daran, dass unsere allgemeine Regeln einfach formuliert werden können und bereits den Großteil des Programms stellen. Außerdem benutzt PROLOG die SLD-Resolution, um logische Anfragen auswerten zu können und das ist bereits ein Backtracking. Da wir in unserer Arbeit allerdings die Programmiersprache JAVA gewählt haben, können wir nicht auf PROLOG zurückgreifen. Viel mehr müssen wir das Backtracking selbst implementieren. 
-
-Wir operieren weiterhin auf Parserbäumen, die so entstehen wie im Abschnitt >>Funktionsweise des Parsers<< erklärt wird. Es seien unsere zwei zu vergleichenden SQL-Anfragen mit \textit{Query1} und \textit{Query2} gegeben. Die dazugehörenden Parserbäume bezeichnen wir mit \textit{RT(Query1)} und \textit{RT(Query2)}. Wir versuchen im Folgenden \textit{Query1} an \textit{Query2} anzupassen.
-
-Um nicht zu viele Regeln definieren zu müssen, werden wir Teile der Vorverarbeitung des ersten Ansatzes wieder verwenden. Wir formen beide Anfragen zunächst in die konjunktive Normalform um. Danach gehen wir nach dem folgendem Prinzip vor.
-
-Es sei $\mathit{comm} = \{+,*,AND,OR,=\}$, die Menge aller kommutativen Operatoren. Wir gehen den Vergleich zweier (Teil-)Bäume rekursiv an, das bedeutet unser Algorithmus erhält stets zwei (Teil-)Bäume in Form von zwei Wurzelknoten. Als Ergebnis gibt der Algorithmus dann an, ob diese zwei (Teil-)Bäume unifiziert werden konnten. Im Folgenden wird der Algorithmus textuell beschrieben. Ein detaillierter Pseudocode ist im Anhang unter Abschnitt \ref{sec:backtrack1} zu finden.
-
-
-TODO Algorithmus in Worten beschreiben: 
-Zum einen haben wir kommutative Operatoren wie \verb|{+,*,AND,OR,=}|. Möchten wir zwei (Teil-)Bäume vergleichen, die einen solchen Operator als Wurzelknoten haben, so müssen wir uns im klaren sein, dass der gesuchte Operand an beliebiger Stelle auftauchen kann. Wir werden einen solchen Vergleich so angehen, dass wir uns den ersten Operanden aus Teilbaum 1 nehmen. Ist dieser Operand ein Ausdruck mit Operator $o_1$, dann suchen wir im zweiten Teilbaum nach einem Operanden, welcher auch ein Ausdruck ist mit Operator $o_2$ mit $o_1=o_2$. Ist dies gelungen, so wird verglichen, ob die Teilbäume mit der Wurzel $o_1$ und $o_2$ gleich sind. Dies geschieht dann rekursiv. Ist dies erfolgreich, so streichen wir aus den Ursprungsbäumen die Teilbäume mit Wurzel $o_1$ und $o_2$ und fahren mit dem nächsten Operanden aus dem ersten Teilbaum fort.
-
-Operatoren, die nicht kommutativ sind, sind meistens Vergleichsoperatoren wie \verb|<=, < , > ,>=|. Haben wir zwei Teilbäume mit einem solchen Operator, so ist der Vergleich sehr einfach, denn die jeweiligen Teilbäume unter den Operatoren müssen absolut identisch sein. Dies wird wieder mittels Rekursion geprüft.
-
-Haben wir im ersten Baum einen Vergleichsoperator ausgewählt und können diesen im zweiten Baum nicht finden, so müssen wir auch nach dem umgedrehten Operator in Baum 2 suchen. Finden wir einen solchen, dann vergleichen wir die zugehörigen zwei Teilbäume weiter rekursiv. Zu beachten ist dabei, dass sich die Operandenreihenfolge vom ersten Teilbaum auch umdreht.
-
-Weiterhin sei daran erinnert, dass arithmetische Ausdrücke in unsere Betrachtung nicht mehr als zwei Operanden im komplexen Teil beinhalten können. Siehe dazu Unterabschnitt \ref{subsubsec:arithmetic}.
 
 \section{Weitere Betrachtungen}
+
+\subsection{JOINS}
+
+Wir betrachten in diesem Abschnitt die Behandlung von JOINs. Wir untersuchen wie wir die unterschiedlichen Verbundstypen vereinfachen oder in eine einheitliche Form umwandeln können. Weiterhin interessiert uns die Frage, wie wir unnötige JOINs erkennen können. Wir diskutieren in wie weit eine automatische Entfernung von unnötigen JOINs Sinn macht und wie das Feedback für den Lernenden aussehen kann.
+
+Vorab möchten wir bemerken, dass die Standardisierung und Eliminierung von JOINs eine fortgeschrittene Strategie darstellt. Diese wird daher nicht im Prototypen auftauchen. Dennoch betrachten wir die theretischen Grundlagen ausreichend und tiefgründig, so dass eine Implementation leicht möglich sein wird.
+
+\subsubsection*{CROSS JOIN}
+
+Ein \verb|CROSS JOIN| zweier Relationen liefert das kartesische Produkt beider zurück. Das Schlüsselwort \verb|CROSS JOIN| unter \verb|FROM| markiert diesen. Das Schlüsselwort kann allerdings auch weggelassen und durch ein Komma ersetzt werden. Um eine einheitliche Darstellung dieses Verbundtypes zu gewährleisten, werden wir das Schlüsselwort \verb|CROSS JOIN| ersetzen, so dass wir eine Liste von Tabellen unter \verb|FROM| erhalten, welche mit Komma getrennt sind.
+
+\subsubsection*{NATURAL JOIN}
+
+Ein natürlicher Verbund (NV) ist ein Verbund im \verb|FROM|-Teil. Er wird markiert durch die Schlüsselworte \verb|NATURAL JOIN ON|. Der Verbund zweier Relationen erfolgt über die Attribute, die in beiden Relationen die gleiche Bezeichnung haben. Gibt es keine solchen Attribute, ist das Ergebnis das kartesische Produkt beider Relationen.
+
+Es gibt zwei Möglichkeiten natürliche Verbunde zu standardisieren. Die erste Möglichkeit besteht darin,   alle Verbundskriterien zu durchsuchen. Stellt man fest, dass die Attribute bei einem Verbundskriterium identisch sind, so handelt es sich um einen natürlichen Verbund. Man könnte diese Kriterien nun streichen und mit dem Schlüsselwort \verb|NATURAL JOIN| explizit kennzeichnen, dass es sich um einen NV handelt. Bei dieser Möglichkeit können aber Probleme auftreten. Angenommen der Lernende L reicht eine Lösung ein, die einen natürliche Verbund zwischen \verb|t1| und \verb|t2| explizit enthält. Weiterhin gibt es kein namensgleiches Attribut in \verb|t1| und \verb|t2|, so dass der natürliche Verbund im Prinzip ein kartesisches Produkt ist. In der Musterlösung stehen \verb|t1| und \verb|t2| nur unter \verb|FROM| um eben dieses Produkt zu erzeugen. Die Methode 1 würde nun garkeine Anpassung machen, da es kein Kriterium für einen potentiellen natürlichen Verbund in der Anfrage des L findet. Als Folge können wir die beiden Anfragen nicht matchen, obwohl beide das gleiche tun.
+
+Die zweite Möglichkeit besteht darin explizite natürliche Verbunde umzuschreiben, in dem wir das Schlüsselwort \verb|NATURAL JOIN| entfernen und beide Relationen durchsuchen nach gleichnamigen Attributen. Haben wir solche gefunden, so fügen wir diese explizit als Verbundskriterien ein. Haben wir keine solche Kriterien gefunden, handelt es sich um ein kartesisches Produkt. Wir fügen in diesem Fall die zweite Tabelle unter \verb|FROM| hinzu und eliminieren das Schlüsselwort \verb|NATURAL JOIN|.
+
+Beide Methoden haben einen gewissen Aufwand zu bewältigen. Bei Methode 1 müssen wir alle Verbundskriterien durchsuchen, was im schlimmsten Fall alle atomaren Formeln im \verb|WHERE|-Teil sein können. In Methode 2 müssen wir zwei Relationen paarweise nach gleichnamigen Attributen durchsuchen.
+Wir entscheiden uns für die 2. Methode, da Methode 1, wie oben erwähnt, Schwächen bei der Umwandlung hat. Weil wir den \verb|NATURAL JOIN| unter \verb|FROM| also auflösen, schreiben wir diesen gleich als \verb|INNER JOIN| unter die \verb|WHERE|-Bedingung, wie das  Beispiel \ref{bsp:natjoin} zeigt (angenommen \textit{table1} und \textit{table2} haben beide eine gleichnamige Spalte namens \textit{id}).
+
+Die eben aufgeführten Transformationen sind nur möglich, wenn der \verb|SELECT|-Teil nicht aus der Wildcard \verb|*| besteht. Bei einem NV wird in einem solchen Fall die Spalte mit dem gleichnamigen Attribut in der zweiten Tabelle eliminiert. Bei einem Verbund mit expliziter Angabe des Verbundskriterium wird dies nicht realisiert. Deswegen sind natürliche Verbunde, die im \verb|SELECT|-Teil die Wildcard \verb|*| enthalten, nicht in explizite Verbunde unter \verb|WHERE| überführbar.
+
+\begin{figure}
+\begin{verbatim}
+Vorher:
+SELECT t1.col1 FROM table1 t1 NATURAL JOIN table2 t2
+
+Danach:
+SELECT t1.col1 FROM table1 t1, table2 t2 WHERE t1.id=t2.id
+\end{verbatim}
+\caption{Beispiel: Standardisierung eines natürlichen Verbundes}
+\label{bsp:natjoin}
+\end{figure}
+
+Ein \verb|INNER JOIN| kann sowohl im \verb|FROM|-, als auch im \verb|WHERE|-Teil einer SQL-Anfrage formuliert werden. Damit Untersuchungen einheitlich geschehen können, formulieren wir solche JOINs im \verb|WHERE|-Teil der SQL-Anfrage.
+
+\begin{figure}
+Eingabe:\\
+\verb|SELECT * FROM foo f INNER JOIN bar b ON f.id=b.id|\\
+
+Umwandlung:\\
+\verb|SELECT * FROM foo f, bar b WHERE f.id=b.id|\\
+\caption{Umwandlung von INNER-JOIN}
+\end{figure}
+
+Bei Anwendung dieser Ersetzungsregeln, soll dem Lernenden ein klares Feedback gegeben werden. Es soll verdeutlicht werden, dass eine korrekte Anfrage dennoch Mängel aufweist, da unnötige Formulierungen benutzt wurden.
+
+Es ist hier bereits möglich Terme, die nur aus numerischen Konstanten bestehen, zu ersetzen durch das jeweilige Ergebnis. So könnten arithmetische Operationen bereits ausgeführt und Vergleiche, die nur aus numerischen Konstanten bestehen, durch entsprechende Wahrheitswerte ersetzt werden.
+
+\subsubsection{JOIN-Eliminierung}
+In einem weiteren Zwischenschritt möchten wir gern einige unnötige \verb|JOINS| eliminieren.
+
+\subsubsection{OUTER JOIN}
+
+Betrachten wir eine SQL-Anfrage mit einem \verb|OUTER JOIN|. Befinden sich im \verb|SELECT|-Teil keine Attribute der \verb|JOIN|-Tabelle, so ist der \verb|JOIN| unnötig, weil Daten von der \verb|JOIN|-Tabelle ohnehin nicht ausgegeben werden. Betrachten wir dazu folgendes Beispiel:
+
+\begin{figure}[h]
+\begin{lstlisting}[mathescape]
+SELECT s.vorname, s.nachname 
+FROM studenten s LEFT JOIN klausur k ON s.id = k.id 
+WHERE k.wert <= 3
+\end{lstlisting}
+\caption{Unnötiger OUTER JOIN}
+\label{fig:joinelem1}
+\end{figure}
+
+Im Beispiel in Abbildung \ref{fig:joinelem1} sollen alle Studenten ausgegeben werden, die in einer Klausur die Note drei oder besser bekommen haben. Da es sich hier um einen \verb|OUTER JOIN| handelt und wir nur Namen der Studenten ausgeben möchten, erhalten wir immer eine gesamte Liste der Studentennamen. Der Teil, der für den \verb|JOIN| interessant wäre, also Daten aus der Tabelle \verb|klausur k|, wird nicht ausgegeben. Damit wäre die folgende SQL-Anfrage mit der aus Abbildung \ref{fig:joinelem1} äquivalent.
+
+\begin{figure}[h]
+\begin{lstlisting}[mathescape]
+SELECT s.vorname, s.nachname 
+FROM studenten s 
+\end{lstlisting}
+\caption{Anfrage ohne JOIN}
+\label{fig:joinelem2}
+\end{figure}
+
+Bei einem \verb|RIGHT JOIN| müsste man äquivalent überprüfen ob man Attribute im \verb|SELECT|-Teil hat, die in der ``linken'' Tabelle sind und genauso verfahren.
+
+Möchte man tatsächlich nur die Studenten ausgeben, die eine drei oder besser geschrieben haben, müsste man einen \verb|INNER JOIN| verwenden.
+
+\subsubsection{Transitiv-implizierte INNER JOINs}
+
+Wenn nur Schlüsselattribute einer Tupelvariable X benutzt werden und diese mit \hyphenation{Fremd-schlüs-sel-at-tri-but-en} einer anderen Tupelvariable Y verglichen werden, dann ist X überflüssig.
+
+In der Arbeit \cite{joinelem2} wird dazu ein Algorithmus angegeben, der im Wesentliche oben genannte, überflüssige Tupelvariablen entfernt. Wir wandeln diesen Algorithmus leicht ab, erhalten aber die Grundidee.
+
+Im ersten Schritt erstellen wir transitiv-abgeschlossene Äquivalenzklassen der Attribute, die im \verb|WHERE|-Teil vorkommen. Haben wir also $X.A=Y.B$ und $Y.B=Z.C$, so befinden sich alle drei Attribute in einer Äquivalenzklasse: $\{X.A,Y.B,Z.C\}$. Eine Äquivalenzklasse enthält nur Tupelvariablen und ist transitiv abgeschlossen über dem Operator $=$.
+Dabei bemerken wir, dass Äquivalenzklassen der Mächtigkeit 1 einfache Vergleiche wie \verb|X.A Operator Konstante| sind. Klassen der Mächtigkeit 2 sind einfache, nicht transitive JOINs und Klassen der Mächtigkeit größer als 2 sind offensichtlich mehrfache, transitive JOINs.
+
+Beispiel:
+\begin{lstlisting}[mathescape]
+SELECT t1.x 
+FROM   test1 t1, test2 t2, test3 t3
+WHERE  t1.x = t2.y
+AND    t1.x = t3.z
+AND    t1.y = t2.z
+AND    t1.z > 3;
+\end{lstlisting}
+
+Bei diesem Beispiel erhalten wir die Äquivalenzklasse \verb|{t1.x, t2.y, t3.z}| sowie die Klassen \verb|{t1.y,t2.z}| und \verb|{t1.z}|.
+
+Im nächsten Schritt gehen wir jede Äquivalenzklasse durch, die mindestens drei Einträge haben. Für jeden Eintrag $e\in\mathit{Aequivalenzklasse}$ mit $e=T.A$ überprüfen wir, ob es andere Äquivalenzklassen gibt, die nicht aus einem transitiven \verb|JOIN| entstanden sind (also weniger als drei Einträge haben) und die ein Attribut der Tabelle $T$ enthalten. Ist dies nicht der Fall und die Tabelle $T$ kommt nicht im \verb|SELECT|-Teil vor, dann ist das Attribut $A$ in dem Vergleich, der durch die Äquivalenzklasse repräsentiert wird, unnötig und kann samt zugehöriger Bedingung im \verb|WHERE|-Teil gestrichen werden. Hat die Äquivalenzklasse jetzt weniger als drei Einträge dann wird die Arbeit an dieser Klasse abgebrochen.
+
+Im letzten Schritt müssen wir noch überprüfen, ob es Tupelvariablen im \verb|FROM|-Teil gibt, die aber nun nicht mehr im \verb|WHERE|-Teil auftauchen. Ist dies der Fall, dann streichen wir diese aus dem \verb|FROM|-Teil.
+
+NULL bearbeiten
+
+Beispiel:
+\begin{lstlisting}[mathescape]
+SELECT ps.partkey, avg(ps.supplycost)
+FROM   supplier s, partsupp ps, customer c, orders o
+WHERE  s.suppkey = ps.suppkey 
+AND    s.suppkey = c.custkey
+AND    c.custkey = o_custkey
+AND    o_totalprice >= 100;
+\end{lstlisting}
+
+Zunächst erzeugen wir alle Äquivalenzklassen:
+\begin{lstlisting}[mathescape]
+Klassen = 
+$\{ \{$s.suppkey, ps.suppkey, c.custkey,o.custkey $\}, \{$o.totalprice$\} \}$
+\end{lstlisting}
+
+Die zweite Menge interessiert uns nicht, da sie nicht mehr als zwei Elemente enthält. Wir betrachten daher nur die erste Menge. Wir untersuchen nun jedes einzelne Element auf seine Gültigkeit. \verb|s.suppkey| kommt in keiner anderen Äquivalenzklasse vor und die Tabelle \verb|supplier s| erscheint nicht im \verb|SELECT|-Teil, daher streichen wir \verb|s.suppkey|. Das nächste Attribut \verb|ps.suppkey| kann nicht gestrichen werden, da die Tabelle \verb|partsupp ps| im \verb|SELECT|-Teil erscheint. \verb|c.custkey| kann wiederum gestrichen werden, da es wieder nicht in einer anderen Äquivalenklasse auftaucht und die Tabelle \verb|customer c| nicht im \verb|SELECT|-Teil auftaucht. Dahingegen ist \verb|o.custkey| nicht zu streichen, da die Tabelle \verb|orders o| in einer Äquivalenzklasse auftaucht, welche nicht zu einem \verb|JOIN| gehört (weil sie weniger als drei Elemente beinhaltet). Nun können wir auch die Tabellen \verb|supplier s| und \verb|customer c| streichen, da keine Bedingung mehr Attribute aus diesen Tabellen enthält.
+
+Daher erhalten wir nun die folgende, optimierte Anfrage:
+\begin{lstlisting}[mathescape]
+SELECT ps.partkey, avg(ps.supplycost)
+FROM   partsupp ps, orders o
+WHERE  o.custkey = ps.suppkey 
+AND    o.totalprice >= 100;
+\end{lstlisting}
+
+PSEUDOCODE:
+
+\begin{lstlisting}[mathescape]
+Alle Attribute im WHERE-Teil in Aequivalenklassen $E_i$ packen.
+foreach $e\in E_i$ mit $\vert e\vert \ge 3$ do
+  foreach $t.a\in e$ do
+    if $\vert e\vert \ge 3$ and $t \notin $SELECT and 
+    $\nexists b\in E_i$ mit $\vert b\vert < 3$ und b=t.*
+      e = e - {t.a}
+    end
+  done
+done
+
+Streiche unnoetige Tabellen aus FROM-Teil 
+\end{lstlisting}
+
+
+KOMPLEXITAT TODO
 
 Unabhängig von den bereits vorgestellten Ansätzen der >>Standardisierung<< und der >>Anpassung durch elementare Transformationen<< gibt es einige Umwandlungen, die entweder davor oder danach geschehen sollten. Diese Umwandlungen sollen dazu dienen dem Studenten ein Feedback zu geben. Das bedeutet, dass die Anfrage des Studenten richtig sein kann, allerdings unnötige oder unschöne Konstrukte enthält, welche die Anfrage unnötig kompliziert oder komplex machen.
 
@@ -667,3 +678,30 @@ if not Anfrage hat GROUP BY Statement:
 answer YES
 \end{lstlisting}
 
+\section{Alternativer Ansatz: Elementare Transformationen}
+
+Der nun vorgestellte Ansatz stellt eine Alternative zur >>Anpassung durch Standardisierung<< dar. Beide Ansätze haben ähnliche Ideen, sind jedoch in ihrer Umsetzung verschieden. Beim Ansatz der Standardisierung haben wir zunächst eine SQL-Anfrage genommen und standardisiert. Dies geschah völlig unabhängig zu der zu vergleichenden, zweiten SQL-Anfrage. Es wurden gewisse allgemeine Regeln aufgestellt und nach diesen wurde jede SQL-Anfrage behandelt und angepasst. Der eigentliche Vergleich geschah dann aufgrund eines Vergleichs der standardisierten Anfragen und dem Vergleich von Metadaten (Anzahl Joins, Anzahl atomarer Formeln, etc.). Ein Nachteil von diesem Ansatz ist, dass wir für jedes mögliche Konstrukt in der SQL-Anfrage auch Regeln im System haben, damit wir jene Konstrukte auch anpassen und standardisieren können. Außerdem findet der Vergleich erst im allerletzten Schritt statt.
+
+Die >>Anpassung durch elementare Transformationen<< stellt einen intuitiven Ansatz vor. Wir versuchen hier per Backtracking konkret eine Lösung der anderen anzugleichen. Damit haben wir einen konkreten Unterschied zum bisherigen Ansatz. Wir vergleichen die Lösung direkt und umgehen die Vorverarbeitungen. Im Wesentlichen geben wir also ganz allgemeine Regeln an und in jedem Schritt versuchen wir durch Anwendung dieser Regeln die SQL-Anfrage so anzupassen, dass sie auf unsere zu vergleichende Anfrage passt.
+
+\subsection{Backtracking}
+
+[Dieser Abschnitt ist experimentell]
+
+Für das Backtracking an sich bietet sich die Programmiersprache PROLOG an. Das liegt daran, dass unsere allgemeine Regeln einfach formuliert werden können und bereits den Großteil des Programms stellen. Außerdem benutzt PROLOG die SLD-Resolution, um logische Anfragen auswerten zu können und das ist bereits ein Backtracking. Da wir in unserer Arbeit allerdings die Programmiersprache JAVA gewählt haben, können wir nicht auf PROLOG zurückgreifen. Viel mehr müssen wir das Backtracking selbst implementieren. 
+
+Wir operieren weiterhin auf Parserbäumen, die so entstehen wie im Abschnitt >>Funktionsweise des Parsers<< erklärt wird. Es seien unsere zwei zu vergleichenden SQL-Anfragen mit \textit{Query1} und \textit{Query2} gegeben. Die dazugehörenden Parserbäume bezeichnen wir mit \textit{RT(Query1)} und \textit{RT(Query2)}. Wir versuchen im Folgenden \textit{Query1} an \textit{Query2} anzupassen.
+
+Um nicht zu viele Regeln definieren zu müssen, werden wir Teile der Vorverarbeitung des ersten Ansatzes wieder verwenden. Wir formen beide Anfragen zunächst in die konjunktive Normalform um. Danach gehen wir nach dem folgendem Prinzip vor.
+
+Es sei $\mathit{comm} = \{+,*,AND,OR,=\}$, die Menge aller kommutativen Operatoren. Wir gehen den Vergleich zweier (Teil-)Bäume rekursiv an, das bedeutet unser Algorithmus erhält stets zwei (Teil-)Bäume in Form von zwei Wurzelknoten. Als Ergebnis gibt der Algorithmus dann an, ob diese zwei (Teil-)Bäume unifiziert werden konnten. Im Folgenden wird der Algorithmus textuell beschrieben. Ein detaillierter Pseudocode ist im Anhang unter Abschnitt \ref{sec:backtrack1} zu finden.
+
+
+TODO Algorithmus in Worten beschreiben: 
+Zum einen haben wir kommutative Operatoren wie \verb|{+,*,AND,OR,=}|. Möchten wir zwei (Teil-)Bäume vergleichen, die einen solchen Operator als Wurzelknoten haben, so müssen wir uns im klaren sein, dass der gesuchte Operand an beliebiger Stelle auftauchen kann. Wir werden einen solchen Vergleich so angehen, dass wir uns den ersten Operanden aus Teilbaum 1 nehmen. Ist dieser Operand ein Ausdruck mit Operator $o_1$, dann suchen wir im zweiten Teilbaum nach einem Operanden, welcher auch ein Ausdruck ist mit Operator $o_2$ mit $o_1=o_2$. Ist dies gelungen, so wird verglichen, ob die Teilbäume mit der Wurzel $o_1$ und $o_2$ gleich sind. Dies geschieht dann rekursiv. Ist dies erfolgreich, so streichen wir aus den Ursprungsbäumen die Teilbäume mit Wurzel $o_1$ und $o_2$ und fahren mit dem nächsten Operanden aus dem ersten Teilbaum fort.
+
+Operatoren, die nicht kommutativ sind, sind meistens Vergleichsoperatoren wie \verb|<=, < , > ,>=|. Haben wir zwei Teilbäume mit einem solchen Operator, so ist der Vergleich sehr einfach, denn die jeweiligen Teilbäume unter den Operatoren müssen absolut identisch sein. Dies wird wieder mittels Rekursion geprüft.
+
+Haben wir im ersten Baum einen Vergleichsoperator ausgewählt und können diesen im zweiten Baum nicht finden, so müssen wir auch nach dem umgedrehten Operator in Baum 2 suchen. Finden wir einen solchen, dann vergleichen wir die zugehörigen zwei Teilbäume weiter rekursiv. Zu beachten ist dabei, dass sich die Operandenreihenfolge vom ersten Teilbaum auch umdreht.
+
+Weiterhin sei daran erinnert, dass arithmetische Ausdrücke in unsere Betrachtung nicht mehr als zwei Operanden im komplexen Teil beinhalten können. Siehe dazu Unterabschnitt \ref{subsubsec:arithmetic}.
