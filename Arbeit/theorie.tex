@@ -394,57 +394,91 @@ Es bietet sich aus diesen Umständen eher an, das Hinzufügen von implizierten G
 
 \subsection{Sortierung}
 
-Im aktuell betrachteten Ansatz möchten wir zwei Anfragen dadurch vergleichen, dass wir sowohl die Musterlösung, als auch die Studentenlösung einer Standardisierung unterziehen. Ein ganz wesentlicher Aspekt dabei ist, die Art der Sortierung. Sind die ZQL-Parserbäume isomorph zueinander, dann lässt sich das leicht zeigen, in dem man beide nach gleichartigen Kriterien sortiert und dann einen direkten Abgleich vornimmt.
+Im aktuell betrachteten Ansatz möchten wir zwei Anfragen dadurch vergleichen, dass wir sowohl die Musterlösung, als auch die Studentenlösung einer Standardisierung unterziehen. Ein ganz wesentlicher Aspekt dabei ist, die Art der Sortierung. Wir betrachten dazu im Folgenden, ZQL-Parserbäume. Wie genau diese Bäume aussehen ist im Kapitel \ref{chap:parser} beschrieben. Im wesentlichen ist es aber ein gewurzelter Baum. Dabei stellen Knoten entweder Operatoren, Konstanten oder Variablen dar. Ein Operator $o_1$ kann natürlicherweise, als Kindknoten, wiederum einen Operator $o_2$ haben. Es sei $T(r)$ der gewurzelte Baum mit Wurzelknoten $r$. Wir bezeichnen mit der Menge $\mathit{children}(r)$, die Kindknoten von $r$ in folgender Art und Weise: $textit{child}(r) = \{c_1, c_2, ..., c_n\}$. Dabei erscheint das Kind $c_i$ direkt links vom Kind $c_j$ genau dann, wenn $j = i + 1$. Anders ausgedrückt: Bei einer Breitensuche über $r$ würden wir erst $c_i$ und im Anschluss daran $c_j$ auffinden, genau dann wenn $j = i + $.
 
-Dabei unterscheiden wir zwei Arten von Sortierung: Hat ein Operator als Operanden nur Ausdrücke und keine Konstanten oder Variablen dann sortieren wir die Kindknoten, welche jeweils wieder eigene Terme bilden.
+Es sei $T(r)$ unser ZQL-Parserbaum. Ist der Operator, den $r$ repräsentiert, kommutativ, so können wir alle Kinder $c_i$ in beliebiger Reihenfolge permutieren und würden den Ausdruck, den $T(r)$ darstellt nicht semantisch verändern. Für unsere Standardisierung ist es aber wichtig, dass wir dennoch eine Ordnung auf solchen Operatoren festlegen, damit unsere Parserbäume am Ende vergleichbar sind. Wir überlegen uns dazu folgende Ordnung: 
 
-Hat ein Operator als Operand mindestens eine Konstante oder Variable, so sortieren wir das innere dieses Terms.
-
-\subsubsection{Sortierung im Inneren der Terme}
-
-Hat ein Operator \textit{OP1} als Kindknoten mindestens ein Blatt, dann werden die Kindknoten so sortiert, dass zunächst die Blattknoten (lexikographisch) und erst dann die Teilbäume erscheinen. Möglich wird dies, weil die Tabellen-Aliase in einem vorherigen Schritt bereits automatisch sortiert und benannt wurden. Bei symmetrischen Operatoren wie $=,  \textit{AND}, \textit{OR}$ können die Kindknoten einfach umgehangen/ umsortiert werden. Bei Operatoren wie $\le,\ge$ ist es notwendig den Operator \textit{OP1} umzudrehen. Weil aber die Sortierung außerhalb von Termen auf den Operatoren basiert, ist es notwendig, die Sortierung im Inneren der Terme zuerst durchzuführen.
-
-Dieser Schritt wurde bereits als Vorbereitung der Schritte >>Hinzufügen von implizierten Formeln<< und >>Operatorbeschränkung<< durchgeführt. 
-
-\subsubsection{Sortierung von Termen}
-
-Hat ein Operator \textit{OP1} als Kindknoten nur weitere Operatoren \textit{OP2,OP3}, dann muss anhand dieser Operatoren die Reihenfolge im Baum festegelegt werden. Dies geschieht, indem wir uns einfach eine Reihenfolge der Operatoren ausdenken. Wir überlegen uns folgende Ordnung $order:\textit{Relation}\to\mathbb{N}$, in der eine Relation $r$ vor einer Relation $s$ im standardisierten Parserbaum erscheint, wenn $order(r) < order(s)$.
-
-$order:$\\
-
-\begin{tabular}{|llllllll|}
+\begin{tabular}{|lllllllll|}
 \hline
-$r\in \textit{Relation}$ & $\le$ & $\ge$ & $>$ & $<$ & $=$ & IS NULL & IS NOT NULL  \\
-$\textit{order}(r)$ & 1 & 2 & 3 & 4 & 5 & 6 & 7\\ 
+$r\in \textit{Relation}$ & OR & $\le$ & $\ge$ & $>$ & $<$ & $=$ & IS NULL & IS NOT NULL  \\
+$\textit{order}(r)$ & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8\\ 
 \hline
 \end{tabular}\\
 
-Es sei $\textit{RT}(\textit{OP})$ der Teilbaum des SQL-Ausdruckes mit der Wurzel \textit{OP}. Wir bezeichnen mit $\textit{depth}(\textit{RT}(\textit{OP}))$ die Tiefe des Baumes $\textit{RT}(\textit{OP})$. Es seien $\textit{child}(\textit{OP}) = \{v_1,v_2,...,v_i,...,v_n\}$ die Kindknoten von $\textit{OP}$. Die korrespondierenden Teilbäume $\textit{RT}(v_1),\textit{RT}(v_2),...,\textit{RT}(v_i),...,\textit{RT}(v_n)$ sollen nun wie folgt angeordnet werden: Der Teilbaum $\textit{RT}(v_x)$ erscheint (bei einer fiktiven BFS) vor dem Teilbaum $\textit{RT}(v_y)$ genau dann, wenn $\textit{depth}(\textit{RT}(v_x)) <  \textit{depth}(\textit{RT}(v_y))$. Die Teilbäume werden also der Tiefe nach aufsteigend angeordnet. 
+Die Kinder vom Baum $T(r)$ müssen so angeordnet werden, dass für alle Kinder paarweise das Folgende gilt. Dabei seien $c_i,c_j\in\mathit{children}(r)$ und $r$ muss kommutativ sein.
 
-Wie bereits im Abschnitt >>Teilsortierung<< angedeutet, werden Teilbäume mit gleicher Tiefe nicht sortiert. In diesem Fall erzeugen wir einen Alternativbaum, indem wir die zwei betreffenden Teilbäume vertauschen. Mit diesem Alternativbaum wird dann, parallel zum bisherigen Baum, weiter verarbeitet. Am Ende muss die Musterlösung auch gegen alle Alternativlösungen geprüft werden.
+$$\forall c_i,c_j : i\neq j \to  ( i<j \leftrightarrow order(i) < order(j) ) $$
 
-Eine weitere Alternative zur Behandlung von Teilbäumen mit gleicher Tiefe, ist die Sortierung Anhand der Blattknoten. Dazu sammeln wir in einer Tiefensuche die Werte der Blattknoten und hängen sie in einem String zusammen. Es seien also die Knoten $V_{DFS} = \{v_1,v_2,...,v_k\}$ die Knoten, die in einer Tiefensuche eines (Teil)baumes entstehen. Wir bezeichnen den Blattknotenstring eines gewurzelten Baumes, mit dem Operator $O$ als Wurzel, mit: $$\mathit{leaf\_string}(RT(O)) = \mathit{val}(v_1) \oplus \mathit{val}(v_2) \oplus ... \mathit{val}(v_k)$$
+In Worten ausgedrückt: Für alle, paarweise verschiedenen, Kinder von $T(r)$ gilt: $c_i$ erscheint genau dann vor $c_j$ im Baum (bezüglich eine Breitensuche), wenn die oben angegebene Ordnung eingehalten wird. Dies wird nicht initial der Fall sein, daher müssen wir die Kinder so umsortieren, dass diese Bedingung erfüllt ist. 
 
-Dabei bezeichnen wir mit $\mathit{val}(v_k)$, den Wert eines Blattknotens.
+Ist $r$ nicht kommutativ, so können wir die Kinder von $r$ nicht umsortieren. Wir verfahren dann rekursiv direkt mit den Kindern weiter, da diese ja wieder kommutative Operatoren sein können. Weiterhin kann es sein, dass eins der Kinder von $r$ eine Konstante oder Variable ist, also ein Blattknoten, der keinen weiteren Baum aufspannt. Der $\mathit{order}$-Wert für eine Konstante ist immer 0 und für eine Variable immer $-1$. Damit ist sichergestellt, dass auf gleicher Baumebene immer zuerst Variablen, dann Konstanten und dann Teilbäume erscheinen, vorausgesetzt, der Elternknoten repräsentiert einen kommutativen Operator.
+Sind alle Kindknoten Variablen, so werden diese lexikographisch sortiert. Sind alle Kindknoten Konstanten, so wird der entsprechende Ausdruck ausgewertet, da wir dann die Situation haben, dass ein Operator mit Operandenkonstanten gegeben ist und dieser Ausdruck ist auswertbar. Wir ersetzen dann den Baum $T(r)$ mit $eval(T(r))$, wobei $eval$ den arithmetisch/logischen Ausdruck auswertet und sein Ergebnis zurückliefert.
 
-$$
-val(v)=\begin{cases}
-  \text{Variablenname},  & \text{wenn }v\text{ Variable,}\\
-  \text{Wert}, & \text{wenn }v\text{ eine Konstante.}
-\end{cases}
-$$
+\begin{verbatim}
+sortiere(rootnode r) {
+   if( children(r) = {} ) 
+      return;
+   if( kommutativ(r) ) {
+      sortiere_menge(children(r));
+   }
+   foreach( c in children(r)) {
+      sortiere(c);
+   }
+}
+\end{verbatim}
 
-Aus den Teilbäumen mit gleicher Tiefe, werden solche Strings erzeugt und diese dann verglichen.
-Ist $\mathit{leaf\_string}(RT(O_1)) <  \mathit{leaf\_string}(RT(O_2))$, so wird der Teilbaum $RT(O_1)$ als erstes Kind im Baum auftauchen.
+Folgendes Beispiel soll diese Arbeitsweise verdeutlichen:
 
-\begin{figure}[h]
-\includegraphics[scale=0.5]{Bilder/same_depth1.png}         \includegraphics[scale=0.5]{Bilder/same_depth2.png}
-\caption{Beispiel von Bäumen mit gleicher Tiefe}
-\label{fig:bsp1}
+Wir betrachten den Ausdruck \verb| a<5 AND (b=2 OR c IS NULL) AND (d=5 OR a<6)|. Dieser ist in Abbildung \ref{fig:sort_ex0} als ZQL-Parserbaum zu sehen. Ziel ist es nun, diesen Baum nach unserem Verfahren zu sortieren.
+
+\begin{figure}
+\includegraphics[scale=0.6]{Bilder/sort_ex0.png}
+\caption{Sortierbeispiel: Ausgangsbaum}
+\label{fig:sort_ex0}
 \end{figure}
 
-Wir sehen in Abbildung \ref{fig:bsp1}, auf der linken Seite, zwei Teilbäume mit Wurzelknoten $>$. Wir bezeichen den linken Teilbaum mit $RT(>_l)$ und den rechten mit $RT(>_r)$. Somit ergeben sich $\mathit{leaf\_string}(RT(>_1)) = \mathit{val}(b) \oplus  \mathit{val}(3) = 'b3'$ und 
-$\mathit{leaf\_string}(RT(>_2)) = \mathit{val}(b) \oplus  \mathit{val}(3) = 'a2'$. Wegen $\mathit{a2} < \mathit{b3}$ tauschen die Teilbäume ihre Position und ergeben das rechte Bild in Abbildung \ref{fig:bsp1}. Da wir diesem Schritt die Tupelvariablen bereits durch automatische Variablennamen vereinheitlicht haben, kann der gesamte Name des Attributs samt Präfix der Tupelvariable als $\mathit{val()}$ angesehen werden.
+Wir bemerken, dass wir einen kommutativen Operator (AND) als Wurzelknoten haben und sortieren daher die unmittelbaren Kinder von AND, also \verb|{>,OR,OR}| zu \verb|{OR,OR,>}|, wie in Abbildung \ref{fig:sort_ex1} zu sehen ist.
+
+\begin{figure}
+\includegraphics[scale=0.55]{Bilder/sort_ex12.png}
+\caption{Sortierbeispiel: Sortierung der ersten Ebene}
+\label{fig:sort_ex1}
+\end{figure}
+
+Wir fahren dann fort und führen sortieren rekursiv auf den Kindknoten $c_1,c_2$ und $c_3$ auf. Am Ende erhalten wir den Ausdruck \verb| (b=2 OR c IS NULL) AND (a<6 OR d=5) AND a<5|, welcher durch den Baum in Abbildung \ref{fig:sort_exfin1} dargestellt wird.
+
+\begin{figure}
+\includegraphics[scale=0.55]{Bilder/sort_exfin1.png}
+\caption{Sortierbeispiel: Vorläufiges Ende des Sortierens}
+\label{fig:sort_exfin1}
+\end{figure}
+
+Wenn wir uns Abbildung \ref{fig:sort_exfin1} genauer betrachten, so fällt auf, dass keine eindeutige Ordnung zugrunde liegt. Die beiden Bäume $T(c_1)$ und $T(c_2)$ repräsentieren beide den Operator \verb|OR|. Es ist mit den bisherigen Regeln nicht klar, was passiert, wenn zwei Geschwisterknoten, den gleichen Operator repräsentieren.
+
+Haben wir also den Fall, dass zwei Kindknoten $c_i,c_j$ von $T(r)$ den gleichen Operator repräsentieren müssen wir rekursiv die beiden Teilbäume $T(c_i)$ und $T(c_j)$ untersuchen. Wir begehen dabei eine gleichzeitge und schrittweise Tiefensuche in beiden Bäumen durch, in dem wir sukzessive einen Schritt einer Tiefensuche in einem Baum, dann im anderen Baum durchführen und schließlich einen nächsten Schritt, in gleicher Weise durchführen. Wir bezeichen die Knoten, bei denen sich die Tiefensuche in einem aktuellen Moment befindet als $v_i\in T(c_i)$ und $v_j\in T(c_j)$. Sobald in einem Schritt $v_i \neq v_j$ ist, entscheiden wir anhand von $\mathit{order}(v_i)$ und $\mathit{order}(v_j)$, welcher Teilbaum vor dem anderen erscheinen soll. $T(c_i)$ erscheint damit vor $T(c_j)$, wenn $\mathit{order}(v_i) < \mathit{order}(v_j)$. Dabei schließen wir Blattknoten von der Betrachtung aus. Trifft die Tiefensuche also in einem Schritt auf beiden Seiten auf Blattknoten, so werden diese nicht mit einbezogen.
+
+Ist die Tiefensuche beendet und es gab zu keine Zeitpunkt zwei innere Knoten in beiden Bäumen mit unterschiedlichen Operatoren, so sind offensichtlich die beiden Teilbäume $T(c_i)$ und $T(c_j)$ strukturell gleich, sie haben also identische innere Knoten. In diesem Fall unterscheiden sich beide Bäume nur durch ihre Blattknoten. Wir bezeichnen die Blattknoten von $T(c_i)$ mit $leaf(c_i)$ und in entsprechender Weise $leaf(c_j)$ die Blattknoten von $T(c_j)$. Wir sortieren diese Blattknotenmengen jetzt lexikographisch. Es ist offensichtlich, dass beide Blattknotenmengen gleich mächtig sind, da ansonsten bereits ein Unterscheid beim Tiefensuchvergleich aufgefallen wäre. Wir gehen jetzt sukzessive beide, sortieren Blattknotenmengen durch und vergleichen jeweils das $i.$ Element dieser Mengen, wobei $1\le i \le n$, mit $n=\vert \mathit{leaf}(c_i)\vert = \vert \mathit{leaf}(c_j) \vert$. Unterscheiden sich die $i.$ Elemente der zwei Mengen, dann erscheint $T(c_i)$ vor $T(c_j)$, wenn das i. Element in $\mathit{leaf(c_i)}$ lexikographisch kleiner ist als das i. Element in $\mathit{leaf(c_j)}$.
+
+Zu beachten ist, dass wenn innerhalb eines Teilbaumes $T(c_i)$ wieder die Situation eintritt, dass es zwei Kinder $d_i,d_j\in\mathit{children}(c_i)$ gibt, mit $d_i=d_j$, aber $i\neq j$, dann wird dieser Fall zuerst behandelt. Wir behandeln also Kinder mit gleichen repräsentierten Operatoren von den Blättern aus, also Bottom-Up.
+
+Als Beispiel betrachten wir den Baum in Abbildung \ref{fig:sort_exfinb0}.
+
+\begin{figure}
+\includegraphics[scale=0.55]{Bilder/sort_exfinb0.png}
+\caption{Sortierbeispiel: strukturell identische Teilbäume}
+\label{fig:sort_exfinb0}
+\end{figure}
+
+Wie wir sehen, sind alle inneren Knoten gleich. Es unterscheiden sich nur die Blattknoten, weshalb eine simultane Tiefensuche über $T(c_1)$ und $T(c_2)$ keine Unterschiede aufgezeigt hat. Die Menge der Blattknoten sind $\mathit{leaf}(c_1) = \{d,4,a,5\}$ und $\mathit{leaf}(c_2) = \{b,2,c,3\}$. Wir sortieren diese Mengen nun und erhalten: $\mathit{leaf'}(c_1) = \{4,5,a,d\}$ und $\mathit{leaf'}(c_2) = \{2,3,b,c\}$.
+Wir gehen nun sukzessive beide Mengen durch und vergleichen zunächst das 1. Element beider Mengen. Diese beiden ersten Elemente unterscheiden sich bereits und weil $4 > 2$ müssen die beiden Bäume $T(c_1)$ und $T(c_2)$ vertauscht werden. Wir erhalten also den finalen, sortierten Baum, der in Abbildung \ref{fig:sort_exfinb1} zu sehen ist.
+
+\begin{figure}
+\includegraphics[scale=0.55]{Bilder/sort_exfinb1.png}
+\caption{Sortierbeispiel: umsortierte Teilbäume}
+\label{fig:sort_exfinb1}
+\end{figure}
+
+
 
 \subsection{GROUP BY / HAVING}
 
@@ -502,122 +536,183 @@ SELECT t1.col1 FROM table1 t1, table2 t2 WHERE t1.id=t2.id
 \label{bsp:natjoin}
 \end{figure}
 
-Ein \verb|INNER JOIN| kann sowohl im \verb|FROM|-, als auch im \verb|WHERE|-Teil einer SQL-Anfrage formuliert werden. Damit Untersuchungen einheitlich geschehen können, formulieren wir solche JOINs im \verb|WHERE|-Teil der SQL-Anfrage.
+\subsubsection*{OUTER JOIN}
 
-\begin{figure}
+Bei einem \verb|OUTER JOIN| unterscheiden wir zwischen einem \verb|LEFT OUTER JOIN| und einem \verb|RIGHT OUTER JOIN|. Ein \verb|FULL OUTER JOIN| ist die Verbindung, also ein \verb|UNION| vom linken und rechten \verb|OUTER JOIN|. Wir betrachten daher exemplarisch zunächst den \verb|LEFT OUTER JOIN|, da sich die Betrachtungen dann äquivalent auf den rechten Verbund und damit auf den \verb|FULL OUTER JOIN| übertragen lassen.
+
+Zunächst ist zu klären, wie der \verb|OUTER JOIN| alternativ formuliert werden kann. Dazu gehen wir kurz darauf ein, was ein \verb|LEFT OUTER JOIN| genau macht. Die ``linke'' Tabelle wird vollständig aufgeführt. Dann wird jeder Eintrag der Tabelle sukzessive betrachtet. Gibt es im aktuellen Eintrag einen Verbundspartner in der ``rechten'' Tabelle (vorgegeben durch das Verbundskriterium), dann werden die Daten der ``rechten'' Tabelle an den Eintrag angehangen. Ist dies nicht der Fall, wird der Eintrag mit \textit{NULL} Einträgen aufgefüllt. 
+
+Um die Umwandlung eines \verb|LEFT OUTER JOIN| zu demonstrieren, betrachten wir folgendes Beispiel:
+
+\begin{figure}[h]
+\begin{verbatim}
+SELECT e.empno, e.job, d.dname 
+FROM dept d 
+LEFT JOIN emp e ON e.deptno = d.deptno 
+WHERE e.sal > 2000
+ORDER BY e.empno
+\end{verbatim}
+\caption{OUTER JOIN Beispiel}
+\end{figure}
+
+Wir haben also zwei verschiedene Mengen von Einträgen. Zum einen Einträge, die einen Verbundspartner besitzen und Einträge, die keinen solchen Partner haben. Anbieten würde sich an dieser Stelle die Verwendung einer Vereinigung (\verb|UNION|) der beiden, eben genannten Mengen. Dabei ist die Umwandlung in ein solches Statement mit einem \verb|UNION| keinesfalls trivial und unterliegt einigen Einschränkungen. 
+
+Ziel ist es also zwei SQL-Anfragen zu formulieren, die jeweils für die oben genannten Mengen stehen. Anschließend werden diese Mengen mit einem \verb|UNION| verbunden.
+
+Für die SQL-Anfrage, welche die Menge der Verbundspartner angibt, übernehmen wir zunächst den \verb|SELECT|-Teil. Die zwei Tabellen, die am Verbund beteiligt sind werden im \verb|FROM|-Teil nun als \verb|CROSS JOIN| aufgeschrieben, also mit Komma getrennt. Der \verb|WHERE|-Teil wird ebenfalls vom gegebenen \verb|OUTER JOIN|-Statement übernommen und durch die Angabe des Verbundskriteriums ergänzt.
+Wir erhalten also die folgende Anfrage bezüglich unseres Beispiels:
+
+\begin{figure}[h]
+\begin{verbatim}
+SELECT e.empno, e.job, d.dname 
+FROM dept d, emp e
+WHERE d.deptno = e.deptno
+AND e.sal > 2000
+ORDER BY e.empno
+\end{verbatim}
+\caption{OUTER JOIN Umwandlung, 1. Teil}
+\end{figure}
+
+Nun muss noch die Teilmenge aller Tupel hinzugefügt werden, die keinen Verbundspartner haben. Wir übernehmen zunächst wieder den \verb|SELECT|-Teil der Ursprungsanfrage, ersetzen aber alle Spaltennamen der ``rechten'' Tabelle mit \verb|NULL|, weil diese Werte aufgrund fehlender Verbundspartner nicht belegt sind. Diese Ersetzungen müssen ebenso im \verb|WHERE|-Teil stattfinden. Die rechte Tablle wird aus dem \verb|FROM|-Teil gestrichen. Nun passen wir den \verb|WHERE|-Teil an. Hier könnte man auf die Idee kommen mit einem \verb|NOT IN| Semijoin zu prüfen, dass auch nur Tupel ohne Verbundspartner aufgenommen werden. Erlaubt  das Verbundskriterium in der ``linken'' Tabelle \verb|NULL|-Werte, so würden diese Einträge nicht erscheinen. Bei einem \verb|LEFT OUTER JOIN| sind diese Tupel aber mit erfasst. Es bietet sich daher eine \verb|NOT EXISTS|-Unterabfrage an. 
+
+\begin{figure}[h]
+\begin{verbatim}
+SELECT NULL, NULL, d.dname
+FROM dept d 
+WHERE NOT EXISTS(
+    SELECT 1 FROM emp e WHERE d.deptno = e.deptno )
+AND NULL > 2000
+ORDER BY e.empno
+\end{verbatim}
+\caption{OUTER JOIN Umwandlung, 2. Teil}
+\end{figure}
+
+Nun müssen beide Anfragen mit einem \verb|UNION ALL| verknüpft werden. Dabei können wir das \verb|ORDER BY|-Statement ausklammern, da dieses erst auf dem Datensatz, der mit \verb|UNION ALL| erzeugt wurde, ausgeführt wird. Unser Endergebnis bezogen auf unser Beispiel lautet also:
+
+\begin{figure}[h]
+\begin{verbatim}
+SELECT e.empno, e.job, d.dname FROM dept d, emp e
+WHERE d.deptno = e.deptno AND e.sal > 2000
+    UNION ALL
+SELECT NULL,NULL,d.dname FROM dept d 
+WHERE NOT EXISTS(
+  SELECT 1 from emp e where d.deptno = e.deptno)
+AND NULL > 2000
+ORDER BY empno
+\end{verbatim}
+\caption{OUTER JOIN Umwandlung, finaler Schritt}
+\end{figure}
+
+Wie man bereits am Beispiel sieht, könnte man im \verb|WHERE|-Teil den Ausdruck \verb|NULL > 2000| zu \verb|NULL| vereinfachen oder gar die zweite Anfrage komplett streichen, da sie nie erfüllt ist. 
+
+Eine Besonderheit stellt das \verb|GROUP BY|-Statement dar. Dies wurde nicht im Beispiel benutzt, daher betrachten wir nun im Folgenden, wie damit zu verfahren ist.
+
+Wird in der \verb|OUTER JOIN| Abfrage nach mindestens einem Attribut der ``rechten'' Tabelle gruppiert, so müssen wir die Gruppierung in eine weitere Anfrage schachteln. Dazu bauen wir die Anfrage, wie oben beschrieben, auf und streichen das \verb|GROUP BY|-Statement zunächst. Aggregationsfunktion \textit{agg(x)} werden ersetzt zu \textit{x}. Um die dann entstandene, mit \verb|UNION ALL| verknüpfte SQL-Anfrage A schachteln wir eine weitere Anfrage B. Der \verb|SELECT|-Teil von B entspricht dem, der ursprünglichen \verb|OUTER JOIN|-Anfrage. Der \verb|FROM|-Teil von B entspricht der konstruierten Anfrage A. Einen \verb|WHERE|-Teil von B gibt es nicht, da dieser bereits in der Anfrage A eingearbeitet wurde. Ergänzt wird die Anfrage B mit dem \verb|GROUP BY|- und \verb|ORDER BY|-Statement der Ursprungsanfrage.
+
+Existiert im \verb|GROUP BY|-Teil der Originalanfrage kein Attribut der ``rechten'' Tabelle, ist die eben genannte Schachtelung nicht notwendig. Es reicht hier aus den \verb|GROUP BY|-Teil einfach in die Konstruierten Teilanfragen mit einzubeziehen. Grund dafür ist, dass wir disjunktive Gruppierungen in beiden Anfragen erhalten und diese ohne Probleme mit \verb|UNION ALL| vereinigen können.
+
+Dies waren alle notwendigen Schritte um einen \verb|LEFT OUTER JOIN| äquivalent in eine komplexe Anfrage mit \verb|UNION ALL| und Semijoins zu überführen. Zu Bemerken ist an dieser Stelle, dass ein \verb|RIGHT OUTER JOIN| entsprechend behandelt wird, nur mit umgekehrten Seiten. Einen \verb|FULL OUTER JOIN| erhalten wir durch ein \verb|UNION| vom \verb|LEFT OUTER| und \verb|RIGHT OUTER JOIN|. 
+
+Nach dieser Betrachtung müssen wir jedoch feststellen, dass die Umwandlung eines \verb|OUTER JOIN| recht vielschichtig und aufwendig ist. Es ist zwar möglich diesen äquivalent umzuformen, allerdings wird der Ausdruck dadurch enorm aufgebläht. Weiterhin funktioniert diese Umwandlung nur in eine Richtung problemlos, nämlich vom \verb|JOIN| zum \verb|UNION|-Ausdruck. Umgekehr ist es sehr aufwendig festzustellen, ob ein \verb|UNION ALL| auch ein \verb|OUTER JOIN| ist, da man zum Beispiel Vergleiche mit \verb|NULL|-Werten (wie im Beispiel: \verb|NULL > 2000|) gewöhnlich nicht ausschreibt oder gar entfernt. Unser Programm soll \verb|OUTER JOIN| daher nicht in einen \verb|UNION ALL| Ausdruck umwandeln. Wir beschränken uns in der Praxis also darauf, einen \verb|OUTER JOIN| unter \verb|FROM| rein syntaktisch zu erkennen und nicht umzuwandeln.
+
+\subsubsection*{INNER JOIN}
+
+Unter einem \verb|INNER JOIN| verstehen wir den Verbund zweier Tabellen unter \verb|FROM|, mit den Schlüsselworten \verb|INNER JOIN|. Ein solcher Verbund kann leicht als \verb|CROSS JOIN| mit Auswahl in der \verb|WHERE|-Bedingung formuliert werden. Dazu entfernen wir den \verb|INNER JOIN| aus dem \verb|FROM|-Teil und erzeugen einen \verb|CROSS JOIN|. Die Verbundbedingungen werden unter \verb|WHERE| eingefügt.
+
+Ein explizit aufgeschriebener \verb|INNER JOIN| kann auch ein \verb|NATURAL JOIN| sein. Da wir solche Verbunde aber auch als \verb|CROSS JOIN| aufschreiben wollen (siehe oben), müssen wir diesen Spezialfall nicht gesondert betrachten. Das folgende Beispiel soll die Umwandlung von \verb|INNER JOIN| verdeutlichen:
+
+\begin{figure}[h]
 Eingabe:\\
-\verb|SELECT * FROM foo f INNER JOIN bar b ON f.id=b.id|\\
+\verb|SELECT * FROM emp e INNER JOIN dept d ON e.deptno.id = d.deptno|\\
 
 Umwandlung:\\
-\verb|SELECT * FROM foo f, bar b WHERE f.id=b.id|\\
+\verb|SELECT * FROM emp e, dept d WHERE e.deptno = d.deptno|\\
 \caption{Umwandlung von INNER-JOIN}
 \end{figure}
 
-Bei Anwendung dieser Ersetzungsregeln, soll dem Lernenden ein klares Feedback gegeben werden. Es soll verdeutlicht werden, dass eine korrekte Anfrage dennoch Mängel aufweist, da unnötige Formulierungen benutzt wurden.
-
-Es ist hier bereits möglich Terme, die nur aus numerischen Konstanten bestehen, zu ersetzen durch das jeweilige Ergebnis. So könnten arithmetische Operationen bereits ausgeführt und Vergleiche, die nur aus numerischen Konstanten bestehen, durch entsprechende Wahrheitswerte ersetzt werden.
 
 \subsubsection{JOIN-Eliminierung}
-In einem weiteren Zwischenschritt möchten wir gern einige unnötige \verb|JOINS| eliminieren.
 
-\subsubsection{OUTER JOIN}
-
-Betrachten wir eine SQL-Anfrage mit einem \verb|OUTER JOIN|. Befinden sich im \verb|SELECT|-Teil keine Attribute der \verb|JOIN|-Tabelle, so ist der \verb|JOIN| unnötig, weil Daten von der \verb|JOIN|-Tabelle ohnehin nicht ausgegeben werden. Betrachten wir dazu folgendes Beispiel:
-
-\begin{figure}[h]
-\begin{lstlisting}[mathescape]
-SELECT s.vorname, s.nachname 
-FROM studenten s LEFT JOIN klausur k ON s.id = k.id 
-WHERE k.wert <= 3
-\end{lstlisting}
-\caption{Unnötiger OUTER JOIN}
-\label{fig:joinelem1}
-\end{figure}
-
-Im Beispiel in Abbildung \ref{fig:joinelem1} sollen alle Studenten ausgegeben werden, die in einer Klausur die Note drei oder besser bekommen haben. Da es sich hier um einen \verb|OUTER JOIN| handelt und wir nur Namen der Studenten ausgeben möchten, erhalten wir immer eine gesamte Liste der Studentennamen. Der Teil, der für den \verb|JOIN| interessant wäre, also Daten aus der Tabelle \verb|klausur k|, wird nicht ausgegeben. Damit wäre die folgende SQL-Anfrage mit der aus Abbildung \ref{fig:joinelem1} äquivalent.
-
-\begin{figure}[h]
-\begin{lstlisting}[mathescape]
-SELECT s.vorname, s.nachname 
-FROM studenten s 
-\end{lstlisting}
-\caption{Anfrage ohne JOIN}
-\label{fig:joinelem2}
-\end{figure}
-
-Bei einem \verb|RIGHT JOIN| müsste man äquivalent überprüfen ob man Attribute im \verb|SELECT|-Teil hat, die in der ``linken'' Tabelle sind und genauso verfahren.
-
-Möchte man tatsächlich nur die Studenten ausgeben, die eine drei oder besser geschrieben haben, müsste man einen \verb|INNER JOIN| verwenden.
-
-\subsubsection{Transitiv-implizierte INNER JOINs}
+Im vorherigem Abschnitt haben wir bereits alle üblichen Verbunde betrachtet und gezeigt, wie wir diese äquivalent umformen können. Wir haben erreicht, dass alle Verbunde unter \verb|FROM| ersetzt wurden zu \verb|CROSS JOIN| mit Auswahlkriterien unter \verb|WHERE|. Wir möchten daher in diesem Abschnitt klären, welche Möglichkeiten es gibt, die so entstandenen Verbunde, zu eliminieren, wenn sich herausstellt, dass sie überflüssig sind.
 
 Wenn nur Schlüsselattribute einer Tupelvariable X benutzt werden und diese mit \hyphenation{Fremd-schlüs-sel-at-tri-but-en} einer anderen Tupelvariable Y verglichen werden, dann ist X überflüssig.
 
-In der Arbeit \cite{joinelem2} wird dazu ein Algorithmus angegeben, der im Wesentliche oben genannte, überflüssige Tupelvariablen entfernt. Wir wandeln diesen Algorithmus leicht ab, erhalten aber die Grundidee.
+Ziel dieses Abschnittes ist es, eine Idee vorzustellen, wie redundante Verbunde mit Hilfe von referentiellen Integritätsbedingungen (RI) gefunden werden können. 
+Die mögliche Anwendung ist natürlicherweise die Entfernung einer Relation bei dem der Verbund aus Tabellen besteht, die durch eine RI-Bedingung verbunden ist (nachfolgend als RI-Joins bezeichnet) und bei der die Tabelle, die den Primärschlüssel enthält nur im Join referenziert wird. Ein RI-Join besteht natürlicherweise aus einem Primärschlüssel- und einem Fremdschlüsselattribut.
 
-Im ersten Schritt erstellen wir transitiv-abgeschlossene Äquivalenzklassen der Attribute, die im \verb|WHERE|-Teil vorkommen. Haben wir also $X.A=Y.B$ und $Y.B=Z.C$, so befinden sich alle drei Attribute in einer Äquivalenzklasse: $\{X.A,Y.B,Z.C\}$. Eine Äquivalenzklasse enthält nur Tupelvariablen und ist transitiv abgeschlossen über dem Operator $=$.
-Dabei bemerken wir, dass Äquivalenzklassen der Mächtigkeit 1 einfache Vergleiche wie \verb|X.A Operator Konstante| sind. Klassen der Mächtigkeit 2 sind einfache, nicht transitive JOINs und Klassen der Mächtigkeit größer als 2 sind offensichtlich mehrfache, transitive JOINs.
+Das Verfahren wird in der Arbeit \cite{joinelem2} näher vorgestellt und läuft im wesentlichen in 4 Schritten ab.
 
-Beispiel:
-\begin{lstlisting}[mathescape]
-SELECT t1.x 
-FROM   test1 t1, test2 t2, test3 t3
-WHERE  t1.x = t2.y
-AND    t1.x = t3.z
-AND    t1.y = t2.z
-AND    t1.z > 3;
-\end{lstlisting}
+\begin{enumerate}
+\item Wir bilden zunächst transitive Spaltenäquivalenzklassen von allen Joinprädikaten. Ist als \verb|A=B| und \verb|B=C|, dann können wir transitiv ableiten, dass ebenso \verb|A=C| gilt. Alle drei Spalten, \verb|A,B,C| befinden sich dann in einer Äquivalenzklasse.
 
-Bei diesem Beispiel erhalten wir die Äquivalenzklasse \verb|{t1.x, t2.y, t3.z}| sowie die Klassen \verb|{t1.y,t2.z}| und \verb|{t1.z}|.
+\item Alle Tabellen unter \verb|FROM|, die mit RI-Joins verknüpft sind, werden in zwei Gruppen eingeteilt. Tabellen in der R-Gruppe sind entfernbar (removable) und Tabellen in der N-Gruppe sind nicht entfernbar (non-removable). Die notwendige Bedingung, die bestimmt, wann eine Tabelle in die R-Gruppe gehört ist, dass es eine parent-table für irgendeine RI. Dies ist jedoch nicht die einzige notwendige Bedingung. Andere, zu erfüllende Bedingung, sind weitaus komplexer und sind für die Präsentation des Ansatzes dieser Methode zu umfangreich. Nachzulesen ist das detaillierte Verfahren in der Arbeit \cite{joinelem2}.
 
-Im nächsten Schritt gehen wir jede Äquivalenzklasse durch, die mindestens drei Einträge haben. Für jeden Eintrag $e\in\mathit{Aequivalenzklasse}$ mit $e=T.A$ überprüfen wir, ob es andere Äquivalenzklassen gibt, die nicht aus einem transitiven \verb|JOIN| entstanden sind (also weniger als drei Einträge haben) und die ein Attribut der Tabelle $T$ enthalten. Ist dies nicht der Fall und die Tabelle $T$ kommt nicht im \verb|SELECT|-Teil vor, dann ist das Attribut $A$ in dem Vergleich, der durch die Äquivalenzklasse repräsentiert wird, unnötig und kann samt zugehöriger Bedingung im \verb|WHERE|-Teil gestrichen werden. Hat die Äquivalenzklasse jetzt weniger als drei Einträge dann wird die Arbeit an dieser Klasse abgebrochen.
+\item Alle Tabellen in der R-Gruppe werden entfernt.
 
-Im letzten Schritt müssen wir noch überprüfen, ob es Tupelvariablen im \verb|FROM|-Teil gibt, die aber nun nicht mehr im \verb|WHERE|-Teil auftauchen. Ist dies der Fall, dann streichen wir diese aus dem \verb|FROM|-Teil.
+\item Da es Fremdschlüssel geben kann, die \verb|NULL|-Werte erlauben, ist es notwendig, ein \verb|IS NOT NULL|-Prädikat dort hinzuzufügen, wo die parents einer RI entfernt wurden und \verb|NULL|-Werte erlaubt sind.
+\end{enumerate}
 
-NULL bearbeiten
+Als visuelles Hilfsmittel verwendet das Verfahren sogenannte Joingraphen $G=(V,E)$. Die Knotenmenge $V$ besteht aus Joinattributen. Eine Kante zwischen zwei Knoten $u,v$ existiert genau dann, wenn $u$ und $v$ Teil eines Joinprädikates sind. Handelt es sich bei dem Join um einen RI-Join, also ein Primär-/ Fremdschlüssel Join, dann sind $u,v$ durch eine gerichtete Kante verbunden, wobei der Pfeil dann vom Fremdschlüsselattribut/Kind zum Primärschlüsselattribut/Eltern geht.
 
-Beispiel:
+Nimmt man sich diese Joingraphen zur Hilfe gibt es drei auszuführende Schritte. Im ersten Schritt wird der Joingraph erzeugt, nach oben genannten Regeln. Dabei werden RI-Joins noch nicht gerichtet dargestellt. Wir erhalten $G_1$.
+
+Im zweiten Schritt fügt man alle transitiv-implizierten Joins als nicht RI-Joins hinzu und markiert die echten RI-Joins entsprechend mit Pfeilen. Wir erhalten $G_2=(V_2,E_2)$
+
+Im dritten Schritt werden unnötige (redundante) Joins entfernt. Ein Knoten $v\in V_2$ ist entfernbar, wenn $v$ Teil eines RI-Joins ist und $v$ nur als Joinkriterium in der Anfrage vorkommt, also weder im \verb|SELECT-, WHERE-| oder \verb|GROUP BY-|Statement vorkommt. Wir erhalten $G_3$, aus dem wir auch ablesen können welche Joins noch notwendig sind. 
+
+Folgendes Beispiel soll das eben Erwähnte verdeutlichen.
+
 \begin{lstlisting}[mathescape]
 SELECT ps.partkey, avg(ps.supplycost)
 FROM   supplier s, partsupp ps, customer c, orders o
 WHERE  s.suppkey = ps.suppkey 
 AND    s.suppkey = c.custkey
 AND    c.custkey = o_custkey
-AND    o_totalprice >= 100;
+AND    o.totalprice >= 100
+GROUP BY ps.partkey
 \end{lstlisting}
 
-Zunächst erzeugen wir alle Äquivalenzklassen:
-\begin{lstlisting}[mathescape]
-Klassen = 
-$\{ \{$s.suppkey, ps.suppkey, c.custkey,o.custkey $\}, \{$o.totalprice$\} \}$
-\end{lstlisting}
+Wir erzeugen zunächst den ersten Joingraphen $G_1$, in dem wir jede Joinbedingug als verbundes Paar in den Graphen einfügen:
 
-Die zweite Menge interessiert uns nicht, da sie nicht mehr als zwei Elemente enthält. Wir betrachten daher nur die erste Menge. Wir untersuchen nun jedes einzelne Element auf seine Gültigkeit. \verb|s.suppkey| kommt in keiner anderen Äquivalenzklasse vor und die Tabelle \verb|supplier s| erscheint nicht im \verb|SELECT|-Teil, daher streichen wir \verb|s.suppkey|. Das nächste Attribut \verb|ps.suppkey| kann nicht gestrichen werden, da die Tabelle \verb|partsupp ps| im \verb|SELECT|-Teil erscheint. \verb|c.custkey| kann wiederum gestrichen werden, da es wieder nicht in einer anderen Äquivalenklasse auftaucht und die Tabelle \verb|customer c| nicht im \verb|SELECT|-Teil auftaucht. Dahingegen ist \verb|o.custkey| nicht zu streichen, da die Tabelle \verb|orders o| in einer Äquivalenzklasse auftaucht, welche nicht zu einem \verb|JOIN| gehört (weil sie weniger als drei Elemente beinhaltet). Nun können wir auch die Tabellen \verb|supplier s| und \verb|customer c| streichen, da keine Bedingung mehr Attribute aus diesen Tabellen enthält.
+\begin{figure}[h]
+\includegraphics[scale=0.4]{Bilder/joinelem_g1.png}
+\caption{$G_1$}
+\end{figure}
 
-Daher erhalten wir nun die folgende, optimierte Anfrage:
+Im zweiten Schritt fügen wir nun alle transitiv-implizierten Joins als nicht RI-Joins hinzu, also als ungerichtete Kanten. Wir weisen dann die RI-Joins aus, in dem wir sie als gerichtete Kanten markieren und erhalten damit $G_2$:
+
+\begin{figure}[h]
+\includegraphics[scale=0.4]{Bilder/joinelem_g2.png}
+\caption{$G_2$}
+\end{figure}
+
+Im letzten Schritt gehen wir alle Knoten sukzessive durch. Da jeder Knoten ein Attribut repräsentiert, prüfen wir ob das repräsentierte Attribut in einem Nicht-Join Prädikat unter \verb|WHERE|, im \verb|GROUP BY|- oder im \verb|SELECT|-Teil vorkommt. Ist dies nicht der Fall, eliminieren wir den Knoten und alle zugehörigen Kanten. In unserem Beispiel kommt weder \verb|s.suppkey| noch \verb|c.custkey| in den genannten Teilen der Anfrage vor. Wir löschen diese Attribute aus $G_2$ und erhalten $G_3$ mit nur noch einem, notwendigen Join:
+
+\begin{figure}[h]
+\includegraphics[scale=0.4]{Bilder/joinelem_g3.png}
+\caption{$G_3$}
+\end{figure}
+
+Durch die Entfernung von Joinprädikaten kann es nun sein, dass auf einige Tabellen, die unter \verb|FROM| stehen, nicht mehr zugegriffen wird. Ist dies der Fall und sind weitere Bedingungen erfüllt, die detailliert in \cite{joinelem2} aufgeführt sind, so müssen diese Tabellen entfernt werden, da sonst ein ungewollter \verb|CROSS JOIN| entsteht, der u.a. zu vielen ungewollten Duplikaten führen kann.
+
+Wir erhalten also folgende SQL-Anfrage:
+
 \begin{lstlisting}[mathescape]
 SELECT ps.partkey, avg(ps.supplycost)
 FROM   partsupp ps, orders o
 WHERE  o.custkey = ps.suppkey 
-AND    o.totalprice >= 100;
+AND    o.totalprice >= 100
+GROUP BY ps.partkey
 \end{lstlisting}
 
-PSEUDOCODE:
+Zu Bemerken ist, dass es noch mehr Fälle gibt, die der Algorithmus in \cite{joinelem2} behandelt. Der vorgestellte Ansatz entfernt nur eine Art von redundanten Joins. 
 
-\begin{lstlisting}[mathescape]
-Alle Attribute im WHERE-Teil in Aequivalenklassen $E_i$ packen.
-foreach $e\in E_i$ mit $\vert e\vert \ge 3$ do
-  foreach $t.a\in e$ do
-    if $\vert e\vert \ge 3$ and $t \notin $SELECT and 
-    $\nexists b\in E_i$ mit $\vert b\vert < 3$ und b=t.*
-      e = e - {t.a}
-    end
-  done
-done
+Redundante Joins zu finden ist keine triviale Aufgabe. Es gibt viele verschiedene Bedingungen die geprüft werden müssen und selbst dann gibt es keinen universellen Ansatz, der sämtliche redundante Joins entdeckt. Aufgrund dieser Komplexität, wird die Joineleminierung nicht in den Prototypen, der im Rahmen dieser Arbeit entsteht, Einzug halten. Für eine zukünftige Erweiterung des Programms um mehr semantic-checks, wäre dieser Ansatz aber gut geeignet.
 
-Streiche unnoetige Tabellen aus FROM-Teil 
-\end{lstlisting}
 
+\subsubsection*{OUTER JOIN-Eliminierung}
+
+Innere Joins sind einfacher zu handhaben als äußere Joins. In der Arbeit \cite{outer2inner} wird ein Verfahren vorgestellt, welches \verb|OUTER JOIN| äquivalent in \verb|INNER JOIN| umwandelt. Das Verfahren ist komplex und mehrstufig, kann aber mit allen \verb|OUTER JOIN| umgehen. Der entstandene \verb|INNER JOIN| ist allerdings aufgebläht und nicht mehr lesbar, da er künstlich konstruiert ist. Im Rahmen unserer Arbeit interessiert dieser Fakt nur am Rande, im Zuge einer Erweiterung der semantischen Funktionen unseres Programmes, ist dieser Ansatz aber sicherlich erwähnenswert und interessant.
 
 KOMPLEXITAT TODO
 
