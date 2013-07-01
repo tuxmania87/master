@@ -1,3 +1,5 @@
+package de.unihalle.sqlequalizer;
+
 
 public class Ersetzungen {
 

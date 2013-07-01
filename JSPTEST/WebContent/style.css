@@ -1,0 +1,12 @@
+div#main_center {
+	margin:auto;
+	width:900px;	
+}
+
+div.description {
+	border:2px dashed black;
+	padding:5px;
+	text-align:justify;
+	font-family:Monospace;
+	width:700px;
+}

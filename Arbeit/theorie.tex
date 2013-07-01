@@ -197,74 +197,123 @@ Im letzten Schritt haben wir die Formel \verb|((a <= 5) or ((b <= 5) and (c <= 5
 
 \subsection{Ersetzung von syntaktischen Varianten}
 
-Um eine Anfrage zu standardisieren müssen wir den syntaktischen Zucker entfernen. Dies geschieht, indem man nur eine syntaktische Schreibweise anerkennt und alle anderen Schreibweisen in die zulässige umgewandelt. Zu erwähnen sind folgende Ersetzungen, die durchgeführt werden sollen um syntaktisch vielfältige, aber semantisch äquivalente Ausdrücke zu minimieren:
+Um eine Anfrage zu standardisieren müssen wir den syntaktischen Zucker entfernen. Dies geschieht, indem man nur eine syntaktische Schreibweise anerkennt und alle anderen Schreibweisen in die zulässige umgewandelt. 
+
+Mit dem Operator \verb|BETWEEN| testen wir ob ein gegebener Ausdruck zwischen zwei Werten, upper und lower, befindet. Wir schreiben den Ausdruck \verb|e BETWEEN upper AND lower| äquivalent um, in dem wir nur Vergleichsoperatoren benutzten. \\Unser Ausdruck lautet dann: \verb|e >= upper AND e <= lower|.
+
+Der Operator \verb|IN| prüft, ob ein gegebener Ausdruck einen bestimmten Wert, aus einer Liste, zugewiesen ist. Die Liste kann dabei als Unterabfrage oder als Liste von Konstanten beschrieben werden. Handelt es sich um eine Liste von Konstanten, so können wir \\\verb|e IN (const1, const2, ..., constn)| ersetzen, in dem wir prüfen ob \verb|expression| einen der konstanten Werte annimmt. Wir verknüpfen also $n$ Vergleiche disjunktiv miteinander. Wir erhalten dadurch: \verb|e = const1 OR e = const2 OR ... OR e = constn|.
+
+Ähnlich dazu verhält sich der Operator \verb|ALL|. Er tritt in folgender Form auf:\\
+\verb|operand comparison_operator ALL (subquery)|. Dabei kann \verb|subquery| auch eine Liste von Konstanten sein. Es wird in jedem Fall geprüft ob der Operand und jedes der Listenelemente in der Vergleichsrelation enthalten ist. Haben wir als \verb|subquery| eine Liste von Konstanten, so ist dies äquivalent mit dem paarweisen Vergleich von \verb|operand| und jedem Listenelement. Diese $n$ Vergleiche werden dann konjunktiv verknüpft, also: \\
+\verb|operand operator elem1 AND ... AND operand operator elemn|. 
+Diese syntaktische Anpassung ist nicht im Programm enthalten, da der ZQL-Parser keine Listen unter \verb|ALL| versteht.
+
+Der Operator \verb|ANY| ist beinahe äquivalent zu \verb|ALL| mit dem Unterschied, dass die entstandene Liste der Vergleiche nicht konjunktiv, sondern disjunktiv verknüpft wird.
+
+Befindet sich im \verb|WHERE|-Teil eine \verb|EXISTS|-Unterabfrage, so können wir den \verb|SELECT|-Teil dieser Unterabfrage vereinfachen. Da wir nur wissen wollen ob es Ergebnistupel aus der Unterabfrage gibt, ist es nicht notwendig bestimmte Spalten aus dieser Unterabfrage zu abzufragen, da wir diese in der Oberanfrage nicht verwenden oder brauchen. Daher ersetzen wir den \verb|SELECT|-Teil von \verb|EXISTS|-Unterabfragen zu:\verb|SELECT 1|. Ein Beispiel dieser Umwandlung ist in Abbildung \ref{fig:exists_ex1} zu sehen.
 
 \begin{figure}[h]
-\begin{tabular}{ccl}
-\verb|A BETWEEN B AND C| & $\to$  & \verb|A >= B AND A <= C|\\
-\verb|SELECT ALL| & $\to$ & \verb|SELECT|\\
-\verb|ORDER BY VAR ASC| &  $\to$ & \verb|ORDER BY VAR|\\
-\verb|A IN ('X', 'Y', 'Z')| & $\to$ & \verb|A = 'X' OR A = 'Y' OR A='Z'|\\
-\verb|EXISTS (SELECT A,B,C ...)| & $\to$ & \verb|EXISTS (SELECT 1 ...)|\\
-\end{tabular}
-\caption{Entfernen von syntaktischen Varianten}
+\begin{verbatim}
+SELECT e.sal FROM emp e WHERE EXISTS (
+    SELECT expression FROM dept d 
+    WHERE e.deptno = d.deptno )
+    
+SELECT e.sal FROM emp e WHERE EXISTS (
+    SELECT 1 FROM dept d 
+    WHERE e.deptno = d.deptno )
+\end{verbatim}
+\caption{Umwandlung des SELECT-Teils einer EXISTS-Unterabfrage}
+\label{fig:exists_ex1}
 \end{figure}
+
+
+%\begin{figure}[h]
+%\begin{tabular}{ccl}
+%\verb|A BETWEEN B AND C| & $\to$  & \verb|A >= B AND A <= C|\\
+%\verb|SELECT ALL| & $\to$ & \verb|SELECT|\\
+%\verb|ORDER BY VAR ASC| &  $\to$ & \verb|ORDER BY VAR|\\
+%\verb|A IN ('X', 'Y', 'Z')| & $\to$ & \verb|A = 'X' OR A = 'Y' OR A='Z'|\\
+%\verb|EXISTS (SELECT A,B,C ...)| & $\to$ & \verb|EXISTS (SELECT 1 ...)|\\
+%\end{tabular}
+%\caption{Entfernen von syntaktischen Varianten}
+%\end{figure}
 
 \subsubsection*{Unteranfragen}
 
 Es ist bekannt, dass sämtliche Typen von Unteranfragen eliminiert oder durch \verb|EXISTS|-Anfragen ersetzt werden können. Streng genommen handelt es sich hier zwar um mehr als nur eine syntaktische Variante, aber dennoch wollen wir das Ersetzen von Unteranfragen in diesem Abschnitt betrachten.
-\subsubsection*{Ersetzen von ALL}
 
-\verb|... SAL >= ALL(1000, LOW_SAL)|  wird zu:\\
-\verb|... SAL >= 1000 AND SAL >= LOW_SAL|
+Wir behandeln in diesem Abschnitt nur echte Unterabfragen, das heißt die Unterabfrage darf keine Liste von Konstanten sein. Ist die Unterabfrage eine Liste, \mbox{z. B.} bei \verb|ALL, ANY| oder \verb|IN| gehen wir vor, wie im vorherigen Abschnitt beschrieben.
 
-\subsubsection*{Ersetzen von ANY/ SOME}
+\subsubsection*{ALL-Unterabfragen}
 
-\begin{verbatim}
-X.SAL >= ANY(SELECT Y.SAL FROM EMP Y 
-             WHERE Y.JOB = 'CLERK')
-\end{verbatim} zu
-\begin{verbatim}
-EXISTS(SELECT Y.SAL FROM EMP Y 
-       WHERE Y.JOB = 'CLERK' 
-       AND X.SAL >= Y.SAL)
-\end{verbatim}
+\verb|ALL|-Unterabfragen haben immer das Muster: \verb|operand comparison_operator ALL (subquery)|. Dabei handelt es sich bei \verb|comparision_operator| um \verb|{=,<>,>,<,>=,<=}|. Die Unterabfrage \verb|subquery| liefert eine Liste von Attributen. Dann wir so verfahren wie bereits im letzten Abschnitt erklärt. Unser Ziel ist es, diese Unterabfrage, wenn möglich, zu ersetzen durch eine \verb|EXISTS|-Unterabfrage. Um diese Umwandlung nachzuvollziehen, wandeln wir zunächst die Unterabfrage mit \verb|ALL| in eine Unterabfrage mit \verb|ANY| um. Dazu ersetzen wir den \verb|comparison_operator| mit seinem gegenteiligem Operator. Folgende Paare sind jeweils voneinander gegenteilige Operatoren: \verb|{ {<,>=}, {>,<=}, {=,<>} }|. Danach ersetzen wir \verb|ALL| mit \verb|ANY| und kapseln die gesamte Unterabfrage mit einem \verb|NOT|. 
 
-Befindet sich ein \verb|NOT| vor der Unteranfrage, so wird dieses nicht zur Unterabfrage ``durchgedrückt'' sondern bleibt davor.
-
-\subsubsection{Ersetzen von IN}
-
-Unter bestimmten Voraussetzungen kann jede IN-Unterabfrage in eine äquivalente EXISTS-Unteranfrage umgewandelt werden.
-
-Wir wandeln IN-Unteranfragen wie die Folgende:
-
+%\begin{figure}
 \begin{lstlisting}[mathescape]
-$t_1$ IN (SELECT $t_2$
-      FROM $R_1\ X_1$, ..., $R_n\ X_n$
-      WHERE $\varphi$)
+WHERE $t_1$ comparison_operator ALL (
+	SELECT $t_2$
+	FROM $R_1$ $X_1$, ..., $R_n$ $X_n$
+	WHERE ($\varphi$)
+)
+
+Geschrieben als ANY-Unterabfrage:
+WHERE NOT( $t_1\ $opposite(comparison_operator$)$ ANY (
+	SELECT $t_2$
+	FROM $R_1$ $X_1$, ..., $R_n$ $X_n$
+	WHERE ($\varphi$) ) 
+)
 \end{lstlisting}
 
-unter Voraussetzungen, die noch erläutert werden, um in:
+Diese \verb|ANY|-Unterabfrage können wir nun in eine \verb|EXISTS|-Unterabfrage transformieren. Wie das genau durchgeführt wird, behandeln wir jetzt im nächsten Abschnitt.
+
+%\caption{Umwandeln von \verb|ALL|- in \verb|ANY|-Unterabfrage}
+%\label{fig:all_ex2}
+%\end{figure}
+
+\subsubsection*{ANY/ SOME-Unterabfragen}
+
+Da \verb|SOME| und \verb|ANY| äquivalente und synonyme Schlüsselworte sind betrachten wir im Folgenden nur \verb|ANY|-Unterabfragen. Eine solche Unterabfrage kann in eine \verb|EXISTS|-Unterabfrage umgewandelt werden. Dazu verknüfen wir den Vergleichsoperator mitsamt linken Operanden konjunktiv mit dem \verb|WHERE|-Teil der Unterabfrage. Als rechten Operanden wählen wir das Attribut, welches sich im \verb|SELECT|-Teil der Unterabfrage befindet. Die Umwandlung findet also nach folgendem Muster statt:
 
 \begin{lstlisting}[mathescape]
-EXISTS (SELECT *
-        FROM $R_1\ X_1$, ..., $R_n\ X_n$
-        WHERE ($\varphi$) AND $t_1 = t_2$)
+WHERE $t_1\ $comparison_operator ANY (
+	SELECT $t_2$
+	FROM $R_1$ $X_1$, ..., $R_n$ $X_n$
+	WHERE ($\varphi$) 
+) 
+
+Geschrieben als EXISTS-Unterabfrage:
+WHERE EXISTS( 
+	SELECT $t_2$
+	FROM $R_1$ $X_1$, ..., $R_n$ $X_n$
+	WHERE ($\varphi$ 
+	AND $t_1$ comparison_operator $t_2$ )
+)
 \end{lstlisting}
 
-Folgende Voraussetzungen müssen erfüllt sein, damit diese Umwandlung angewendet werden kann:
+Wie wir am Ergebnis der Umwandlung erkennen, verstößt $t_2$ im \verb|SELECT|-Teil der \verb|EXISTS|-Unterabfrage bereits gegen unsere Konvention, die einige Seiten vorher getroffen wurde. Es empfiehlt sich daher, die Normierung des \verb|SELECT|-Teils von \verb|EXISTS|-Unterabfragen erst nach dem Umwandeln von Unterabfragen durchzuführen.
 
-\begin{itemize}
+
+\subsubsection*{IN-Unterabfragen}
+
+Das Schlüsselwort \verb|IN| ist lediglich ein Synonym für \verb|= ANY|. Diese Unterabfragen sind daher ein Spezialfall der, bereits betrachteten, \verb|ANY|-Unterabfragen.
+
+\subsubsection*{Voraussetzungen}
+
+Alle, eben genannten, Umwandlungen können nur durchgeführt werden, wenn bestimmte Bedingungen erfüllt sind.
+
+\begin{enumerate}
 \item Alle Tupelvariablen, die in $t_1$ vorkommen, müssen sich unterscheiden von allen $X_i$. Erreicht wird dies ggf. durch Umbenennung der $X_i$, da diese nicht für die eigentliche (Ober)anfrage wichtig sind.
 \item Wenn $t_1$ Attributreferenzen $A$ ohne Tupelvariable enthält, dann dürfen die $R_i$ kein Attribut $A$ haben. Erreicht wird dies, indem ggf. die Tupelvariable eingeführt wird.
-\item Die Unteranfrage für $t_2$ darf keine Nullwerte liefern.
-\end{itemize}
+\item Die Unteranfrage für $t_2$ darf keine Nullwerte liefern. 
+\end{enumerate}
+
+wir haben im Abschnitt \verb|FROM|-Teil bereits festgelegt, dass sämtliche Aliase der Tupelvariablen automatisch erzeugt werden. Dies gilt in natürlicher Weise auch für Unterabfragen. Der Prozess erstreckt sich von Einführung von Aliasen, falls vorher keine Vorhanden waren, bis hin zur Umbenennung bereits vorhandener Aliase, sodass niemals identische Aliase innerhalb einer SQL-Anfrage vorkommen können. Damit erfüllen wir bereits die Bedingung 1 und 2. 
+
+Da es nicht entscheidbar ist, ob eine Unterabfrage \verb|NULL|-Werte liefern kann, vereinfachen wir das Entscheidungskriterium dafür. Wenn eine der zugehörigen Spalten in $t_2$ so definiert ist, dass \verb|NULL|-Werte laut Definition des Datenbankschemas erlaubt sind, so gehen wir davon aus, dass die Unterabfrage \verb|NULL|-Werte liefern wird. Wir wandeln in einem solchen Fall die Unterabfrage nicht um.
 
 \subsubsection{Andere Unteranfragen}
 
 Ungewöhnliche Unterabfragen, wie \mbox{z. B.} Unterabfragen unter \verb|FROM| werden hier nicht betrachtet. Im Allgemeinen werden solche Unterabfragen kaum gebraucht und machen die Anfrage meist nur viel komplexer als notwendig.
-
-
 
 \subsection{Operatorenvielfalt}
 

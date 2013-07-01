@@ -1,8 +1,13 @@
+package de.unihalle.sqlequalizer;
+
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Table {
 
+	
 	public boolean existColumn(String c) {
 		Iterator<Column> it = columns.iterator();
 		while(it.hasNext()) {
@@ -42,7 +47,30 @@ public class Table {
 					|| temp[1].toLowerCase().indexOf("text") >= 0) {
 				type = Column.VARCHAR;
 			}
-			Column c = new Column(temp[0], type);
+			
+			//check for references
+			String ref = null;
+			
+			for(int j = 0; j< temp.length - 1; j++) {
+				if(temp[j].toLowerCase().equals("references")) {
+					Pattern p = Pattern.compile("([a-z0-9]+)\\(([a-z0-9]+)\\)");
+					Matcher m = p.matcher(temp[j+1].toLowerCase());
+					if(m.find()) {
+						ref = m.group(1)+"."+m.group(2);
+					}
+				}
+			}
+			
+			//check for notnull
+			boolean nul = true;
+			for(int j = 1; j< temp.length; j++) {
+				if(temp[j].toLowerCase().equals("null") && temp[j-1].toLowerCase().equals("not")) {
+					nul = false;
+				}
+			}
+			
+			//Column c = new Column(temp[0], type);
+			Column c = new Column(temp[0], type, false, ref, nul);
 			columns.add(c);
 		}
 	}
@@ -50,10 +78,10 @@ public class Table {
 	@Override
 	public String toString() {
 		String ret = "";
-		ret += "Table: "+ name+ System.lineSeparator();
+		ret += "Table: "+ name+ "\n";
 		
 		for(int i=0; i< columns.size(); i++) {
-			ret += columns.get(i).name+" ("+columns.get(i).type+")"+System.lineSeparator();
+			ret += columns.get(i).name+" ("+columns.get(i).type+")"+"\n";
 		}
 		
 		return ret;
