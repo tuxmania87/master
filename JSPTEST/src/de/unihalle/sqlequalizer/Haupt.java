@@ -8,6 +8,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.gibello.zql.ParseException;
 import org.gibello.zql.ZConstant;
@@ -60,7 +62,9 @@ public class Haupt {
 		QueryHandler q2 = new QueryHandler();
 		q2.createTable("create table emp (empno int, ename varchar(500), job varchar(500), mgr int, hiredate datetime, sal int not null, comm int, deptno int)");
 		q2.createTable("create table dept (deptno int, dname varchar(500), location varchar(500))");
-		q2.createTable("create table test (a int references emp(sal) not null, b int, c int, d int, x int, y int)");
+		q2.createTable("create table test (a float(5,2) references emp(sal) not null, b int, c int, d int, x int, y int)");
+		q2.createTable("create table test2 (a int)");
+		
 		
 		
 
@@ -68,13 +72,23 @@ public class Haupt {
 		//q2.setOriginalStatement("select * from test t where (x or (g and h) or z or not (a > 2 and (b or (c and d))));");
 		//q2.setOriginalStatement("select * from emp  where deptno > 2 AND sal > ALL (select sal from emp  where deptno=20);");
 		//q2.setOriginalStatement("SELECT e1.empno, e1.sal FROM   emp e1 WHERE  e1.sal > ALL (SELECT e2.sal                      FROM   emp e2                      WHERE  e2.deptno = 20); ;");
-		q2.setOriginalStatement("select * from emp e, emp x  where e.deptno = x.deptno AND x.sal > 200;");
+		q2.setOriginalStatement("select * from emp e where 10 > 5 and ( 2 > 3 or 3 > 2);");
 		System.out.println(q2.original);
 		ZQuery res = q2.equalize();
 		System.out.println(res);
 		
+		System.out.println();
+		
+		
+		System.out.println("STELLE: "+QueryUtils.places("a1.sal", q2));
+		
 		q2 = new QueryHandler();
-		q2.setOriginalStatement("select * from emp e, emp x  where e.deptno = x.deptno AND e.sal > 200;");
+		q2.createTable("create table emp (empno int, ename varchar(500), job varchar(500), mgr int, hiredate datetime, sal int not null, comm int, deptno int)");
+		q2.createTable("create table dept (deptno int, dname varchar(500), location varchar(500))");
+		q2.createTable("create table test (a int references emp(sal) not null, b int, c int, d int, x int, y int)");
+		
+		
+		q2.setOriginalStatement("select * from emp e where 11 < 2 +3 ;");
 		System.out.println(q2.original);
 		res = q2.equalize();
 		System.out.println(res);
@@ -101,6 +115,10 @@ public class Haupt {
 		result = QueryUtils.sortedTree(result);
 		System.out.println(result);*/
 		
+	
+		System.out.println("b".compareTo("a"));
+		
+	
 	}
 
 	public static boolean examine(ZExp e1, ZExp e2) {

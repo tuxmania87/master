@@ -177,13 +177,14 @@ public class QueryHandler {
 		 * tempQuery.addOrderBy(q.getOrderBy());
 		 */
 
-		ZExpression newWHEREClause = (ZExpression) handleWHEREClause(
-				q.getWhere(), q.getFrom(), tables);
+		ZExp newWHEREClause = handleWHEREClause(
+				q.getWhere(), q.getFrom(), this);
 		ZGroupBy newGROUPBYClause = handleGROUPBYStatement(q.getGroupBy());
 
 		ZQuery newQ = new ZQuery();
 		newQ.addFrom(q.getFrom());
 		newQ.addWhere(newWHEREClause);
+		
 		newQ.addSelect(newSELECTClause);
 		newQ.addGroupBy(newGROUPBYClause);
 		newQ.addOrderBy(q.getOrderBy());
@@ -275,6 +276,9 @@ public class QueryHandler {
 
 	public ZExp tranformToKNF(ZExp root) {
 
+		if(root == null)
+			return null;
+		
 		ZExp step = root;
 		String old = "";
 
@@ -288,12 +292,14 @@ public class QueryHandler {
 		return step;
 	}
 
-	public ZExp handleWHEREClause(ZExp zexp, Vector<ZFromItem> from, ArrayList<Table> tables)
+	public ZExp handleWHEREClause(ZExp zexp, Vector<ZFromItem> from, QueryHandler q)
 			throws Exception {
 
 		if (zexp == null)
 			return null;
 
+		 ArrayList<Table> tables = q.tables;
+		
 		// ZExp whereCondition = null;
 		ZExp whereCondition = zexp;
 
@@ -311,6 +317,15 @@ public class QueryHandler {
 			whereCondition = QueryUtils.replaceSyntacticVariantes(whereCondition);
 		} while(!check.equals(whereCondition.toString()));
 		
+		
+		whereCondition = QueryUtils.addImplicitFormulas(whereCondition, q);
+		whereCondition = QueryUtils.evaluateArithmetic(whereCondition);
+		
+		//elimnate duplicate trees somewhere , maybe after sorting for easier detection?
+		
+		//KNF must be restored because we added possibly and nodes in between the tree
+		whereCondition = tranformToKNF(whereCondition);
+		
 		/*whereCondition = (ZExpression) QueryUtils
 				.dfs_orderPairs(whereCondition);
 		whereCondition = (ZExpression) QueryUtils.dfs_work(whereCondition);
@@ -318,7 +333,7 @@ public class QueryHandler {
 		whereCondition = (ZExpression) QueryUtils.operatorCompression(
 				whereCondition, null);
 		whereCondition = (ZExpression) QueryUtils.dfs_work(whereCondition);*/
-		whereCondition = (ZExpression) QueryUtils.sortedTree(whereCondition);
+		whereCondition =  QueryUtils.sortedTree(whereCondition);
 
 		return whereCondition;
 	}

@@ -29,16 +29,34 @@ public class Table {
 
 	Table(String sqlStatement) {
 		//TODO: Parse if valid statement
+		
 		name = sqlStatement.trim().replaceAll("\\s+", " ").split(" ")[2];
 		columns = new ArrayList<Column>();
 		String content = sqlStatement.substring(sqlStatement.indexOf('(') + 1,
 				getIndexOfLastParenthesis(sqlStatement));
 
-		System.out.println(content);
+		boolean inParens = false;
+		String newcontent = "";
+		for(int i = 0; i<content.length(); i++) {
+			if(content.charAt(i) == '(')
+				inParens = true;
+			else if(content.charAt(i) == ')')
+				inParens = false;
+			
+			if(content.charAt(i) == ',' && inParens)
+				newcontent += "%";
+			else
+				newcontent += content.charAt(i);
+		}
 
+		content = newcontent;
+		
 		String[] rows = content.split(",");
 		for (int i = 0; i < rows.length; i++) {
+			
 			String[] temp = rows[i].trim().split(" ");
+			
+			int digits = 0;
 			int type = Column.OTHER;
 			if (temp[1].toLowerCase().indexOf("int") >= 0
 					|| temp[1].toLowerCase().indexOf("number") >= 0) {
@@ -48,6 +66,17 @@ public class Table {
 				type = Column.VARCHAR;
 			}
 			
+			
+			
+			Pattern p1 = Pattern.compile("[a-z0-9]+\\(\\s*[0-9]+\\s*\\%\\s*([0-9]+)\\s*\\)");
+			Matcher m1 = p1.matcher(temp[1].toLowerCase());
+			
+			if(m1.matches()) {
+				type = Column.NUMBER;
+				digits = Integer.parseInt(m1.group(1));
+			}
+			
+			
 			//check for references
 			String ref = null;
 			
@@ -55,7 +84,7 @@ public class Table {
 				if(temp[j].toLowerCase().equals("references")) {
 					Pattern p = Pattern.compile("([a-z0-9]+)\\(([a-z0-9]+)\\)");
 					Matcher m = p.matcher(temp[j+1].toLowerCase());
-					if(m.find()) {
+					if(m.matches()) {
 						ref = m.group(1)+"."+m.group(2);
 					}
 				}
@@ -70,7 +99,8 @@ public class Table {
 			}
 			
 			//Column c = new Column(temp[0], type);
-			Column c = new Column(temp[0], type, false, ref, nul);
+			//System.out.println(temp[0]+" "+type+" "+ref+" "+nul+" "+digits);
+			Column c = new Column(temp[0], type, false, ref, nul, digits);
 			columns.add(c);
 		}
 	}

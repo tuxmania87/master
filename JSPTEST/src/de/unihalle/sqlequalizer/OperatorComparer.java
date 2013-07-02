@@ -66,28 +66,8 @@ public class OperatorComparer implements Comparator<ZExp> {
 				return 1;
 			
 			if(Arrays.asList(QueryUtils.orderList).indexOf(z2.getOperator()) == Arrays.asList(QueryUtils.orderList).indexOf(z1.getOperator())) {
-				//we have both the same operator and have to decide with a DFS and the first different node (except leafs)
-				// if we structure is all the same, then we decide leaf node wise
-							
-				/*int value = QueryUtils.DFSFirstDifferentNodeValue(z1,z2);
-				if(value == 0) {
-					//System.out.println("struktur gleich :");
-					//System.out.println(z1+" "+z2);
-					
-					String[] leftLeafs = QueryUtils.getLeafes(z1);
-					String[] rightLeafs = QueryUtils.getLeafes(z1);
-					
-					Arrays.sort(leftLeafs);
-					Arrays.sort(rightLeafs);
-					
-					for(int i=0; i<leftLeafs.length; i++) {
-						if(leftLeafs[i].compareTo(rightLeafs[i]) != 0) 
-							return leftLeafs[i].compareTo(rightLeafs[i]);
-					}
-					
-				} else {
-					return value;
-				}*/
+				//iterate both trees and as soon as structure differs
+				return QueryUtils.DFSFirstDifferentNodeValue(z1, z2);
 				
 			}
 			
