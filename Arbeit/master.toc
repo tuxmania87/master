@@ -37,42 +37,47 @@
 \contentsline {subsection}{\numberline {3.3.4}Ersetzung von syntaktischen Varianten}{25}{subsection.3.3.4}
 \contentsline {subsubsection}{Andere Unteranfragen}{28}{section*.17}
 \contentsline {subsection}{\numberline {3.3.5}Operatorenvielfalt}{28}{subsection.3.3.5}
-\contentsline {subsubsection}{Teilsortierung}{29}{section*.18}
-\contentsline {subsubsection}{Hinzuf\IeC {\"u}gen implizierter Formeln}{29}{section*.19}
+\contentsline {subsubsection}{Analyse der unterschiedlichen Operatoren}{29}{section*.18}
+\contentsline {subsubsection}{Hinzuf\IeC {\"u}gen implizierter Formeln}{30}{section*.19}
 \contentsline {subsubsection}{Beschr\IeC {\"a}nkung der Operatorenvielfalt}{31}{section*.20}
-\contentsline {subsubsection}{Einschr\IeC {\"a}nkungen bei arithmetischen Ausdr\IeC {\"u}cken}{32}{section*.21}
-\contentsline {subsubsection}{arithmetische Ausdr\IeC {\"u}cke -- Standardisierung}{32}{section*.22}
-\contentsline {subsubsection}{arithmetische Ausdr\IeC {\"u}cke -- Operatorenbeschr\IeC {\"a}nkung}{33}{section*.23}
-\contentsline {subsubsection}{transitiv-implizierte Formeln}{33}{section*.24}
-\contentsline {subsubsection}{implizierte Dom\IeC {\"a}nen}{34}{section*.25}
-\contentsline {subsubsection}{Diskussion der beiden Ans\IeC {\"a}tze}{34}{section*.26}
-\contentsline {subsection}{\numberline {3.3.6}Sortierung}{35}{subsection.3.3.6}
-\contentsline {subsection}{\numberline {3.3.7}GROUP BY / HAVING}{39}{subsection.3.3.7}
-\contentsline {subsection}{\numberline {3.3.8}ORDER BY}{40}{subsection.3.3.8}
-\contentsline {subsection}{\numberline {3.3.9}Abschluss}{40}{subsection.3.3.9}
-\contentsline {section}{\numberline {3.4}Weitere Betrachtungen}{41}{section.3.4}
-\contentsline {subsection}{\numberline {3.4.1}JOINS}{41}{subsection.3.4.1}
-\contentsline {subsubsection}{JOIN-Eliminierung}{45}{section*.31}
-\contentsline {subsection}{\numberline {3.4.2}Anzahl atomarer Formeln}{49}{subsection.3.4.2}
-\contentsline {subsection}{\numberline {3.4.3}Anzahl der Operatorkompressionen}{49}{subsection.3.4.3}
-\contentsline {subsection}{\numberline {3.4.4}unn\IeC {\"o}tiges DISTINCT}{50}{subsection.3.4.4}
-\contentsline {subsection}{\numberline {3.4.5}Algorithmus aus \cite {sql1folien}}{50}{subsection.3.4.5}
-\contentsline {section}{\numberline {3.5}Alternativer Ansatz: Elementare Transformationen}{51}{section.3.5}
-\contentsline {subsection}{\numberline {3.5.1}Backtracking}{52}{subsection.3.5.1}
-\contentsline {chapter}{\numberline {4}Anfragen auf externen Datenbanken}{54}{chapter.4}
-\contentsline {chapter}{\numberline {5}Verwendete Software}{55}{chapter.5}
-\contentsline {section}{\numberline {5.1}SQL-Parser}{55}{section.5.1}
-\contentsline {subsection}{\numberline {5.1.1}\IeC {\"u}ber den SQL-Parser: ZQL}{55}{subsection.5.1.1}
-\contentsline {subsection}{\numberline {5.1.2}Funktionsweise des Parsers}{55}{subsection.5.1.2}
-\contentsline {subsection}{\numberline {5.1.3}Grenzen des Parsers}{59}{subsection.5.1.3}
-\contentsline {section}{\numberline {5.2}Java Server Pages}{60}{section.5.2}
-\contentsline {subsection}{\numberline {5.2.1}\IeC {\"U}berblick}{60}{subsection.5.2.1}
-\contentsline {subsection}{\numberline {5.2.2}Einbettung in JSP}{60}{subsection.5.2.2}
-\contentsline {subsection}{\numberline {5.2.3}Log}{60}{subsection.5.2.3}
-\contentsline {chapter}{\numberline {6}Praktische Umsetzung}{61}{chapter.6}
-\contentsline {section}{\numberline {6.1}Anforderungen}{61}{section.6.1}
-\contentsline {section}{\numberline {6.2}Funktionsumfang}{61}{section.6.2}
-\contentsline {chapter}{\numberline {7}Ergebnisse}{62}{chapter.7}
-\contentsline {chapter}{\numberline {8}Ausblick}{63}{chapter.8}
-\contentsline {chapter}{\numberline {9}Anhang}{65}{chapter.9}
-\contentsline {section}{\numberline {9.1}Algorithmus f\IeC {\"u}r Backtracking}{66}{section.9.1}
+\contentsline {subsubsection}{Einschr\IeC {\"a}nkungen bei arithmetischen Ausdr\IeC {\"u}cken}{33}{section*.21}
+\contentsline {subsubsection}{arithmetische Ausdr\IeC {\"u}cke -- Standardisierung}{33}{section*.22}
+\contentsline {subsubsection}{arithmetische Ausdr\IeC {\"u}cke -- Operatorenbeschr\IeC {\"a}nkung}{34}{section*.23}
+\contentsline {subsubsection}{transitiv-implizierte Formeln}{34}{section*.24}
+\contentsline {subsubsection}{implizierte Dom\IeC {\"a}nen}{35}{section*.25}
+\contentsline {subsubsection}{Diskussion der beiden Ans\IeC {\"a}tze}{35}{section*.26}
+\contentsline {subsection}{\numberline {3.3.6}Sortierung}{36}{subsection.3.3.6}
+\contentsline {subsection}{\numberline {3.3.7}GROUP BY / HAVING}{40}{subsection.3.3.7}
+\contentsline {subsection}{\numberline {3.3.8}ORDER BY}{41}{subsection.3.3.8}
+\contentsline {subsection}{\numberline {3.3.9}Abschluss}{41}{subsection.3.3.9}
+\contentsline {section}{\numberline {3.4}Weitere Betrachtungen}{42}{section.3.4}
+\contentsline {subsection}{\numberline {3.4.1}JOINS}{42}{subsection.3.4.1}
+\contentsline {subsubsection}{JOIN-Eliminierung}{46}{section*.31}
+\contentsline {section}{\numberline {3.5}Komplexit\IeC {\"a}t von SQL-Anfragen}{50}{section.3.5}
+\contentsline {subsection}{\numberline {3.5.1}Anzahl atomarer Formeln unter WHERE / Baumtiefe}{50}{subsection.3.5.1}
+\contentsline {subsection}{\numberline {3.5.2}Anzahl benutzter Tabellen unter FROM}{51}{subsection.3.5.2}
+\contentsline {subsection}{\numberline {3.5.3}Existenz von Teilen der SQL-Anfrage}{51}{subsection.3.5.3}
+\contentsline {subsection}{\numberline {3.5.4}Anzahl von JOINs / Unterabfragen}{51}{subsection.3.5.4}
+\contentsline {subsection}{\numberline {3.5.5}Anzahl der Operatorkompressionen}{51}{subsection.3.5.5}
+\contentsline {subsection}{\numberline {3.5.6}unn\IeC {\"o}tiges DISTINCT}{52}{subsection.3.5.6}
+\contentsline {subsection}{\numberline {3.5.7}verbale Beschreibung}{52}{subsection.3.5.7}
+\contentsline {subsection}{\numberline {3.5.8}Algorithmus aus \cite {sql1folien}}{53}{subsection.3.5.8}
+\contentsline {section}{\numberline {3.6}Alternativer Ansatz: Elementare Transformationen}{54}{section.3.6}
+\contentsline {subsection}{\numberline {3.6.1}Backtracking}{54}{subsection.3.6.1}
+\contentsline {chapter}{\numberline {4}Anfragen auf externen Datenbanken}{56}{chapter.4}
+\contentsline {chapter}{\numberline {5}Verwendete Software}{57}{chapter.5}
+\contentsline {section}{\numberline {5.1}SQL-Parser}{57}{section.5.1}
+\contentsline {subsection}{\numberline {5.1.1}\IeC {\"u}ber den SQL-Parser: ZQL}{57}{subsection.5.1.1}
+\contentsline {subsection}{\numberline {5.1.2}Funktionsweise des Parsers}{57}{subsection.5.1.2}
+\contentsline {subsection}{\numberline {5.1.3}Grenzen des Parsers}{61}{subsection.5.1.3}
+\contentsline {section}{\numberline {5.2}Java Server Pages}{62}{section.5.2}
+\contentsline {subsection}{\numberline {5.2.1}\IeC {\"U}berblick}{62}{subsection.5.2.1}
+\contentsline {subsection}{\numberline {5.2.2}Einbettung in JSP}{62}{subsection.5.2.2}
+\contentsline {subsection}{\numberline {5.2.3}Log}{62}{subsection.5.2.3}
+\contentsline {chapter}{\numberline {6}Praktische Umsetzung}{63}{chapter.6}
+\contentsline {section}{\numberline {6.1}Anforderungen}{63}{section.6.1}
+\contentsline {section}{\numberline {6.2}Funktionsumfang}{63}{section.6.2}
+\contentsline {chapter}{\numberline {7}Ergebnisse}{64}{chapter.7}
+\contentsline {chapter}{\numberline {8}Ausblick}{65}{chapter.8}
+\contentsline {chapter}{\numberline {9}Anhang}{67}{chapter.9}
+\contentsline {section}{\numberline {9.1}Algorithmus f\IeC {\"u}r Backtracking}{68}{section.9.1}

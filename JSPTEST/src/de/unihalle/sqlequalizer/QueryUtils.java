@@ -898,7 +898,44 @@ public class QueryUtils {
 				}
 			}
 			
-			//TODO <= and >=
+			if(ret.getOperator().equals(">=") && areChildsNumericORString(ret.getOperands())) {
+				if(areChildsNumeric(ret.getOperands())) {
+					boolean val = Double.parseDouble(((ZConstant) ret.getOperand(0)).getValue()) >= 
+					Double.parseDouble(((ZConstant) ret.getOperand(1)).getValue());
+					if(val) {
+						return null;
+					} else {
+						return new ZConstant("false", ZConstant.NULL);
+					}
+				} else {
+					boolean val = ((ZConstant) ret.getOperand(0)).getValue().compareTo(((ZConstant) ret.getOperand(1)).getValue()) >= 0;
+					if(val) {
+						return null;
+					} else {
+						return new ZConstant("false", ZConstant.NULL);
+					}
+				}
+			}
+			
+			if(ret.getOperator().equals("<=") && areChildsNumericORString(ret.getOperands())) {
+				if(areChildsNumeric(ret.getOperands())) {
+					boolean val = Double.parseDouble(((ZConstant) ret.getOperand(0)).getValue()) <= 
+					Double.parseDouble(((ZConstant) ret.getOperand(1)).getValue());
+					if(val) {
+						return null;
+					} else {
+						return new ZConstant("false", ZConstant.NULL);
+					}
+				} else {
+					boolean val = ((ZConstant) ret.getOperand(0)).getValue().compareTo(((ZConstant) ret.getOperand(1)).getValue()) <= 0;
+					if(val) {
+						return null;
+					} else {
+						return new ZConstant("false", ZConstant.NULL);
+					}
+				}
+			}
+			
 			
 			if(ret.getOperator().equals("AND")) {
 				Iterator<ZExp> it2 = ret.getOperands().iterator();
@@ -929,55 +966,7 @@ public class QueryUtils {
 			return ret;
 		}
 		
-		/*
-		if (casted.getOperands().size() == 2
-				&& casted.getOperand(0) instanceof ZConstant
-				&& casted.getOperand(1) instanceof ZConstant) {
-
-			ZConstant arg0 = (ZConstant) casted.getOperand(0);
-			ZConstant arg1 = (ZConstant) casted.getOperand(1);
-
-			if (arg0.getType() == ZConstant.NUMBER
-					&& arg1.getType() == ZConstant.NUMBER) {
-				int a = Integer.parseInt(arg0.toString());
-				int b = Integer.parseInt(arg1.toString());
-				if (operator.equals("+")) {
-					return new ZConstant(String.valueOf(a + b),
-							ZConstant.NUMBER);
-				}
-				if (operator.equals("-")) {
-					return new ZConstant(String.valueOf(a - b),
-							ZConstant.NUMBER);
-				}
-				if (operator.equals("*")) {
-					return new ZConstant(String.valueOf(a * b),
-							ZConstant.NUMBER);
-				}
-				if (operator.equals("/") && a % b == 0) {
-					return new ZConstant(String.valueOf(a / b),
-							ZConstant.NUMBER);
-				}
-
-			
-					if (c2.getType() == ZConstant.NUMBER
-							&& c1.getType() == ZConstant.NUMBER) {
-						// either false or true
-					}
-					if (c1.getType() == ZConstant.COLUMNNAME
-							&& c2.getType() == ZConstant.COLUMNNAME) {
-						ZExpression right = new ZExpression("-");
-						right.addOperand(c2);
-						right.addOperand(new ZConstant("1", ZConstant.NUMBER));
-						ZExpression t1 = new ZExpression("<=");
-						t1.addOperand(c1);
-						t1.addOperand(right);
-						return t1;
-					}
-				}
-			}
-		} 
-		move to eval
-		*/
+		
 		
 		return exp;
 	}

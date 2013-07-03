@@ -185,6 +185,9 @@ public class QueryHandler {
 		newQ.addFrom(q.getFrom());
 		newQ.addWhere(newWHEREClause);
 		
+		if(newWHEREClause instanceof ZConstant && ((ZConstant) newWHEREClause).getValue().equals("false"))
+			throw new Exception("Your Query always return the empty set, hence the where condition is not satisfiable.");
+		
 		newQ.addSelect(newSELECTClause);
 		newQ.addGroupBy(newGROUPBYClause);
 		newQ.addOrderBy(q.getOrderBy());
@@ -335,6 +338,8 @@ public class QueryHandler {
 		whereCondition = (ZExpression) QueryUtils.dfs_work(whereCondition);*/
 		whereCondition =  QueryUtils.sortedTree(whereCondition);
 
+		
+		
 		return whereCondition;
 	}
 

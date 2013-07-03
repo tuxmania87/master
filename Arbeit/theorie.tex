@@ -319,17 +319,30 @@ Ungewöhnliche Unterabfragen, wie \mbox{z. B.} Unterabfragen unter \verb|FROM| w
 
 Im folgenden Abschnitt soll geklärt werden wie mit verschiedenen Schreibweisen von ein- und demselben Ausdruck umgegangen werden soll. Betrachtet man sich \mbox{z. B.} \verb|A > 5| ist dieser Ausdruck äquivalent mit \verb|5 < A|. Wenn wir wissen, dass \verb|A| ein ganzzahlige Variable ist, dann sind auch folgende Äquivalenzen wahr: \verb|A >= 6| sowie \verb|6 <= A|. Wir betrachten nun zwei verschiedene Ansätze um mit diesem Problem umzugehen. Der erste Ansatz beschäftigt sich damit, alle implizierten Schreibweisen mit in die Formel aufzunehmen. Damit stellt man sicher, dass sich alle korrekten Schreibweisen einer Formel in der Anfrage befinden. Der zweite Ansatz beschäftigt sich damit, nur bestimmte Schreibweisen zuzulassen und alle anderen durch die zulässigen zu ersetzen.
 
-Hinweis: Diesem Schritt geht eine Teilsortierung vor. Diese wird ebenfalls im Abschnitt >>Sortierung<< erwähnt. 
+\subsubsection{Analyse der unterschiedlichen Operatoren}
 
-\subsubsection{Teilsortierung}
+Wir unterscheiden im wesentlichen zwei Arten von Operatoren. Zum einen Operatoren, bei denen wir die Operanden in beliebiger Reihenfolge anordnen können. Wir nennen diese Operatoren, kommutative Operatoren. Dies sind \verb|{ =, AND, OR, +, *}|. Alle anderen Operatoren sind demnach nicht kommutativ, da wir die Reihenfolge der Operanden nicht ändern können, ohne den Ausdruck zu verfälschen. Zu dieser Gruppe von Operatoren zählen insbesondere \verb|{ >=, >, <, <=, -, /, }|. Eine dritte Gruppe bilden unäre Operatoren, die nur ein Operanden kennen. Diese Gruppe ist aber im Sinne der Anordnung uninteressant, da wir hier keine mehrdeutig aufgeschrieben Varianten haben.
 
-Wir betrachten Ausdrücke mit den Operatoren $\{>,<,\leq,\geq,=,+,\cdot\}$. Da es sich hier jeweils um binäre Operatoren handelt, sprechen wir, im Sinne der Anordnung, im Folgenden von einem linken und einem rechten Operanden. Ist einer der Operanden eine Variable, so wird diese links angeordnet. Sind beide Operanden Variablen, so werden sie lexikographisch-sortiert angeordnet. Operanden, die selbst wieder zusammengesetzte Ausdrücke sind, stehen rechts. Sind beide Operanden zusammengesetzte Ausdrücke, so steht der komplexere rechts und der weniger komplexe links. Ein Ausdruck $A$ ist komplexer als ein Ausdruck $B$, wenn der zugehörige Operatorbaum von $A$ tiefer ist als der Operatorbaum von $B$. Sind beide Ausdrücke gleich komplex, so wird die symmetrische Variante mit hinzugenommen. Wenn wir Operanden umsortieren bei denen der Operator $\in \{>,<,\leq,\geq\}$ ist, dann muss der jeweilige Operator auch umgedreht werden. Bei den restlichen Operatoren ist dies nicht der Fall, da diese symmetrisch sind.
+Ziel ist es, nach wie vor, eine gewisse Ordnung zu definieren, so dass nach der Standardisierung semantisch gleiche Anfragen auch syntaktisch gleich sind. Betrachten wir nun einen Ausdruck mit einem Operator $op$ und $n$ Operanden bezeichnet als $child_i$. Ist $op$ ein kommutativer Operator, so können wir die Operanden $child_i$ beliebig anordnen ohne den Sinn des Ausdrucks zu verändern. Dies tun wir, in dem wir eine bestimmte Sortierreihenfolge etablieren. Diese finden wir im späteren Abschnitt \ref{subsec:sort}.
+
+Diese Sortierung ist nicht möglich, wenn $op$ nicht kommutativ ist. In einem solchen Fall müssen wir also die äquivalenten Schreibweisen des Ausdrucks mit in unsere Formel aufnehmen und konjunktiv mit dem Originalausdruck verknüpfen. Im folgenden Beispiel sei angenommen, dass $a$ vom Typ \verb|INT| ist.
+Zu beachten ist, dass im Beispiel der Operator $>$ nicht kommutativ ist und daher all seine weiteren Schreibweisen hinzugefügt werden müssen.
+
+\begin{verbatim}
+Eingabe:
+SELECT * FROM emp e WHERE e.sal > 1000
+
+Vervollständigte Form:
+SELECT * FROM emp e WHERE e.sal > 1000 AND 1000 < e.sal AND e.sal >= 1001 AND 1001 <= e.sal
+\end{verbatim}
+
+Zu beachten ist weiterhin, dass wir nach der Umformung vier anstatt einer Formel haben. Diese Formeln müssen auch eine gewissen Ordnung unterzogen werden, da der übergeordnete Operator \verb|AND| wiederum kommutativ ist. Die Art dieser Ordnung wird im Abschnitt \ref{subsec:sort} beschrieben.
+
+Wir möchten im folgenden zunächst diskutieren, wie wir diese implizierten Formeln hinzufügen können. Im Anschluss daran diskutieren wir, wie eine Sortierordnung aussehen kann.
 
 \subsubsection{Hinzufügen implizierter Formeln}
 
-Trifft man im Parserbaum auf eine Formel, zu der es mehrere äquivalente Formeln gibt, so ist ein Ansatz alle diese äquivalenten Formeln konjunktiv zu verknüpfen und mit in den Parserbaum aufzunehmen. Treffen wir also zum Beispiel auf folgenden Ausdruck: \begin{verbatim}SELECT * FROM testtable WHERE A = B - C\end{verbatim}, , so müssen wir auch alle äquivalenten Formeln mit aufnehmen. Daraus wird dann also der Ausdruck: \begin{verbatim}...WHERE A = B - C AND B = A + C AND C = B - A\end{verbatim}
-
-Wie man bereits sieht, sind die hinzugefügten Formeln redundant und tragen nicht effizient zur Beschleunigung der Anfrage bei. Es soll hier lediglich sichergestellt werden, dass alle möglichen äquivalenten Formeln auftreten, da wir nicht wissen, was der Student für einen Repräsentanten der Formeln wählen wird. Weiterhin muss bemerkt werden, dass dadurch die gesamte SQL-Anfrage enorm aufgebläht wird. Es ist daher unbedingt wichtig, die Originalanfrage zu speichern. Weiterhin muss das Programm eine Verbindung zwischen den Formeln der Originalanfrage und den Formeln der veränderten, aufgeblähten Anfrage herstellen. Dem Lernenden soll in einem Feedback nur Fehler in der Originalanfrage aufgezeigt werden. Da intern aber mit der aufgeblähten Anfrage gearbeitet wird, muss beim Auftreten eines Fehlers oder Hinweises nachgeschlagen werden, von welchem Teil der Originalanfrage der Teil entstammt, der jetzt den Fehler auslöst.
+Wie bereits im vorherigen Beispiel ersichtlich, sind die hinzugefügten Formeln redundant und tragen nicht effizient zur Beschleunigung der Anfrage bei. Es soll hier lediglich sichergestellt werden, dass alle möglichen äquivalenten Formeln auftreten, da wir nicht wissen, was der Lernende für einen Repräsentanten der Formeln wählen wird. Weiterhin muss bemerkt werden, dass dadurch die gesamte SQL-Anfrage enorm aufgebläht wird. Es ist daher unbedingt wichtig, die Originalanfrage zu speichern. Weiterhin muss das Programm eine Verbindung zwischen den Formeln der Originalanfrage und den Formeln der veränderten, aufgeblähten Anfrage herstellen. Dem Lernenden soll in einem Feedback nur Fehler in der Originalanfrage aufgezeigt werden. Da intern aber mit der aufgeblähten Anfrage gearbeitet wird, muss beim Auftreten eines Fehlers oder Hinweises nachgeschlagen werden, von welchem Teil der Originalanfrage der Teil entstammt, der jetzt den Fehler auslöst.
 
 Im Folgenden listen wir Mengen $M_i$ von Ausdrücken. Finden wir in der zu bearbeitenden SQL-Anfrage eine Formel $f$, die auf einen Ausdruck $a\in M_i$ passt, dann verknüpfen wir alle Ausdrücke $\{b : b\in M_i \wedge b \neq a\}$ konjunktiv mit $f$. Dabei sind alle Variablennamen $A,B,C$ keine (komplexen) Ausdrücke. Es handelt sich also jeweils um Blattknoten im Parserbaum. Ferner bezeichnen wir $X,Y$ als numerische Konstanten.\\
 
@@ -354,7 +367,7 @@ Wir erhalten also \verb|x=4,99|, weil \verb|x+0,01=5|. Somit ergänzen wir unser
 
 Finden wir Ausdrücke mit $>,<,\leq,\geq$, welche als Argumente Variablen oder Konstanten haben, so unterscheiden wir also grundsätzlich drei Fälle.
 
-Fall 1 $(M_5,M_6)$: Beide Operanden sind Variablen oder Konstanten. In diesem Fall ergänzen wir nur den jeweils symmetrischen Operator. Da beide Operanden Variablen sind, macht es keinen Sinn jeweils $\leq,\geq$ oder $<,>$ zu ersetzen.
+Fall 1 $(M_5,M_6)$: Beide Operanden sind Variablen oder Konstanten. In diesem Fall ergänzen wir nur den jeweils symmetrischen Operator. Da beide Operanden Variablen sind, macht es weniger Sinn jeweils $\leq,\geq$ oder $<,>$ zu ersetzen, da normalerweise ein künstliches hinzufügen eines Summanden auf einer Seite, die Anfrage unnatürlich aussehen lässt. Es ist aber auch kein Problem diese Ersetzungen auch durchzuführen, wenn beide Operanden Variablen sind. Die Anfrage wird dann natürlich noch weiter künstlich aufgebläht.
 
 Fall 2 $(M_7,M_8)$: Einer der beiden Operanden ist eine numerische Konstante und der andere ist eine Variable. In diesem Fall fügen wir alle implizierten Gleichungen hinzu, also insbesondere die Operatoren $\leq,\geq,<,>$. Zu beachten ist hier, dass nicht nur Gleichungen der Form $A>X$ dazu führen, dass alle Ausdrücke von $M_7$ hinzugefügt werden. Auch wenn eine Gleichung der Form $Var1\geq 5.2$ auftaucht, werden Ersetzungen durchgeführt. Diese Gleichung passt auf das Muster $A\geq X+\mathit{adjust}(A)$. Angenommen $Var1$ hat maximal eine Nachkommastelle, so würden dann folgende Gleichungen impliziert werden: $\{\ Var1>5.1\ ,\ 5.1<Var1\ ,\ 5.2 \leq Var1\ \}$.
 
@@ -362,7 +375,7 @@ Fall 3: Beide Operanden sind numerische Konstanten. In dem Fall wird die logisch
 
 Sind durch die hinzugefügten Terme nun arithmetische Ausdrücke entstanden, die nur noch numerische Konstanten enthalten, so werden diese Ausdrücke ausgewertet.
 
-Dieser Teilschritt erfordert weiterhin eine Sortierung der einzelnen Terme.
+In einem anschließenden Schritt werden arithmetisch/logische Ausdrücke ausgewertet und durch ihre Ergebnis ersetzt. Dieser Schritt muss BOTTOM-UP geschehen, damit man auch mehrere Ersetzungen nach oben, im Parserbaum, weiterreicht. Haben wir am Ende einen SQL-Ausdruck dessen \verb|WHERE|-Teil aus \verb|false| besteht, dann haben wir eine Anfrage gefunden, die immer das leere Ergebnis liefern wird. In diesem Fall müssen wir natürlich eine Fehlermeldung ausgeben.
 
 \subsubsection{Beschränkung der Operatorenvielfalt}
 
@@ -387,12 +400,16 @@ Es sei unsere Ausgangsanfrage: \begin{verbatim}SELECT * FROM testtable WHERE X =
 
 Die Formel $X=6-Y$ finden wir in $M_1$ in Form von $A=B-C$. Wir ersetzen nun also $X=6-Y$ mit dem Repräsentanten von $M_1$, und wir bekommen: \begin{verbatim}SELECT * FROM testtable WHERE 6 = X + Y\end{verbatim}
 
+Ein Problem bei der Verwendung von Repräsentanten durch Einschränkung der Operatorenvielfalt ist, dass es zu überlappenden Mengen kommen kann. Damit ist gemeint, dass ein Ausdruck auf mindestens zwei Mengen $M_i$ und $M_j$ mit $i\neq j$ passt. Man muss sich in einem solchen Fall fragen, welchen Ausdruck man als Repräsentanten wählt. Es gibt mehrere Arten mit diesem Problem umzugehen. Auf der einen Seite könnte man die Mengen so umgestalten, dass alle Mengen $M_i$ jeweils, paarweise disjunkte Mengen darstellen, dann käme es zu keiner derartigen Überlappung. Zum anderen könnte man eine Ordnung vorschreiben. Würde ein Ausdruck $expr$ auf die Mengen $M_i$ und $M_j$ mit $i\neq j$ passen wählen wir den Repräsentanten $r(M_i)$ genau dann, wenn $i < j$, ansonsten wählen wir $r(M_j)$.
+
+In unserem Programm verwenden wir nicht diesen Ansatz, sondern wir fügen implizierte Formeln hinzu.
+
 \subsubsection{Einschränkungen bei arithmetischen Ausdrücken}
 \label{subsubsec:arithmetic}
 
 Bevor wir zur Diskussion beider Ansätze kommen, müssen wir noch erklären, was die beiden Ansätze bisher nicht leisten können. Für beide Ansätze haben wir angenommen, dass arithmetische Ausdrücke maximal aus zwei Operanden auf der komplexen Seite bestehen. Natürlich können in der Praxis auch komplexere Ausdrücke auftauchen. Diese Arbeit aber, entsteht im Rahmen einer Lernplattform. In der Lehre kommt es selten vor, dass arithmetische Ausdrücke im Übermaß benutzt werden. Wenn sie auftauchen, sind sie auch meistens auf zwei Operanden beschränkt. Es ist kaum von Nöten komplexe arithmetische Ausdrücke in der SQL-Anfrage zu verwenden. Im Rahmen dieser Arbeit betrachten wir solche Ausdrücke also immer mit maximal zwei Operanden auf der komplexeren Seite. Dies begründet sich auch in der zunehmenden Schwierigkeit solche komplexen Ausdrücke zu behandeln, wie wir im Folgenden sehen werden.
 
-Wir wollen uns dennoch mit der Frage beschäftigen: ``Wie passen wir komplexere arithmetische Ausdrücke an?''. 
+Wir wollen uns dennoch mit der Frage beschäftigen: ``Wie passen wir komplexere arithmetische Ausdrücke an?''. Die folgenden Ansätze sind nur theoretische Überlegungen und stellen kein vollendetes Konzept dar. Wir gehen in unserem Programm trotz der folgenden Diskussion von der Beschränktheit der arithmetischen Ausdrücke aus.
 
 \subsubsection{arithmetische Ausdrücke -- Standardisierung}
 
@@ -415,7 +432,7 @@ Im zweiten Ansatz gestaltet sich das Problem etwas einfacherer. Wie bereits im e
 
 Formeln können auch transitiv-impliziert sein. Steht in der Musterlösung die Formel \verb|A>B AND B>C| und der Student hat geschrieben \verb|A>B AND A>C|, so sind beide Aussagen logisch identisch. Leider erkennt dies unser bisheriger Ansatz nicht. Um solche Formeln zu erkennen, müssen wir auch alle transitiv-implizierten Formeln hinzufügen. Dabei gibt es verschiedene Fälle. 
 
-Existiert in der Formel nur eine Relation $R$, so wie im Beispiel eben $R=\ >$, dann können wir im Ansatz des Hinzufügens implizierter Formeln die transitive Hülle von $R$ berechnen und die entstandenen Paare der Ausgangsformel hinzufügen. Wollen wir keine implizierten Formeln hinzufügen, sondern nur bestimmte Schreibweisen erlauben, so können wir zunächst die transitive Hülle $R^+$ berechnen und danach eine transitive Reduktion durchführen. Zu beachten ist bei diesem Ansatz, dass es nicht für jede Relation eine eindeutige transitive Reduktion gibt. 
+Existiert in der Formel nur eine Relation $R$, so wie im Beispiel eben $R=\ '>'$, dann können wir im Ansatz des Hinzufügens implizierter Formeln die transitive Hülle von $R$ berechnen und die entstandenen Paare der Ausgangsformel hinzufügen. Wollen wir keine implizierten Formeln hinzufügen, sondern nur bestimmte Schreibweisen erlauben, so können wir zunächst die transitive Hülle $R^+$ berechnen und danach eine transitive Reduktion durchführen. Zu beachten ist bei diesem Ansatz, dass es nicht für jede Relation eine eindeutige transitive Reduktion gibt. 
 
 Komplexer wird das Problem, wenn eine Formel verschiedene Relationen enthält, wie \mbox{z. B.} \verb|A>B AND B=9|. Diese Formel impliziert eine weitere Formel transitiv, weil die Relationen $>$ und $=$ zueinander kompatibel sind. Inkompatible Relationen sind $>,\geq$ zu $\leq,<$. Die Relation $=$ ist zu jedweder Relation kompatibel. Haben wir also eine Mischformel mit mehreren kompatiblen Relationen, dann ordnen wir das entstehende transitive Paar der allgemeineren Relation zu. In unserem Beispiel entsteht das Paar $(A,9)$. Da $>$ allgemeiner ist als $=$ ordnen wir $(A,9) \in >$ zu. Auch hier können wir die implizierten Formeln der Ausgangsformel hinzufügen (Ansatz Hinzufügen der Implikationen) oder danach die transitive Reduktion berechnen, wie oben bereits erwähnt. Ein Ansatz eines Algorithmus für solche Mischformeln wäre einen Graph zu erzeugen mit Operanden als Knoten und Relation als Kantenbeschriftung. Zwei Knoten sind genau dann miteinander verbunden, wenn sie durch eine Relation $R_i$ miteinander in der Formel verknüpft sind. $R_i$ ist dann auch die Kantenbeschriftung. Wenn auf einem Pfad alle Relationen zueinander kompatibel sind, wird mit üblichen Methoden die transitive Hülle bestimmt, indem neue Kanten eingezeichnet werden. Beschriftet werden diese Kanten mit dem allgemeineren der Relationen, die auf dem Pfad liegt. So erhalten wir alle transitiv-implizierten Paare.
 
@@ -442,6 +459,7 @@ Bei der Verwendung von eingeschränkten Operatoren gestaltet sich dieser Ansatz 
 Es bietet sich aus diesen Umständen eher an, das Hinzufügen von implizierten Gleichungen zu verwenden.
 
 \subsection{Sortierung}
+\label{subsec:sort}
 
 Im aktuell betrachteten Ansatz möchten wir zwei Anfragen dadurch vergleichen, dass wir sowohl die Musterlösung, als auch die Studentenlösung einer Standardisierung unterziehen. Ein ganz wesentlicher Aspekt dabei ist, die Art der Sortierung. Wir betrachten dazu im Folgenden, ZQL-Parserbäume. Wie genau diese Bäume aussehen ist im Kapitel \ref{chap:parser} beschrieben. Im wesentlichen ist es aber ein gewurzelter Baum. Dabei stellen Knoten entweder Operatoren, Konstanten oder Variablen dar. Ein Operator $o_1$ kann natürlicherweise, als Kindknoten, wiederum einen Operator $o_2$ haben. Es sei $T(r)$ der gewurzelte Baum mit Wurzelknoten $r$. Wir bezeichnen mit der Menge $\mathit{children}(r)$, die Kindknoten von $r$ in folgender Art und Weise: $textit{child}(r) = \{c_1, c_2, ..., c_n\}$. Dabei erscheint das Kind $c_i$ direkt links vom Kind $c_j$ genau dann, wenn $j = i + 1$. Anders ausgedrückt: Bei einer Breitensuche über $r$ würden wir erst $c_i$ und im Anschluss daran $c_j$ auffinden, genau dann wenn $j = i + $.
 
@@ -545,8 +563,7 @@ Interessant für das Preprocessing sind allerdings andere Informationen über OR
 
 \subsection{Abschluss}
 
-Wir fassen die einzelnen Schritte noch einmal kurz zusammen: Zunächst haben wir den \verb|FROM|-Teil der Anfrage vereinheitlicht, indem wir einheitliche Tupelvariablen erzeugt haben, nachdem alle Tabellen im \verb|FROM|-Teil lexikographisch sortiert wurden. Alle neu erzeugten Variablennamen wurden im Rest der Anfrage korrekt eingesetzt bzw. ersetzt. Danach haben wir den \verb|WHERE|-Teil bearbeitet. Wir haben zunächst unnötige Klammern entfernt und die Formeln in die KNF überführt. Danach haben wir einfache syntatkische Varianten ersetzt um eine einheitlichere Darstellung zu erhalten. Dazu gehörte es auch Unteranfragen aufzulösen oder, wenn nicht möglich, in eine \verb|EXISTS|-Unteranfrage zu überführen. Danach haben wir innere Verbunde (JOINs), die im \verb|FROM|-Teil formuliert wurden, in den \verb|WHERE|-Teil überführt, um anschließend unnötige äußere Verbunde und unnötige transitive, innere Verbunde  zu eliminieren. Eine der letzten Schritte war das Behandeln der Vielfalt der Operatoren. Dem ging zunächst eine Teilsortierung des Parserbaumes voraus. Mit einer der beiden vorgestellten Methoden haben wir nun alle implizierten Formeln hinzugefügt, oder die Operatoren gemäß ihrer Repräsentanten beschränkt. Schlussendlich haben wir den gesamten \verb|WHERE|-Teil sortiert, um eine Vereinheitlichung zu erreichen.
-
+Wir fassen die einzelnen Schritte noch einmal kurz zusammen: Zunächst haben wir den \verb|FROM|-Teil der Anfrage vereinheitlicht, indem wir einheitliche Tupelvariablen erzeugt haben, nachdem alle Tabellen im \verb|FROM|-Teil lexikographisch sortiert wurden. Alle neu erzeugten Variablennamen wurden im Rest der Anfrage korrekt eingesetzt bzw. ersetzt. Finden wir in diesem Schritt im \verb|FROM|-Teil bereits zwei gleiche Tabellen mit unterschiedlichen Aliasen, so könnte ein Selbstverbund dadurch entstehen. Um mehrdeutigen zu vermeiden, erzeugen wir eine Kopie der vorliegenden Anfrage und vertauschen die gleichen Tabellennamen im \verb|FROM|-Teil. Wir erhalten somit für jeden Selbstverbund einen zusätzlich zu untersuchenden Baum. Am Ende prüfen wir ob einer dieser Bäume syntaktisch äquivalent ist mit einem der erzeugen Bäumde, der zweiten Anfrage. Danach haben wir den \verb|WHERE|-Teil bearbeitet. Wir haben zunächst unnötige Klammern entfernt und die Formeln in die KNF überführt. Danach haben wir einfache syntaktische Varianten ersetzt um eine einheitlichere Darstellung zu erhalten. Dazu gehörte es auch Unteranfragen aufzulösen oder, wenn nicht möglich, in eine \verb|EXISTS|-Unteranfrage zu überführen. Anschließend haben wir innere Verbunde (JOINs), die im \verb|FROM|-Teil formuliert wurden, in den \verb|WHERE|-Teil überführt. Eine der letzten Schritte war das Behandeln der Vielfalt der Operatoren. Hier haben wir für alle nicht-kommutativen Operatoren ihre alternativen Schreibweisen konjunktiv-verknüpft mit in die Formel aufgenommen. Nach diesem Schritt müssen wir nun die KNF wiederherstellen, da diese durch hinzufügen von \verb|AND|-Knoten zerstört sein kann. Schlussendlich haben wir den gesamten \verb|WHERE|-Teil sortiert, um eine Vereinheitlichung zu erreichen.
 
 \section{Weitere Betrachtungen}
 
@@ -763,15 +780,33 @@ Redundante Joins zu finden ist keine triviale Aufgabe. Es gibt viele verschieden
 
 Innere Joins sind einfacher zu handhaben als äußere Joins. In der Arbeit \cite{outer2inner} wird ein Verfahren vorgestellt, welches \verb|OUTER JOIN| äquivalent in \verb|INNER JOIN| umwandelt. Das Verfahren ist komplex und mehrstufig, kann aber mit allen \verb|OUTER JOIN| umgehen. Der entstandene \verb|INNER JOIN| ist allerdings aufgebläht und nicht mehr lesbar, da er künstlich konstruiert ist. Im Rahmen unserer Arbeit interessiert dieser Fakt nur am Rande, im Zuge einer Erweiterung der semantischen Funktionen unseres Programmes, ist dieser Ansatz aber sicherlich erwähnenswert und interessant.
 
-KOMPLEXITAT TODO
+\section{Komplexität von SQL-Anfragen}
 
-Unabhängig von den bereits vorgestellten Ansätzen der >>Standardisierung<< und der >>Anpassung durch elementare Transformationen<< gibt es einige Umwandlungen, die entweder davor oder danach geschehen sollten. Diese Umwandlungen sollen dazu dienen dem Studenten ein Feedback zu geben. Das bedeutet, dass die Anfrage des Studenten richtig sein kann, allerdings unnötige oder unschöne Konstrukte enthält, welche die Anfrage unnötig kompliziert oder komplex machen.
+Durch Standardisierung zweier SQL-Abfragen \verb|query1| und \verb|query2| können wir durch einen syntaktischen Vergleich prüfen, ob es uns möglich war, beide gegeneinander zu matchen. Unabhängig vom Ergebnis dieses Matchings ist für den Lernenden wichtig, wie nah er an der Musterlösung dran war. Folgende Szenarien sind dabei denkbar. 
 
-Folgende verschiedene Komplexitätseinstufungen sollen eingeführt werden und auf jede Studentenanfrage angewendet werden.
+Im ersten Szenario konnte die SQL-Anfrage des Lernenden nicht mit der SQL-Anfrage der Musterlösung gematcht werden. Der Lernende benötigt nun ein Feedback um seine Fehler zu erkennen und um letztendlich einen neuen Lösungsvorschlag zu machen. 
 
-\subsection{Anzahl atomarer Formeln}
+In einem zweite Szenario konnte die SQL-Anfrage des Lernenden gematcht werden. Während des Standardisierungsprozesses seiner Anfrage, kann es aber sein, dass unnötige Klauseln entfernt wurden. In einem solchen Fall ist es von Interesse dem Lernenden mitzuteilen, dass seine Lösung noch nicht perfekt (im Sinne der Musterlösung) ist. 
+
+Wir wollen im Folgenden nun Kriterien von Metainformationen festlegen. Diese Metainformationen der zwei Anfragen sollen dann jeweils miteinander verglichen werden. Finden wir bei einem solchen Vergleich Unstimmigkeiten in der Anzahl der jeweiligen Informationen, muss dies dem Lernenden mitgeteilt werden.
+
+\subsection{Anzahl atomarer Formeln unter WHERE / Baumtiefe}
 
 Die Studentenanfrage enthält vor der Transformation durch unser Programm mehr atomare Formeln als die Musterlösung, so wurden offensichtlich unnötige Formeln oder doppelte Formeln aufgeschrieben. Stellt unser Programm fest, dass beide Lösungen dennoch gleich sind, so muss dem Studenten mitgeteilt werden, dass er redundante Formeln eingebaut hat, welche die Lösung unnötig verkomplizieren. 
+
+Gleichzeitig kann die unterschiedliche Tiefe des Parserbaumes der \verb|WHERE|-Klausel auch auf redundante Formeln hinweisen, die unser Programm durch Konstanten ersetzt hat, beispielsweise arithmetisch/logische Ausdrücke, die nur Konstanten als Operanden haben und damit bereits auswertbar sind.
+
+\subsection{Anzahl benutzter Tabellen unter FROM}
+
+Der Lernende könnte durch gewisse Semi-Joins unter \verb|WHERE| durchaus eine andere Anzahl an Tabellen im \verb|FROM|-Teil benutzten, als die Musterlösung. 
+
+\subsection{Existenz von Teilen der SQL-Anfrage}
+
+Geraden wenn der Lernende eine falsche Lösung einsendet, kann es sein, dass er sogar wichtige Teile einer Anfrage nicht benutzt, die aber von der Musterlösung verwendet wird. So ist es sinnvoll zu vergleichen, ob sowohl die Musterlösung, als auch die Lösung des Studenten einen nicht leeren \verb|SELECT-, FROM-, WHERE-, GROUP BY-| und \verb|ORDER BY-|Teil hat. Unterschiede müssen dem Lernenden mitgeteilt werden. Dabei ist sowohl die Information interessant, ob ein gewisser Teil existiert, als auch die Anzahl der Attribute oder Formeln im jeweiligen Teil der Anfrage.
+
+\subsection{Anzahl von JOINs / Unterabfragen}
+
+Sehr viele Fehler bei Anfängern finden sich im Bereich JOINs. Gerade deswegen ist es für den Lernenden interessant, ob er mehr oder weniger JOINs verwendet hat, als die Musterlösung. Im selben Atemzug sind Unterabfragen genannt, die entweder zu zaghaft oder zu häufig von Lernenden eingesetzt werden. Daher sollte auch diese Anzahl überwacht werden.
 
 \subsection{Anzahl der Operatorkompressionen}
 
@@ -782,6 +817,23 @@ Wie im vorherigen Abschnitt bereits erklärt ist der ZQL-Parserbaum nicht binär
 Eine interessante Frage ist, ob ein \verb|DISTINCT| wirklich notwendig ist. Dies ist natürlich wichtig für den Vergleich zweier SQL-Anfragen. In \cite{brass2} wurde im Rahmen des SQLLint-Projektes bereits in dem Prototypen ein Checker eingebaut, der prüft ob \verb|DISTINCT| wirklich notwendig ist. Aber auch im Rahmen dieser Arbeit ist es notwendig zu wissen, ob das \verb|DISTINCT| notwendig ist. 
 
 Auf den ersten Blick reicht es aus zu prüfen, ob die Musterlösung ein \verb|DISTINCT| enthält. Ist dies der Fall, so muss die Lösung des Lernenden das offensichtlich auch enthalten. Allerdings setzt dieser Denkansatz voraus, dass die eingetragene Musterlösung stets perfekt ist. Um Fehler vorzubeugen ist es besser, alle Anfragen auf unnötige \verb|DISTINCT| zu prüfen. So kann dem Korrektor beim Eintragen der Musterlösung bereits angezeigt werden, dass sein angegebenes \verb|DISTINCT| unnötig ist oder ob ein \verb|DISTINCT| notwendig wäre um Duplikate zu eliminieren. Auch wenn man sich weg bewegt vom Modell der Musterlösung und dem Vergleich mit dem Lernenden, ist dieser Check durchaus wichtig. Im Folgenden stellen wir daher einen Algorithmus vor, der erkennt ob die Lösung Duplikate enthalten kann oder nicht.
+
+Dabei muss angemerkt werden, dass der nachfolgende Algorithmus die hinreichende Bedingung für ein unnötiges \verb|DISTINCT| prüft. Das bedeutet, dass wenn der Algorithmus sagt >>ja, \verb|DISTINCT| ist unnötig<<, können wir sicher sein, dass es tatsächlich unnötig ist. Sagt der Algorithmus allerdings >>nein<< bedeutet dies, nicht notwendigerweise, dass das \verb|DISTINCT| wirklich unnötig ist. Gewisse Sachverhalte findet der Algorithmus nicht.
+
+Der Algorithmus ist nicht in unserem Programm implementiert. Wir beschreibe ihn aber im Folgenden so, dass er in einer Überarbeitung ohne Probleme integriert werden könnte. Der Algorithmus müsste dann in jedem Fall nach der Umwandlung des \verb|WHERE|-Teils in die KNF erfolgen, da dies eine Voraussetzung für den Algorithmus ist.
+
+\subsection{verbale Beschreibung}
+
+Es sei $\mathcal{K}$ die Menge aller Attribute, die als Aausgabespalten unter \verb|SELECT| vorkommen.
+Wir fügen im nächsten Schritt nun alle Attribute $A$ zu $\mathcal{K}$ hinzu, für die $A=c$ bzw. $c=A$ in der \verb|WHERE|-Bedingung auftaucht. Hierbei wird, wie bereits erwähnt, vorausgesetzt, dass die Bedingung eine Konjunktion ist. Weiterhin ist zu bemerken, dass Unterabfragen vom Algorithmus ignoriert werden.
+
+Solange eine der folgenden Aktionen zu einer Veränderung unseres Zustands führt, machen wir Folgendes:
+\begin{itemize}
+\item Wir fügen zur Menge $\mathcal{K}$ Attribute $A$ hinzu, wenn $A=B$ Teil der \verb|WHERE|-Bedingung ist und $B\in \mathcal{K}$ gilt.
+\item Enthält $\mathcal{K}$ einen Schlüssel einer Tupelvariable, so fügen wir alle Attribute dieser Variable hinzu.
+\end{itemize}
+
+Enthält $\mathcal{K}$ nun von jeder Tupelvariable unter \verb|FROM| einen Schlüssel, so ist das \verb|DISTINCT| sicher überflüssig. Haben wir ein \verb|GROUP BY|-Statement so prüfen wir anstelle dessen, ob alle \verb|GROUP BY|-Spalten in $\mathcal{K}$ enthalten sind.
 
 \subsection{Algorithmus aus \cite{sql1folien}}
 
@@ -795,32 +847,37 @@ WHERE $\varphi$
 
 Es sei $X=\{X_1, ..., X_n\}$ die Menge aller Tupelvariablen. Es sei $G=\{G_1, ..., G_m\}$ die Menge aller \verb|GROUP BY| Spalten.
 
-Die Einzelnen Attribute $t_i$ haben die Form $t = X.k$. Dabei ist $X$ eine Tupelvariable und $k$ ein Attribut. Wir bezeichnen die Menge aller $t_i$ mit $\mathcal{K}=\{t_1,...,t_k\}$.
+Die einzelnen Attribute $t_i$ haben die Form $t = X.k$. Dabei ist $X$ eine Tupelvariable und $k$ ein Attribut. Wir bezeichnen die Menge aller $t_i$ mit $\mathcal{K}=\{t_1,...,t_k\}$.
 
 \begin{lstlisting}[mathescape]
-$\mathcal{K}$ = $\mathcal{K}\ \cup$ A, wenn $A=c\in$ WHERE-Bedingung
+$\mathcal{K}$ = $\mathcal{K}\ \cup$ {A}, wenn $A=c$ als Konjunktion in WHERE auftaucht
 do 
   $\mathcal{K'}$ = $\mathcal{K}$
   $\mathcal{K'}$ = $\mathcal{K'}\ \cup$ A, wenn $A=B\in$ WHERE-Bedingung und $B\in\mathcal{K}$
   $\mathcal{K'}$ = $\mathcal{K'}\ \cup$ S mit $S=\{b\in X\}$, wenn $t\in \mathcal{K'}$ ein Schluessel ist und t=X.k
 while ($\mathcal{K}\ \neq\ \mathcal{K'}$)
 
-if Anfrage hat GROUP BY Statement:
+if not Anfrage hat GROUP BY Statement:
   foreach $x\in X$ do
     if not ($\exists k\in \mathcal{K'}$ mit $k$ ist Schluessel von $x$)
-      break and answer NO
+      break and return NO
     endif
   done
 
-if not Anfrage hat GROUP BY Statement:
+if Anfrage hat GROUP BY Statement:
   foreach $g\in G$ do
     if $g\notin \mathcal{K'}$
-      break and answer NO
+      break and return NO
     endif
   done
 
-answer YES
+return YES
 \end{lstlisting}
+
+
+Beispiel:
+
+mit EMP und DEPT
 
 \section{Alternativer Ansatz: Elementare Transformationen}
 
