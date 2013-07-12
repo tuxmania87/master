@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.3-1.40.12 (MiKTeX 2.9) (preloaded format=pdflatex 2012.8.27)  3 JUL 2013 17:19
+This is pdfTeX, Version 3.1415926-2.3-1.40.12 (MiKTeX 2.9) (preloaded format=pdflatex 2012.8.27)  11 JUL 2013 09:06
 entering extended mode
 **master.tex
 (E:\Users\Robert\Desktop\Arbeit\master\Arbeit\master.tex
@@ -1362,20 +1362,14 @@ File: omstxr.fd 2000/12/15 v3.1
 LaTeX Font Info:    Font shape `OMS/txr/m/n' in size <12> not available
 (Font)              Font shape `OMS/txsy/m/n' tried instead on input line 30.
 
-[11] [12]
-Overfull \hbox (11.2861pt too wide) in paragraph at lines 77--78
-\T1/txr/m/n/12 >>SQLLint - De-tec-ting Se-man-tic Er-rors in SQL Que-ries<< ist
- ein Pro-jekt der Martin-Luther-Universität
- []
-
-[13] [14]
-Overfull \hbox (6.24332pt too wide) in paragraph at lines 98--99
+[11] [12] [13] [14]
+Overfull \hbox (6.24332pt too wide) in paragraph at lines 90--91
 \T1/txr/m/n/12 Unteranfragen. Al-le an-de-ren Un-ter-an-fra-gen ([]\T1/txtt/m/n
 /12 IN,>=ALL, \T1/txr/m/n/12 etc.) kön-nen auf die []\T1/txtt/m/n/12 EXISTS\T1/
 txr/m/n/12 -Unteranfrage
  []
 
-LaTeX Font Info:    Try loading font information for U+fplmbb on input line 112
+LaTeX Font Info:    Try loading font information for U+fplmbb on input line 104
 .
 ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\psnfss\ufplmbb.fd"
 File: ufplmbb.fd 2003/10/30 Fontinst v1.914 font definitions for U/fplmbb.
@@ -1402,14 +1396,14 @@ Overfull \hbox (5.8739pt too wide) in paragraph at lines 157--158
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
 l.164 
-      ] <Bilder/not_graph1.png, id=491, 468.75125pt x 444.66125pt>
+      ] <Bilder/not_graph1.png, id=489, 468.75125pt x 444.66125pt>
 File: Bilder/not_graph1.png Graphic file (type png)
 
 <use Bilder/not_graph1.png>
 Package pdftex.def Info: Bilder/not_graph1.png used on input line 184.
 (pdftex.def)             Requested size: 234.37505pt x 222.33008pt.
 
-<Bilder/not_graph2.png, id=493, 468.75125pt x 444.66125pt>
+<Bilder/not_graph2.png, id=491, 468.75125pt x 444.66125pt>
 File: Bilder/not_graph2.png Graphic file (type png)
 
 <use Bilder/not_graph2.png>
@@ -1420,14 +1414,14 @@ Overfull \hbox (48.7739pt too wide) in paragraph at lines 181--186
 [][] 
  []
 
-[23] <Bilder/not_graph3.png, id=501, 468.75125pt x 444.66125pt>
+[23] <Bilder/not_graph3.png, id=499, 468.75125pt x 444.66125pt>
 File: Bilder/not_graph3.png Graphic file (type png)
 
 <use Bilder/not_graph3.png>
 Package pdftex.def Info: Bilder/not_graph3.png used on input line 190.
 (pdftex.def)             Requested size: 234.37505pt x 222.33008pt.
 
-<Bilder/not_graph4.png, id=502, 468.75125pt x 348.30125pt>
+<Bilder/not_graph4.png, id=500, 468.75125pt x 348.30125pt>
 File: Bilder/not_graph4.png Graphic file (type png)
 
 <use Bilder/not_graph4.png>
@@ -1532,14 +1526,14 @@ Underfull \hbox (badness 10000) in paragraph at lines 468--474
 
  []
 
-<Bilder/sort_ex0.png, id=612, 581.17125pt x 261.22594pt>
+<Bilder/sort_ex0.png, id=610, 581.17125pt x 261.22594pt>
 File: Bilder/sort_ex0.png Graphic file (type png)
 
 <use Bilder/sort_ex0.png>
 Package pdftex.def Info: Bilder/sort_ex0.png used on input line 502.
 (pdftex.def)             Requested size: 348.70544pt x 156.73676pt.
  [37]
-<Bilder/sort_ex12.png, id=619, 850.67813pt x 134.75343pt>
+<Bilder/sort_ex12.png, id=617, 850.67813pt x 134.75343pt>
 File: Bilder/sort_ex12.png Graphic file (type png)
 
 <use Bilder/sort_ex12.png>
@@ -1550,7 +1544,7 @@ Overfull \hbox (1.24924pt too wide) in paragraph at lines 510--511
 [][]
  []
 
-<Bilder/sort_exfin1.png, id=621, 572.1375pt x 261.22594pt>
+<Bilder/sort_exfin1.png, id=619, 572.1375pt x 261.22594pt>
 File: Bilder/sort_exfin1.png Graphic file (type png)
 
 <use Bilder/sort_exfin1.png>
@@ -1570,7 +1564,7 @@ l.526
 l.526 
        <E:/Users/Robert/Desktop/Arbeit/master/Arbeit/Bilder/sort_ex0.png (PNG c
 opy)> <E:/Users/Robert/Desktop/Arbeit/master/Arbeit/Bilder/sort_ex12.png (PNG c
-opy)>] <Bilder/sort_exfinb0.png, id=631, 568.37344pt x 261.22594pt>
+opy)>] <Bilder/sort_exfinb0.png, id=629, 568.37344pt x 261.22594pt>
 File: Bilder/sort_exfinb0.png Graphic file (type png)
 
 <use Bilder/sort_exfinb0.png>
@@ -1583,7 +1577,7 @@ Package pdftex.def Info: Bilder/sort_exfinb0.png used on input line 534.
                                                   \fi \fi 
 l.541 
        <E:/Users/Robert/Desktop/Arbeit/master/Arbeit/Bilder/sort_exfin1.png (PN
-G copy)>] <Bilder/sort_exfinb1.png, id=638, 568.37344pt x 261.22594pt>
+G copy)>] <Bilder/sort_exfinb1.png, id=636, 568.37344pt x 261.22594pt>
 File: Bilder/sort_exfinb1.png Graphic file (type png)
 
 <use Bilder/sort_exfinb1.png>
@@ -1668,14 +1662,14 @@ Overfull \hbox (23.23955pt too wide) in paragraph at lines 718--719
 NOT NULL\T1/txr/m/n/12 -
  []
 
-[47] <Bilder/joinelem_g1.png, id=694, 611.28375pt x 354.32375pt>
+[47] <Bilder/joinelem_g1.png, id=692, 611.28375pt x 354.32375pt>
 File: Bilder/joinelem_g1.png Graphic file (type png)
 
 <use Bilder/joinelem_g1.png>
 Package pdftex.def Info: Bilder/joinelem_g1.png used on input line 744.
 (pdftex.def)             Requested size: 244.50917pt x 141.72697pt.
 
-<Bilder/joinelem_g2.png, id=695, 644.4075pt x 351.3125pt>
+<Bilder/joinelem_g2.png, id=693, 644.4075pt x 351.3125pt>
 File: Bilder/joinelem_g2.png Graphic file (type png)
 
 <use Bilder/joinelem_g2.png>
@@ -1685,7 +1679,7 @@ Package pdftex.def Info: Bilder/joinelem_g2.png used on input line 751.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-<Bilder/joinelem_g3.png, id=696, 271.0125pt x 344.28625pt>
+<Bilder/joinelem_g3.png, id=694, 271.0125pt x 344.28625pt>
 File: Bilder/joinelem_g3.png Graphic file (type png)
 
 <use Bilder/joinelem_g3.png>
@@ -1735,58 +1729,41 @@ Kapitel 4.
 Kapitel 5.
 (E:\Users\Robert\Desktop\Arbeit\master\Arbeit\software.tex [57
 
-]
-Overfull \hbox (35.1228pt too wide) in paragraph at lines 36--37
-\T1/txr/m/n/12 ei-ne Wild-card []\T1/txtt/m/n/12 * \T1/txr/m/n/12 han-delt oder
- ob das Item ei-ne Ag-gre-ga-tes-funk-ti-on ist. Bei []\T1/txtt/m/n/12 SELECT A
-VG(sal) FROM ...
- []
-
-<Bilder/where_syntax.png, id=796, 369.38pt x 251.94125pt>
+] [58]
+<Bilder/where_syntax.png, id=798, 369.38pt x 251.94125pt>
 File: Bilder/where_syntax.png Graphic file (type png)
 
 <use Bilder/where_syntax.png>
 Package pdftex.def Info: Bilder/where_syntax.png used on input line 55.
 (pdftex.def)             Requested size: 258.56422pt x 176.35767pt.
 
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-[58] <Bilder/with_zql.png, id=801, 488.82625pt x 155.58125pt>
+<Bilder/with_zql.png, id=799, 488.82625pt x 155.58125pt>
 File: Bilder/with_zql.png Graphic file (type png)
 
 <use Bilder/with_zql.png>
 Package pdftex.def Info: Bilder/with_zql.png used on input line 67.
 (pdftex.def)             Requested size: 342.17603pt x 108.90611pt.
-
-Overfull \hbox (58.08076pt too wide) in paragraph at lines 74--75
-\T1/txr/m/n/12 Kon-stan-te so-wie den Typ. Als Ty-pen kom-men in Fra-ge: []\T1/
-txtt/m/n/12 COLUMNNAME, NULL, NUMBER, STRING, UNKNOWN\T1/txr/m/n/12 .
- []
-
-[59pdfTeX warning (ext4): destination with the same identifier (name{figure.5.1
-}) has been already used, duplicate ignored
+ [59pdfTeX warning (ext4): destination with the same identifier (name{figure.5.
+1}) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.80 L
-      etztendlich vereinigt die Klasse \textbf{ZQuery} die eben vorgestellte...
-pdfTeX warning (ext4): destination with the same identifier (name{figure.5.2}) 
-has been already used, duplicate ignored
+l.75 
+     pdfTeX warning (ext4): destination with the same identifier (name{figure.5
+.2}) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.80 L
-      etztendlich vereinigt die Klasse \textbf{ZQuery} die eben vorgestellte...
- <E:/Users/Robert/Desktop/Arbeit/master/Arbeit/Bilder/where_syntax.png> <E:/Use
-rs/Robert/Desktop/Arbeit/master/Arbeit/Bilder/with_zql.png>]
+l.75 
+      <E:/Users/Robert/Desktop/Arbeit/master/Arbeit/Bilder/where_syntax.png> <E
+:/Users/Robert/Desktop/Arbeit/master/Arbeit/Bilder/with_zql.png>]
 Overfull \hbox (18.07098pt too wide) in paragraph at lines 80--82
 []\T1/txr/m/n/12 Letztendlich ver-ei-nigt die Klas-se \T1/txr/bx/n/12 ZQue-ry \
 T1/txr/m/n/12 die eben vor-ge-stell-ten Klas-sen. Die Funk-ti-on []\T1/txtt/m/n
 /12 getSelect()
  []
 
-
+[60]
 Overfull \hbox (18.47388pt too wide) in paragraph at lines 98--99
 [][]\T1/txtt/m/n/12 selItem1 = { [Table=e], [Column=name], [Expression=false], 
 [Wildcard=false] } 
@@ -1804,13 +1781,13 @@ Overfull \hbox (43.67383pt too wide) in paragraph at lines 102--103
 e], [Wildcard=false] } 
  []
 
-[60]
+
 Overfull \hbox (20.75388pt too wide) in paragraph at lines 106--108
 [][]\T1/txtt/m/n/12 fromItem1 = { [Table=emp], [Alias=e] } []fromItem2 = { [Tab
 le=dept], [Alias=d] } 
  []
 
-<Bilder/parserbaum.png, id=814, 968.61874pt x 373.395pt>
+<Bilder/parserbaum.png, id=812, 968.61874pt x 373.395pt>
 File: Bilder/parserbaum.png Graphic file (type png)
 
 <use Bilder/parserbaum.png>
@@ -1826,9 +1803,10 @@ Overfull \hbox (27.36385pt too wide) in paragraph at lines 112--113
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.130 \section
-              {Java Server Pages} <E:/Users/Robert/Desktop/Arbeit/master/Arbeit
-/Bilder/parserbaum.png>]) [62]
+l.124 W
+       eiterhin ist der ZQL-Parser nicht in der Lage \verb|JOINS| Ã¼ber die ...
+ <E:/Users/Robert/Desktop/Arbeit/master/Arbeit/Bilder/parserbaum.png>])
+[62]
 Kapitel 6.
 (E:\Users\Robert\Desktop\Arbeit\master\Arbeit\praxis.tex) [63
 
@@ -1925,17 +1903,25 @@ Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 130.
 Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 130.
 Package rerunfilecheck Info: File `master.out' has not changed.
 (rerunfilecheck)             Checksum: C5C6059CADF918043A1DFD9A28CCCEB8;4616.
-Package rerunfilecheck Info: File `master.brf' has not changed.
-(rerunfilecheck)             Checksum: 4E98C9537EA8CB54A5BC4246F0550618;1239.
 
+
+Package rerunfilecheck Warning: File `master.brf' has changed.
+(rerunfilecheck)                Rerun to get bibliographical references right.
+
+Package rerunfilecheck Info: Checksums for `master.brf':
+(rerunfilecheck)             Before: 4E98C9537EA8CB54A5BC4246F0550618;1239
+(rerunfilecheck)             After:  C520F36833D0B7C03BF203E71AF48B82;1239.
 
 LaTeX Warning: There were undefined references.
+
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
 
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 130.
  ) 
 Here is how much of TeX's memory you used:
- 21889 strings out of 494045
- 396557 string characters out of 3145966
+ 21887 strings out of 494045
+ 396535 string characters out of 3145966
  538348 words of memory out of 3000000
  24272 multiletter control sequences out of 15000+200000
  72024 words of font info for 105 fonts, out of 3000000 for 9000
@@ -1955,9 +1941,9 @@ gram Files (x86)/MiKTeX 2.9/fonts/type1/urw/palatino/uplr8a.pfb><C:/Program Fil
 es (x86)/MiKTeX 2.9/fonts/type1/urw/times/utmb8a.pfb><C:/Program Files (x86)/Mi
 KTeX 2.9/fonts/type1/urw/times/utmr8a.pfb><C:/Program Files (x86)/MiKTeX 2.9/fo
 nts/type1/urw/times/utmri8a.pfb>
-Output written on master.pdf (70 pages, 628047 bytes).
+Output written on master.pdf (70 pages, 628560 bytes).
 PDF statistics:
- 1074 PDF objects out of 1200 (max. 8388607)
- 352 named destinations out of 1000 (max. 500000)
+ 1072 PDF objects out of 1200 (max. 8388607)
+ 350 named destinations out of 1000 (max. 500000)
  621 words of extra memory for PDF output out of 10000 (max. 10000000)
 

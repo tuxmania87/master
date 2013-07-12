@@ -7,12 +7,11 @@
 \contentsline {chapter}{\numberline {2}Forschungsstand und Einordnung}{9}{chapter.2}
 \contentsline {section}{\numberline {2.1}Einleitung}{9}{section.2.1}
 \contentsline {section}{\numberline {2.2}SQL-Tutor}{9}{section.2.2}
-\contentsline {section}{\numberline {2.3}SQL-Exploratorium}{10}{section.2.3}
+\contentsline {section}{\numberline {2.3}SQL-Exploratorium}{11}{section.2.3}
 \contentsline {subsection}{\numberline {2.3.1}Interactive Examples}{11}{subsection.2.3.1}
 \contentsline {subsection}{\numberline {2.3.2}SQL Knowledge Tester}{11}{subsection.2.3.2}
 \contentsline {subsection}{\numberline {2.3.3}Weiteres}{12}{subsection.2.3.3}
-\contentsline {subsubsection}{Adaptive Navigation for SQL Questions}{12}{section*.5}
-\contentsline {subsubsection}{SQL-Lab}{12}{section*.6}
+\contentsline {subsubsection}{Adaptive Navigation for SQL Questions}{12}{section*.4}
 \contentsline {section}{\numberline {2.4}WIN-RBDI}{12}{section.2.4}
 \contentsline {section}{\numberline {2.5}SQLLint}{13}{section.2.5}
 \contentsline {subsection}{\numberline {2.5.1}Algorithmus zum Finden von inkonsistenten Bedingungen}{14}{subsection.2.5.1}
@@ -31,28 +30,28 @@
 \contentsline {subsection}{\numberline {3.3.1}Entfernen von syntaktischen Details}{22}{subsection.3.3.1}
 \contentsline {subsection}{\numberline {3.3.2}FROM-Teil}{22}{subsection.3.3.2}
 \contentsline {subsection}{\numberline {3.3.3}WHERE-Teil}{23}{subsection.3.3.3}
-\contentsline {subsubsection}{Entfernung unn\IeC {\"o}tiger Klammerungen}{23}{section*.9}
-\contentsline {subsubsection}{NOT aufl\IeC {\"o}sen}{23}{section*.10}
-\contentsline {subsubsection}{Anwenden des Distributivgesetzes}{24}{section*.11}
+\contentsline {subsubsection}{Entfernung unn\IeC {\"o}tiger Klammerungen}{23}{section*.7}
+\contentsline {subsubsection}{NOT aufl\IeC {\"o}sen}{23}{section*.8}
+\contentsline {subsubsection}{Anwenden des Distributivgesetzes}{24}{section*.9}
 \contentsline {subsection}{\numberline {3.3.4}Ersetzung von syntaktischen Varianten}{25}{subsection.3.3.4}
-\contentsline {subsubsection}{Andere Unteranfragen}{28}{section*.17}
+\contentsline {subsubsection}{Andere Unteranfragen}{28}{section*.15}
 \contentsline {subsection}{\numberline {3.3.5}Operatorenvielfalt}{28}{subsection.3.3.5}
-\contentsline {subsubsection}{Analyse der unterschiedlichen Operatoren}{29}{section*.18}
-\contentsline {subsubsection}{Hinzuf\IeC {\"u}gen implizierter Formeln}{30}{section*.19}
-\contentsline {subsubsection}{Beschr\IeC {\"a}nkung der Operatorenvielfalt}{31}{section*.20}
-\contentsline {subsubsection}{Einschr\IeC {\"a}nkungen bei arithmetischen Ausdr\IeC {\"u}cken}{33}{section*.21}
-\contentsline {subsubsection}{arithmetische Ausdr\IeC {\"u}cke -- Standardisierung}{33}{section*.22}
-\contentsline {subsubsection}{arithmetische Ausdr\IeC {\"u}cke -- Operatorenbeschr\IeC {\"a}nkung}{34}{section*.23}
-\contentsline {subsubsection}{transitiv-implizierte Formeln}{34}{section*.24}
-\contentsline {subsubsection}{implizierte Dom\IeC {\"a}nen}{35}{section*.25}
-\contentsline {subsubsection}{Diskussion der beiden Ans\IeC {\"a}tze}{35}{section*.26}
+\contentsline {subsubsection}{Analyse der unterschiedlichen Operatoren}{29}{section*.16}
+\contentsline {subsubsection}{Hinzuf\IeC {\"u}gen implizierter Formeln}{30}{section*.17}
+\contentsline {subsubsection}{Beschr\IeC {\"a}nkung der Operatorenvielfalt}{31}{section*.18}
+\contentsline {subsubsection}{Einschr\IeC {\"a}nkungen bei arithmetischen Ausdr\IeC {\"u}cken}{33}{section*.19}
+\contentsline {subsubsection}{arithmetische Ausdr\IeC {\"u}cke -- Standardisierung}{33}{section*.20}
+\contentsline {subsubsection}{arithmetische Ausdr\IeC {\"u}cke -- Operatorenbeschr\IeC {\"a}nkung}{34}{section*.21}
+\contentsline {subsubsection}{transitiv-implizierte Formeln}{34}{section*.22}
+\contentsline {subsubsection}{implizierte Dom\IeC {\"a}nen}{35}{section*.23}
+\contentsline {subsubsection}{Diskussion der beiden Ans\IeC {\"a}tze}{35}{section*.24}
 \contentsline {subsection}{\numberline {3.3.6}Sortierung}{36}{subsection.3.3.6}
 \contentsline {subsection}{\numberline {3.3.7}GROUP BY / HAVING}{40}{subsection.3.3.7}
 \contentsline {subsection}{\numberline {3.3.8}ORDER BY}{41}{subsection.3.3.8}
 \contentsline {subsection}{\numberline {3.3.9}Abschluss}{41}{subsection.3.3.9}
 \contentsline {section}{\numberline {3.4}Weitere Betrachtungen}{42}{section.3.4}
 \contentsline {subsection}{\numberline {3.4.1}JOINS}{42}{subsection.3.4.1}
-\contentsline {subsubsection}{JOIN-Eliminierung}{46}{section*.31}
+\contentsline {subsubsection}{JOIN-Eliminierung}{46}{section*.29}
 \contentsline {section}{\numberline {3.5}Komplexit\IeC {\"a}t von SQL-Anfragen}{50}{section.3.5}
 \contentsline {subsection}{\numberline {3.5.1}Anzahl atomarer Formeln unter WHERE / Baumtiefe}{50}{subsection.3.5.1}
 \contentsline {subsection}{\numberline {3.5.2}Anzahl benutzter Tabellen unter FROM}{51}{subsection.3.5.2}

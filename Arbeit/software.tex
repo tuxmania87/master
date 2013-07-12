@@ -23,7 +23,7 @@ Das Interface \verb|ZStatement| bildet eine abstrakte Oberklasse für alle mögl
 Das Interface \verb|ZExp| bildet eine abstrakte Oberklasse für drei verschiedene Arten von Ausdrücken:
 
 \begin{itemize}
-\item \verb|ZConstant| - Konstanten vom Typ \verb|COLUMNAME, NULL, NUMBER, STRING| oder \verb|UNKNOWN|
+\item \verb|ZConstant| - Konstanten vom Typ \verb|NULL, NUMBER, STRING| oder \verb|UNKNOWN|. Dazu gehören auch Spaltennamen. Dies sind keine Konstanten im eigentlichen Sinne, sondern vielmehr im Sinne eines Parserbaumes. Im ZQL-Parserbaum sind Elemente entweder eine SQL-Anfrage (Query), ein Ausdruck, bestehend aus Operator und Operanden, oder eine Konstante. Spaltennamen fallen in die Kategorie Konstanten, da sie keine Ausdrücke oder SQL-Anfragen sind. Der Typ hierfür ist dann \verb|COLUMNAME|.
 \item \verb|ZExpression| - Ein SQL-Ausdruck bestehend aus einem Operator und einen oder mehreren Operanden
 \item \verb|ZQuery| - Eine \verb|SELECT| Anfrage ist auch ein Ausdruck
 \end{itemize}
@@ -31,9 +31,9 @@ Das Interface \verb|ZExp| bildet eine abstrakte Oberklasse für drei verschieden
 Wir klären in diesem Abschnitt nun genauer, wie der Parser SQL-Anfragen in interne Datenstrukturen überführt.
 Dazu müssen die Datentypen des Parserpaketes zunächst erläutert werden. Anschließend stellen wir eine Beispielanfrage und ihre Überführung in die Datenstrukturen des Parsers vor. Daraus leiten wir auch die Schwächen bzw. Grenzen des Parsers ab. Wir stellen im Folgenden dar, was für relevante Attribute und Methoden die jeweiligen Klassen besitzen. Da viele Klassen durch Vererbung entstehen, werden wir der Übersicht halber auch abgeleitete relevante Attribute und Funktionen mit einbeziehen.
 
-Die Klasse \textbf{ZFromItem} bezeichnet genau eine Tabelle. Gespeichert wird in dieser Klasse daher der \textit{Name der Tabelle} und ein möglicher \textit{Alias}.
+Die Klasse \textbf{ZFromItem} bezeichnet genau eine Tupelvariable. Gespeichert wird in dieser Klasse daher der \textit{Name der Tabelle} und ein möglicher \textit{Alias}.
 
-Ähnlich ist die Klasse \textbf{ZSelectItem} aufgebaut. Sie speichert den Namen des Attributs und einen eventuell angegebene Tupelvariable. Weiterhin wird festgehalten, ob das SelectItem ein Ausdruck ist wie \mbox{z. B.} in \verb|SELECT a+b|. In diesem Fall würde man über die Funktion \verb|getExpression()| ein Objekt einer Klasse erhalten, die von \verb|ZExp| erben muss. Weiterhin wird gespeichert, ob es sich um eine Wildcard \verb|*| handelt oder ob das Item eine Aggregatesfunktion ist. Bei \verb|SELECT AVG(sal) FROM ...| würde der Name des Items \verb|sal| sein und die Aggregatsfunktion ist dann \verb|AVG|. 
+Ähnlich ist die Klasse \textbf{ZSelectItem} aufgebaut. Sie speichert den Namen des Attributs und einen eventuell angegebene Tupelvariable. Weiterhin wird festgehalten, ob das SelectItem ein Ausdruck ist wie \mbox{z. B.} in \verb|SELECT a+b|. In diesem Fall würde man über die Funktion \verb|getExpression()| ein Objekt einer Klasse erhalten, die von \verb|ZExp| erben muss. Zu beachten ist dabei, dass ein Ausdruck in ZQL immer einen Operator und mindestens einen Operanden besitzen muss. Deswegen fallen Spaltennamen nicht in diese Kategorie, sondern sind unter Konstanten zu finden. Weiterhin wird gespeichert, ob es sich um eine Wildcard \verb|*| handelt oder ob das Item eine Aggregatesfunktion ist. Bei \verb|SELECT AVG(sal) FROM ...| würde der Name des Items \verb|sal| sein und die Aggregatsfunktion ist dann \verb|AVG|. 
 
 Der \verb|WHERE|-Teil wird dargestellt mit Hilfe der Klasse \textbf{ZExpression}. Diese Klasse implementiert das Interface \verb|ZExp|. Ein Objekt der Klasse \verb|ZExpression| besteht immer aus einem Operator und mehreren Operanden. Ein Operator ist ein gültiger String. Was ZQL für gültige Operatoren kennt wird im Anhang aufgeführt. Ein Ausdruck speichert seine Operanden als \textit{Vector} von Objekten, die das Interface \verb|ZExp| implementieren. Demnach kann ein Operand vom Typ \verb|ZExpression, ZConstant| oder \verb|ZQuery| sein.
 Wichtig ist auch zu bemerken, dass ZQL nicht nur zwei Operanden pro Ausdruck kennt. 
@@ -71,7 +71,7 @@ Wir erhalten also aus obigen \verb|WHERE|-Ausdruck:
 
 So erklärt sich auch die Verwendung eines \textit{Vector} zur Speicherung der Operanden.
 
-Die Klasse \textbf{ZConstant} dient zur Darstellung von SQL-Konstanten. Sie speichert den Wert der Konstante sowie den Typ. Als Typen kommen in Frage: \verb|COLUMNNAME, NULL, NUMBER, STRING, UNKNOWN|. Da die Typen selbsterklärend sind, wird auf eine detaillierte Beschreibung verzichtet.
+Die Klasse \textbf{ZConstant} dient zur Darstellung von SQL-Konstanten. Sie speichert den Wert der Konstante sowie den Typ. Als Typen kommen in Frage: \verb|NULL, NUMBER, STRING, UNKNOWN|. Da die Typen selbsterklärend sind, wird auf eine detaillierte Beschreibung verzichtet. Wie bereits erwähnt zählen auch Spaltennamen zu Konstanten, sie erhalten den Typ \verb|COLUMNNAME|. Begründet ist dies dadurch, dass ein Spaltenname kein Operator mit Operanden ist.
 
 Ein Objekt der Klasse \textbf{ZGroupBy} speichert im Wesentlichen zwei Informationen. Die \verb|GROUP BY| Ausdrücke werden gespeichert in einem \textit{Vector} von Klassen, die das \verb|ZExp| Interface implementiert haben. Der optionale \verb|HAVING BY| Ausdruck wird als Objekt einer der Klassen gespeichert, welche \verb|ZExp| implementieren. Typischerweise wird das ein Objekt der Klasse \verb|ZExpression| sein.
 
