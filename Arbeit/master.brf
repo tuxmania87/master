@@ -21,5 +21,6 @@
 \backcite {outer2inner}{{50}{3.4.1}{section*.30}}
 \backcite {brass2}{{52}{3.5.6}{subsection.3.5.6}}
 \backcite {sql1folien}{{53}{3.5.8}{subsection.3.5.8}}
-\backcite {zql1}{{57}{5.1.1}{subsection.5.1.1}}
-\backcite {javacc1}{{57}{5.1.1}{subsection.5.1.1}}
+\backcite {sqldiff1}{{57}{3.7.1}{subsection.3.7.1}}
+\backcite {zql1}{{60}{4.1.1}{subsection.4.1.1}}
+\backcite {javacc1}{{60}{4.1.1}{subsection.4.1.1}}

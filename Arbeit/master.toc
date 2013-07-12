@@ -63,20 +63,23 @@
 \contentsline {subsection}{\numberline {3.5.8}Algorithmus aus \cite {sql1folien}}{53}{subsection.3.5.8}
 \contentsline {section}{\numberline {3.6}Alternativer Ansatz: Elementare Transformationen}{54}{section.3.6}
 \contentsline {subsection}{\numberline {3.6.1}Backtracking}{54}{subsection.3.6.1}
-\contentsline {chapter}{\numberline {4}Anfragen auf externen Datenbanken}{56}{chapter.4}
-\contentsline {chapter}{\numberline {5}Verwendete Software}{57}{chapter.5}
-\contentsline {section}{\numberline {5.1}SQL-Parser}{57}{section.5.1}
-\contentsline {subsection}{\numberline {5.1.1}\IeC {\"u}ber den SQL-Parser: ZQL}{57}{subsection.5.1.1}
-\contentsline {subsection}{\numberline {5.1.2}Funktionsweise des Parsers}{57}{subsection.5.1.2}
-\contentsline {subsection}{\numberline {5.1.3}Grenzen des Parsers}{61}{subsection.5.1.3}
-\contentsline {section}{\numberline {5.2}Java Server Pages}{62}{section.5.2}
-\contentsline {subsection}{\numberline {5.2.1}\IeC {\"U}berblick}{62}{subsection.5.2.1}
-\contentsline {subsection}{\numberline {5.2.2}Einbettung in JSP}{62}{subsection.5.2.2}
-\contentsline {subsection}{\numberline {5.2.3}Log}{62}{subsection.5.2.3}
-\contentsline {chapter}{\numberline {6}Praktische Umsetzung}{63}{chapter.6}
-\contentsline {section}{\numberline {6.1}Anforderungen}{63}{section.6.1}
-\contentsline {section}{\numberline {6.2}Funktionsumfang}{63}{section.6.2}
-\contentsline {chapter}{\numberline {7}Ergebnisse}{64}{chapter.7}
-\contentsline {chapter}{\numberline {8}Ausblick}{65}{chapter.8}
-\contentsline {chapter}{\numberline {9}Anhang}{67}{chapter.9}
-\contentsline {section}{\numberline {9.1}Algorithmus f\IeC {\"u}r Backtracking}{68}{section.9.1}
+\contentsline {section}{\numberline {3.7}SQL-Anfragen auf externen Datenbanken}{56}{section.3.7}
+\contentsline {subsection}{\numberline {3.7.1}unterschiedliche DBMS}{56}{subsection.3.7.1}
+\contentsline {subsection}{\numberline {3.7.2}Visualisierung von Ergebnistupeln}{58}{subsection.3.7.2}
+\contentsline {subsection}{\numberline {3.7.3}Behandeln von Fehlern}{59}{subsection.3.7.3}
+\contentsline {chapter}{\numberline {4}Verwendete Software}{60}{chapter.4}
+\contentsline {section}{\numberline {4.1}SQL-Parser}{60}{section.4.1}
+\contentsline {subsection}{\numberline {4.1.1}\IeC {\"u}ber den SQL-Parser: ZQL}{60}{subsection.4.1.1}
+\contentsline {subsection}{\numberline {4.1.2}Funktionsweise des Parsers}{60}{subsection.4.1.2}
+\contentsline {subsection}{\numberline {4.1.3}Grenzen des Parsers}{64}{subsection.4.1.3}
+\contentsline {section}{\numberline {4.2}Java Server Pages}{65}{section.4.2}
+\contentsline {subsection}{\numberline {4.2.1}\IeC {\"U}berblick}{65}{subsection.4.2.1}
+\contentsline {subsection}{\numberline {4.2.2}Einbettung in JSP}{65}{subsection.4.2.2}
+\contentsline {subsection}{\numberline {4.2.3}Log}{65}{subsection.4.2.3}
+\contentsline {chapter}{\numberline {5}Praktische Umsetzung}{66}{chapter.5}
+\contentsline {section}{\numberline {5.1}Anforderungen}{66}{section.5.1}
+\contentsline {section}{\numberline {5.2}Funktionsumfang}{66}{section.5.2}
+\contentsline {chapter}{\numberline {6}Ergebnisse}{67}{chapter.6}
+\contentsline {chapter}{\numberline {7}Ausblick}{68}{chapter.7}
+\contentsline {chapter}{\numberline {8}Anhang}{71}{chapter.8}
+\contentsline {section}{\numberline {8.1}Algorithmus f\IeC {\"u}r Backtracking}{72}{section.8.1}
