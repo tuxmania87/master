@@ -2,6 +2,8 @@ Um die Frage zu beantworten wie man zwei SQL-Anfragen miteinander vergleichen ka
 
 Ein Ansatz besteht darin beide SQL-Anfragen einer Standardisierung zu unterziehen. Wie genau so etwas durchgeführt werden kann, wird im Folgenden noch erläutert. Dann würden wir zwei standardisierte SQL-Anfragen erhalten. Sind diese syntaktisch äquivalent, so handelt es sich um identische Anfragen. Dieser Ansatz wird uns mit einigen Problemen konfrontieren und daraus entwickeln wir einen zweiten Ansatz. Dieser versucht durch gleichartige Umformungen, die zwei Anfragen zu unifizieren (gleich zu machen). Bei diesem Ansatz würden wir also versuchen die geparsten Operatorbäume miteinander zu vergleichen. Auch diese Lösung bringt Vorteile aber auch Probleme mit sich, die im Folgenden besprochen werden.
 
+Mit der Standardisierung der Anfragen können wir jedoch nur ein hinreichendes Kriterium abdecken. Schaffen wir es nicht, mit Hilfe der Standardisierung, zwei Anfragen syntaktisch, und damit auch semantisch, gleich zu machen, so möchten wir sicher gehen, dass die Anfragen tatsächlich nicht semantisch äquivalent sind. Dazu testen wir die Anfrage gegen ein notwendiges Kriterium. Wir führen sowohl die Anfrage der Musterlösung, als auch die Anfrage des Lernenden auf einer echten Datenbank mit konkreten Daten aus. Liefern beide Anfrage unterschiedliche Ergebnistupel, so wissen wir sicher, dass unsere Anfragen nicht semantisch äquivalent sein können. 
+
 Zu Bemerken ist hierbei, dass im folgendem Kapitel die theoretischen Grundlagen behandelt werden, die notwendig sind um zwei SQL-Anfragen auf semantische Äquivalenz zu prüfen. Dabei werden hier insbesondere auch Ideen vorgestellt, die nicht im praktischem Teil, dem Programm, auftauchen. Die Erklärung für diese Beschränkungen erfolgt in diesem Kapitel sowie im Abschnitt \ref{subsec:grenzenparser} und im Kapitel \ref{chap:praxis}.
 
 \section{Hintergrund}
@@ -52,11 +54,15 @@ Die Operatorenvielfalt ist ein Problem, was auf zwei unterschiedliche Arten ange
 
 Sind alle diese Teilschritte ausgeführt, vergleichen wir die standardisierten Anfragen auf syntaktische Äquivalenz. Bei Erfolg sind diese ebenso semantisch äquivalent.
 
-\subsection{Elementare Transformationen}
+%\subsection{Elementare Transformationen}
 
-Der zweite Ansatz ist das Anwenden von elementaren Transformationen auf einer Anfrage A um sie an eine zweite Anfrage B anzupassen. Dabei wird immer versucht Teile der Anfrage A durch Anwendung von elementaren Transformationen auf Teile von Anfrage B anzupassen. 
+%Der zweite Ansatz ist das Anwenden von elementaren Transformationen auf einer Anfrage A um sie an eine %zweite Anfrage B anzupassen. Dabei wird immer versucht Teile der Anfrage A durch Anwendung von elementaren %Transformationen auf Teile von Anfrage B anzupassen. 
 
-Zunächst wird versucht den FROM-Teil von Anfrage A anzupassen, indem wir die Anordnung der Variablennamen permutieren. Ist dies gelungen werden Aliase, die Anfrage A jetzt verwendet, in den restlichen Teilen der Anfrage A übernommen, ähnlich wie im Ansatz >>Standardisierung<<. Im WHERE-Teil wird durch sukzessives Backtracking versucht beide WHERE-Ausdrücke aneinander anzupassen. Ähnlich wir dann mit GROUP BY und ORDER BY Ausdrücken vorgegangen. Konnte das Backtracking Erfolg vermelden, so wissen wir, dass beide Anfragen semantisch äquivalent sind. 
+%Zunächst wird versucht den FROM-Teil von Anfrage A anzupassen, indem wir die Anordnung der Variablennamen %permutieren. Ist dies gelungen werden Aliase, die Anfrage A jetzt verwendet, in den restlichen Teilen der %Anfrage A übernommen, ähnlich wie im Ansatz >>Standardisierung<<. Im WHERE-Teil wird durch sukzessives %Backtracking versucht beide WHERE-Ausdrücke aneinander anzupassen. Ähnlich wir dann mit GROUP BY und ORDER %BY Ausdrücken vorgegangen. Konnte das Backtracking Erfolg vermelden, so wissen wir, dass beide Anfragen %semantisch äquivalent sind. 
+
+\subsection{Test mit konkreten Daten}
+
+Konnten wir, durch die Standardisierung beider Anfragen, keine semantische Äquivalenz feststellen, so muss dies nicht notwendig bedeuten, dass die zwei Anfragen nicht semantisch äquivalent sind. Wir prüfen diese Tatsache, indem wir die zwei Anfragen auf einer Datenbank mit einem konkreten Datenbankzustand ausführen. Wir vergleichen anschließend die Ergebnistupel beider Anfragen. Sind diese nicht identisch, so ist klar, dass wir keine äquivalenten Anfragen haben. Sind beide jedoch identisch, wissen wir nicht mit Sicherheit, ob die Anfragen äquivalent sind, oder nicht. Wir erinnern uns, dass es eine Teilmenge von SQL-Anfragen gibt, bei denen eine Äquivalenz nicht entscheidbar ist. In einem solchen Fall ist es sinnvoll, dem Dozenten die Anfrage des Lernenden zu zeigen, damit dieser entscheiden kann, ob die Anfrage korrekt ist.
 
 \subsection{Erwartungen}
 
@@ -95,11 +101,13 @@ Dem entgegen erwarten wir eine schnellere Laufzeit bei der Standardisierung. Daf
 \subsection{Preprocessing}
 \label{subsec:preprocessing}
 
-Im Abschitt >>Forschungsstand<< haben wir bereits einige Lernplattformen/ -projekte zum Thema SQL kennen gelernt. Viele dieser Plattformen möchten dem Lernenden genügend Feedback beim Lernprozess geben. Dies ist nicht nur sinnvoll, damit der Student schneller auf korrekte Lösungen stößt, sonder auch, weil die Standardhinweise eines SQL-Systems meist nur auf syntaktische Fehler hinweisen. Einen großen Beitrag zur Verbesserung von Fehlermeldungen hat das Projekt SQLLint vorzuweisen, da es Fehlermeldungen und Hinweise konkreterer Natur ausgibt. Hervorzuheben ist noch einmal, dass es sich hierbei um semantische Fehlermeldungen handelt. Schon nach kurzer Einlernzeit sinkt die Anzahl syntaktischer Fehler bei Lernenden. Dafür machen diese mehr semantische Fehler, was um so schlimmer ist, da bisher kaum oder keine Warnhinweise für solche Fehler existierten. 
+Im Abschitt >>Forschungsstand<< haben wir bereits einige Lernplattformen/ -projekte zum Thema SQL kennen gelernt. Viele dieser Plattformen möchten dem Lernenden genügend Feedback beim Lernprozess geben. Dies ist nicht nur sinnvoll, damit der Student schneller auf korrekte Lösungen stößt, sonder auch, weil die Standardhinweise eines SQL-Systems meist nur auf syntaktische Fehler hinweisen. Einen großen Beitrag zur Verbesserung von Fehlermeldungen hat das Projekt SQLLint vorzuweisen, da es Fehlermeldungen und Hinweise konkreterer Natur ausgibt. Hervorzuheben ist noch einmal, dass es sich hierbei um semantische Fehlermeldungen handelt. Schon nach kurzer Einlernzeit sinkt die Anzahl syntaktischer Fehler bei Lernenden. Dafür machen diese mehr semantische Fehler, was um so schlimmer ist, da bisher kaum oder keine Warnhinweise für solche Fehler, in üblichen DBMS, existierten. 
 
-Dennoch sollen in dieser Arbeit zwei SQL-Anfragen verglichen werden. Wir können hier also nicht alle Ideen des SQLLint übernehmen. Egal ob das Matchen der Musterlösung und der Lösung des Lernenden gelingt oder nicht, wir möchten dem Lernenden ein Feedback geben, an dem er idealerweise sehen kann, warum das Matching nicht gelungen ist. Wir können dabei, wie bereits erwähnt, nicht an die Komplexität des SQLLint anknüpfen. Stattdessen werden wir uns eines einfachen Sammelns von Metainformationen der SQL-Anfrage bedienen. Diese sammeln wir bevor die zwei Anfragen durch Folgeschritte angepasst oder verändert werden. Am Ende des Matchingsversuchs sollen die Metainformationen der zwei Anfragen verglichen werden und dem Lernenden soll ein Feedback gegeben werden. Konnte keine Übereinstimmung der zwei Anfragen erreicht werden, so können die Metainformationen dem Lernenden Anhaltspunkte für eine richtige Lösung geben. Konnten die Anfragen unifiziert werden, so sind die Metainformationen dennoch von Interesse. Es könnte sein, dass der Lernende eine unnötig komplexe Lösung eingesandt hat, die sich durch Anpassungen vereinfachen ließe. So kann der Lernende potentiell auch aus einer korrekten Lösung noch etwas lernen.
+Dennoch sollen in dieser Arbeit zwei SQL-Anfragen verglichen werden. Wir können hier also nicht alle Ideen des SQLLint übernehmen. Egal ob das Matchen der Musterlösung und der Lösung des Lernenden gelingt oder nicht, wir möchten dem Lernenden ein Feedback geben, an dem er idealerweise sehen kann, warum das Matching nicht gelungen ist. 
 
-Wir möchten für jede SQL-Anfrage ein Preprocessing vor der eigentlichen Bearbeitung vorschalten, was im Wesentlichen folgende Punkte beinhalten soll:
+Dies geschieht in folgender Art und Weise. Direkt nach dem Parsen und noch bevor wir irgendwelche Anpassungen vornehmen, analysieren wir beide Anfragen und sammeln Metainformationen über diese. Nachdem wir beide Anfragen standardisiert haben, vergleichen wir die Metainformationen beider Anfragen systematisch miteinander. Fallen uns Unterschiede auf, so teilen wir dies dem Lernenden als Hinweis mit. Neben dem Bloßen Vergleich von Metainformationen sind noch andere Kriterien für den Vergleich interessant. So vergleichen wir weiterhin, ob beide Anfragen die gleichen Tabellen unter \verb|FROM| ansprechen. Auch interessiert uns in diesem Zusammenhang ob Teile der SQL-Anfragen miteinander übereinstimmen. Wir prüfen also, ob \verb|SELECT|, \verb|WHERE|, \verb|FROM|, \verb|GROUP BY| und \verb|ORDER BY| jeweils identisch sind. So können wir dem Lernenden deutlich machen, dass \mbox{z. B.} der \verb|WHERE|-Teil seiner Lösung korrekt ist, aber der \verb|SELECT|-Teil noch nicht übereinstimmt.
+
+Folgende Metainformationen möchten wir im Vorfeld sammeln:
 
 \begin{itemize}
 \item Anzahl der JOIN Bedingungen
@@ -123,14 +131,28 @@ Wir möchten für jede SQL-Anfrage ein Preprocessing vor der eigentlichen Bearbe
 Unterscheiden sich Musterlösung und Lösung des Studenten in den mit * markierten Punkten ist es extrem unwahrscheinlich, dass beide Lösungen die gleichen Tupel zurückliefern würden. Hier möchten wir im Vorfeld dem Lernenden eine Warnung anzeigen, dass er höchstwahrscheinlich etwas vergessen hat. Alle anderen Punkte werden im Anschluss an die eigentliche Analyse der Anfragen abgeglichen. So sind etwa folgende Meldungen denkbar:
 
 \begin{itemize}
-\item ``The sample solution contains two joins but your solution does not contain any join.''
-\item ``Your solution is correct but the sample solution contains two less atomar formulas (formula1, formula2).''
-\item ``Your solution is correct but the sample solution does not contain DISTINCT. Reconsidder if it is really necessary.''
+\item ``Die Musterlösung enthält zwei Joins, aber ihre Lösung enthält keinen Join.''
+\item ``Ihre Lösung ist korrekt, allerdings enthält die Musterlösung zwei atomare Formeln weniger (Formel1, Formel2).''
+\item ``Ihre Lösung ist korrekt, aber die Musterlösung enthält kein DISTINCT. Überlegen Sie, ob dies wirklich notwendig ist..''
 \end{itemize}
+
+Folgende zusätzliche Vergleiche führen wir nach der Standardisierung beider Anfragen durch. Dabei bezeichnen wir die Musterlösung mit ML und die Lösung des Lernenden mit LL.
+
+\begin{itemize}
+\item Stimmen \verb|SELECT|-Teil von ML und LL überein?
+\item Stimmen \verb|FROM|-Teil von ML und LL überein?
+\item Stimmen \verb|WHERE|-Teil von ML und LL überein?
+\item Stimmen \verb|GROUP BY|-Teil von ML und LL überein?
+\item Stimmen \verb|HAVING|-Teil von ML und LL überein?
+\item Stimmen \verb|ORDER BY|-Teil von ML und LL überein?
+\end{itemize}
+
+Möglich wären auch deutlichere Hinweise, \mbox{z. B.} die Angaben welche Tabellen unter \verb|FROM| in der ML vorkommen und in der LL nicht. Allerdings könnten solche Meldungen zu viel von der ML preis geben.
+
 
 Zusammenfassend kann man Folgendes sagen: Das Preprocessing wird direkt nach dem Parsen einer SQL-Anfrage durchgeführt. Es sammelt Metainformationen über die Anfrage. Da wir zwei Anfragen vergleichen, werden diese Metainformationen einzeln für jede Anfrage gespeichert. Dann beginnen wir mit dem zweiten Schritt, dem Angleichen der SQL-Anfragen. Dazu verwenden wir Strategien, die in folgenden Kapiteln besprochen werden.
 
-Egal ob die Ergebnisse im zweiten Schritt erfolgreich waren oder nicht, wir geben danach einen Vergleich der Metainformationen aus. Beispiele wurden eben bereits genannt. Das soll dem Lernenden bei falschen Lösungen Anhaltspunkte geben, wie eine richtige Lösung aussehen könnte. Bei einer korrekten Lösung, können solche Hinweise trotzdem nützlich sein, denn die Anfrage des Lernenden kann trotz Korrektheit zu lang bzw. kompliziert sein. Dies würde bei einem Vergleich der gesammelten Metainformationen deutlich werden.
+Egal ob die Ergebnisse im zweiten Schritt erfolgreich waren oder nicht, wir geben danach einen Vergleich der Metainformationen aus. Zusätzlich führen wir weitere Vergleiche mit den standardisierten Anfragen durch. Beispiele wurden eben bereits genannt. Das soll dem Lernenden bei falschen Lösungen Anhaltspunkte geben, wie eine richtige Lösung aussehen könnte. Bei einer korrekten Lösung, können solche Hinweise trotzdem nützlich sein, denn die Anfrage des Lernenden kann trotz Korrektheit zu lang bzw. kompliziert sein. Dies würde bei einem Vergleich der gesammelten Metainformationen deutlich werden.
 
 \section{Standardisierung von SQL-Anfragen}
 
@@ -141,6 +163,10 @@ Zunächst verfolgen wir den Ansatz zwei SQL-Anfragen zu vergleichen, indem wir s
 Das Entfernen von syntaktischen Details übernimmt zum großen Teil bereits der Parser. Er entfernt unnötige Leerzeichen, Kommentare sowie unnötige Klammern. Aufgrund der Arbeitsweise des Parsers gibt es allerdings Situationen, in dem der Parser scheinbar nicht alle unnötigen Klammern entfernt. Wie im Abschnitt >>Verwendeter Parser<< erläutert wird, sind die geparsten Bäume nicht binär. Ein Baum wie in Abbildung \ref{baum1} zu sehen, ist daher zu vermeiden. 
 
 Der Parser hilft allerdings dabei die SQL-Anfrage in einer Datenstruktur zu überführen, die frei von allen syntaktischen Details ist. Dazu gehören Leerzeichen, Tabs, Zeilenumbrüche und Groß-/ Kleinschreibung von Schlüsselwörtern.
+
+\subsection{SELECT-Teil}
+
+Im \verb|SELECT|-Teil brauchen wir im Normalfall keine Änderungen vornehmen. Das einzige, was hier anpassbar wäre, ist die Reihenfolge der einzelnen Attribute bzw. Aggregationsfunktionen. Diese ist aber im Standardfall vorgegeben. Ist für eine Aufgabenstellung aber explizit vermerkt, dass die Reihenfolge der Spalten keine Rolle spielt, so sortieren wir die Spaltennamen lexikographisch. Eine weitere Besonderheit stellen die Spaltenüberschriften dar. Hier muss wieder vermerkt werden, ob Spaltenüberschriften von Bedeutung sind. Ist dies nicht der Fall, so entfernen wir aus dem \verb|SELECT|-Teil alle Spaltenüberschriften. 
 
 \subsection{FROM-Teil}
 \label{subsec:from}
@@ -164,6 +190,7 @@ Aufgrund der Eigenheiten des ZQL-Parsers ist es möglich, dass eine unnötige Kl
 
 
 \subsubsection{Entfernung unnötiger Klammerungen}
+\label{subsubsec:opcomp}
 
 Ein Ausdruck \verb|((a > 5)  and ((b > 5) and (c > 5)))| enthält unnötige Klammern, da der Operator \verb|and| als Operand von einem weiteren \verb|and| vorkommt. Folgender Ausdruck ist äquivalent: \verb|((a > 5)  and (b > 5) and (c > 5))|. Diese spezielle Form der Klammerung entsteht aus der Tatsache, dass der ZQL-Parserbaum nicht binär ist und beide eben genannten Beispiele nicht den gleichen Baum beschreiben. Als ersten Schritt in Richtung KNF möchten wir solche unnötigen Klammern entfernen. 
 
@@ -341,6 +368,7 @@ Zu beachten ist weiterhin, dass wir nach der Umformung vier anstatt einer Formel
 Wir möchten im folgenden zunächst diskutieren, wie wir diese implizierten Formeln hinzufügen können. Im Anschluss daran diskutieren wir, wie eine Sortierordnung aussehen kann.
 
 \subsubsection{Hinzufügen implizierter Formeln}
+\label{subsubsec:implicitformulas}
 
 Wie bereits im vorherigen Beispiel ersichtlich, sind die hinzugefügten Formeln redundant und tragen nicht effizient zur Beschleunigung der Anfrage bei. Es soll hier lediglich sichergestellt werden, dass alle möglichen äquivalenten Formeln auftreten, da wir nicht wissen, was der Lernende für einen Repräsentanten der Formeln wählen wird. Weiterhin muss bemerkt werden, dass dadurch die gesamte SQL-Anfrage enorm aufgebläht wird. Es ist daher unbedingt wichtig, die Originalanfrage zu speichern. Weiterhin muss das Programm eine Verbindung zwischen den Formeln der Originalanfrage und den Formeln der veränderten, aufgeblähten Anfrage herstellen. Dem Lernenden soll in einem Feedback nur Fehler in der Originalanfrage aufgezeigt werden. Da intern aber mit der aufgeblähten Anfrage gearbeitet wird, muss beim Auftreten eines Fehlers oder Hinweises nachgeschlagen werden, von welchem Teil der Originalanfrage der Teil entstammt, der jetzt den Fehler auslöst.
 
@@ -808,7 +836,7 @@ Geraden wenn der Lernende eine falsche Lösung einsendet, kann es sein, dass er 
 
 Sehr viele Fehler bei Anfängern finden sich im Bereich JOINs. Gerade deswegen ist es für den Lernenden interessant, ob er mehr oder weniger JOINs verwendet hat, als die Musterlösung. Im selben Atemzug sind Unterabfragen genannt, die entweder zu zaghaft oder zu häufig von Lernenden eingesetzt werden. Daher sollte auch diese Anzahl überwacht werden.
 
-\subsection{Anzahl der Operatorkompressionen}
+\subsection{Anzahl der Operatorionen}
 
 Wie im vorherigen Abschnitt bereits erklärt ist der ZQL-Parserbaum nicht binär. Dadurch kann es durch zu vorsichtige Klammersetzung passieren, dass ein Teilbaum mit zwei Ebenen entsteht, obwohl nur ein Operator beteiligt ist. Erklärt ist dies im Abschnitt >>Funktionsweise des Parsers<<. Die dort vorgestellte Operatorkompression ist ein Verfahren um unnötige Klammerungen zu entfernen. Ist die Gleichheit der Lösung des Studenten mit der Musterlösung durch unser Programm gezeigt, aber die Studentenlösung musste mehr Operatorkompressionen durchführen, so hat der Student unnötige Klammern gesetzt, welche die Lösung wiederum unnötig verkomplizieren. Dies muss ihm durch unser Programm mitgeteilt werden.
 
@@ -879,34 +907,11 @@ Beispiel:
 
 mit EMP und DEPT
 
-\section{Alternativer Ansatz: Elementare Transformationen}
+%\section{Alternativer Ansatz: Elementare Transformationen}
 
-Der nun vorgestellte Ansatz stellt eine Alternative zur >>Anpassung durch Standardisierung<< dar. Beide Ansätze haben ähnliche Ideen, sind jedoch in ihrer Umsetzung verschieden. Beim Ansatz der Standardisierung haben wir zunächst eine SQL-Anfrage genommen und standardisiert. Dies geschah völlig unabhängig zu der zu vergleichenden, zweiten SQL-Anfrage. Es wurden gewisse allgemeine Regeln aufgestellt und nach diesen wurde jede SQL-Anfrage behandelt und angepasst. Der eigentliche Vergleich geschah dann aufgrund eines Vergleichs der standardisierten Anfragen und dem Vergleich von Metadaten (Anzahl Joins, Anzahl atomarer Formeln, etc.). Ein Nachteil von diesem Ansatz ist, dass wir für jedes mögliche Konstrukt in der SQL-Anfrage auch Regeln im System haben, damit wir jene Konstrukte auch anpassen und standardisieren können. Außerdem findet der Vergleich erst im allerletzten Schritt statt.
-
-Die >>Anpassung durch elementare Transformationen<< stellt einen intuitiven Ansatz vor. Wir versuchen hier per Backtracking konkret eine Lösung der anderen anzugleichen. Damit haben wir einen konkreten Unterschied zum bisherigen Ansatz. Wir vergleichen die Lösung direkt und umgehen die Vorverarbeitungen. Im Wesentlichen geben wir also ganz allgemeine Regeln an und in jedem Schritt versuchen wir durch Anwendung dieser Regeln die SQL-Anfrage so anzupassen, dass sie auf unsere zu vergleichende Anfrage passt.
-
-\subsection{Backtracking}
-
-[Dieser Abschnitt ist experimentell]
-
-Für das Backtracking an sich bietet sich die Programmiersprache PROLOG an. Das liegt daran, dass unsere allgemeine Regeln einfach formuliert werden können und bereits den Großteil des Programms stellen. Außerdem benutzt PROLOG die SLD-Resolution, um logische Anfragen auswerten zu können und das ist bereits ein Backtracking. Da wir in unserer Arbeit allerdings die Programmiersprache JAVA gewählt haben, können wir nicht auf PROLOG zurückgreifen. Viel mehr müssen wir das Backtracking selbst implementieren. 
-
-Wir operieren weiterhin auf Parserbäumen, die so entstehen wie im Abschnitt >>Funktionsweise des Parsers<< erklärt wird. Es seien unsere zwei zu vergleichenden SQL-Anfragen mit \textit{Query1} und \textit{Query2} gegeben. Die dazugehörenden Parserbäume bezeichnen wir mit \textit{RT(Query1)} und \textit{RT(Query2)}. Wir versuchen im Folgenden \textit{Query1} an \textit{Query2} anzupassen.
-
-Um nicht zu viele Regeln definieren zu müssen, werden wir Teile der Vorverarbeitung des ersten Ansatzes wieder verwenden. Wir formen beide Anfragen zunächst in die konjunktive Normalform um. Danach gehen wir nach dem folgendem Prinzip vor.
-
-Es sei $\mathit{comm} = \{+,*,AND,OR,=\}$, die Menge aller kommutativen Operatoren. Wir gehen den Vergleich zweier (Teil-)Bäume rekursiv an, das bedeutet unser Algorithmus erhält stets zwei (Teil-)Bäume in Form von zwei Wurzelknoten. Als Ergebnis gibt der Algorithmus dann an, ob diese zwei (Teil-)Bäume unifiziert werden konnten. Im Folgenden wird der Algorithmus textuell beschrieben. Ein detaillierter Pseudocode ist im Anhang unter Abschnitt \ref{sec:backtrack1} zu finden.
-
-
-TODO Algorithmus in Worten beschreiben: 
-Zum einen haben wir kommutative Operatoren wie \verb|{+,*,AND,OR,=}|. Möchten wir zwei (Teil-)Bäume vergleichen, die einen solchen Operator als Wurzelknoten haben, so müssen wir uns im klaren sein, dass der gesuchte Operand an beliebiger Stelle auftauchen kann. Wir werden einen solchen Vergleich so angehen, dass wir uns den ersten Operanden aus Teilbaum 1 nehmen. Ist dieser Operand ein Ausdruck mit Operator $o_1$, dann suchen wir im zweiten Teilbaum nach einem Operanden, welcher auch ein Ausdruck ist mit Operator $o_2$ mit $o_1=o_2$. Ist dies gelungen, so wird verglichen, ob die Teilbäume mit der Wurzel $o_1$ und $o_2$ gleich sind. Dies geschieht dann rekursiv. Ist dies erfolgreich, so streichen wir aus den Ursprungsbäumen die Teilbäume mit Wurzel $o_1$ und $o_2$ und fahren mit dem nächsten Operanden aus dem ersten Teilbaum fort.
-
-Operatoren, die nicht kommutativ sind, sind meistens Vergleichsoperatoren wie \verb|<=, < , > ,>=|. Haben wir zwei Teilbäume mit einem solchen Operator, so ist der Vergleich sehr einfach, denn die jeweiligen Teilbäume unter den Operatoren müssen absolut identisch sein. Dies wird wieder mittels Rekursion geprüft.
-
-Haben wir im ersten Baum einen Vergleichsoperator ausgewählt und können diesen im zweiten Baum nicht finden, so müssen wir auch nach dem umgedrehten Operator in Baum 2 suchen. Finden wir einen solchen, dann vergleichen wir die zugehörigen zwei Teilbäume weiter rekursiv. Zu beachten ist dabei, dass sich die Operandenreihenfolge vom ersten Teilbaum auch umdreht.
-
-Weiterhin sei daran erinnert, dass arithmetische Ausdrücke in unsere Betrachtung nicht mehr als zwei Operanden im komplexen Teil beinhalten können. Siehe dazu Unterabschnitt \ref{subsubsec:arithmetic}.
-
+%Der nun vorgestellte Ansatz stellt eine Alternative zur >>Anpassung durch Standardisierung<< dar. Beide %Ansätze haben ähnliche Ideen, sind jedoch in ihrer Umsetzung verschieden. Beim Ansatz der Standardisierung %haben wir zunächst eine SQL-Anfrage genommen und standardisiert. Dies geschah völlig unabhängig zu der zu %vergleichenden, zweiten SQL-Anfrage. Es wurden gewisse allgemeine Regeln aufgestellt und nach diesen wurde jede SQL-Anfrage behandelt und angepasst. Der eigentliche Vergleich geschah dann aufgrund eines Vergleichs der standardisierten Anfragen und dem Vergleich von Metadaten (Anzahl Joins, Anzahl atomarer Formeln, etc.). Ein Nachteil von diesem Ansatz ist, dass wir für jedes mögliche Konstrukt in der SQL-Anfrage auch Regeln im System haben, damit wir jene Konstrukte auch anpassen und standardisieren können. Außerdem findet der Vergleich erst im allerletzten Schritt statt.%
+%
+%Die >>Anpassung durch elementare Transformationen<< stellt einen intuitiven Ansatz vor. Wir versuchen hier per Backtracking konkret eine Lösung der anderen anzugleichen. Damit haben wir einen konkreten Unterschied zum bisherigen Ansatz. Wir vergleichen die Lösung direkt und umgehen die Vorverarbeitungen. Im Wesentlichen geben wir also ganz allgemeine Regeln an und in jedem Schritt versuchen wir durch Anwendung dieser Regeln die SQL-Anfrage so anzupassen, dass sie auf unsere zu vergleichende Anfrage passt.
 
 \section{SQL-Anfragen auf externen Datenbanken}
 
@@ -936,21 +941,34 @@ Wichtig für unsere Arbeit ist, dass wir keine Probleme zu erwarten haben, wenn 
 
 Wir wollen zwei SQL-Anfragen auf einer konkreten Datenbank ausführen. Nun müssen wir die entstandenen Ergebnismengen miteinander vergleichen. Dabei wollen wir in diesem Abschnitt diskutieren wie dies am sinnvollsten Geschehen soll. 
 
-Der erste und naheliegenste Ansatz ist es, beide Ergebnismengen iterativ zu vergleichen. Wir gehen also beide Mengen Schritt für Schritt durch. Treffen wir dabei auf unterschiedliche Elemente, so geben wir an in welchem Tupel sich beide Mengen unterscheiden und beenden den Vergleich. Bei dieser Vorgehensweise eröffnen sich mehrere Probleme. 
+Der erste Ansatz ist es, beide Ergebnismengen iterativ zu vergleichen. Wir gehen also beide Mengen Schritt für Schritt durch. Treffen wir dabei auf unterschiedliche Elemente, so geben wir an in welchem Tupel sich beide Mengen unterscheiden und beenden den Vergleich. Wir müssen sicher gehen, dass die Reihenfolge der Spalten und Zielen dabei keine Probleme verursacht.
 
-Ein Hauptproblem ist die Sortierung. Dabei spielt sowohl die Reihenfolge der Spalten, als auch die Sortierung der Tupel eine Rolle. Ist in der Aufgabenstellung gefordert, dass Spalten A, B und C ausgegeben werden sollen, so ist nicht unbedingt klar, ob bei der Ausgabe erst Spalte A, dann B und dann C ausgegeben werden muss, oder ob eine beliebige Permuation nicht ebenso zulässig ist. Hier müsste mein in der Aufgabe deutlich machen, ob die Spalten in einer gewissen Reihenfolge auszugeben sind. Ist dies der Fall muss der Dozent im Programm ebenfalls mit einer Option anschalten, dass die Spaltenreihenfolge gleich sein muss. Ist dies nicht der Fall, so muss das Programm prüfen ob alle Spalten in den, zu vergleichenden Tupeln, enthalten sind (und nicht mehr).
+Interessant sind dabei sowohl die Reihenfolge der Spalten, als auch die Sortierung der Tupel eine Rolle. Wir haben die Sortierung der Spalten bereits im Abschnitt \verb|SELECT|-Teil behandelt. Spielt die Reihenfolge keine Rolle, so sind die Items im \verb|SELECT|-Teil bereits lexikographisch sortiert. Andernfalls ist die Reihenfolge fix und wir müssen sie so nehmen, wie wir sie erhalten.
 
-Das zweite Problem ist die Reihenfolge der Tupel. Enthält die Musterlösung ein \verb|ORDER BY|-Statement, so gehen wir davon aus, dass die Tupel in einer bestimmten Reihenfolge vom Lernenden ausgegeben werden müssen. Ist dies nicht der Fall, so müssen wir wieder alle Ergebnistupel der beiden Anfragen miteinander abgleichen. 
+Für eine eindeutige Reihenfolge der Tupel haben wir allerdings bisher nicht gesorgt. Wir müssen hier mehrere Fälle betrachten. 
 
-Eine einfache Umsetzung der Abgleichung von unsortierten Tupeln und Spalten ist eine künstliche Sortierung. Haben wir kein \verb|ORDER BY|-Statement in der Musterlösung und der Dozent hat per Option vermerkt, dass die Spaltenreihenfolge ebenfalls egal ist, dann sortieren wir zunächst die Spaltennamen lexikographisch. Anschließend Sortieren wir die Tupel sukzessive nach der ersten, zweiten, dritten, usw. Spalte aufsteigend. Nun können wir iterativ alle Tupel durchgehen und paarweise vergleichen.
+Enthält die Musterlösung und die Lösung des Lernenden kein \verb|ORDER BY|, müssen wir uns um die Reihenfolge nicht weiter kümmern, da jedes DBMS deterministisch eine Reihenfolge auswählen wird. Diese Reihenfolge ist dann insbesondere für beide Anfragen identisch, da deterministisch.
 
-Ein weiteres Problem bilden Spaltenüberschriten. Auch hier müsste der Dozent vermerken, ob Spaltenüberschriften eine Rolle spielen oder nicht. Notfalls kann sich das Programm an der Musterlösung orientieren. Werden in dieser Spaltenüberschriften verwendet, so könnten wir davon ausgehen, dass diese gefordert sind. Es wäre allerdings sinnvoller, die Notwendigkeit einer Spaltenüberschrift per Option an-/ abschaltbar zu machen, da unterschiedliche Dozenten die Übungsdatenbank befüllen könnten und diese unterschiedliche Stile bei der Musterlösung haben.
+Der zweite Fall zeichnet sich dadurch aus, dass die Musterlösung kein \verb|ORDER BY| enthält, die Lösung des Lernenden enthält aber ein solches. Wir können dann davon ausgehen, dass die Reihenfolge nicht von Bedeutung ist, denn sonst würde die Musterlösung ein \verb|ORDER BY| enthalten. Wir entfernen das \verb|ORDER BY| aus der Lösung des Lernenden, bevor wir die Anfragen auf der realen Datenbank ausführen. Der Lernende erhält natürlich dennoch einen Hinweis, dass er ein \verb|ORDER BY| verwendet, die Musterlösung aber nicht. Solche Informationen werden ja bereits im Preprocessing gesammelt und gehen dadurch nicht verloren.
 
-Für den Lernenden reicht es nicht aus die Tupel zu erwähnen, die beim Vergleich von seiner Anfrage mit der Musterlösung fehlen bzw. überflüssig sind. Diese Aussage wäre nicht sehr informativ und zielführend. Stattdessen muss das Programm sowohl die Datensätze der Musterlösung, als auch die Datensätze der Anfrage des Lerneden tabellarisch ausgeben. Durch unsere, eingangs erwähnte, Sortierung der Ergebnismengen, entstehen zwei Tabellen, die übersichtlich begreiflich machen, welche Tupel dem Lerneden Fehlen, oder welche überflüssig sind. Wir sehen uns dazu Abbildung \ref{fig:screenshot_tables} an.
+Der dritte Fall wäre dann genau umgekehrt. Hier hat also die Musterlösung ein \verb|ORDER BY|-Statement, die Lösung des Lernenden aber nicht. Hier ist offensichtlich eine Reihenfolge gewünscht. Wir werden daher keine Anpassung in einem solchen Fall durchführen. Unterscheiden sich die Musterlösung und die Lösung des Lernenden nur durch das \verb|ORDER BY|-Statement, erhält der Lernende ohnehin eine Meldung, dass der Rest der Anfrage übereinstimmt, so wie im Bereich Preprocessing erläutert.
+
+Der letzte Fall ist für uns nicht relevant. In beiden Anfragen befindet sich ein \verb|ORDER BY| und daher können wir auch keine Anpassungen vornehmen. 
+
+Nachdem wir dann die zwei Anfragen auf der Datenbank ausgeführt haben erhalten wir zwei Ergebnistupel. Stellt sich durch einen schrittweise Vergleich heraus, dass beide Ergebnismengen identisch sind, müssen wir dem Studenten mitteilen, dass es nicht entscheidbar ist, ob seine Lösung korrekt ist oder nicht. In einem solchen Fall muss der Dozent entweder eine Mail erhalten, um die Lösung manuell zu prüfen, oder dem Studenten wird angezeigt, dass er diese Lösung doch in der nächsten Übung vorstellen soll, um deren Korrektheit zu prüfen.
+
+Sind die Ergebnismengen aber nicht gleich, so zeigen wir beide Tupel in Tabellenform nebeneinander an. Der Lernenden kann dann schnell und übersichtlich erkennen, welche Tupel er mit seiner Anfrage zurückliefert und welche Tupel ihm fehlen bzw. zu viel sind.
 
 \subsection{Behandeln von Fehlern}
 
-- Syntaxfehler unterschiedlicher Natur, verweis auf abschnitt oben
-- inkonsistente Bedingungen, evt im 1. schritt erkannt
-- Diskussion: Standardisierte oder studentenanfrage einlesen
-- Laufzeitfehler behandeln/melden
+Bei der Ausführung von SQL-Anfragen auf realen Datenbanken können verschieden Fehler auftreten. Wir möchten nun kurz untersuchen welche Arten von Fehlern wir erwarten können und wie wir diese behandeln wollen. Der Begriff >>Fehler<< ist in diesem Sinne auch etwas weiträumiger zu verstehen, wie wir gleich merken werden.
+
+Einer der typischsten Fehler ist der Syntaxfehler. Der Lernende hat also eine Lösung angegeben, die nicht in das Syntaxschema einer SQL-Anfrage passt. Die Hauptursachen für solche Fehler sind falsche Anordnung von Schlüsselwörtern oder gar >>Rechtschreibfehler<<. Jedoch kann es auch sein, dass der Lernende Syntax benutzt hat, welche nur ein bestimmtes SQL-System versteht, \mbox{z. B.} PostgreSQL. Wird die Anfrage aber auf einer Oracle Datenbank ausgeführt, versteht das DBMS diese Anfrage eventuell nicht und es kommt zu einem Syntaxfehler, der auf einem anderen DBMS keiner wäre. Wir könnten den Fehler verhindern, in dem wir in einem vorherigen Schritt prüfen, ob die Anfrage SQL-92 konform ist. Eine andere Lösung ist es, zu jeder Anfrage zu speichern, für welches konkretes DBMS sie gedacht ist. Dann könnte man sich sicher sein, dass der Syntaxfehler auch einen Fehler für alle SQL-Systeme darstellt. Wenn man keine gesonderte Behandlung in Betracht zieht, so kann man den Fehler, wie üblich, dem Nutzer anzeigen mit dem Vermerk, dass der Syntaxfehler eventuell zu DBMS spezifisch ist. In unserem Prototypen reichen wir derartige Syntaxfehler an den Nutzer weiter.
+
+Ein weiterer Fehlertyp ist der semantische Fehler. Wie bereits, in der Einführung dieser Arbeit, erwähnt, ist dies ein Fehlertyp, der schwer zu entdecken ist. Typische Vertreter sind inkonsistente Bedingungen, also \verb|WHERE|-Bedingungen, die entweder immer die leere Menge liefern, oder die immer die gesamten Tabellen als Ergebnistupel liefern, da die \verb|WHERE|-Bedingung allgemeingültig ist (Tautologie). Die eben genannten Fälle erkennt unser Programm, da es mit der Methode \verb|eval| die Ausdrücke, so weit möglich, auswertet. Andere semantische Fehler, wie unnötige JOINs und unnötiges DISTINCT wurden bereits im Kapitel \ref{chap:theorie} behandelt. Unser Programm wird davon allerdings nichts umsetzen, da es einen größeren Aufwand darstellt, diese Methoden zu implementieren. Es gibt weitere semantische Fehler, die unser Programm nicht berücksichtigt. Hier sei verwiesen auf die Arbeit \cite{brass2}. 
+
+In Hinblick auf syntaktische und semantische Fehler sollten wir uns fragen, welche Anfrage wir, zur Ausführung auf der realen Datenbank, einsetzen wollen. Zur Wahl stehen dabei die Anfrage, die der Lernende eingibt und die Anfrage, die unser Programm im ersten Schritt durch Standardisierung erzeugt. 
+
+Da wir, bei der Ausführung der Anfragen auf realen Datenbanken, darauf bedacht sind, so wenig Fehler wie möglich zu erzeugen, ist es am sinnvollsten, die standardisierte Anfrage zu verwenden. Der Lernende bekommt in jedem Fall Hinweise, wenn bei der Standardisierung semantische oder syntaktische Besonderheiten gefunden wurden. hat der Student \mbox{z. B.} eine Tautologie als \verb|WHERE|-Bedingung aufgeschrieben, so kann das unser Programm erkennen. Der Lernende erhält den Hinweis, dass seine Bedingung überflüssig ist und auf der realen Datenbank lassen wir dann, die schon verkürzte Fassung laufen. 
+
+Ein letzter Fehlertyp bilden die Laufzeitfehler. Da wir solche Fehler nur schwer oder gar nicht im Vorfeld erkennen können, sind wir gezwungen die Fehlermeldung an den Lernenden weiterzugeben. Diese Fehlermeldung werden vom konkreten DBMS erzeugt und können mitunter unverständlich sein. Jedes DBMS hat dabei auch eine eigene Formulierung für die gleichen Laufzeitfehler. Es bietet sich daher an, eine Art Wörterbuch für Fehlermeldungen zu verwenden. Tritt ein bestimmter Fehler in einem DBMS auf, so wird dieser >>übersetzt<< in eine, von uns standardisierte, Fehlermeldung. So können wir sicher sein, dass der Student beim gleichen Fehler, die gleiche Meldung erhält, unabhängig vom DBMS.

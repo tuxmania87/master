@@ -163,7 +163,7 @@ public class QueryHandler {
 		return ret;
 	}
 
-	public ZExp handleQUERY(ZQuery q) throws Exception {
+	public ZQuery handleQUERY(ZQuery q) throws Exception {
 		before = new MetaQueryInfo(original);
 		handleFROMClause(q.getFrom());
 		Vector<ZSelectItem> newSELECTClause = handleSELECTClause(q.getSelect());

@@ -2,6 +2,7 @@ package de.unihalle.sqlequalizer;
 
 import java.lang.reflect.Field;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -49,9 +50,9 @@ public class QueryUtils {
 	public static HashMap<String, String> messages;
 
 	public static String orderList[] = { "OR", "<=", ">=", "<", ">", "=",
-			"IS NULL", "IS NOT NULL" , "EXISTS", "ANY", "ALL"};
+			"IS NULL", "IS NOT NULL", "EXISTS", "ANY", "ALL" };
 
-	public static String commutativeOperators[] = { "=", "OR", "AND" , "+" };
+	public static String commutativeOperators[] = { "=", "OR", "AND", "+" };
 	public static String comparisonOperators[] = { "<", "<=", ">", ">=", "=" };
 	public static String subQueryOperators[] = { "EXISTS", "ANY", "SOME", "ALL" };
 
@@ -64,6 +65,35 @@ public class QueryUtils {
 				return true;
 		}
 		return false;
+	}
+
+	public static String formatDBSchema(String schema) {
+
+		String response = "";
+		boolean firstParen = false;
+		int space = 0;
+		for (int i = 0; i < schema.length(); i++) {
+			if (schema.charAt(i) == '(' && !firstParen) {
+				firstParen = true;
+				response += "(<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+				continue;
+			} else if (schema.charAt(i) == ' ') {
+				space++;
+				if (space == 2)
+					response += "<span style=\"font-weight:bold;\">";
+				if (space == 3)
+					response += "</span>";
+			} else if (firstParen && schema.charAt(i) == ',') {
+				response += ",<br>&nbsp;&nbsp;&nbsp;&nbsp;";
+				continue;
+			}
+
+			if (i == schema.length() - 1)
+				response += "<br>";
+			response += schema.charAt(i);
+		}
+
+		return response;
 	}
 
 	public static String getFlippedOperator(String op) {
@@ -175,36 +205,33 @@ public class QueryUtils {
 		if (r2 instanceof ZExpression && r1 instanceof ZConstant) {
 			return -1;
 		}
-		
-		if(r1 instanceof ZQuery && ! (r2 instanceof ZQuery))
+
+		if (r1 instanceof ZQuery && !(r2 instanceof ZQuery))
 			return -1;
-		
-		if(r2 instanceof ZQuery && ! (r1 instanceof ZQuery))
+
+		if (r2 instanceof ZQuery && !(r1 instanceof ZQuery))
 			return 1;
 
-		if(r1 instanceof ZQuery &&  r2 instanceof ZQuery) {
-			//depth has to decide
+		if (r1 instanceof ZQuery && r2 instanceof ZQuery) {
+			// depth has to decide
 			ZQuery z1 = (ZQuery) r1;
 			ZQuery z2 = (ZQuery) r2;
-			
+
 			return DFSFirstDifferentNodeValue(z1.getWhere(), z2.getWhere());
 		}
-			
-		
+
 		return 0;
-		
-		
+
 	}
 
 	public static ZExp negate(ZExp exp) {
-		if (exp instanceof ZConstant) 
+		if (exp instanceof ZConstant)
 			return exp;
 
-		if(exp instanceof ZQuery) {
+		if (exp instanceof ZQuery) {
 			return exp;
 		}
-	
-		
+
 		ZExpression casted = (ZExpression) exp;
 
 		ZExpression result = new ZExpression(
@@ -223,33 +250,112 @@ public class QueryUtils {
 		return -1;
 	}
 
-	public static boolean isIdenticalResultSets(ResultSet r1, ResultSet r2) {
-		try {
-			int col = 1;
-			while (r1.next() && r2.next()) {
-				Object res1 = r1.getObject(col);
-				Object res2 = r2.getObject(col);
+	public static boolean isIdenticalResultSets(ResultSet r1, ResultSet r2,
+			boolean row, boolean column) throws SQLException {
 
-				if (!res1.equals(res2)) {
-					throw new RuntimeException(String.format(
-							"%s and %s aren't equal at common position %d",
-							res1, res2, col));
+		if (row && column) {
+			try {
+				int col = 1;
+				while (r1.next() && r2.next()) {
+					Object res1 = r1.getObject(col);
+					Object res2 = r2.getObject(col);
+
+					if (!res1.equals(res2)) {
+						throw new RuntimeException(String.format(
+								"%s and %s aren't equal at common position %d",
+								res1, res2, col));
+					}
+
+					// rs1 and rs2 must reach last row in the same iteration
+					if ((r1.isLast() != r2.isLast())) {
+						throw new RuntimeException(
+								"The two ResultSets contains different number of columns!");
+					}
+
+					col++;
+
 				}
-
-				// rs1 and rs2 must reach last row in the same iteration
-				if ((r1.isLast() != r2.isLast())) {
-					throw new RuntimeException(
-							"The two ResultSets contains different number of columns!");
-				}
-
-				col++;
-
+			} catch (SQLException e) {
+				return false;
 			}
-		} catch (SQLException e) {
-			return false;
+			return true;
 		}
-		return true;
 
+		if (!column) {
+			HashMap<String, Integer> originalOrder = new HashMap<String, Integer>();
+
+			ResultSetMetaData meta1 = r1.getMetaData();
+			String[] columnNames = new String[meta1.getColumnCount()];
+
+			for (int i = 1; i <= meta1.getColumnCount(); i++) {
+				originalOrder.put(meta1.getColumnName(i), i);
+				columnNames[i - 1] = meta1.getColumnName(i);
+			}
+
+			Arrays.sort(columnNames);
+
+			int rownumber = 0;
+			r1.last();
+			rownumber = r1.getRow();
+			r1.beforeFirst();
+
+			String[][] resultSet1 = new String[rownumber][];
+
+			for (int i = 0; i < rownumber; i++) {
+				r1.next();
+				resultSet1[i] = new String[meta1.getColumnCount()];
+				for (int j = 0; j < meta1.getColumnCount(); j++) {
+					resultSet1[i][j] = r1.getObject(
+							(originalOrder.get(columnNames[j - 1])).intValue())
+							.toString();
+				}
+			}
+
+			originalOrder = new HashMap<String, Integer>();
+
+			ResultSetMetaData meta2 = r2.getMetaData();
+			columnNames = new String[meta2.getColumnCount()];
+
+			for (int i = 1; i <= meta2.getColumnCount(); i++) {
+				originalOrder.put(meta2.getColumnName(i), i);
+				columnNames[i - 1] = meta2.getColumnName(i);
+			}
+
+			Arrays.sort(columnNames);
+
+			rownumber = 0;
+			r2.last();
+			rownumber = r2.getRow();
+			r2.beforeFirst();
+
+			String[][] resultSet2 = new String[rownumber][];
+
+			for (int i = 0; i < rownumber; i++) {
+				resultSet2[i] = new String[meta2.getColumnCount()];
+				r1.next();
+				for (int j = 0; j < meta2.getColumnCount(); j++) {
+					resultSet2[i][j] = r2.getObject(
+							(originalOrder.get(columnNames[j - 1])).intValue())
+							.toString();
+				}
+			}
+
+			// iterate both arrays
+			if (resultSet1.length != resultSet2.length)
+				return false;
+
+			for (int i = 0; i < resultSet1.length; i++) {
+				for (int j = 0; j < resultSet1[i].length; j++) {
+					if (!resultSet1[i][j].equals(resultSet2[i][j])) {
+						return false;
+					}
+				}
+			}
+			return true;
+
+		}
+
+		return false;
 	}
 
 	public static boolean isLesserThan(ZExp a, ZExp b) {
@@ -361,36 +467,35 @@ public class QueryUtils {
 		return r;
 
 	}
-	
-	
-	public static double adjust(String attribute, QueryHandler q)  {
+
+	public static double adjust(String attribute, QueryHandler q) {
 		int places1 = places(attribute, q);
-		
-		return 1 / Math.pow(10,places1);
+
+		return 1 / Math.pow(10, places1);
 	}
-	
+
 	public static int places(String attribute, QueryHandler q) {
-		//attribte has the form tablealias.varname
+		// attribte has the form tablealias.varname
 		String table = attribute.split("\\.")[0];
 		String att = attribute.split("\\.")[1];
 		Set<String> keys = q.Zuordnung.keySet();
 		Iterator<String> it = keys.iterator();
-		
-		while(it.hasNext()) {
+
+		while (it.hasNext()) {
 			String key = it.next();
-			if(q.Zuordnung.get(key).equals(table)) {
-				//check if key is an old alias or an actual table
-				for(int i=0; i<q.tables.size(); i++) {
-					if(q.tables.get(i).name.equals(key)) {
-						//we found the actual table, return places
-						for(int j  = 0; j < q.tables.get(i).columns.size(); j++) {
-							if( q.tables.get(i).columns.get(j).name.equals(att)) {
+			if (q.Zuordnung.get(key).equals(table)) {
+				// check if key is an old alias or an actual table
+				for (int i = 0; i < q.tables.size(); i++) {
+					if (q.tables.get(i).name.equals(key)) {
+						// we found the actual table, return places
+						for (int j = 0; j < q.tables.get(i).columns.size(); j++) {
+							if (q.tables.get(i).columns.get(j).name.equals(att)) {
 								return q.tables.get(i).columns.get(j).digitsAfterColon;
 							}
 						}
 					}
 				}
-				
+
 			}
 		}
 		return 0;
@@ -478,10 +583,9 @@ public class QueryUtils {
 				ArrayList<ZExp> tl = masterlist.get(current);
 				Collections.sort(tl, new LeafOrder());
 
-				
 			}
 			ZExpression zret = new ZExpression(z.getOperator());
-			
+
 			it = keys.iterator();
 			while (it.hasNext()) {
 				String current = it.next();
@@ -589,17 +693,17 @@ public class QueryUtils {
 	}
 
 	public static ZExp sortedTree(ZExp exp) {
-		
-		if(exp == null)
+
+		if (exp == null)
 			return null;
-		
+
 		String old = null;
 		ZExp ret = exp;
 		do {
 			old = ret.toString();
-		    ret = sortTree(rebuilder(ret));
-		} while(! old.equals(ret.toString()));
-		
+			ret = sortTree(rebuilder(ret));
+		} while (!old.equals(ret.toString()));
+
 		return ret;
 	}
 
@@ -635,9 +739,70 @@ public class QueryUtils {
 			}
 		}
 
+		
+
+
 		return res;
 	}
 
+	public static String compareStandardizedQueries(ZQuery q1, ZQuery q2) {
+		// additionally we want to compare single parts of the queries
+				// (select,from,where,group by, having, order by)
+				String res = "";
+
+				if ((q1.getSelect() != null
+						&& q2.getSelect() != null && !q1
+						.getSelect().equals(q2.getSelect()))
+						|| (q1.getSelect() == null && q2
+								.getSelect() != null)
+						|| ((q1.getSelect() != null && q2
+								.getSelect() == null))) {
+					res += "SELECT: not identical!<br>";
+				}
+				
+				if ((q1.getFrom() != null
+						&& q2.getFrom() != null && !q1
+						.getFrom().equals(q2.getFrom()))
+						|| (q1.getFrom() == null && q2
+								.getFrom() != null)
+						|| ((q1.getFrom() != null && q2
+								.getFrom() == null))) {
+					res += "FROM: not identical!<br>";
+				}
+				
+				if ((q1.getWhere() != null
+						&& q2.getWhere() != null && !q1
+						.getWhere().equals(q2.getWhere()))
+						|| (q1.getWhere() == null && q2
+								.getWhere() != null)
+						|| ((q1.getWhere() != null && q2
+								.getWhere() == null))) {
+					res += "WHERE: not identical!<br>";
+				}
+				
+				if ((q1.getGroupBy() != null
+						&& q2.getGroupBy() != null && !q1
+						.getGroupBy().equals(q2.getGroupBy()))
+						|| (q1.getGroupBy() == null && q2
+								.getGroupBy() != null)
+						|| ((q1.getGroupBy() != null && q2
+								.getGroupBy() == null))) {
+					res += "GROUP BY: not identical!<br>";
+				}
+				
+				if ((q1.getOrderBy() != null
+						&& q2.getOrderBy() != null && !q1
+						.getOrderBy().equals(q2.getOrderBy()))
+						|| (q1.getOrderBy() == null && q2
+								.getOrderBy() != null)
+						|| ((q1.getOrderBy() != null && q2
+								.getOrderBy() == null))) {
+					res += "ORDER BY: not identical!<br>";
+				}
+				
+		return res;
+	}
+	
 	public static ZExp operatorCompression(ZExp exp, ZExp parent) {
 
 		if (exp instanceof ZConstant) {
@@ -703,49 +868,43 @@ public class QueryUtils {
 	public static ZExp pushDownNegate(ZExp exp) {
 		if (exp instanceof ZExpression) {
 			ZExpression z = (ZExpression) exp;
-			
+
 			ZExpression toHandle = null;
-			
-			if(((ZExpression) exp).getOperator().equals("NOT") && 
-					((ZExpression) exp).getOperand(0) instanceof ZExpression &&
-					! Arrays.asList(QueryUtils.subQueryOperators).contains(((ZExpression) ((ZExpression) exp).getOperand(0)).getOperator())
-					) {
+
+			if (((ZExpression) exp).getOperator().equals("NOT")
+					&& ((ZExpression) exp).getOperand(0) instanceof ZExpression
+					&& !Arrays.asList(QueryUtils.subQueryOperators).contains(
+							((ZExpression) ((ZExpression) exp).getOperand(0))
+									.getOperator())) {
 				toHandle = (ZExpression) negate(z.getOperand(0));
 			} else {
 				toHandle = z;
 			}
-			
+
 			Iterator<ZExp> it = toHandle.getOperands().iterator();
-			
+
 			ZExpression ret = new ZExpression(toHandle.getOperator());
-			
-			while(it.hasNext()) {
-				ret.addOperand(pushDownNegate(it.next()));
-			}
-			
-			return ret;
-			
-		}
-		
-		return exp;
-		
-		/*if (exp instanceof ZExpression) {
-			ZExpression ret = new ZExpression(((ZExpression) exp).getOperator());
-			Iterator<ZExp> it = ((ZExpression) exp).getOperands().iterator();
 
 			while (it.hasNext()) {
-				ZExp cur = it.next();
-				if (cur instanceof ZExpression
-						&& ((ZExpression) cur).getOperator().equals("NOT")) {
-					ret.addOperand(negate(cur));
-				} else {
-					ret.addOperand(cur);
-				}
+				ret.addOperand(pushDownNegate(it.next()));
 			}
+
 			return ret;
+
 		}
+
 		return exp;
-		*/
+
+		/*
+		 * if (exp instanceof ZExpression) { ZExpression ret = new
+		 * ZExpression(((ZExpression) exp).getOperator()); Iterator<ZExp> it =
+		 * ((ZExpression) exp).getOperands().iterator();
+		 * 
+		 * while (it.hasNext()) { ZExp cur = it.next(); if (cur instanceof
+		 * ZExpression && ((ZExpression) cur).getOperator().equals("NOT")) {
+		 * ret.addOperand(negate(cur)); } else { ret.addOperand(cur); } } return
+		 * ret; } return exp;
+		 */
 	}
 
 	public static ZExp dfs_orderPairs(ZExp exp) {
@@ -796,452 +955,560 @@ public class QueryUtils {
 
 	private static boolean areChildsNumeric(Vector<ZExp> childs) {
 		Iterator<ZExp> it = childs.iterator();
-		
-		while(it.hasNext()) {
+
+		while (it.hasNext()) {
 			ZExp cur = it.next();
-			if( ! (cur instanceof ZConstant) || ((ZConstant) cur).getType() != ZConstant.NUMBER )
+			if (!(cur instanceof ZConstant)
+					|| ((ZConstant) cur).getType() != ZConstant.NUMBER)
 				return false;
 		}
-		
+
 		return true;
 	}
-	
+
 	private static boolean areChildsNumericORString(Vector<ZExp> childs) {
 		Iterator<ZExp> it = childs.iterator();
-		
-		while(it.hasNext()) {
+
+		while (it.hasNext()) {
 			ZExp cur = it.next();
-			if( ! (cur instanceof ZConstant) || ( ((ZConstant) cur).getType() != ZConstant.NUMBER && ((ZConstant) cur).getType() != ZConstant.STRING))
+			if (!(cur instanceof ZConstant)
+					|| (((ZConstant) cur).getType() != ZConstant.NUMBER && ((ZConstant) cur)
+							.getType() != ZConstant.STRING))
 				return false;
 		}
-		
+
 		return true;
 	}
-	
+
 	public static ZExp evaluateArithmetic(ZExp exp) {
-		
-		if(exp instanceof ZConstant)
+
+		if (exp instanceof ZConstant)
 			return exp;
-		
-		if(exp instanceof ZExpression) {
+
+		if (exp instanceof ZExpression) {
 			ZExpression z = (ZExpression) exp;
-			
+
 			ZExpression ret = new ZExpression(z.getOperator());
-			
+
 			Iterator<ZExp> it = z.getOperands().iterator();
-			while(it.hasNext()) {
+			while (it.hasNext()) {
 				ZExp evalueted = evaluateArithmetic(it.next());
-				if(evalueted != null)
+				if (evalueted != null)
 					ret.addOperand(evalueted);
 			}
-			
-			if(ret.getOperands() == null) {
+
+			if (ret.getOperands() == null) {
 				return null;
 			}
-			
-			//check childs
-			if(ret.getOperator().equals("+") && areChildsNumeric(ret.getOperands())) {
-				return new ZConstant(  String.valueOf(Double.parseDouble(((ZConstant) ret.getOperand(0)).getValue()) + 
-						Double.parseDouble(((ZConstant) ret.getOperand(1)).getValue())), ZConstant.NUMBER);
+
+			// check childs
+			if (ret.getOperator().equals("+")
+					&& areChildsNumeric(ret.getOperands())) {
+				return new ZConstant(
+						String.valueOf(Double.parseDouble(((ZConstant) ret
+								.getOperand(0)).getValue())
+								+ Double.parseDouble(((ZConstant) ret
+										.getOperand(1)).getValue())),
+						ZConstant.NUMBER);
 			}
-			
-			if(ret.getOperator().equals("-") && areChildsNumeric(ret.getOperands())) {
-				return new ZConstant(  String.valueOf(Double.parseDouble(((ZConstant) ret.getOperand(0)).getValue()) - 
-						Double.parseDouble(((ZConstant) ret.getOperand(1)).getValue())), ZConstant.NUMBER);
+
+			if (ret.getOperator().equals("-")
+					&& areChildsNumeric(ret.getOperands())) {
+				return new ZConstant(
+						String.valueOf(Double.parseDouble(((ZConstant) ret
+								.getOperand(0)).getValue())
+								- Double.parseDouble(((ZConstant) ret
+										.getOperand(1)).getValue())),
+						ZConstant.NUMBER);
 			}
-			
-			if(ret.getOperator().equals("*") && areChildsNumeric(ret.getOperands())) {
-				return new ZConstant(  String.valueOf(Double.parseDouble(((ZConstant) ret.getOperand(0)).getValue()) * 
-						Double.parseDouble(((ZConstant) ret.getOperand(1)).getValue())), ZConstant.NUMBER);
+
+			if (ret.getOperator().equals("*")
+					&& areChildsNumeric(ret.getOperands())) {
+				return new ZConstant(
+						String.valueOf(Double.parseDouble(((ZConstant) ret
+								.getOperand(0)).getValue())
+								* Double.parseDouble(((ZConstant) ret
+										.getOperand(1)).getValue())),
+						ZConstant.NUMBER);
 			}
-			
-			if(ret.getOperator().equals("/") && areChildsNumeric(ret.getOperands())) {
-				return new ZConstant(  String.valueOf(Double.parseDouble(((ZConstant) ret.getOperand(0)).getValue()) / 
-						Double.parseDouble(((ZConstant) ret.getOperand(1)).getValue())), ZConstant.NUMBER);
+
+			if (ret.getOperator().equals("/")
+					&& areChildsNumeric(ret.getOperands())) {
+				return new ZConstant(
+						String.valueOf(Double.parseDouble(((ZConstant) ret
+								.getOperand(0)).getValue())
+								/ Double.parseDouble(((ZConstant) ret
+										.getOperand(1)).getValue())),
+						ZConstant.NUMBER);
 			}
-			
-			if(ret.getOperator().equals(">") && areChildsNumericORString(ret.getOperands())) {
-				if(areChildsNumeric(ret.getOperands())) {
-					boolean val = Double.parseDouble(((ZConstant) ret.getOperand(0)).getValue()) > 
-					Double.parseDouble(((ZConstant) ret.getOperand(1)).getValue());
-					if(val) {
+
+			if (ret.getOperator().equals(">")
+					&& areChildsNumericORString(ret.getOperands())) {
+				if (areChildsNumeric(ret.getOperands())) {
+					boolean val = Double.parseDouble(((ZConstant) ret
+							.getOperand(0)).getValue()) > Double
+							.parseDouble(((ZConstant) ret.getOperand(1))
+									.getValue());
+					if (val) {
 						return null;
 					} else {
 						return new ZConstant("false", ZConstant.NULL);
 					}
 				} else {
-					boolean val = ((ZConstant) ret.getOperand(0)).getValue().compareTo(((ZConstant) ret.getOperand(1)).getValue()) == 1;
-					if(val) {
+					boolean val = ((ZConstant) ret.getOperand(0)).getValue()
+							.compareTo(
+									((ZConstant) ret.getOperand(1)).getValue()) == 1;
+					if (val) {
 						return null;
 					} else {
 						return new ZConstant("false", ZConstant.NULL);
 					}
 				}
 			}
-			
-			if(ret.getOperator().equals("<") && areChildsNumericORString(ret.getOperands())) {
-				if(areChildsNumeric(ret.getOperands())) {
-					boolean val = Double.parseDouble(((ZConstant) ret.getOperand(0)).getValue()) < 
-					Double.parseDouble(((ZConstant) ret.getOperand(1)).getValue());
-					if(val) {
+
+			if (ret.getOperator().equals("<")
+					&& areChildsNumericORString(ret.getOperands())) {
+				if (areChildsNumeric(ret.getOperands())) {
+					boolean val = Double.parseDouble(((ZConstant) ret
+							.getOperand(0)).getValue()) < Double
+							.parseDouble(((ZConstant) ret.getOperand(1))
+									.getValue());
+					if (val) {
 						return null;
 					} else {
 						return new ZConstant("false", ZConstant.NULL);
 					}
 				} else {
-					boolean val = ((ZConstant) ret.getOperand(0)).getValue().compareTo(((ZConstant) ret.getOperand(1)).getValue()) == -1;
-					if(val) {
+					boolean val = ((ZConstant) ret.getOperand(0)).getValue()
+							.compareTo(
+									((ZConstant) ret.getOperand(1)).getValue()) == -1;
+					if (val) {
 						return null;
 					} else {
 						return new ZConstant("false", ZConstant.NULL);
 					}
 				}
 			}
-			
-			if(ret.getOperator().equals(">=") && areChildsNumericORString(ret.getOperands())) {
-				if(areChildsNumeric(ret.getOperands())) {
-					boolean val = Double.parseDouble(((ZConstant) ret.getOperand(0)).getValue()) >= 
-					Double.parseDouble(((ZConstant) ret.getOperand(1)).getValue());
-					if(val) {
+
+			if (ret.getOperator().equals(">=")
+					&& areChildsNumericORString(ret.getOperands())) {
+				if (areChildsNumeric(ret.getOperands())) {
+					boolean val = Double.parseDouble(((ZConstant) ret
+							.getOperand(0)).getValue()) >= Double
+							.parseDouble(((ZConstant) ret.getOperand(1))
+									.getValue());
+					if (val) {
 						return null;
 					} else {
 						return new ZConstant("false", ZConstant.NULL);
 					}
 				} else {
-					boolean val = ((ZConstant) ret.getOperand(0)).getValue().compareTo(((ZConstant) ret.getOperand(1)).getValue()) >= 0;
-					if(val) {
+					boolean val = ((ZConstant) ret.getOperand(0)).getValue()
+							.compareTo(
+									((ZConstant) ret.getOperand(1)).getValue()) >= 0;
+					if (val) {
 						return null;
 					} else {
 						return new ZConstant("false", ZConstant.NULL);
 					}
 				}
 			}
-			
-			if(ret.getOperator().equals("<=") && areChildsNumericORString(ret.getOperands())) {
-				if(areChildsNumeric(ret.getOperands())) {
-					boolean val = Double.parseDouble(((ZConstant) ret.getOperand(0)).getValue()) <= 
-					Double.parseDouble(((ZConstant) ret.getOperand(1)).getValue());
-					if(val) {
+
+			if (ret.getOperator().equals("<=")
+					&& areChildsNumericORString(ret.getOperands())) {
+				if (areChildsNumeric(ret.getOperands())) {
+					boolean val = Double.parseDouble(((ZConstant) ret
+							.getOperand(0)).getValue()) <= Double
+							.parseDouble(((ZConstant) ret.getOperand(1))
+									.getValue());
+					if (val) {
 						return null;
 					} else {
 						return new ZConstant("false", ZConstant.NULL);
 					}
 				} else {
-					boolean val = ((ZConstant) ret.getOperand(0)).getValue().compareTo(((ZConstant) ret.getOperand(1)).getValue()) <= 0;
-					if(val) {
+					boolean val = ((ZConstant) ret.getOperand(0)).getValue()
+							.compareTo(
+									((ZConstant) ret.getOperand(1)).getValue()) <= 0;
+					if (val) {
 						return null;
 					} else {
 						return new ZConstant("false", ZConstant.NULL);
 					}
 				}
 			}
-			
-			
-			if(ret.getOperator().equals("AND")) {
+
+			if (ret.getOperator().equals("=")
+					&& areChildsNumericORString(ret.getOperands())) {
+				if (areChildsNumeric(ret.getOperands())) {
+					boolean val = Double.parseDouble(((ZConstant) ret
+							.getOperand(0)).getValue()) == Double
+							.parseDouble(((ZConstant) ret.getOperand(1))
+									.getValue());
+					if (val) {
+						return null;
+					} else {
+						return new ZConstant("false", ZConstant.NULL);
+					}
+				} else {
+					boolean val = ((ZConstant) ret.getOperand(0)).getValue()
+							.compareTo(
+									((ZConstant) ret.getOperand(1)).getValue()) == 0;
+					if (val) {
+						return null;
+					} else {
+						return new ZConstant("false", ZConstant.NULL);
+					}
+				}
+			}
+
+			if (ret.getOperator().equals("AND")) {
 				Iterator<ZExp> it2 = ret.getOperands().iterator();
-				
-				while(it2.hasNext()) {
+
+				while (it2.hasNext()) {
 					ZExp cur = it2.next();
-					if(cur instanceof ZConstant && ((ZConstant) cur).getType() == ZConstant.NULL && ((ZConstant) cur).getValue().equals("false")) {
+					if (cur instanceof ZConstant
+							&& ((ZConstant) cur).getType() == ZConstant.NULL
+							&& ((ZConstant) cur).getValue().equals("false")) {
 						return new ZConstant("false", ZConstant.NULL);
 					}
 				}
 			}
-			
-			if(ret.getOperator().equals("OR")) {
+
+			if (ret.getOperator().equals("OR")) {
 				Iterator<ZExp> it2 = ret.getOperands().iterator();
-				
-				while(it2.hasNext()) {
+
+				while (it2.hasNext()) {
 					ZExp cur = it2.next();
-					if(cur instanceof ZConstant && ((ZConstant) cur).getType() == ZConstant.NULL && ((ZConstant) cur).getValue().equals("false")) {
+					if (cur instanceof ZConstant
+							&& ((ZConstant) cur).getType() == ZConstant.NULL
+							&& ((ZConstant) cur).getValue().equals("false")) {
 						return null;
 					}
 				}
 			}
-			
-			
-			if(ret.getOperands().size() == 0)
+
+			if (ret.getOperands().size() == 0)
 				return null;
-			
+
 			return ret;
 		}
-		
-		
-		
+
 		return exp;
 	}
-	
+
 	/**
-	 * Adds implicit formulas
-	 * warning! after this funtion one have to 
-	 * recall the KNF function because its structure will be 
-	 * destroyed in this function.
+	 * Adds implicit formulas warning! after this funtion one have to recall the
+	 * KNF function because its structure will be destroyed in this function.
 	 * 
 	 * @return
 	 */
 	public static ZExp addImplicitFormulas(ZExp exp, QueryHandler q) {
-		
-		if(exp instanceof ZExpression) {
-			
+
+		if (exp instanceof ZExpression) {
+
 			ZExpression z = (ZExpression) exp;
-			
-			if(z.getOperator().equals("=") && 
-					((z.getOperand(0) instanceof ZExpression && z.getOperand(1) instanceof ZConstant) ||
-					 (z.getOperand(1) instanceof ZExpression && z.getOperand(0) instanceof ZConstant))
-			   ) {
-				ZExpression zexp = (ZExpression) ((z.getOperand(0) instanceof ZExpression) ? z.getOperand(0) : z.getOperand(1)); 
-				
-				if( (zexp.getOperator().equals("+") || zexp.getOperator().equals("-") || zexp.getOperator().equals("*") || zexp.getOperator().equals("/") ) && zexp.getOperands().size() == 2 
-						&& zexp.getOperand(0) instanceof ZConstant && zexp.getOperand(1) instanceof ZConstant) {
-					ZConstant zconst = (ZConstant) ((z.getOperand(0) instanceof ZConstant) ? z.getOperand(0) : z.getOperand(1));
-					
-					//replace occurence of all equivalent formulas  ( in paper its set M_1 )
+
+			if (z.getOperator().equals("=")
+					&& ((z.getOperand(0) instanceof ZExpression && z
+							.getOperand(1) instanceof ZConstant) || (z
+							.getOperand(1) instanceof ZExpression && z
+							.getOperand(0) instanceof ZConstant))) {
+				ZExpression zexp = (ZExpression) ((z.getOperand(0) instanceof ZExpression) ? z
+						.getOperand(0) : z.getOperand(1));
+
+				if ((zexp.getOperator().equals("+")
+						|| zexp.getOperator().equals("-")
+						|| zexp.getOperator().equals("*") || zexp.getOperator()
+						.equals("/"))
+						&& zexp.getOperands().size() == 2
+						&& zexp.getOperand(0) instanceof ZConstant
+						&& zexp.getOperand(1) instanceof ZConstant) {
+					ZConstant zconst = (ZConstant) ((z.getOperand(0) instanceof ZConstant) ? z
+							.getOperand(0) : z.getOperand(1));
+
+					// replace occurence of all equivalent formulas ( in paper
+					// its set M_1 )
 					ZConstant a = (ZConstant) zexp.getOperand(0);
 					ZConstant b = (ZConstant) zexp.getOperand(1);
-					
+
 					ZExpression andnode = new ZExpression("AND");
-					
-					if(zexp.getOperator().equals("+")) {
+
+					if (zexp.getOperator().equals("+")) {
 						ZExpression eq1 = new ZExpression("=");
 						eq1.addOperand(a);
 						eq1.addOperand(new ZExpression("-", zconst, b));
-						
+
 						ZExpression eq2 = new ZExpression("=");
 						eq2.addOperand(b);
 						eq2.addOperand(new ZExpression("-", zconst, a));
-						
+
 						andnode.addOperand(z);
 						andnode.addOperand(eq1);
 						andnode.addOperand(eq2);
-						
+
 						return andnode;
-					} else if(zexp.getOperator().equals("-")) {
-						//operator is "-"
+					} else if (zexp.getOperator().equals("-")) {
+						// operator is "-"
 						ZExpression eq1 = new ZExpression("=");
 						eq1.addOperand(a);
 						eq1.addOperand(new ZExpression("+", zconst, b));
-						
+
 						ZExpression eq2 = new ZExpression("=");
 						eq2.addOperand(b);
 						eq2.addOperand(new ZExpression("-", a, zconst));
-						
+
 						andnode.addOperand(z);
 						andnode.addOperand(eq1);
 						andnode.addOperand(eq2);
-						
+
 						return andnode;
-					} else if(zexp.getOperator().equals("*")) {
+					} else if (zexp.getOperator().equals("*")) {
 						ZExpression eq1 = new ZExpression("=");
 						eq1.addOperand(b);
 						eq1.addOperand(new ZExpression("/", zconst, a));
-						
+
 						ZExpression eq2 = new ZExpression("=");
 						eq2.addOperand(a);
-						eq2.addOperand(new ZExpression("/",  zconst, b));
-						
+						eq2.addOperand(new ZExpression("/", zconst, b));
+
 						andnode.addOperand(z);
 						andnode.addOperand(eq1);
 						andnode.addOperand(eq2);
-						
+
 						return andnode;
-						
-					} else if(zexp.getOperator().equals("/")) {
+
+					} else if (zexp.getOperator().equals("/")) {
 						ZExpression eq1 = new ZExpression("=");
 						eq1.addOperand(b);
 						eq1.addOperand(new ZExpression("/", a, zconst));
-						
+
 						ZExpression eq2 = new ZExpression("=");
 						eq2.addOperand(a);
-						eq2.addOperand(new ZExpression("*",  zconst, b));
-						
+						eq2.addOperand(new ZExpression("*", zconst, b));
+
 						andnode.addOperand(z);
 						andnode.addOperand(eq1);
 						andnode.addOperand(eq2);
-						
+
 						return andnode;
 					}
-					
+
 				}
-				
-				 
-			} 
-			
-			if(z.getOperator().equals(">") || z.getOperator().equals("<") ||  z.getOperator().equals(">=") || z.getOperator().equals("<=")) {
+
+			}
+
+			if (z.getOperator().equals(">") || z.getOperator().equals("<")
+					|| z.getOperator().equals(">=")
+					|| z.getOperator().equals("<=")) {
 				ZExpression andnode = new ZExpression("AND");
-				
+
 				ZExp child1 = addImplicitFormulas(z.getOperand(0), q);
 				ZExp child2 = addImplicitFormulas(z.getOperand(1), q);
-				
-				ZExpression orig = new ZExpression(z.getOperator(), child1, child2);
-				ZExpression mirror = new ZExpression(getFlippedOperator(z.getOperator()), child2, child1);
-				
+
+				ZExpression orig = new ZExpression(z.getOperator(), child1,
+						child2);
+				ZExpression mirror = new ZExpression(
+						getFlippedOperator(z.getOperator()), child2, child1);
+
 				andnode.addOperand(orig);
 				andnode.addOperand(mirror);
-				
-				if( !(child1 instanceof ZConstant) || !(child2 instanceof ZConstant)  )
+
+				if ((!(child1 instanceof ZConstant) || !(child2 instanceof ZConstant))
+						|| ((((ZConstant) child1).getType() != ZConstant.NUMBER) && (((ZConstant) child2)
+								.getType() != ZConstant.NUMBER)))
 					return andnode;
-				
+
 				ZConstant zc1 = (ZConstant) child1;
 				ZConstant zc2 = (ZConstant) child2;
-				
-				if( (z.getOperator().equals(">") && zc1.getType() != ZConstant.NUMBER && zc2.getType() == ZConstant.NUMBER ) ||
-						(z.getOperator().equals("<") && zc1.getType() == ZConstant.NUMBER && zc2.getType() != ZConstant.NUMBER )	) {
-					
-					ZConstant number = zc1.getType() == ZConstant.NUMBER ? zc1 : zc2;
-					ZConstant variable = zc1.getType() != ZConstant.NUMBER ? zc1 : zc2;
-					
-					double sum = Double.parseDouble(number.getValue()) + adjust(variable.getValue(), q);
-					ZExpression node1 = new ZExpression(">=", variable, new ZConstant(String.valueOf(sum), ZConstant.NUMBER) );
-					ZExpression node2 = new ZExpression("<=", new ZConstant(String.valueOf(sum), ZConstant.NUMBER), variable ); 
+
+				if ((z.getOperator().equals(">")
+						&& zc1.getType() != ZConstant.NUMBER && zc2.getType() == ZConstant.NUMBER)
+						|| (z.getOperator().equals("<")
+								&& zc1.getType() == ZConstant.NUMBER && zc2
+								.getType() != ZConstant.NUMBER)) {
+
+					ZConstant number = zc1.getType() == ZConstant.NUMBER ? zc1
+							: zc2;
+					ZConstant variable = zc1.getType() != ZConstant.NUMBER ? zc1
+							: zc2;
+
+					double sum = Double.parseDouble(number.getValue())
+							+ adjust(variable.getValue(), q);
+					ZExpression node1 = new ZExpression(
+							">=",
+							variable,
+							new ZConstant(String.valueOf(sum), ZConstant.NUMBER));
+					ZExpression node2 = new ZExpression("<=", new ZConstant(
+							String.valueOf(sum), ZConstant.NUMBER), variable);
 					andnode.addOperand(node1);
 					andnode.addOperand(node2);
 					return andnode;
 				}
-				
-				if( (z.getOperator().equals(">=") && zc1.getType() != ZConstant.NUMBER && zc2.getType() == ZConstant.NUMBER ) ||
-						(z.getOperator().equals("<=") && zc1.getType() == ZConstant.NUMBER && zc2.getType() != ZConstant.NUMBER )	) {
-					
-					ZConstant number = zc1.getType() == ZConstant.NUMBER ? zc1 : zc2;
-					ZConstant variable = zc1.getType() != ZConstant.NUMBER ? zc1 : zc2;
-					
+
+				if ((z.getOperator().equals(">=")
+						&& zc1.getType() != ZConstant.NUMBER && zc2.getType() == ZConstant.NUMBER)
+						|| (z.getOperator().equals("<=")
+								&& zc1.getType() == ZConstant.NUMBER && zc2
+								.getType() != ZConstant.NUMBER)) {
+
+					ZConstant number = zc1.getType() == ZConstant.NUMBER ? zc1
+							: zc2;
+					ZConstant variable = zc1.getType() != ZConstant.NUMBER ? zc1
+							: zc2;
+
 					double adj = adjust(variable.getValue(), q);
 					double x = Double.parseDouble(number.getValue()) - adj;
-					
-					ZExpression node1 = new ZExpression(">", variable, new ZConstant(String.valueOf(x), ZConstant.NUMBER) );
-					ZExpression node2 = new ZExpression("<", new ZConstant(String.valueOf(x), ZConstant.NUMBER), variable ); 
+
+					ZExpression node1 = new ZExpression(">", variable,
+							new ZConstant(String.valueOf(x), ZConstant.NUMBER));
+					ZExpression node2 = new ZExpression("<", new ZConstant(
+							String.valueOf(x), ZConstant.NUMBER), variable);
 					andnode.addOperand(node1);
 					andnode.addOperand(node2);
 					return andnode;
 				}
-				
-				
-				
+
 			}
-			
-			
-			
+
 			ZExpression ret = new ZExpression(z.getOperator());
 			Iterator<ZExp> it = z.getOperands().iterator();
-			while(it.hasNext()) {
+			while (it.hasNext()) {
 				ret.addOperand(addImplicitFormulas(it.next(), q));
 			}
 			return ret;
-			
+
 		}
-		
-		
+
 		return exp;
 	}
-	
-	public static ZExp replaceSubqueries(ZExp exp,ArrayList<Table> tables) {
-		
-		if(exp instanceof ZExpression) {
+
+	public static ZExp replaceSubqueries(ZExp exp, ArrayList<Table> tables) {
+
+		if (exp instanceof ZExpression) {
 			ZExpression z = (ZExpression) exp;
-			if(Arrays.asList(comparisonOperators).contains(z.getOperator())) {
-				if(z.getOperand(1) instanceof ZExpression) {
+			if (Arrays.asList(comparisonOperators).contains(z.getOperator())) {
+				if (z.getOperand(1) instanceof ZExpression) {
 					ZExpression z2 = (ZExpression) z.getOperand(1);
-					
-					if(z2.getOperator().equals("ALL")) {
-						
+
+					if (z2.getOperator().equals("ALL")) {
+
 						ZQuery tquery = (ZQuery) z2.getOperand(0);
-						ZSelectItem selItem = (ZSelectItem) tquery.getSelect().firstElement();
-						
-						//we look up if t_2 may be null 
-						for(int i = 0; i<tables.size(); i++) {
+						ZSelectItem selItem = (ZSelectItem) tquery.getSelect()
+								.firstElement();
+
+						// we look up if t_2 may be null
+						for (int i = 0; i < tables.size(); i++) {
 							Table tt = tables.get(i);
-							for(int j = 0; j< tt.columns.size(); j++) {
-								if(tt.columns.get(j).name.equals(selItem.getColumn()) 
+							for (int j = 0; j < tt.columns.size(); j++) {
+								if (tt.columns.get(j).name.equals(selItem
+										.getColumn())
 										&& tt.columns.get(j).canBeNull) {
-									//we dont replace it because it can be null
-									ZExpression ret = new ZExpression(((ZExpression) exp).getOperator());
+									// we dont replace it because it can be null
+									ZExpression ret = new ZExpression(
+											((ZExpression) exp).getOperator());
 									ret.addOperand(z.getOperand(0));
-									ret.addOperand(replaceSubqueries(z.getOperand(1), tables));
+									ret.addOperand(replaceSubqueries(
+											z.getOperand(1), tables));
 									return ret;
 								}
 							}
 						}
-						
+
 						ZExpression notnode = new ZExpression("NOT");
 						ZExpression anynode = new ZExpression("ANY");
-						ZExpression comparisonnode = new ZExpression(QueryUtils.getOppositeOperator(z.getOperator()));
+						ZExpression comparisonnode = new ZExpression(
+								QueryUtils.getOppositeOperator(z.getOperator()));
 						notnode.addOperand(comparisonnode);
 						comparisonnode.addOperand(z.getOperand(0));
 						comparisonnode.addOperand(anynode);
 						anynode.addOperand(z2.getOperand(0));
 						return replaceSubqueries(notnode, tables);
-						
+
 					}
-					
-					if(z2.getOperator().equals("ANY") || z2.getOperator().equals("SOME")) {
+
+					if (z2.getOperator().equals("ANY")
+							|| z2.getOperator().equals("SOME")) {
 						ZExpression existsnode = new ZExpression("EXISTS");
-						
+
 						ZQuery query = (ZQuery) z2.getOperand(0);
-						
-						ZSelectItem selItem = (ZSelectItem) query.getSelect().firstElement();
-						for(int i = 0; i<tables.size(); i++) {
+
+						ZSelectItem selItem = (ZSelectItem) query.getSelect()
+								.firstElement();
+						for (int i = 0; i < tables.size(); i++) {
 							Table tt = tables.get(i);
-							for(int j = 0; j< tt.columns.size(); j++) {
-								if(tt.columns.get(j).name.equals(selItem.getColumn()) 
+							for (int j = 0; j < tt.columns.size(); j++) {
+								if (tt.columns.get(j).name.equals(selItem
+										.getColumn())
 										&& tt.columns.get(j).canBeNull) {
-									//we dont replace it because it can be null
-									ZExpression ret = new ZExpression(((ZExpression) exp).getOperator());
+									// we dont replace it because it can be null
+									ZExpression ret = new ZExpression(
+											((ZExpression) exp).getOperator());
 									ret.addOperand(z.getOperand(0));
-									ret.addOperand(replaceSubqueries(z.getOperand(1), tables));
+									ret.addOperand(replaceSubqueries(
+											z.getOperand(1), tables));
 									return ret;
 								}
 							}
 						}
-						
-						//query is normalized which means either AND is root node of where clause
+
+						// query is normalized which means either AND is root
+						// node of where clause
 						// or there is no and in where clause
-						
-						if(query.getWhere() instanceof ZExpression && ((ZExpression) query.getWhere()).getOperator().equals("AND")) {
-							
-								//just add t_1 = t_2 to and 
-								
-								ZExpression equalnode = new ZExpression("=");
-								equalnode.addOperand(z.getOperand(0));
-								equalnode.addOperand( new ZConstant( ((ZSelectItem)query.getSelect().firstElement()).toString(), ZConstant.COLUMNNAME)  );
-								((ZExpression) query.getWhere()).addOperand(equalnode);
+
+						if (query.getWhere() instanceof ZExpression
+								&& ((ZExpression) query.getWhere())
+										.getOperator().equals("AND")) {
+
+							// just add t_1 = t_2 to and
+
+							ZExpression equalnode = new ZExpression("=");
+							equalnode.addOperand(z.getOperand(0));
+							equalnode.addOperand(new ZConstant(
+									((ZSelectItem) query.getSelect()
+											.firstElement()).toString(),
+									ZConstant.COLUMNNAME));
+							((ZExpression) query.getWhere())
+									.addOperand(equalnode);
+						} else {
+							// we have to add AND to first layer
+							ZExpression equalnode = new ZExpression(
+									z.getOperator());
+							equalnode.addOperand(z.getOperand(0));
+							equalnode.addOperand(new ZConstant(
+									((ZSelectItem) query.getSelect()
+											.firstElement()).toString(),
+									ZConstant.COLUMNNAME));
+
+							if (query.getWhere() instanceof ZExpression) {
+								ZExpression andnode = new ZExpression("AND");
+								andnode.addOperand(query.getWhere());
+								andnode.addOperand(equalnode);
+								query.addWhere(andnode);
 							} else {
-								//we have to add AND to first layer
-								ZExpression equalnode = new ZExpression(z.getOperator());
-								equalnode.addOperand(z.getOperand(0));
-								equalnode.addOperand( new ZConstant( ((ZSelectItem)query.getSelect().firstElement()).toString(), ZConstant.COLUMNNAME) );
-								
-								if(query.getWhere() instanceof ZExpression) {
-									ZExpression andnode = new ZExpression("AND");
-									andnode.addOperand(query.getWhere());
-									andnode.addOperand(equalnode);
-									query.addWhere(andnode);
-								} else {
-									query.addWhere(equalnode);
-								}
+								query.addWhere(equalnode);
 							}
-							
-						
-						
+						}
+
 						existsnode.addOperand(query);
 						return existsnode;
 					}
 				}
-					
+
 			}
-			
+
 			Iterator it = z.getOperands().iterator();
 			ZExpression ret = new ZExpression(z.getOperator());
-			while(it.hasNext()) {
+			while (it.hasNext()) {
 				ret.addOperand(replaceSubqueries((ZExp) it.next(), tables));
 			}
 			return ret;
-			
-			
+
 		}
-		
-		
+
 		return exp;
 	}
-	
+
 	public static ZExp replaceSyntacticVariantes(ZExp exp) {
 
 		if (exp instanceof ZQuery) {
@@ -1251,11 +1518,11 @@ public class QueryUtils {
 		if (exp instanceof ZConstant) {
 			return exp;
 		}
-		
-		if(exp instanceof ZExpression) {
+
+		if (exp instanceof ZExpression) {
 			String operator = ((ZExpression) exp).getOperator();
 			ZExpression casted = (ZExpression) exp;
-			
+
 			/**
 			 * replaces a BETWEEN b AND c with a >= b AND a <= c
 			 */
@@ -1268,30 +1535,31 @@ public class QueryUtils {
 				t1.addOperand(casted.getOperand(1));
 				t2.addOperand(casted.getOperand(0));
 				t2.addOperand(casted.getOperand(2));
-				
+
 				exp = new ZExpression("AND");
 				casted.addOperand(replaceSyntacticVariantes(t1));
 				casted.addOperand(replaceSyntacticVariantes(t2));
 
 				return exp;
 			}
-		
+
 			/**
-			 * replaces a IN (const1, const2, ..., constn) with
-			 * a = const1 OR a = const 2 OR ... OR a = constn
+			 * replaces a IN (const1, const2, ..., constn) with a = const1 OR a
+			 * = const 2 OR ... OR a = constn
 			 * 
-			 * subqueries with IN are not replaced here but in replaceSubqueries()
+			 * subqueries with IN are not replaced here but in
+			 * replaceSubqueries()
 			 */
-			if(operator.equals("IN")) {
-				//check if only constant are children
+			if (operator.equals("IN")) {
+				// check if only constant are children
 				Iterator it = casted.getOperands().iterator();
-				
+
 				ZExpression orList = new ZExpression("OR");
-				
+
 				ZConstant firstOperand = (ZConstant) it.next();
-				while(it.hasNext()) {
+				while (it.hasNext()) {
 					ZExp elem = (ZExp) it.next();
-					if( ! (elem instanceof ZConstant)) {
+					if (!(elem instanceof ZConstant)) {
 						return exp;
 					} else {
 						ZExpression tExpression = new ZExpression("=");
@@ -1299,49 +1567,43 @@ public class QueryUtils {
 						tExpression.addOperand(elem);
 						orList.addOperand(tExpression);
 					}
-						
+
 				}
-				
+
 				return orList;
-				
+
 			}
-			
-			
-			if(operator.equals("EXISTS")) {
+
+			if (operator.equals("EXISTS")) {
 				ZQuery zq = (ZQuery) casted.getOperand(0);
 				Vector<ZSelectItem> selItems = new Vector<ZSelectItem>();
 				ZSelectItem selItem = new ZSelectItem("1");
 				selItems.add(selItem);
 				zq.addSelect(selItems);
-				
+
 				ZExpression ret = new ZExpression("EXISTS");
 				ret.addOperand(zq);
 				return ret;
-				
+
 			}
-			
+
 			Iterator<ZExp> it = casted.getOperands().iterator();
-			
+
 			ZExpression ret = new ZExpression(casted.getOperator());
-			while(it.hasNext()) {
+			while (it.hasNext()) {
 				ret.addOperand(replaceSyntacticVariantes(it.next()));
 			}
 			return ret;
-			
+
 		}
-		
-		/*if (operator.equals("LIKE")) {
-			if (!casted.getOperand(1).toString().contains("%")) {
-				ZExpression t1 = new ZExpression("=");
-				t1.addOperand(casted.getOperand(0));
-				t1.addOperand(casted.getOperand(1));
-				exp = t1;
-				return exp;
-			}
-		}
-		*/
-		
-		
+
+		/*
+		 * if (operator.equals("LIKE")) { if
+		 * (!casted.getOperand(1).toString().contains("%")) { ZExpression t1 =
+		 * new ZExpression("="); t1.addOperand(casted.getOperand(0));
+		 * t1.addOperand(casted.getOperand(1)); exp = t1; return exp; } }
+		 */
+
 		return exp;
 	}
 

@@ -88,7 +88,7 @@ public class Haupt {
 		q2.createTable("create table test (a int references emp(sal) not null, b int, c int, d int, x int, y int)");
 		
 		
-		q2.setOriginalStatement("select * from emp e where 11 < 2 +3 ;");
+		q2.setOriginalStatement("select * from emp e where sal > deptno ;");
 		System.out.println(q2.original);
 		res = q2.equalize();
 		System.out.println(res);
@@ -117,6 +117,8 @@ public class Haupt {
 		
 	
 		System.out.println("b".compareTo("a"));
+		
+	
 		
 	
 	}

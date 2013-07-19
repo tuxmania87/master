@@ -10,3 +10,30 @@ div.description {
 	font-family:Monospace;
 	width:700px;
 }
+
+div.description_table {
+	
+	padding:5px;
+	text-align:justify;
+	font-family:Monospace;
+	
+}
+
+
+table.outer td {
+	vertical-align:top;
+	border:1px solid black;
+}
+table.inner td {
+	border:none;
+}
+
+table.outer th {
+	font-family:auto;
+	font-size:20px;
+}
+
+table.inner th {
+	font-family:Monospace;
+	font-size:auto;
+}

@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,16 +18,21 @@ public class Task {
 	public String[] samplesolution = null;
 	public String[] dbschema = null;
 	public int[] externalDbs = null;
+	public boolean respectRow = false;
+	public boolean respectColumn = false;
 	
 	public Task(Connection c, int id) {
 		try {
 			PreparedStatement ps = c
-					.prepareStatement("select * from tasks t, dbschema d where id = ? AND id=taskid");
+					.prepareStatement("select  t.id,schemaid,description,schema,respectColumnorder from tasks t, dbschema d where t.id = ? AND schemaid=d.id");
 			ps.setInt(1, id);
 
 			ResultSet rs = ps.executeQuery();
 
+			
+			
 			while (rs.next()) {
+				
 				this.id = rs.getInt("id");
 				text = rs.getString("description");
 				dbschema = rs.getString("schema").split(";");
@@ -82,7 +88,8 @@ public class Task {
 		ArrayList<Task> alist = new ArrayList<Task>();
 
 		while (r.next()) {
-			alist.add(new Task(c, r.getInt(1)));
+			alist.add(new Task(c, r.getInt("id")));
+			System.out.println("loaded "+r.getInt("id"));
 		}
 		c.close();
 		return alist.toArray(new Task[alist.size()]);

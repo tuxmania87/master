@@ -1,23 +1,98 @@
-\section{Anforderungen}
+%\section{Anforderungen}
 
-Das zu entwickelnde Programm wird online per Java Servlets zur Verfügung gestellt. Als Webserver wird der Tomcat eingesetzt. Folgende Funktionalitäten sollen umgesetzt weden:
+%Das zu entwickelnde Programm wird online per Java Servlets zur Verfügung gestellt. Als Webserver wird der %Tomcat eingesetzt. Folgende Funktionalitäten sollen umgesetzt weden:
 
-\begin{itemize}
-\item Loginsystem für Lernenden und Betreuer
-\item Grafische Oberfläche
-\item Eintragen von neuen Übungsaufgaben bestehend aus:
-	\begin{itemize}
-	\item Sachtext /Aufgabenstellung
-	\item Musterlösung(en)
-	\item Angabe von realen Datenbanken mit Testdaten
-	\item Einteilung in Kategorie
-	\end{itemize}
-\item Löschen und Bearbeiten von Übungsaufgaben
-\item Erstellen, Bearbeiten und Löschen von Kategorien
-\item Lösen von Übungsaufgaben durch Angabe einer SQL-Anfrage
-\item Tracking von Lösungsversuchen (Versuch, AufgabenID, Timestamp, UserID)
-\item Tracking von Usern und letzten Aktivitäten
-\item Tracking von Fehlern/ Fehlversuchen pro Aufgabe/User
-\end{itemize}
+%\begin{itemize}
+%\item Loginsystem für Lernenden und Betreuer
+%\item Grafische Oberfläche
+%\item Eintragen von neuen Übungsaufgaben bestehend aus:
+%	\begin{itemize}
+%	\item Sachtext /Aufgabenstellung
+%	\item Musterlösung(en)
+%	\item Angabe von realen Datenbanken mit Testdaten
+%	\item Einteilung in Kategorie
+%	\end{itemize}
+%\item Löschen und Bearbeiten von Übungsaufgaben
+%\item Erstellen, Bearbeiten und Löschen von Kategorien
+%\item Lösen von Übungsaufgaben durch Angabe einer SQL-Anfrage
+%\item Tracking von Lösungsversuchen (Versuch, AufgabenID, Timestamp, UserID)
+%\item Tracking von Usern und letzten Aktivitäten
+%\item Tracking von Fehlern/ Fehlversuchen pro Aufgabe/User
+%\end{itemize}
 
-\section{Funktionsumfang}
+\section{Dokumentation}
+
+Im folgendem Abschnitt beschreiben wir die Struktur des Programms und gehen, in übersichtlicher Form, auf die einzelnen Klassen und Funktionen des Programms ein. Eine noch detaillierte Fassung der Dokumentation findet sich im Quelltext als Javadocs-Kommentare.
+
+\subsection{Datenbankstruktur}
+
+Wir benutzen eine Datenbank um Aufgabenstellungen, Nutzer, Lösungsversuche und vieles mehr abzuspeichern. Im folgenden werden die einzelnen Tabellen erläutert. Ein ER-Diagramm zur verwendeten Datenbankstruktur finden wir im Anhang. 
+
+\textbf{attempts} (\underline{id}, userid $\to$ user(id), taskid $\to$ tasks(id), timeat ,sqlstatement ,correct)
+
+Die Tabelle \verb|attempts| speichert je einen Lösungsversuch eines Benutzers. Dabei wird die SQL-Anfrage (\verb|sqlstatement|) eines Benutzers (mit der ID \verb|userid|) mit der Uhrzeit (\verb|timeat|) abgespeichert. Weiterhin wird vermerkt, welche Aufgabe (\verb|taskid|) der Student lösen wollte und, ob dieser Korrekt war.
+
+\textbf{dbschema} (taskid $\to$ tasks(id), schema)
+
+In der Tabelle \verb|dbschema| speichern wir zu jeder Aufgabe \verb|taskid|, wie die Struktur der Tabelle dafür aussieht. Wir speichern dazu eine, möglichst SQL-92 konforme, \verb|CREATE TABLE|-Anweisung im Attribut \verb|schema|.
+
+\textbf{external\_database} (id, uri, dbname, username, password)
+
+Die Tabelle \verb|external_database| speichert die Zugriffsdaten (\verb|username,password|) einer externen Datenbank, die verwendet wird, um die notwendigen Bedingung einer Äquivalenz zu prüfen. Weiterhin speichern wir den Zugriffspfad auf diese Datenbank (\verb|uri|) und den Datenbanknamen (\verb|dbname|).
+
+\textbf{samplesolutions} (id, taskid, sqlstatement)
+
+Die Musterlösung für eine Aufgabe, wird in der Tabelle \verb|samplesolutions| gespeichert. Wir erfassen dabei die Aufgabennummer (\verb|taskid|), sowie die Musterlösung als SQL-Anfrage (\verb|sqlstatement|). Wir verwenden einen künstlichen Schlüssel \verb|id|, da es unter Umständen mehrere Musterlösungen zu einer Aufgabe geben kann.
+
+\textbf{tasks} (id, description, createdAt$^0$)
+
+Die Aufgaben werden in der Tabelle \verb|tasks| gespeichert. Wir versehen jede Aufgabe mit einer \verb|id| und einer Beschreibung, in Form eines Sachtextes (\verb|description|). Optional können wir noch vermerken, wann die Aufgabe eingetragen wurde.
+
+\textbf{tasks\_db} (taskid $\to$ tasks(id), dbid $\to$ external\_database(id))
+
+Es kann unter Umständen möglich sein, pro Aufgabe mehrere externe Datenbanken anzugeben. Daher speichern wir die Zuordnung einer Datenbank zu einer Aufgabe in der Tabelle \verb|tasks_db|. Hierzu verwenden wir den Fremdschlüssel zur Aufgabentabelle (\verb|taskid|) und den zur externen Datenbank (\verb|dbid|).
+
+\textbf{users} (id, name, password, isDozent)
+
+Einzelne Benutzer werden in der Tabelle \verb|users| erfasst. Neben den üblichen Kontoinformationen, wie \verb|name, password| speichern wir auch, ob der Nutzer ein Dozent ist. Diese Information ist wichtig, um zu entscheiden, ob ein Nutzer auch Aufgaben einpflegen darf.
+
+\subsection{Programmstruktur}
+
+In diesem Abschnitt werden wir die wichtigsten Klassen und Funktionen auflisten und erläutern. Eine vollständige Dokumentation aller Klassen, ist im Quellcode als Javadocs-Kommentare vorhanden. (TODO: evt Anhang).
+
+Im wesentlichen besteht das Programm aus zwei Hauptklassen. Mit diesen Hauptklassen können wir den gesamten Programmablauf steuern. Eingebettet werden diese Klassen dann, in eine JSP-Umgebung.
+
+\subsubsection{QueryUtils}
+
+Die erste wesentliche Klasse ist \verb|QueryUtils|. Wie der Name andeutet, handelt es sich um eine Sammlung von Funktionen, die es erleichtert einzelne Teilschritte abzuarbeiten. Wir erläutern nun wichtige Funktionen dieser Klasse.
+
+Die Funktion \verb|addImplicitFormulas(ZExp exp, QueryHandler q)| erhält den Wurzelknoten eines Ausdrucks als \verb|exp|. Weiterhin übergeben wir ein Objekt vom Typ \verb|QueryHandler|. In dieser Klasse werden implizite Formeln hinzugefügt. Wie in Abschnitt \ref{subsubsec:implicitformulas} beschrieben, werden dem Ausdruck \verb|exp|  Formeln hinzugefügt, wenn der jeweilige vorhandene Operator nicht kommutativ ist. In einem solchen Fall fügen wir den gegenteiligen Operator mit hinzu. Der so entstandene Ausdruck wird neu konstruiert und zurückgegeben.
+
+Die Funktionen \verb|double adjust(String attribute, QueryHandler q)| und \\\verb|int places(String attribute, QueryHandler q)| funktionieren genau so, wie in Abschnitt \ref{subsubsec:implicitformulas} beschrieben. Sie werden als Hilfsfunktionen für \verb|addImplicitFormulas| benötigt.
+
+Mit der Funktion \verb|String compareMetaInfos(MetaQueryInfo m1, MetaQueryInfo m2)| vergleichen wir zwei Mengen von Metainformationen zweier Anfragen. Wir benutzen dies, um die Informationen, welche beim Preprocessing gesammelt wurden, auszuwerten. Die Funktion erstellt eine Zeichenkette, welche die Informationen und Hinweise beinhaltet, die beim Vergleich der Metainformationen aufgefallen sind.
+
+Da wir wollen, dass unsere Formel die KNF einhält, müssen wir das Distributivgesetz anwenden. Dies geschieht mit der Funktion \verb|ZExp distribute(ZExp r)|. Sie erhält den Wurzelknoten eines Ausdrucks und liefert einen neuen Wurzelknoten zurück, der dann den Ausdruck in KNF darstellt.
+
+Aufgrund der Besonderen Struktur des ZQL-Parserbaumes können Situationen entstehen, in denen wir, die in Abschnitt \ref{subsubsec:opcomp} beschrieben, Operatorkompression durchführen müssen. Dies geschieht mit der Funktion \verb|ZExp operatorCompression(ZExp exp, ZExp parent)|. Dabei stellt \verb|exp| den Wurzelnoten eines Ausdrucks dar. \verb|parent| bezeichnet den Elternknoten, initial ist dieser \verb|null|, wenn es keinen Elternknoten von \verb|exp| gibt. Zurückgeliefert wird ein neuer Wurzelknoten.
+
+\subsubsection{QueryHandler}
+
+Die Klasse \verb|QueryHandler| ist für genau eine konkrete SQL-Anfrage zuständig. Diese Klasse beinhaltet daher kaum Klassenfunktionen (statische Funktionen), wie sie bei der Klasse \verb|QueryUtils| zu finden sind. Dreh- und Angelpunkt ist die Funktion \verb|ZQuery handleQUERY(ZQuery q)|. Sie erhält eine SQL-Anfrage, bearbeitet diese, und liefert sie dann zurück. 
+
+Im ersten Schritt ruft sie die Funktion \verb|void handleFROMClause(Vector<ZFromItem> from)| auf. In dieser Funktion werden die Aliase der Tabellen automatisch benannt. Etwaige vorherige Aliase werden in einer HashMap gespeichert.
+
+Im nächsten Schritt ruft \verb|handleQuqery| die Funktion \verb|handleWHEREClause| auf. Diese Funktion kann als Hauptfunktion des gesamten Programms gesehen werden, da hier die meiste Arbeit verrichtet wird. \verb|handleWHEREClause| benennt zunächst alle Attribute in der \verb|WHERE|-Klausel um, indem der automatische Alias vom vorherigen Schritt eingefügt wird. Haben die Attribute bereits einen Alias als Präfix, so wird dieser durch den automatischen Alias ausgetauscht. Hat ein Attribut keinen Alias als Präfix, so wird im Datenbankschema gesucht, zu welcher Tabelle, die unter \verb|FROM| auftaucht, das Attribut gehört. Finden wir keine solche Tabelle oder finden wir mehrere Tabellen mit solchen Attributen, beendet die Funktion die Arbeit und wirft eine Exception, die den Sachverhalt erläutert. Nun wird die KNF hergestellt, indem alle Schritte vom Abschnitt \ref{subsubsec:implicitformulas} ausgeführt werden. Dabei helfen die Funktionen \verb|operatorCompression|, \verb|pushDownNegate| und \verb|distribute| der Klasse \verb|QueryUtils|. Anschließend werden Unterabfragen in \verb|EXISTS|-Unterabfragen umgewandelt mit \verb|replaceSubqueries| und syntaktische Varianten ersetzen wir mit \verb|replaceSyntacticVariantes|. Beide Funktionen sind wieder Teil der \verb|QueryUtils|-Klasse. Nun fügen wir implizite Formeln hinzu und werten arithmetische Ausdrücke aus mit \verb|evaluateArithmetic|.
+Der letzte Schritt ist die Sortierung nach den Kriterien, die in Abschnitt \ref{subsec:sort} erläutert wurden. Dies passiert in der Funktion \verb|sortedTree|, die sich auch die, dafür eigenen, Interfaces \verb|OperatorComparer| und \verb|LeafOrder| bedient. Es ist darauf hinzuweisen, dass für Unterabfragen jeweils wieder die Funktion \verb|handleQuery| ausgeführt wird. Damit ist die Abarbeitung des \verb|WHERE|-Teils beendet.
+
+Die Abarbeitung des \verb|GROUP BY|-Teils ist dem des \verb|WHERE|-Teils beinahe gleich, daher wird hier auf detaillierte Beschreibungen verzichtet. Die Funktion \verb|handleQuery| gibt nun die neue, standardisierte Anfrage zurück.
+
+\subsubsection{Webinterface}
+
+Das Programm soll, mit Hilfe der Java Server Pages (JSP), als Webseite darstellbar sein. 
+
+
+\subsection{Technische Details}
+
+Die Umsetzung einiger, in Kapitel \ref{chap:theorie}, Sachverhalte ist in der Praxis etwas komplexer, als theoretisch erdacht. Im Folgenden Abschnitt gehen wir daher auf Implementierungsdetails einiger Funktionen ein, die sich etwas komplexer gestalten. Es soll damit ein Eindruck vermittelt werden, wie die theoretischen Sachverhalte in ein konkretes Programm übertragbar sind.
+

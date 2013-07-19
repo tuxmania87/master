@@ -21,49 +21,48 @@
 \BOOKMARK [1][-]{section.3.1}{Hintergrund}{chapter.3}% 21
 \BOOKMARK [1][-]{section.3.2}{Workflow}{chapter.3}% 22
 \BOOKMARK [2][-]{subsection.3.2.1}{Standardisierung}{section.3.2}% 23
-\BOOKMARK [2][-]{subsection.3.2.2}{Elementare Transformationen}{section.3.2}% 24
+\BOOKMARK [2][-]{subsection.3.2.2}{Test mit konkreten Daten}{section.3.2}% 24
 \BOOKMARK [2][-]{subsection.3.2.3}{Erwartungen}{section.3.2}% 25
 \BOOKMARK [2][-]{subsection.3.2.4}{Preprocessing}{section.3.2}% 26
 \BOOKMARK [1][-]{section.3.3}{Standardisierung von SQL-Anfragen}{chapter.3}% 27
 \BOOKMARK [2][-]{subsection.3.3.1}{Entfernen von syntaktischen Details}{section.3.3}% 28
-\BOOKMARK [2][-]{subsection.3.3.2}{FROM-Teil}{section.3.3}% 29
-\BOOKMARK [2][-]{subsection.3.3.3}{WHERE-Teil}{section.3.3}% 30
-\BOOKMARK [2][-]{subsection.3.3.4}{Ersetzung von syntaktischen Varianten}{section.3.3}% 31
-\BOOKMARK [2][-]{subsection.3.3.5}{Operatorenvielfalt}{section.3.3}% 32
-\BOOKMARK [2][-]{subsection.3.3.6}{Sortierung}{section.3.3}% 33
-\BOOKMARK [2][-]{subsection.3.3.7}{GROUP BY / HAVING}{section.3.3}% 34
-\BOOKMARK [2][-]{subsection.3.3.8}{ORDER BY}{section.3.3}% 35
-\BOOKMARK [2][-]{subsection.3.3.9}{Abschluss}{section.3.3}% 36
-\BOOKMARK [1][-]{section.3.4}{Weitere Betrachtungen}{chapter.3}% 37
-\BOOKMARK [2][-]{subsection.3.4.1}{JOINS}{section.3.4}% 38
-\BOOKMARK [1][-]{section.3.5}{Komplexit\344t von SQL-Anfragen}{chapter.3}% 39
-\BOOKMARK [2][-]{subsection.3.5.1}{Anzahl atomarer Formeln unter WHERE / Baumtiefe}{section.3.5}% 40
-\BOOKMARK [2][-]{subsection.3.5.2}{Anzahl benutzter Tabellen unter FROM}{section.3.5}% 41
-\BOOKMARK [2][-]{subsection.3.5.3}{Existenz von Teilen der SQL-Anfrage}{section.3.5}% 42
-\BOOKMARK [2][-]{subsection.3.5.4}{Anzahl von JOINs / Unterabfragen}{section.3.5}% 43
-\BOOKMARK [2][-]{subsection.3.5.5}{Anzahl der Operatorkompressionen}{section.3.5}% 44
-\BOOKMARK [2][-]{subsection.3.5.6}{unn\366tiges DISTINCT}{section.3.5}% 45
-\BOOKMARK [2][-]{subsection.3.5.7}{verbale Beschreibung}{section.3.5}% 46
-\BOOKMARK [2][-]{subsection.3.5.8}{Algorithmus aus sql1folien}{section.3.5}% 47
-\BOOKMARK [1][-]{section.3.6}{Alternativer Ansatz: Elementare Transformationen}{chapter.3}% 48
-\BOOKMARK [2][-]{subsection.3.6.1}{Backtracking}{section.3.6}% 49
-\BOOKMARK [1][-]{section.3.7}{SQL-Anfragen auf externen Datenbanken}{chapter.3}% 50
-\BOOKMARK [2][-]{subsection.3.7.1}{unterschiedliche DBMS}{section.3.7}% 51
-\BOOKMARK [2][-]{subsection.3.7.2}{Visualisierung von Ergebnistupeln}{section.3.7}% 52
-\BOOKMARK [2][-]{subsection.3.7.3}{Behandeln von Fehlern}{section.3.7}% 53
-\BOOKMARK [0][-]{chapter.4}{Verwendete Software}{}% 54
-\BOOKMARK [1][-]{section.4.1}{SQL-Parser}{chapter.4}% 55
-\BOOKMARK [2][-]{subsection.4.1.1}{\374ber den SQL-Parser: ZQL}{section.4.1}% 56
-\BOOKMARK [2][-]{subsection.4.1.2}{Funktionsweise des Parsers}{section.4.1}% 57
-\BOOKMARK [2][-]{subsection.4.1.3}{Grenzen des Parsers}{section.4.1}% 58
-\BOOKMARK [1][-]{section.4.2}{Java Server Pages}{chapter.4}% 59
-\BOOKMARK [2][-]{subsection.4.2.1}{\334berblick}{section.4.2}% 60
-\BOOKMARK [2][-]{subsection.4.2.2}{Einbettung in JSP}{section.4.2}% 61
-\BOOKMARK [2][-]{subsection.4.2.3}{Log}{section.4.2}% 62
-\BOOKMARK [0][-]{chapter.5}{Praktische Umsetzung}{}% 63
-\BOOKMARK [1][-]{section.5.1}{Anforderungen}{chapter.5}% 64
-\BOOKMARK [1][-]{section.5.2}{Funktionsumfang}{chapter.5}% 65
-\BOOKMARK [0][-]{chapter.6}{Ergebnisse}{}% 66
-\BOOKMARK [0][-]{chapter.7}{Ausblick}{}% 67
-\BOOKMARK [0][-]{chapter.8}{Anhang}{}% 68
-\BOOKMARK [1][-]{section.8.1}{Algorithmus f\374r Backtracking}{chapter.8}% 69
+\BOOKMARK [2][-]{subsection.3.3.2}{SELECT-Teil}{section.3.3}% 29
+\BOOKMARK [2][-]{subsection.3.3.3}{FROM-Teil}{section.3.3}% 30
+\BOOKMARK [2][-]{subsection.3.3.4}{WHERE-Teil}{section.3.3}% 31
+\BOOKMARK [2][-]{subsection.3.3.5}{Ersetzung von syntaktischen Varianten}{section.3.3}% 32
+\BOOKMARK [2][-]{subsection.3.3.6}{Operatorenvielfalt}{section.3.3}% 33
+\BOOKMARK [2][-]{subsection.3.3.7}{Sortierung}{section.3.3}% 34
+\BOOKMARK [2][-]{subsection.3.3.8}{GROUP BY / HAVING}{section.3.3}% 35
+\BOOKMARK [2][-]{subsection.3.3.9}{ORDER BY}{section.3.3}% 36
+\BOOKMARK [2][-]{subsection.3.3.10}{Abschluss}{section.3.3}% 37
+\BOOKMARK [1][-]{section.3.4}{Weitere Betrachtungen}{chapter.3}% 38
+\BOOKMARK [2][-]{subsection.3.4.1}{JOINS}{section.3.4}% 39
+\BOOKMARK [1][-]{section.3.5}{Komplexit\344t von SQL-Anfragen}{chapter.3}% 40
+\BOOKMARK [2][-]{subsection.3.5.1}{Anzahl atomarer Formeln unter WHERE / Baumtiefe}{section.3.5}% 41
+\BOOKMARK [2][-]{subsection.3.5.2}{Anzahl benutzter Tabellen unter FROM}{section.3.5}% 42
+\BOOKMARK [2][-]{subsection.3.5.3}{Existenz von Teilen der SQL-Anfrage}{section.3.5}% 43
+\BOOKMARK [2][-]{subsection.3.5.4}{Anzahl von JOINs / Unterabfragen}{section.3.5}% 44
+\BOOKMARK [2][-]{subsection.3.5.5}{Anzahl der Operatorionen}{section.3.5}% 45
+\BOOKMARK [2][-]{subsection.3.5.6}{unn\366tiges DISTINCT}{section.3.5}% 46
+\BOOKMARK [2][-]{subsection.3.5.7}{verbale Beschreibung}{section.3.5}% 47
+\BOOKMARK [2][-]{subsection.3.5.8}{Algorithmus aus sql1folien}{section.3.5}% 48
+\BOOKMARK [1][-]{section.3.6}{SQL-Anfragen auf externen Datenbanken}{chapter.3}% 49
+\BOOKMARK [2][-]{subsection.3.6.1}{unterschiedliche DBMS}{section.3.6}% 50
+\BOOKMARK [2][-]{subsection.3.6.2}{Visualisierung von Ergebnistupeln}{section.3.6}% 51
+\BOOKMARK [2][-]{subsection.3.6.3}{Behandeln von Fehlern}{section.3.6}% 52
+\BOOKMARK [0][-]{chapter.4}{Verwendete Software}{}% 53
+\BOOKMARK [1][-]{section.4.1}{SQL-Parser}{chapter.4}% 54
+\BOOKMARK [2][-]{subsection.4.1.1}{\374ber den SQL-Parser: ZQL}{section.4.1}% 55
+\BOOKMARK [2][-]{subsection.4.1.2}{Funktionsweise des Parsers}{section.4.1}% 56
+\BOOKMARK [2][-]{subsection.4.1.3}{Grenzen des Parsers}{section.4.1}% 57
+\BOOKMARK [1][-]{section.4.2}{Java Server Pages}{chapter.4}% 58
+\BOOKMARK [2][-]{subsection.4.2.1}{\334berblick}{section.4.2}% 59
+\BOOKMARK [2][-]{subsection.4.2.2}{Einbettung in JSP}{section.4.2}% 60
+\BOOKMARK [2][-]{subsection.4.2.3}{Log}{section.4.2}% 61
+\BOOKMARK [0][-]{chapter.5}{Praktische Umsetzung}{}% 62
+\BOOKMARK [1][-]{section.5.1}{Dokumentation}{chapter.5}% 63
+\BOOKMARK [2][-]{subsection.5.1.1}{Datenbankstruktur}{section.5.1}% 64
+\BOOKMARK [2][-]{subsection.5.1.2}{Programmstruktur}{section.5.1}% 65
+\BOOKMARK [2][-]{subsection.5.1.3}{Technische Details}{section.5.1}% 66
+\BOOKMARK [0][-]{chapter.6}{Ausblick}{}% 67
+\BOOKMARK [0][-]{chapter.7}{Anhang}{}% 68
