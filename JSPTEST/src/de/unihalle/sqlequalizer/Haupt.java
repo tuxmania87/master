@@ -26,46 +26,21 @@ public class Haupt {
 	@SuppressWarnings("unchecked")
 	public static void main(String[] args) throws Exception {
 
+		
+
 		QueryHandler q2 = new QueryHandler();
-		q2.createTable("create table emp (empno int, ename varchar(500), job varchar(500), mgr int, hiredate datetime, sal int not null, comm int, deptno int)");
-		q2.createTable("create table dept (deptno int, dname varchar(500), location varchar(500))");
-		q2.createTable("create table test (a float(5,2) references emp(sal) not null, b int, c int, d int, x int, y int)");
-		q2.createTable("create table test2 (a int)");
-
-		q2.setOriginalStatement("select sal, ename from emp e where 10 > 5 and ( 2 > 3 or 3 > 2);");
-		System.out.println(q2.original);
-		ZQuery res = q2.equalize(false);
-		System.out.println(res);
-
-		System.out.println();
-
-		System.out.println("STELLE: " + QueryUtils.places("a1.sal", q2));
-
-		q2 = new QueryHandler();
 		q2.createTable("create table emp (empno int, ename varchar(500), job varchar(500), mgr int, hiredate datetime, sal int not null, comm int, deptno int)");
 		q2.createTable("create table dept (deptno int, dname varchar(500), location varchar(500))");
 		q2.createTable("create table test (a int references emp(sal) not null, b int, c int, d int, x int, y int)");
 
-		q2.setOriginalStatement("select sal from emp e where sal > deptno ;");
+		q2.setOriginalStatement("select * from emp e, emp x, dept d, test a, test b where e.sal > 200 and a.b = 2 ;");
 		System.out.println(q2.original);
-		res = q2.equalize(true);
-		System.out.println(res);
+		
+		ZQuery[] moreRes =  q2.equalize(true);
+		for(int i = 0; i< moreRes.length; i++) {
+			System.out.println(moreRes[i].toString());
+		}
 
-		String[] feld = new String[] { "a", "b1", "b2", "c", "d1", "d2", "e", "f", "g1", "g2", "g3" };
-		int[][] pos =  { new int[] { 0,3,4,5,6,7,8,9,10  }, new int[] {0,1,2,3,6,7,8,9,10}, new int[] {0,1,2,3,4,5,6,7} };
-
-		String[][] test = getPermutationOfWithFixedPosGroupes(feld, pos);
-		
-		
-		String[] feldx = new String[] { "a", "e1", "e2", "c", "d1", "d2" };
-		
-		
-		String[][] anotherTest = new String[3][];
-		anotherTest[0] = new String[] { "b1" , "b2" };
-		anotherTest[1] = new String[] { "d1" , "d2" };
-		anotherTest[2] = new String[] { "e1" , "e2" };
-		
-		testf1(new String[0][],anotherTest, 0);
 		
 	}
 
@@ -76,219 +51,7 @@ public class Haupt {
 	 */
 	
 	
-	public static void testf1(String[][] right,String[][] data, int i) {
-		if( i == data.length) {
-			doubleArrayOutput(right);
-			return;
-		}
-		
-		ArrayList<String[]> perms = new ArrayList<String[]>();
-		permute(data[i], new String[0], perms);
-		
-		for(int j = 0; j< perms.size(); j++) {
-			String[][] t_feld = new String[right.length+1][];
-			int ty = 0;
-			for(; ty < right.length; ty++) {
-				t_feld[ty] = right[ty].clone();
-			}
-			t_feld[ty] = perms.get(j).clone();
-			
-			testf1(t_feld,data,i+1);
-		}
-		
-	}
 	
-	
-	private static void doubleArrayOutput(String[][] test) {
-		for(int i=0; i< test.length; i++) {
-			for(int j=0; j< test[i].length; j++) {
-				System.out.print(test[i][j]+" ");
-			}
-			System.out.print(" | ");
-		}
-		System.out.println();
-	}
-
-	private static boolean isNumberinArray(int needle, int[] haystack) {
-		for (int i = 0; i < haystack.length; i++)
-			if (needle == haystack[i])
-				return true;
-
-		return false;
-	}
-
-	private static int[][] removeElemFromPos(int pos, int[][] haystack) {
-		int[][] ret = new int[haystack.length-1][];
-		int c = 0;
-		int i = 0;
-		
-		while(c < ret.length) {
-			if(i == pos)
-				i++;
-			else {
-				ret[c++] = haystack[i++];
-			}
-		}
-		
-		return ret;
-	}
-	
-	public static String[][] getPermutationOfWithFixedPosGroupes(String[] arr,
-			int[][] fixedPos) {
-		
-		ArrayList<String[]> collect = new ArrayList<String[]>();
-		
-		for(int i=0; i< fixedPos.length; i++) {
-			int[] curGroup = fixedPos[i];
-			
-			int[][] restGroup = removeElemFromPos(i, fixedPos);
-			
-			String[][] t_res = getPermutationOfWithFixedPos(arr, curGroup);
-			
-			for(int j = 0; j<t_res.length; j++) {
-				String[] cur = t_res[j];
-				for(int x = 0; x< restGroup.length; x++) {
-					String[][] t_res2 = getPermutationOfWithFixedPos(cur, restGroup[x]);
-					
-					for(int i1=0; i1< t_res2.length; i1++) {
-						collect.add(t_res2[i1]);
-					}
-				}
-			}
-			
-			//doubleArrayOutput(t_res);
-		}
-		
-		//sort
-		
-		class t_comprarer implements Comparator<String[]> {
-
-			@Override
-			public int compare(String[] o1, String[] o2) {
-				String s1="";
-				String s2="";
-				for(int i=0; i< o1.length; i++) {
-					s1 += o1[i]+",";
-					s2 += o2[i]+",";
-				}
-				return s1.compareTo(s2);
-			}
-		}
-		
-		Collections.sort(collect, new t_comprarer());
-		
-		int i = 0;
-		String checker = "";
-		
-		ArrayList<String[]> SetList = new ArrayList<String[]>();
-		
-		while(i < collect.size()) {
-			if (checker.equals(implode(",",collect.get(i)))) {
-				
-			} else {
-				checker = implode(",",collect.get(i));
-				SetList.add(collect.get(i));
-			}
-			i++;
-		}
-		
-		System.out.println(collect.size()+" "+SetList.size());
-		
-		for(int iy = 0; iy< collect.size(); iy++)
-			System.out.println(implode(",",collect.get(iy)));
-		
-		return null;
-	}
-	
-	private static String implode(String glue, String[] arr) {
-		String res = "";
-		
-		for(int i = 0; i< arr.length; i++) {
-			res += arr[i]+glue;
-		}
-		
-		return res.substring(0,res.length()-glue.length());
-	}
-	
-	public static String[][] getPermutationOfWithFixedPos(String[] arr,
-			int[] fixedPos) {
-
-		// step 1 filter fixed values
-
-		String[] filtered = new String[arr.length - fixedPos.length];
-		int count = 0;
-		int ncount = 0;
-
-		while (count < arr.length) {
-			if (isNumberinArray(count, fixedPos)) {
-				count++;
-			} else {
-				filtered[ncount++] = arr[count++];
-			}
-
-		}
-
-		ArrayList<String[]> res = new ArrayList<String[]>();
-
-		Haupt.permute(filtered, new String[0], res);
-
-		String[][] newRes = new String[res.size()][];
-
-		for (int i = 0; i < res.size(); i++) {
-			String[] cur = res.get(i);
-			String[] newCur = new String[cur.length + fixedPos.length];
-
-			int inputIndex = 0;
-			int oldIndex = 0;
-
-			while (inputIndex < newCur.length) {
-
-				if (isNumberinArray(inputIndex, fixedPos)) {
-					newCur[inputIndex] = arr[inputIndex];
-					inputIndex++;
-				} else {
-					newCur[inputIndex++] = cur[oldIndex++];
-				}
-			}
-			newRes[i] = newCur;
-
-		}
-
-		return newRes;
-	}
-
-	public static void permute(String[] in, String[] res,
-			ArrayList<String[]> realResult) {
-		if (in.length == 0) {
-			// output
-			realResult.add(res);
-		}
-
-		for (int i = 0; i < in.length; i++) {
-
-			String[] newin = new String[in.length - 1];
-			int newcount = 0;
-			int oldcount = 0;
-
-			while (newcount < newin.length) {
-				if (oldcount == i)
-					oldcount++;
-
-				newin[newcount++] = in[oldcount++];
-			}
-
-			String[] newres = new String[res.length + 1];
-			int j = 0;
-			for (; j < res.length; j++) {
-				newres[j] = res[j];
-			}
-			newres[j] = in[i];
-
-			permute(newin, newres, realResult);
-
-		}
-
-	}
 
 	public static boolean examine(ZExp e1, ZExp e2) {
 

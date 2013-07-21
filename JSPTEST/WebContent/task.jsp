@@ -69,7 +69,7 @@
 				QueryHandler qh_ss = new QueryHandler();
 
 				ZQuery q = null;
-				ZQuery q2 = null;
+				ZQuery[] q2 = null;
 
 				String compare = null;
 				String compareAfter = null;
@@ -83,7 +83,7 @@
 					qh.setOriginalStatement(request
 							.getParameter("user_solution"));
 					qh_ss.setOriginalStatement(t.samplesolution[0]);
-					q = qh.equalize(t.respectColumn);
+					q = qh.equalize(t.respectColumn)[0];
 					q2 = qh_ss.equalize(t.respectColumn);
 					compare = QueryUtils.compareMetaInfos(qh_ss.before,
 							qh.before);
@@ -126,9 +126,28 @@
 		<h3>SQL-Equalizer part 1 (Matching after standardization)</h3>
 			<%
 				if (error == null) {
-					compareAfter = QueryUtils.compareStandardizedQueries(q, q2);
+						
+						
+						
+						compareAfter = QueryUtils.compareStandardizedQueries(q, q2[0]);
+						
+						for(int i = 0; i<q2.length; i++) {
+							String temp = QueryUtils.compareStandardizedQueries(q, q2[i]);
+							if(temp.length() < compareAfter.length())
+								compareAfter = temp;
+						}
+						
 						//check with equalizer 
-						firststep_matching = q.toString().equals(q2.toString());
+						
+						firststep_matching = false;
+						for(int i = 0; i<q2.length; i++) {
+							System.out.println(i+" "+q2[i].toString());
+							if(q.toString().equals(q2[i].toString()))
+								firststep_matching = true;
+						}
+						
+						System.out.println("Student: "+q.toString());
+						
 						if (firststep_matching) {
 							out.println("<span style=\"color:green;font-weight:bold;font-size:large;\">Your solution could be matched with a sample solution hence it is correct.</span><br>");
 							
@@ -324,7 +343,7 @@
 		prep.setInt(1, maxid+1);
 		prep.setString(2, session.getAttribute("userid").toString());
 		prep.setInt(3, t.id);
-		prep.setString(4, new SimpleDateFormat("yyyy-MM-dd kk:mm:ss").format(new Date()));
+		prep.setString(4, new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
 		
 		prep.setString(5, qh.original.toString());
 		prep.setInt(6, firststep_matching?1:0);

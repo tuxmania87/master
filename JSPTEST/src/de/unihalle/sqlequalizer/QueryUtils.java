@@ -697,6 +697,98 @@ public class QueryUtils {
 		return true;
 	}
 	
+	public static Vector<ZFromItem> cloneFromItems(Vector<ZFromItem> data) {
+		
+		Vector<ZFromItem> res = new Vector<ZFromItem>();
+		Iterator<ZFromItem> i = data.iterator();
+		
+		while(i.hasNext()) {
+			ZFromItem z = i.next();
+			
+			ZFromItem clone = new ZFromItem(z.getTable());
+			clone.setAlias(z.getAlias());
+			res.add(clone);
+		}
+		
+		return res;
+		
+	}
+	
+	public static ArrayList<String[]> createPermutations(String[][] right,String[][] data, int i) {
+		if( i == data.length) {
+			String res = "";
+			for(int x = 0; x<  right.length; x++) {
+				res += implode(",",right[x])+",";
+			}
+			ArrayList<String[]> t_res = new ArrayList<String[]>();
+			t_res.add(res.substring(0,res.length()-1).split(","));
+			return t_res;
+		}
+		
+		ArrayList<String[]> perms = new ArrayList<String[]>();
+		permute(data[i], new String[0], perms);
+		
+		ArrayList<String[]> erg = new ArrayList<String[]>();
+		
+		for(int j = 0; j< perms.size(); j++) {
+			String[][] t_feld = new String[right.length+1][];
+			int ty = 0;
+			for(; ty < right.length; ty++) {
+				t_feld[ty] = right[ty].clone();
+			}
+			t_feld[ty] = perms.get(j).clone();
+			
+			erg.addAll(createPermutations(t_feld,data,i+1));
+			
+		}
+		return erg;
+	}
+
+	private static String implode(String glue, String[] arr) {
+		String res = "";
+		
+		for(int i = 0; i< arr.length; i++) {
+			res += arr[i]+glue;
+		}
+		
+		return res.substring(0,res.length()-glue.length());
+	}
+	
+	
+
+	public static void permute(String[] in, String[] res,
+			ArrayList<String[]> realResult) {
+		if (in.length == 0) {
+			// output
+			realResult.add(res);
+		}
+
+		for (int i = 0; i < in.length; i++) {
+
+			String[] newin = new String[in.length - 1];
+			int newcount = 0;
+			int oldcount = 0;
+
+			while (newcount < newin.length) {
+				if (oldcount == i)
+					oldcount++;
+
+				newin[newcount++] = in[oldcount++];
+			}
+
+			String[] newres = new String[res.length + 1];
+			int j = 0;
+			for (; j < res.length; j++) {
+				newres[j] = res[j];
+			}
+			newres[j] = in[i];
+
+			permute(newin, newres, realResult);
+
+		}
+
+	}
+	
 	public static String compareStandardizedQueries(ZQuery q1, ZQuery q2) {
 		// additionally we want to compare single parts of the queries
 				// (select,from,where,group by, having, order by)

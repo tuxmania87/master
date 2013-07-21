@@ -33,8 +33,8 @@ public class QueryHandler {
 	public QueryHandler parent = null;
 
 	private boolean respectColumnOrder = false;
-	
-	public ZExp makeAliases(ZExp exp, Vector<ZFromItem> fromItems)
+
+	public ZExp makeAliases(ZExp exp, Vector<ZFromItem> fromItems, HashMap<String, String> sub)
 			throws Exception {
 
 		if (exp instanceof ZConstant
@@ -57,7 +57,7 @@ public class QueryHandler {
 					while (iterator != null) {
 						if (iterator.Zuordnung.get(split[0]) != null) {
 							return new ZConstant(
-									iterator.Zuordnung.get(split[0]) + "."
+									sub.get(iterator.Zuordnung.get(split[0])) + "."
 											+ split[1],
 									((ZConstant) exp).getType());
 						}
@@ -65,7 +65,7 @@ public class QueryHandler {
 					}
 
 				} else {
-					return new ZConstant(Zuordnung.get(split[0]) + "."
+					return new ZConstant(sub.get(Zuordnung.get(split[0])) + "."
 							+ split[1], ((ZConstant) exp).getType());
 				}
 
@@ -113,7 +113,7 @@ public class QueryHandler {
 									+ split[0]
 									+ " konnte in keiner der Tabellen in der FROM Klausel gefunden werden!");
 				}
-				return new ZConstant(Zuordnung.get(targetTable) + "."
+				return new ZConstant(sub.get(Zuordnung.get(targetTable)) + "."
 						+ split[0], ZConstant.COLUMNNAME);
 
 			}
@@ -127,7 +127,7 @@ public class QueryHandler {
 			qh.parent = this;
 			qh.tables = (ArrayList<Table>) this.tables.clone();
 			qh.setOriginalStatement(exp.toString());
-			return qh.equalize(true);
+			return qh.equalize(true)[0];
 
 			// old
 			// return handleQUERY((ZQuery)exp);
@@ -138,7 +138,7 @@ public class QueryHandler {
 			Iterator<ZExp> it = zexp.getOperands().iterator();
 			ZExpression ret = new ZExpression(zexp.getOperator());
 			while (it.hasNext()) {
-				ret.addOperand(makeAliases(it.next(), fromItems));
+				ret.addOperand(makeAliases(it.next(), fromItems, sub));
 			}
 			return ret;
 		}
@@ -167,55 +167,108 @@ public class QueryHandler {
 		return ret;
 	}
 
-	public ZQuery handleQUERY(ZQuery q) throws Exception {
-		
+	public ZQuery[] handleQUERY(ZQuery q) throws Exception {
+
 		class tempSorter implements Comparator<ZSelectItem> {
 
 			@Override
 			public int compare(ZSelectItem o1, ZSelectItem o2) {
-				
+
 				return o1.getColumn().compareTo(o2.getColumn());
-				
+
 			}
-			
+
 		}
-		
-		if(!this.respectColumnOrder) {
+
+		if (!this.respectColumnOrder) {
 			Collections.sort(q.getSelect(), new tempSorter());
 			Collections.sort(original.getSelect(), new tempSorter());
 		}
-		
+
 		before = new MetaQueryInfo(original);
 		handleFROMClause(q.getFrom());
 		Vector<ZSelectItem> newSELECTClause = handleSELECTClause(q.getSelect());
 
-		// reassemle query temporarily for preprocessing
-		/*
-		 * ZQuery tempQuery = new ZQuery(); tempQuery.addFrom(q.getFrom());
-		 * tempQuery.addSelect(newSELECTClause);
-		 * tempQuery.addWhere(q.getWhere());
-		 * tempQuery.addGroupBy(q.getGroupBy());
-		 * tempQuery.addOrderBy(q.getOrderBy());
-		 */
+		// if we got the same table several times in FROM
+		// we have to produce permutations and do query handling
+		// for each of them
 
-		ZExp newWHEREClause = handleWHEREClause(
-				q.getWhere(), q.getFrom(), this);
-		ZGroupBy newGROUPBYClause = handleGROUPBYStatement(q.getGroupBy());
+		Vector<ZFromItem> v = q.getFrom();
 
-		ZQuery newQ = new ZQuery();
-		newQ.addFrom(q.getFrom());
-		newQ.addWhere(newWHEREClause);
-		
-		if(newWHEREClause instanceof ZConstant && ((ZConstant) newWHEREClause).getValue().equals("false"))
-			throw new Exception("Your Query always return the empty set, hence the where condition is not satisfiable.");
-		
-		newQ.addSelect(newSELECTClause);
-		newQ.addGroupBy(newGROUPBYClause);
-		newQ.addOrderBy(q.getOrderBy());
+		Iterator<ZFromItem> it = v.iterator();
 
-		after = new MetaQueryInfo(newQ);
+		ArrayList<ArrayList<String>> fromList = new ArrayList<ArrayList<String>>();
+		ArrayList<String> listGroups = new ArrayList<String>();
+		ZFromItem z = it.next();
+		String table_checker = z.getTable();
+		it = v.iterator();
+		while (it.hasNext()) {
+			z = it.next();
+			if (!z.getTable().equals(table_checker)) {
+				fromList.add(listGroups);
+				listGroups = new ArrayList<String>();
+				table_checker = z.getTable();
+				listGroups.add(z.getAlias());
+			} else {
+				listGroups.add(z.getAlias());
+			}
+		}
 
-		return newQ;
+		fromList.add(listGroups);
+
+		// transfert into String[][]
+		String[][] fromListArray = new String[fromList.size()][];
+		for (int i = 0; i < fromListArray.length; i++) {
+			fromListArray[i] = fromList.get(i).toArray(
+					new String[fromList.get(i).size()]);
+		}
+
+		ArrayList<String[]> permutations = QueryUtils.createPermutations(
+				new String[0][], fromListArray, 0);
+
+		ZQuery[] newQueries = new ZQuery[permutations.size()];
+
+		// foreach permutation of FROM list, create Query and process
+
+		for (int i = 0; i < permutations.size(); i++) {
+
+			ZQuery newQ = new ZQuery();
+			
+			//rename alias, use permutations
+			String[] permutation = permutations.get(i);
+			Vector<ZFromItem> v1 = q.getFrom();
+			
+			HashMap<String, String> substis = new HashMap<String, String>();
+			
+			for(int y = 0; y < v1.size(); y++) {
+				substis.put(v1.get(y).getAlias(), permutation[y]);
+			}
+			
+			
+			
+			
+			ZExp newWHEREClause = handleWHEREClause(q.getWhere(), q.getFrom(),
+					this,  substis);
+			ZGroupBy newGROUPBYClause = handleGROUPBYStatement(q.getGroupBy());
+
+			
+			newQ.addFrom(q.getFrom());
+			newQ.addWhere(newWHEREClause);
+
+			if (newWHEREClause instanceof ZConstant
+					&& ((ZConstant) newWHEREClause).getValue().equals("false"))
+				throw new Exception(
+						"Your Query always return the empty set, hence the where condition is not satisfiable.");
+
+			newQ.addSelect(newSELECTClause);
+			newQ.addGroupBy(newGROUPBYClause);
+			newQ.addOrderBy(q.getOrderBy());
+
+			after = new MetaQueryInfo(newQ);
+			newQueries[i] = newQ;
+		}
+		return newQueries;
+
 	}
 
 	public void handleFROMClause(Vector<ZFromItem> from) {
@@ -287,16 +340,14 @@ public class QueryHandler {
 					}
 				}
 				// targetTable lokup
-				
+
 				String foundTable = Zuordnung.get(targetTable);
-				
-				if(foundTable == null) {
-					throw new Exception(
-							"Column name unknown: "
-									+ split[0]
-									+ " is not contained by any table in FROM!");
+
+				if (foundTable == null) {
+					throw new Exception("Column name unknown: " + split[0]
+							+ " is not contained by any table in FROM!");
 				}
-				
+
 				String addString = foundTable + "." + split[0];
 				if (z.getAggregate() != null) {
 					addString = z.getAggregate() + "(" + addString + ")";
@@ -305,22 +356,20 @@ public class QueryHandler {
 			}
 
 		}
-		
-		
-		
+
 		return ret;
 	}
 
 	public ZExp tranformToKNF(ZExp root) {
 
-		if(root == null)
+		if (root == null)
 			return null;
-		
+
 		ZExp step = root;
 		String old = "";
 
 		do {
-			old =  step.toString();
+			old = step.toString();
 			step = QueryUtils.operatorCompression(step, null);
 			step = QueryUtils.pushDownNegate(step);
 			step = QueryUtils.distribute(step);
@@ -329,58 +378,58 @@ public class QueryHandler {
 		return step;
 	}
 
-	public ZExp handleWHEREClause(ZExp zexp, Vector<ZFromItem> from, QueryHandler q)
-			throws Exception {
+	public ZExp handleWHEREClause(ZExp zexp, Vector<ZFromItem> from,
+			QueryHandler q, HashMap<String, String> substis) throws Exception {
 
 		if (zexp == null)
 			return null;
 
-		 ArrayList<Table> tables = q.tables;
-		
+		ArrayList<Table> tables = q.tables;
+
 		// ZExp whereCondition = null;
 		ZExp whereCondition = zexp;
 
-		whereCondition = (ZExpression) makeAliases(zexp, from);
-		
-		//recursvie for subqueries TODO
-		
-		whereCondition = tranformToKNF(whereCondition); 
-		
+		whereCondition = (ZExpression) makeAliases(zexp, from, substis);
+
+		// recursvie for subqueries TODO
+
+		whereCondition = tranformToKNF(whereCondition);
+
 		String check = null;
-		
+
 		do {
 			check = whereCondition.toString();
-			whereCondition = QueryUtils.replaceSubqueries(whereCondition,tables);
-			whereCondition = QueryUtils.replaceSyntacticVariantes(whereCondition);
-		} while(!check.equals(whereCondition.toString()));
-		
-		
+			whereCondition = QueryUtils.replaceSubqueries(whereCondition,
+					tables);
+			whereCondition = QueryUtils
+					.replaceSyntacticVariantes(whereCondition);
+		} while (!check.equals(whereCondition.toString()));
+
 		whereCondition = QueryUtils.addImplicitFormulas(whereCondition, q);
 		whereCondition = QueryUtils.evaluateArithmetic(whereCondition);
-		
-		//elimnate duplicate trees somewhere , maybe after sorting for easier detection?
-		
-		//KNF must be restored because we added possibly and nodes in between the tree
-		whereCondition = tranformToKNF(whereCondition);
-		
-		/*whereCondition = (ZExpression) QueryUtils
-				.dfs_orderPairs(whereCondition);
-		whereCondition = (ZExpression) QueryUtils.dfs_work(whereCondition);
-		whereCondition = (ZExpression) QueryUtils.dfs_work(whereCondition);
-		whereCondition = (ZExpression) QueryUtils.operatorCompression(
-				whereCondition, null);
-		whereCondition = (ZExpression) QueryUtils.dfs_work(whereCondition);*/
-		whereCondition =  QueryUtils.sortedTree(whereCondition);
 
-		
-		
+		// elimnate duplicate trees somewhere , maybe after sorting for easier
+		// detection?
+
+		// KNF must be restored because we added possibly and nodes in between
+		// the tree
+		whereCondition = tranformToKNF(whereCondition);
+
+		/*
+		 * whereCondition = (ZExpression) QueryUtils
+		 * .dfs_orderPairs(whereCondition); whereCondition = (ZExpression)
+		 * QueryUtils.dfs_work(whereCondition); whereCondition = (ZExpression)
+		 * QueryUtils.dfs_work(whereCondition); whereCondition = (ZExpression)
+		 * QueryUtils.operatorCompression( whereCondition, null); whereCondition
+		 * = (ZExpression) QueryUtils.dfs_work(whereCondition);
+		 */
+		whereCondition = QueryUtils.sortedTree(whereCondition);
+
 		return whereCondition;
 	}
 
 	public void setOriginalStatement(String s) throws ParseException {
-		
-		
-		
+
 		if (s.trim().charAt(s.trim().length() - 1) != ';')
 			s += ';';
 
@@ -435,11 +484,11 @@ public class QueryHandler {
 		return true;
 	}
 
-	public ZQuery equalize(boolean respect) throws Exception {
+	public ZQuery[] equalize(boolean respect) throws Exception {
 		this.respectColumnOrder = respect;
 		if (parent != null)
 			aliascount = parent.aliascount;
-		return (ZQuery) handleQUERY(workingCopy);
+		return handleQUERY(workingCopy);
 	}
 
 	/*
