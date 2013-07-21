@@ -8,10 +8,10 @@ import java.sql.SQLWarning;
 
 public class Login {
 
-	public static boolean login(String u, String p) {
+	public static int login(String u, String p) {
 		try {
-		Class.forName("org.sqlite.JDBC");
-		Connection conn = DriverManager.getConnection("jdbc:sqlite:e:\\users\\robert\\workspace\\jsptest\\test.db");
+		
+		Connection conn = Connector.getConnection();
 		
 		
 		// Print all warnings
@@ -23,18 +23,43 @@ public class Login {
 	          System.out.println( "Error  : " + warn.getErrorCode() ) ;
 	      }
 		
-		String q = "select * from users where name = ? and password = ?";
+		String q = "select id from users where name = ? and password = ?";
 		
 		PreparedStatement psmt = conn.prepareStatement(q);
 		
 		psmt.setString(1, u);
 		psmt.setString(2, p);
-		ResultSet rs = psmt.executeQuery();
-		conn.close();
-		return rs.next();
 		
+		ResultSet res = psmt.executeQuery();
+		
+		res.next();
+		return res.getInt("id");
+		
+			
 		} catch (Exception e) {
 			e.printStackTrace();
+			return 0;
+		}
+	}
+	
+	public static boolean isDozent(String u) {
+		try {
+		Class.forName("org.sqlite.JDBC");
+		Connection conn = DriverManager.getConnection("jdbc:sqlite:e:\\users\\robert\\workspace\\jsptest\\test.db");
+		
+		String q = "select 1 from users where name = ? and isDozent = 1";
+		
+		PreparedStatement psmt = conn.prepareStatement(q);
+		psmt.setString(1, u);
+		
+		ResultSet rs =psmt.executeQuery();
+		
+		if(!rs.next())
+			return false;
+		
+		return true;
+		}
+		catch(Exception e) {
 			return false;
 		}
 	}

@@ -3,6 +3,46 @@ div#main_center {
 	width:900px;	
 }
 
+div#nav {
+	position:absolute;
+	left:20px;
+	top:200px;
+}
+
+div#nav ul li {
+	list-style-type:none;
+}
+
+div#nav a:link {
+	text-decoration:none;
+	color:black;
+	font-weight:bold;
+	font-size:large;
+}
+
+div#nav a:visited {
+	text-decoration:none;
+	color:black;
+	font-weight:bold;
+	font-size:large;
+}
+
+div#nav a:hover {
+	text-decoration:none;
+	color:grey;
+	font-weight:bold;
+	font-size:large;
+	
+}
+
+div#nav a:active {
+	text-decoration:none;
+	color:grey;
+	font-weight:bold;
+	font-size:large;
+	
+}
+
 div.description {
 	border:2px dashed black;
 	padding:5px;
@@ -10,6 +50,13 @@ div.description {
 	font-family:Monospace;
 	width:700px;
 }
+
+div.border_only {
+	border:2px dashed black;
+	padding:5px;
+	width:700px;
+}
+
 
 div.description_table {
 	
@@ -26,6 +73,11 @@ table.outer td {
 }
 table.inner td {
 	border:none;
+}
+
+table td {
+	vertical-align:top;
+	border:1px solid black;
 }
 
 table.outer th {

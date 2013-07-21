@@ -5,12 +5,16 @@
     
  <%
 
- boolean success = true;
+ int id = 0;
  if(request.getParameter("submit") != null) {
 	 
-	 success = Login.login(request.getParameter("pname"), request.getParameter("ppassword"));
-	 if(success) {
-		 request.getSession().setAttribute("userid", request.getParameter("pname"));
+	 id = Login.login(request.getParameter("pname"), request.getParameter("ppassword"));
+	 if(id > 0) {
+		 request.getSession().setAttribute("userid", id);
+		 
+		 if(Login.isDozent(request.getParameter("pname"))) {
+			 request.getSession().setAttribute("dozent", 1);
+		 }
 		 
 		 response.setStatus(HttpServletResponse.SC_MOVED_TEMPORARILY);
 		 response.setHeader("Location", request.getParameter("refer")!=null?request.getParameter("refer"):"/JSPTEST/" ); 

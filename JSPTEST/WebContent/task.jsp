@@ -1,4 +1,8 @@
 
+<%@page import="java.util.Date"%>
+<%@page import="java.text.SimpleDateFormat"%>
+<%@page import="java.sql.PreparedStatement"%>
+<%@page import="de.unihalle.sqlequalizer.Connector"%>
 <%@page import="java.util.Iterator"%>
 <%@page import="java.sql.ResultSetMetaData"%>
 <%@page import="java.sql.ResultSet"%>
@@ -22,8 +26,10 @@
 <%
 	Connection c = Task.connect();
 	Task t = new Task(c, Integer.parseInt(request.getParameter("t")));
+	boolean firststep_matching = false;
 %>
 <body>
+	<%@ include file="nav.jsp"%>
 	<div id="main_center">
 
 		<h2>task description:</h2>
@@ -66,6 +72,7 @@
 				ZQuery q2 = null;
 
 				String compare = null;
+				String compareAfter = null;
 				String error = null;
 
 				for (int i = 0; i < t.dbschema.length; i++) {
@@ -76,8 +83,8 @@
 					qh.setOriginalStatement(request
 							.getParameter("user_solution"));
 					qh_ss.setOriginalStatement(t.samplesolution[0]);
-					q = qh.equalize();
-					q2 = qh_ss.equalize();
+					q = qh.equalize(t.respectColumn);
+					q2 = qh_ss.equalize(t.respectColumn);
 					compare = QueryUtils.compareMetaInfos(qh_ss.before,
 							qh.before);
 
@@ -87,8 +94,7 @@
 				}
 		%>
 		<h2>
-			your parsed statement &nbsp;&nbsp;<a href="#" onclick="toggle(this)"><span
-				style="font-size: 18px;">+</span></a>
+			your parsed statement
 		</h2>
 		<div class="description">
 			<%
@@ -116,49 +122,45 @@
 	
 
 		<h2>feedback from sql-equalizer</h2>
-		<div class="description">
+		<div class="border_only">
+		<h3>SQL-Equalizer part 1 (Matching after standardization)</h3>
 			<%
 				if (error == null) {
-
+					compareAfter = QueryUtils.compareStandardizedQueries(q, q2);
 						//check with equalizer 
-						if (q.toString().equals(q2.toString())) {
+						firststep_matching = q.toString().equals(q2.toString());
+						if (firststep_matching) {
 							out.println("<span style=\"color:green;font-weight:bold;font-size:large;\">Your solution could be matched with a sample solution hence it is correct.</span><br>");
-							String compareAfter = QueryUtils.compareStandardizedQueries(q, q2);
-							if (compare != null && compare.trim() != "") {
-								out.println("however the sql-equalizer encountered the following:<br>"
-										+ compare);
-							}
+							
 						} else {
-							out.println("Your solution could not be matched with a sample solution.<br>");
+							out.println("<span style=\"color:red;font-weight:bold;font-size:large;\">Your solution could not be matched with a sample solution.</span><br>");
 
-							out.println("<br> <br>Additional notifications from the sql-equalizer:<br>"
-									+ compare);
 						}
 
-						if (request.getSession().getAttribute("dozent") != null) {
+						/*if (request.getSession().getAttribute("dozent") != null) {
+							out.println("<br><br>");
 							out.println(q);
 							out.println("<br>");
 							out.println(q2);
-						}
+						}*/
 					} else {
-						out.println("sql-equalizer could not parse your statement:<br>"
-								+ error);
+						out.println("<span style=\"color:red;font-weight:bold;font-size:large;\">sql-equalizer could not parse your statement:</span><br>"
+								+ "<span style=\"font-weight:bold;font-size:large;\">" + error + "</span>");
 					}
 			%>
-		</div>
-		
-			<%if (!q.toString().equals(q2.toString())) { %>
-
-		<h2>results on real database</h2>
-		<div class="description_table">
-			<%
-				
-
-						if (t.externalDbs.length > 0)
-							out.println("Your sql query will be checked with real data now. proceeding.....<br>");
-						//check with databases
-
-						for (int i = 0; i < t.externalDbs.length; i++) {
+		<br>
+		<h3>SQL-Equalizer part 2 (execution of queries on real data)</h3>
+		<%		
+				if(error != null) {
+					
+				} else
+				if (firststep_matching) {
+					out.println("<span style=\"color:green;font-weight:bold;font-size:large;\">SQL-Equalizer could already match your solution with the sample solutin. No need for test real data.</span><br>");
+				} else if (t.externalDbs.length > 0){
+					out.println("Your sql query will be checked with real data now. proceeding.....<br>");
+					
+					//check on real data
+					for (int i = 0; i < t.externalDbs.length; i++) {
 							//foreach database
 							ResultSet r1 = null;
 							ResultSet r2 = null;
@@ -211,13 +213,9 @@
 								try {
 									
 									if (QueryUtils.isIdenticalResultSets(r1, r2, t.respectRow, t.respectColumn)) {
-										out.println("sample-solution and your query returned the same data but your solution could not be matched against any valid sample solution. please discuss your solution with your lecturer.<br>");
-										out.println("LevenshteinDistance: "
-												+ QueryUtils
-														.getLevenshteinDistance(
-																q.toString(),
-																q2.toString()));
-									}
+										out.println("<br><span style=\"color:red;font-weight:bold;font-size:large;\">sample-solution and your query returned the same data but your solution could not be matched against any valid sample solution.</span><br>");
+										
+									} else { throw new RuntimeException(); }
 								} catch (RuntimeException e) {
 									out.println("Your query returned invalid data. Showing both resultsets below:<br><br>");
 
@@ -292,13 +290,47 @@
 							}
 
 						}
-
+					//endof check
 					
+				} else {
+					out.println("<span style=\"color:red;font-weight:bold;font-size:large;\">There is no real database to check your solution on real data.</span>");
+				}
 			%>
+		
+		<% if(error == null) { %>
+			
+		<h3>Important Notifications</h3>
+		SQL-Equalizer compared each single part of the queries and detected some problems:<br>
+		<% out.println(compareAfter+"<br>"+compare); %>
+		
+		<% } %>
+					
 		</div>
-	<% } %>
+		
+	
 		
 		<%
+		
+		
+		c = Connector.getConnection();
+		
+		PreparedStatement prep = c.prepareStatement("select max(id) from attempts");
+		ResultSet res = prep.executeQuery();
+		res.next();
+		
+		int maxid = res.getInt("max(id)");
+		
+		prep = c.prepareStatement("insert into attempts (id,userid,taskid,timeat,sqlstatement,correct) values (?,?,?,?,?,?)");
+		prep.setInt(1, maxid+1);
+		prep.setString(2, session.getAttribute("userid").toString());
+		prep.setInt(3, t.id);
+		prep.setString(4, new SimpleDateFormat("yyyy-MM-dd kk:mm:ss").format(new Date()));
+		
+		prep.setString(5, qh.original.toString());
+		prep.setInt(6, firststep_matching?1:0);
+		
+		prep.execute();
+		
 			}
 		%>
 	</div>

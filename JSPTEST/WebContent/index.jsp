@@ -13,11 +13,12 @@
 <%@ include file="header.jsp" %>
 </head>
 <body>
+<%@ include file="nav.jsp" %> 
 <div id="main_center">
 <span style="text-align:center;"><h2>welcome to the sql-equalizer</h2></span>
 TODO Statistik Übersichten<br>
 <a href="tasks.jsp">Aufgaben</a>
-<br><% out.println(System.getProperty("java.version")); %>
+<br>
 </div>
 </body>
 </html>

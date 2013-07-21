@@ -252,18 +252,28 @@ public class QueryUtils {
 
 	public static boolean isIdenticalResultSets(ResultSet r1, ResultSet r2,
 			boolean row, boolean column) throws SQLException {
-
-		if (row && column) {
+			
+			ResultSetMetaData m1 = r1.getMetaData();
+			ResultSetMetaData m2 = r2.getMetaData();
+			
+			if(m1.getColumnCount() != m2.getColumnCount())
+				return false;
+		
 			try {
-				int col = 1;
+				
 				while (r1.next() && r2.next()) {
-					Object res1 = r1.getObject(col);
-					Object res2 = r2.getObject(col);
+					for(int i=1; i<= m1.getColumnCount(); i++) {
+					
+					Object res1 = r1.getObject(i);
+					Object res2 = r2.getObject(i);
 
+					if(res1 == null && res2 == null)
+						continue;
+					
 					if (!res1.equals(res2)) {
 						throw new RuntimeException(String.format(
 								"%s and %s aren't equal at common position %d",
-								res1, res2, col));
+								res1, res2, i));
 					}
 
 					// rs1 and rs2 must reach last row in the same iteration
@@ -271,91 +281,18 @@ public class QueryUtils {
 						throw new RuntimeException(
 								"The two ResultSets contains different number of columns!");
 					}
-
-					col++;
+					
+					
+					}
 
 				}
 			} catch (SQLException e) {
 				return false;
 			}
 			return true;
-		}
+		
 
-		if (!column) {
-			HashMap<String, Integer> originalOrder = new HashMap<String, Integer>();
 
-			ResultSetMetaData meta1 = r1.getMetaData();
-			String[] columnNames = new String[meta1.getColumnCount()];
-
-			for (int i = 1; i <= meta1.getColumnCount(); i++) {
-				originalOrder.put(meta1.getColumnName(i), i);
-				columnNames[i - 1] = meta1.getColumnName(i);
-			}
-
-			Arrays.sort(columnNames);
-
-			int rownumber = 0;
-			r1.last();
-			rownumber = r1.getRow();
-			r1.beforeFirst();
-
-			String[][] resultSet1 = new String[rownumber][];
-
-			for (int i = 0; i < rownumber; i++) {
-				r1.next();
-				resultSet1[i] = new String[meta1.getColumnCount()];
-				for (int j = 0; j < meta1.getColumnCount(); j++) {
-					resultSet1[i][j] = r1.getObject(
-							(originalOrder.get(columnNames[j - 1])).intValue())
-							.toString();
-				}
-			}
-
-			originalOrder = new HashMap<String, Integer>();
-
-			ResultSetMetaData meta2 = r2.getMetaData();
-			columnNames = new String[meta2.getColumnCount()];
-
-			for (int i = 1; i <= meta2.getColumnCount(); i++) {
-				originalOrder.put(meta2.getColumnName(i), i);
-				columnNames[i - 1] = meta2.getColumnName(i);
-			}
-
-			Arrays.sort(columnNames);
-
-			rownumber = 0;
-			r2.last();
-			rownumber = r2.getRow();
-			r2.beforeFirst();
-
-			String[][] resultSet2 = new String[rownumber][];
-
-			for (int i = 0; i < rownumber; i++) {
-				resultSet2[i] = new String[meta2.getColumnCount()];
-				r1.next();
-				for (int j = 0; j < meta2.getColumnCount(); j++) {
-					resultSet2[i][j] = r2.getObject(
-							(originalOrder.get(columnNames[j - 1])).intValue())
-							.toString();
-				}
-			}
-
-			// iterate both arrays
-			if (resultSet1.length != resultSet2.length)
-				return false;
-
-			for (int i = 0; i < resultSet1.length; i++) {
-				for (int j = 0; j < resultSet1[i].length; j++) {
-					if (!resultSet1[i][j].equals(resultSet2[i][j])) {
-						return false;
-					}
-				}
-			}
-			return true;
-
-		}
-
-		return false;
 	}
 
 	public static boolean isLesserThan(ZExp a, ZExp b) {
@@ -527,7 +464,7 @@ public class QueryUtils {
 
 	}
 
-	public static ZExp rebuilder(ZExp node) {
+	public static ZExp sortLeafs(ZExp node) {
 
 		if (node instanceof ZConstant)
 			return node;
@@ -537,7 +474,7 @@ public class QueryUtils {
 			ZExpression ret = new ZExpression(z.getOperator());
 
 			for (int i = 0; i < z.getOperands().size(); i++) {
-				ret.addOperand(rebuilder(z.getOperand(i)));
+				ret.addOperand(sortLeafs(z.getOperand(i)));
 			}
 
 			// untersuche kinder
@@ -701,7 +638,7 @@ public class QueryUtils {
 		ZExp ret = exp;
 		do {
 			old = ret.toString();
-			ret = sortTree(rebuilder(ret));
+			ret = sortTree(sortLeafs(ret));
 		} while (!old.equals(ret.toString()));
 
 		return ret;
@@ -739,65 +676,77 @@ public class QueryUtils {
 			}
 		}
 
-		
-
 
 		return res;
 	}
 
+
+	
+	private static <T> boolean equalsVectors(Vector<T> v1, Vector<T> v2) {
+		if(v1.size() != v2.size())
+			return false;
+		
+		for(int i = 0; i< v1.size(); i++) {
+			T z1 = v1.get(i);
+			T z2 = v2.get(i);
+			
+			if(!z1.toString().equals(z2.toString()))
+				return false;
+		}
+		
+		return true;
+	}
+	
 	public static String compareStandardizedQueries(ZQuery q1, ZQuery q2) {
 		// additionally we want to compare single parts of the queries
 				// (select,from,where,group by, having, order by)
 				String res = "";
 
 				if ((q1.getSelect() != null
-						&& q2.getSelect() != null && !q1
-						.getSelect().equals(q2.getSelect()))
+						&& q2.getSelect() != null && !equalsVectors(q1.getSelect(), q2.getSelect()))
 						|| (q1.getSelect() == null && q2
 								.getSelect() != null)
 						|| ((q1.getSelect() != null && q2
 								.getSelect() == null))) {
-					res += "SELECT: not identical!<br>";
+					res += "<span style=\"font-weight:bold;\">SELECT:</span>   <span style=\"color:red;\">not identical!</span><br>";
 				}
 				
 				if ((q1.getFrom() != null
-						&& q2.getFrom() != null && !q1
-						.getFrom().equals(q2.getFrom()))
+						&& q2.getFrom() != null && !equalsVectors(q1.getFrom(), q2.getFrom()))
 						|| (q1.getFrom() == null && q2
 								.getFrom() != null)
 						|| ((q1.getFrom() != null && q2
 								.getFrom() == null))) {
-					res += "FROM: not identical!<br>";
+					res += "<span style=\"font-weight:bold;\">FROM:</span>   <span style=\"color:red;\">not identical!</span><br>";
 				}
 				
 				if ((q1.getWhere() != null
 						&& q2.getWhere() != null && !q1
-						.getWhere().equals(q2.getWhere()))
+						.getWhere().toString().equals(q2.getWhere().toString()))
 						|| (q1.getWhere() == null && q2
 								.getWhere() != null)
 						|| ((q1.getWhere() != null && q2
 								.getWhere() == null))) {
-					res += "WHERE: not identical!<br>";
+					res += "<span style=\"font-weight:bold;\">WHERE:</span>   <span style=\"color:red;\">not identical!</span><br>";
 				}
 				
 				if ((q1.getGroupBy() != null
 						&& q2.getGroupBy() != null && !q1
-						.getGroupBy().equals(q2.getGroupBy()))
+						.getGroupBy().toString().equals(q2.getGroupBy().toString()))
 						|| (q1.getGroupBy() == null && q2
 								.getGroupBy() != null)
 						|| ((q1.getGroupBy() != null && q2
 								.getGroupBy() == null))) {
-					res += "GROUP BY: not identical!<br>";
+					res += "<span style=\"font-weight:bold;\">GROUP BY:</span>   <span style=\"color:red;\">not identical!</span><br>";
 				}
 				
 				if ((q1.getOrderBy() != null
-						&& q2.getOrderBy() != null && !q1
-						.getOrderBy().equals(q2.getOrderBy()))
+						&& q2.getOrderBy() != null && !equalsVectors(q1.getOrderBy(), q2.getOrderBy()))
 						|| (q1.getOrderBy() == null && q2
 								.getOrderBy() != null)
 						|| ((q1.getOrderBy() != null && q2
 								.getOrderBy() == null))) {
-					res += "ORDER BY: not identical!<br>";
+					res += "<span style=\"font-weight:bold;\">ORDER BY:</span>   <span style=\"color:red;\">not identical!</span><br>";
 				}
 				
 		return res;

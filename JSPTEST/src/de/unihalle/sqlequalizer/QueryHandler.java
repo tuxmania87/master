@@ -3,6 +3,8 @@ package de.unihalle.sqlequalizer;
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
@@ -30,6 +32,8 @@ public class QueryHandler {
 	public ZQuery workingCopy = null;
 	public QueryHandler parent = null;
 
+	private boolean respectColumnOrder = false;
+	
 	public ZExp makeAliases(ZExp exp, Vector<ZFromItem> fromItems)
 			throws Exception {
 
@@ -123,7 +127,7 @@ public class QueryHandler {
 			qh.parent = this;
 			qh.tables = (ArrayList<Table>) this.tables.clone();
 			qh.setOriginalStatement(exp.toString());
-			return qh.equalize();
+			return qh.equalize(true);
 
 			// old
 			// return handleQUERY((ZQuery)exp);
@@ -164,6 +168,23 @@ public class QueryHandler {
 	}
 
 	public ZQuery handleQUERY(ZQuery q) throws Exception {
+		
+		class tempSorter implements Comparator<ZSelectItem> {
+
+			@Override
+			public int compare(ZSelectItem o1, ZSelectItem o2) {
+				
+				return o1.getColumn().compareTo(o2.getColumn());
+				
+			}
+			
+		}
+		
+		if(!this.respectColumnOrder) {
+			Collections.sort(q.getSelect(), new tempSorter());
+			Collections.sort(original.getSelect(), new tempSorter());
+		}
+		
 		before = new MetaQueryInfo(original);
 		handleFROMClause(q.getFrom());
 		Vector<ZSelectItem> newSELECTClause = handleSELECTClause(q.getSelect());
@@ -258,15 +279,25 @@ public class QueryHandler {
 								targetTable = tab.name;
 							} else {
 								throw new Exception(
-										"Nicht eindeutig: Spalte "
+										"Ambiguous column name: "
 												+ c.name
-												+ " kommt in mehreren Tabellen vor! Bitte Spaltenalias verwenden!");
+												+ " is contained by more than one tables you mentioned in FROM.");
 							}
 						}
 					}
 				}
 				// targetTable lokup
-				String addString = Zuordnung.get(targetTable) + "." + split[0];
+				
+				String foundTable = Zuordnung.get(targetTable);
+				
+				if(foundTable == null) {
+					throw new Exception(
+							"Column name unknown: "
+									+ split[0]
+									+ " is not contained by any table in FROM!");
+				}
+				
+				String addString = foundTable + "." + split[0];
 				if (z.getAggregate() != null) {
 					addString = z.getAggregate() + "(" + addString + ")";
 				}
@@ -274,6 +305,9 @@ public class QueryHandler {
 			}
 
 		}
+		
+		
+		
 		return ret;
 	}
 
@@ -344,7 +378,10 @@ public class QueryHandler {
 	}
 
 	public void setOriginalStatement(String s) throws ParseException {
-		if (s.charAt(s.length() - 1) != ';')
+		
+		
+		
+		if (s.trim().charAt(s.trim().length() - 1) != ';')
 			s += ';';
 
 		ZqlParser zp = new ZqlParser();
@@ -398,7 +435,8 @@ public class QueryHandler {
 		return true;
 	}
 
-	public ZQuery equalize() throws Exception {
+	public ZQuery equalize(boolean respect) throws Exception {
+		this.respectColumnOrder = respect;
 		if (parent != null)
 			aliascount = parent.aliascount;
 		return (ZQuery) handleQUERY(workingCopy);

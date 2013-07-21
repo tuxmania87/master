@@ -9,14 +9,14 @@
 </head>
 <body>
 <div id="main_center">
-
+<%@ include file="nav.jsp" %>
 <h2>list of available tasks</h2>
 <ul>
 <%
 Task[] t = Task.getAllTasks();
 for(int i=0; i<t.length; i++) {
 	out.println("<li><a href=\"task.jsp?t="+t[i].id+"\">"+t[i].text+"</a></li>");	 
-}
+} 
 %>
 </ul>
 </div>

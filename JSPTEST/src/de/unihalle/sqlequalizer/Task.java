@@ -20,11 +20,12 @@ public class Task {
 	public int[] externalDbs = null;
 	public boolean respectRow = false;
 	public boolean respectColumn = false;
+	public int schemaid = 0;
 	
 	public Task(Connection c, int id) {
 		try {
 			PreparedStatement ps = c
-					.prepareStatement("select  t.id,schemaid,description,schema,respectColumnorder from tasks t, dbschema d where t.id = ? AND schemaid=d.id");
+					.prepareStatement("select  t.id,schemaid,description,schem,respectColumnorder from tasks t left join dbschema d on schemaid=d.id where t.id = ?");
 			ps.setInt(1, id);
 
 			ResultSet rs = ps.executeQuery();
@@ -35,9 +36,9 @@ public class Task {
 				
 				this.id = rs.getInt("id");
 				text = rs.getString("description");
-				dbschema = rs.getString("schema").split(";");
-				
-				
+				dbschema = rs.getString("schem").split(";");
+				schemaid = rs.getInt("schemaid");
+				respectColumn = rs.getBoolean("respectColumnorder");
 				//load Sample Solutions
 				ArrayList<String> ssl = new ArrayList<String>();
 				PreparedStatement ps2 = c.prepareStatement("select sqlstatement from samplesolutions where taskid = ?");
@@ -74,8 +75,7 @@ public class Task {
 	}
 
 	public static Connection connect() throws Exception {
-		Class.forName("org.sqlite.JDBC");
-		return DriverManager.getConnection("jdbc:sqlite:e:\\users\\robert\\workspace\\jsptest\\test.db");
+		return Connector.getConnection();
 
 	}
 

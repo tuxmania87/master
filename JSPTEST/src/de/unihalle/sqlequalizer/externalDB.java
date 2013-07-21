@@ -11,8 +11,8 @@ public class externalDB {
 	public static ResultSet executeQueryOn(String q, int dbid) throws Exception{
 	
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
-			Class.forName("org.sqlite.JDBC");
-			Connection conn =  DriverManager.getConnection("jdbc:sqlite:e:\\users\\robert\\workspace\\jsptest\\test.db");
+			
+			Connection conn =  Connector.getConnection();
 			PreparedStatement ps = conn.prepareStatement("select * from external_database where id = ?");
 			ps.setInt(1, dbid);
 			
