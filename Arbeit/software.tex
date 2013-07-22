@@ -127,10 +127,82 @@ Trotz dieser Einschränkungen sind alle Konzepte, die in dieser Arbeit vorgestel
 
 %TODO: CREATE TABLE
 
-\section{Java Server Pages}
+\section{JavaServer Pages}
 
-\subsection{Überblick}
+JavaServer Pages (JSP), ist eine auf JHTML basierende Web-Programmiersprache zur dynamischen Erzeugung von HTML- oder XML-Dokumenten auf einem Webserver. Im Jahre 1999 wurden die JSP von Sun Microsystems veröffentlicht. Man kann sich die JSP als High-Level Abstraktion eines Java Servlets vorstellen. JSP werden zur Laufzeit in Servlets umgewandelt. Jedes dieser JSP-Servlets wird gecached und wiederverwendet, bis die Original-JSP verändert wurde. Ein skizzenhaftes Schema, finden wir in Abbildung \ref{fig:jsp}
 
-\subsection{Einbettung in JSP}
+\begin{figure}[h]
+\begin{subfigure}[b]{.4\textwidth}
+ \includegraphics[scale=0.3]{Bilder/jsp.png}
+ \caption{JSP-Konzep}
+ \label{fig:jsp}
+\end{subfigure}
+\begin{subfigure}[b]{.5\textwidth}
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Objekt} & \textbf{Typ} \\\hline
+request	& javax.servlet.http.HttpServletRequest \\\hline
+response & javax.servlet.http.HttpServletResponse \\\hline
+session & javax.servlet.http.HttpSession \\\hline
+pageContext	& javax.servlet.jsp.PageContext \\\hline
+application	& javax.servlet.ServletContext \\\hline
+config& javax.servlet.ServletConfig \\ \hline
+out	& javax.servlet.jsp.JspWriter \\\hline
+exception & java.lang.Throwable \\\hline
+\end{tabular}
+\caption{Implizte Objekte in JSP}
+\label{fig:implicitObj}
+\end{subfigure}
+\caption{}
+\end{figure}
 
-\subsection{Log}
+
+Man könnte die JSP als Erweiterung der Servlets ansehen, da die JSP alle Funktionen dieser übernehmen. Zusätzlich können auch eigene Tag-Libraries erstellt werden. JSP funktioniert ähnlich wie ASP oder PHP. Sowohl Java-Servlets, als auch die JSP, haben die Aufgabe Javacode per HTML dem Nutzer verfügbar zu machen. Im Gegensatz zu den Java-Servlets, die komplett aus Javacode bestehen, bestehen JSP-Dateien aus HTML mit kurzen Einschüben von Javacode. Während man also bei den Servlets HTML-Ausgaben nur innerhalb einer Funktion bewerkstelligen kann, ist es möglich bei den JSP direkt HTML auszuschreiben.
+
+\subsection{Funktionsweise}
+
+Wie bereits erwähnt, handelt es sich bei einer JSP-Seite um ein HTML-Dokument. Daher gibt es hier keine expliziten Funktionen oder Klassen, die die Ausgabe eines Javaprogrammes steuern. Stattdessen stehen dem Programmierer unter JSP mehrere implizite Objekte zur Verfügung, um deren Konstruktion er sich nicht kümmern muss. Eine Übersicht der impliziten Objekte finden wir in Abbildung \ref{fig:implicitObj}. Da eine JSP-Datei im eigentlichem Sinne eine (J)HTML-Seite ist, muss der Javacode abgegrenzt werden. Wir schreiben sämtlichen Javacode daher innerhalb von \verb|<% %>|. Diese Funktionieren ähnlich wie \verb|<?php ?>| in PHP.
+
+Wir gehen nun kurz auf wesentliche implizite Objekte ein. Das Objekt \textbf{request} beinhaltet alle Funktionen und Daten, die wir benötigen um die HTTP-Anfrage zu verarbeiten. Wir haben \mbox{z. B.} Zugriff auf: Cookies, HTTP-Header, übertragene POST- oder GET-Variablen (hier Parameter genannt).
+
+Das \textbf{response}-Objekt ist das genaue Gegenstück zum request-Objekt. Es enthält alle Informationen für die HTTP-Response und wird vor allem genutzt, um den Content-Type festzulegen und Response-Header oder Cookies zu setzen. 
+
+Das \textbf{session}-Objekt regelt alle wichtigen Funktionen für die aktuelle Session. Wir können hier die Session-ID abfragen, sowie Objekte zur Session hinzufügen und entfernen.
+
+Als letztes, möchten wir das \textbf{out}-Objekt erwähnen. Es repräsentiert einen BufferedWriterm, genauer JSPWriter. Das Objekt kennt im Wesentlichen die Funktionen \verb|print| und \verb|println|. In PHP entspricht dies einem \verb|echo| oder \verb|print| Befehl. Der so gedruckte Text, wird zur Laufzeit in die entstehende HTML-Datei geschrieben. 
+
+Das Folgende Beispiel soll die Verwendung der impliziten Objekte verdeutlichen, ist aber, aus Platzgründen, stark vereinfacht.
+\lstset{language=Java}
+\begin{lstlisting}
+<%@page import="java.util.Date"%>
+<%@page language="java" contentType="text/html" 
+		pageEncoding="UTF-8" %>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head><title>Datum: <% out.print(new Date()); %></title></head>
+<body>Zu dieser Seite sind 
+<% out.print(request.getCookies().length); %> 
+Cookies gespeichert.
+</body></html>
+\end{lstlisting}
+
+\section{Auflistung der Software}
+
+Um die Programmierung nachzuvollziehen, werden im Folgenden, alle Programme mit Versionsnummer angegeben. Weiterhin wird vermerkt, wo die Software im Internet zu finden ist.
+
+\begin{tabular}{p{10cm}r}
+\textbf{Software}: ZQL-Parser & \textbf{Version}: 2011-08-26\\
+\multicolumn{2}{p{1\textwidth}}{\textbf{Beschreibung}: Ein Open-Source-Parser, der mit JavaCC, einem Java-Parser-Generator, realisiert wurde. Wir haben bereits einige Schwächen bemerkt, er ist aber leicht erweiterbar, da er quelloffen ist und unter der GNU GPLv3 steht.}\\
+\multicolumn{2}{l}{\textbf{URL}: \url{http://zql.sourceforge.net/}}
+\end{tabular}\\
+
+\begin{tabular}{p{10cm}r}
+\textbf{Software}: Apache Tomcat & \textbf{Version}:6.0\\
+\multicolumn{2}{p{1\textwidth}}{\textbf{Beschreibung}: Tomcat ist ein Webserver, der in einem Web-Container die Servlet- und die JSP-Engine bereithält. Mit ihm ist es möglich, JSP-Seiten zu betreiben.}\\
+\multicolumn{2}{l}{\textbf{URL}: \url{http://tomcat.apache.org/}}
+\end{tabular}\\
+
+\begin{tabular}{p{10cm}r}
+\textbf{Software}: Oracle JDK  & \textbf{Version}:1.6.0\\
+\multicolumn{2}{p{1\textwidth}}{\textbf{Beschreibung}: Das Java-JDK ist notwendig um Programme zu übersetzen und auszuführen. Wir verwenden Version 1.6.0, da im universitärem Umfeld, in dessen Rahmen unser Programm entsteht, häufig noch diese Version verwendet wird. Unser Programm ist jedoch auch kompatibel zu JDK 1.7.0.}\\
+\multicolumn{2}{l}{\textbf{URL}: \url{http://www.oracle.com/technetwork/java/javase/downloads/index.html}}
+\end{tabular}\\

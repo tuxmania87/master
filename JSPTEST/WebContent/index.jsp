@@ -1,5 +1,6 @@
 
 
+<%@page import="java.util.Date"%>
 <%@page import="java.io.File"%>
 <%@page import="de.unihalle.sqlequalizer.QueryUtils"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
@@ -15,6 +16,7 @@
 <body>
 <%@ include file="nav.jsp" %> 
 <div id="main_center">
+<% out.print(new Date().toString()); %>
 <span style="text-align:center;"><h2>welcome to the sql-equalizer</h2></span>
 TODO Statistik Übersichten<br>
 <a href="tasks.jsp">Aufgaben</a>

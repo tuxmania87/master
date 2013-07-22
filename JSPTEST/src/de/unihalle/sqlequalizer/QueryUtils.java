@@ -4,11 +4,14 @@ import java.lang.reflect.Field;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Set;
 import java.util.Vector;
 
@@ -641,7 +644,40 @@ public class QueryUtils {
 			ret = sortTree(sortLeafs(ret));
 		} while (!old.equals(ret.toString()));
 
+		
+		//duplicate are beeing removed now
+		ret = removeDuplicates(ret);
+		
+		
 		return ret;
+	}
+	
+	public static ZExp removeDuplicates(ZExp exp) {
+		
+		if(exp instanceof ZExpression) {
+			ZExpression casted = (ZExpression) exp;
+			if(!casted.getOperator().toLowerCase().equals("and") && !casted.getOperator().toLowerCase().equals("or")) 
+				return exp;
+			else {
+				ZExpression newExp = new ZExpression(casted.getOperator());
+				String checker = "";
+				
+				Iterator<ZExp> childs = casted.getOperands().iterator();
+				while(childs.hasNext()) {
+					ZExp current = childs.next();
+					if(checker.equals(current.toString())) {
+					} else {
+						checker = current.toString();
+						newExp.addOperand(removeDuplicates(current));
+					}
+				}
+				
+				return newExp;
+			}
+		}
+		
+		return exp;
+		
 	}
 
 	public static String compareMetaInfos(MetaQueryInfo m1, MetaQueryInfo m2)
@@ -713,6 +749,7 @@ public class QueryUtils {
 		return res;
 		
 	}
+	
 	
 	public static ArrayList<String[]> createPermutations(String[][] right,String[][] data, int i) {
 		if( i == data.length) {
@@ -1021,6 +1058,110 @@ public class QueryUtils {
 		return true;
 	}
 
+	
+	
+	private static ZExp formatAllNumerics(ZExp root, int places) {
+		if(root instanceof ZConstant) {
+			ZConstant c = (ZConstant) root;
+			if(c.getType() == ZConstant.NUMBER) {
+				
+				String pattern = "0";
+				if(places > 0) {
+					pattern = "0.";
+					for(int i=0; i<places; i++)
+						pattern += "0";
+				}
+				
+				NumberFormat nf = NumberFormat.getNumberInstance(Locale.ENGLISH);
+				DecimalFormat df = (DecimalFormat)nf;
+				df.applyPattern(pattern);
+				
+				return new ZConstant( df.format(Double.parseDouble(c.getValue())), ZConstant.NUMBER);
+			}
+		}
+		
+		if(root instanceof ZExpression) {
+			ZExpression z = (ZExpression) root;
+			Iterator<ZExp> it = z.getOperands().iterator();
+			
+			ZExpression  newExp = new ZExpression(z.getOperator());
+			while(it.hasNext()) {
+				newExp.addOperand(formatAllNumerics(it.next(), places));
+			}
+			return newExp;
+		}
+		
+		return root;
+	}
+	
+	public static ZExp testf1(ZExp exp, Vector<ZFromItem> fromList, QueryHandler qh) {
+		if (exp instanceof ZExpression) {
+			ZExpression z = (ZExpression) exp;
+			if(z.getOperator().equals("=") || 
+				z.getOperator().equals(">=") ||
+				z.getOperator().equals("<=") ||
+				z.getOperator().equals(">") ||
+				z.getOperator().equals("<")) {
+					
+				
+				ZConstant dominantConstant = null;
+				if(z.getOperand(0) instanceof ZConstant && ((ZConstant) z.getOperand(0)).getType() == ZConstant.COLUMNNAME) {
+					dominantConstant = (ZConstant) z.getOperand(0);
+				}
+				
+				if(z.getOperand(1) instanceof ZConstant && ((ZConstant) z.getOperand(1)).getType() == ZConstant.COLUMNNAME) {
+					dominantConstant = (ZConstant) z.getOperand(1);
+				}
+				
+				if(dominantConstant == null)
+					return exp;
+				else {
+					//look for datatype in definition
+					String tablealias = dominantConstant.getValue().split("\\.")[0];
+					String attributename = dominantConstant.getValue().split("\\.")[1];
+					String tablename = null;
+					
+					for(int i=0; i< fromList.size(); i++) {
+						ZFromItem zfi = fromList.get(i);
+						if(zfi.getAlias().equals(tablealias))
+							tablename = zfi.getTable();
+					}
+					
+					Integer places = null;
+					
+					for(int i=0; i< qh.tables.size();i++) {
+						Table t = qh.tables.get(i);
+						if(t.name.equals(tablename)) {
+							for(int j=0; j< t.columns.size(); j++) {
+								if(t.columns.get(j).name.equals(attributename) && t.columns.get(j).type == Column.NUMBER) {
+									places = new Integer(t.columns.get(j).digitsAfterColon);
+								}
+							}
+						}
+					}
+					
+					if(places == null)
+						return exp;
+					else {
+						return formatAllNumerics(exp, places.intValue());
+					}
+					
+					
+				}
+				
+			} else {
+				ZExpression newExp = new ZExpression(z.getOperator());
+				Iterator<ZExp> it = z.getOperands().iterator();
+				while(it.hasNext()) {
+					newExp.addOperand(testf1(it.next(),fromList,qh));
+				
+				}
+				return newExp;
+			}
+		}
+		return exp;
+	}
+	
 	public static ZExp evaluateArithmetic(ZExp exp) {
 
 		if (exp instanceof ZConstant)
@@ -1045,12 +1186,13 @@ public class QueryUtils {
 			// check childs
 			if (ret.getOperator().equals("+")
 					&& areChildsNumeric(ret.getOperands())) {
-				return new ZConstant(
-						String.valueOf(Double.parseDouble(((ZConstant) ret
+					double val = Double.parseDouble(((ZConstant) ret
 								.getOperand(0)).getValue())
 								+ Double.parseDouble(((ZConstant) ret
-										.getOperand(1)).getValue())),
-						ZConstant.NUMBER);
+										.getOperand(1)).getValue());
+					
+					
+					return new ZConstant(String.valueOf(val),ZConstant.NUMBER);
 			}
 
 			if (ret.getOperator().equals("-")

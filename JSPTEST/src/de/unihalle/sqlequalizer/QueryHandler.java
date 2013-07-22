@@ -34,89 +34,86 @@ public class QueryHandler {
 
 	private boolean respectColumnOrder = false;
 
+	public String getCorrectAlias(String data, Vector<ZFromItem> fromItems, HashMap<String, String> sub) throws Exception{
+		
+		String[] split = data.split("\\.");
+
+		// do we already have alias? then just change it!
+		if (split.length > 1) {
+			// if Zuordnung.get(split[0]) == null then
+			// we are maybe in a subquery and have to checck parent
+			// alias table (for all parents)
+
+			if (Zuordnung.get(split[0]) == null) {
+				QueryHandler iterator = this.parent;
+
+				while (iterator != null) {
+					if (iterator.Zuordnung.get(split[0]) != null) {
+						return sub.get(iterator.Zuordnung.get(split[0])) + "."+ split[1];
+					}
+					iterator = iterator.parent;
+				}
+
+			} else {
+				return sub.get(Zuordnung.get(split[0])) + "."+ split[1];
+			}
+
+			throw new Exception("couldnt find matching table!");
+
+		} else if (split.length == 1) {
+			String targetTable = null;
+			// lookup tables
+			Iterator<Table> it = tables.iterator();
+			while (it.hasNext()) {
+				Table t = it.next();
+				Iterator<Column> it2 = t.columns.iterator();
+				while (it2.hasNext()) {
+					if (split[0].equals(it2.next().name)) {
+						if (QueryUtils.isTableInFromClause(t.name,
+								fromItems)) {
+							if (targetTable == null) {
+								// check ob tabelle mehrfach in HashTable
+								// vorkommt
+								int i = 1;
+								while (Zuordnung.containsKey(t.name + i)) {
+									i++;
+								}
+								if (i > 1) {
+									throw new Exception(
+											"Tabelle '"
+													+ t.name
+													+ "' kommt mehrfach in der FROM Klausel vor. Nicht eindeutig auf welche sich '"
+													+ split[0]
+													+ "' bezieht!");
+								}
+								targetTable = t.name;
+							} else {
+								throw new Exception(
+										"Tupelvariable in mehreren Tabellen vorhanden! Ambigious!");
+							}
+						}
+					}
+				}
+			}
+			// we found alias, located in targetTable
+			if (targetTable == null) {
+				throw new Exception(
+						"Das Tupel "
+								+ split[0]
+								+ " konnte in keiner der Tabellen in der FROM Klausel gefunden werden!");
+			}
+			return sub.get(Zuordnung.get(targetTable)) + "."+ split[0];
+		}
+		return data;
+	}
+	
 	public ZExp makeAliases(ZExp exp, Vector<ZFromItem> fromItems, HashMap<String, String> sub)
 			throws Exception {
 
 		if (exp instanceof ZConstant
 				&& ((ZConstant) exp).getType() == ZConstant.COLUMNNAME) {
-
-			// TODO:
-			String a = ((ZConstant) exp).toString();
-
-			String[] split = a.split("\\.");
-
-			// do we already have alias? then just change it!
-			if (split.length > 1) {
-				// if Zuordnung.get(split[0]) == null then
-				// we are maybe in a subquery and have to checck parent
-				// alias table (for all parents)
-
-				if (Zuordnung.get(split[0]) == null) {
-					QueryHandler iterator = this.parent;
-
-					while (iterator != null) {
-						if (iterator.Zuordnung.get(split[0]) != null) {
-							return new ZConstant(
-									sub.get(iterator.Zuordnung.get(split[0])) + "."
-											+ split[1],
-									((ZConstant) exp).getType());
-						}
-						iterator = iterator.parent;
-					}
-
-				} else {
-					return new ZConstant(sub.get(Zuordnung.get(split[0])) + "."
-							+ split[1], ((ZConstant) exp).getType());
-				}
-
-				throw new Exception("couldnt find matching table!");
-
-			} else if (split.length == 1) {
-				String targetTable = null;
-				// lookup tables
-				Iterator<Table> it = tables.iterator();
-				while (it.hasNext()) {
-					Table t = it.next();
-					Iterator<Column> it2 = t.columns.iterator();
-					while (it2.hasNext()) {
-						if (split[0].equals(it2.next().name)) {
-							if (QueryUtils.isTableInFromClause(t.name,
-									fromItems)) {
-								if (targetTable == null) {
-									// check ob tabelle mehrfach in HashTable
-									// vorkommt
-									int i = 1;
-									while (Zuordnung.containsKey(t.name + i)) {
-										i++;
-									}
-									if (i > 1) {
-										throw new Exception(
-												"Tabelle '"
-														+ t.name
-														+ "' kommt mehrfach in der FROM Klausel vor. Nicht eindeutig auf welche sich '"
-														+ split[0]
-														+ "' bezieht!");
-									}
-									targetTable = t.name;
-								} else {
-									throw new Exception(
-											"Tupelvariable in mehreren Tabellen vorhanden! Ambigious!");
-								}
-							}
-						}
-					}
-				}
-				// we found alias, located in targetTable
-				if (targetTable == null) {
-					throw new Exception(
-							"Das Tupel "
-									+ split[0]
-									+ " konnte in keiner der Tabellen in der FROM Klausel gefunden werden!");
-				}
-				return new ZConstant(sub.get(Zuordnung.get(targetTable)) + "."
-						+ split[0], ZConstant.COLUMNNAME);
-
-			}
+			return new ZConstant(getCorrectAlias(((ZConstant) exp).getValue(), fromItems, sub), ((ZConstant) exp).getType());
+			
 		}
 		if (exp instanceof ZConstant)
 			return exp;
@@ -407,10 +404,10 @@ public class QueryHandler {
 
 		whereCondition = QueryUtils.addImplicitFormulas(whereCondition, q);
 		whereCondition = QueryUtils.evaluateArithmetic(whereCondition);
+		
+		whereCondition = QueryUtils.testf1(whereCondition, from, q);
 
-		// elimnate duplicate trees somewhere , maybe after sorting for easier
-		// detection?
-
+		
 		// KNF must be restored because we added possibly and nodes in between
 		// the tree
 		whereCondition = tranformToKNF(whereCondition);
