@@ -10,7 +10,6 @@ public class externalDB {
 	
 	public static ResultSet executeQueryOn(String q, int dbid) throws Exception{
 	
-			Class.forName("com.mysql.jdbc.Driver").newInstance();
 			
 			Connection conn =  Connector.getConnection();
 			PreparedStatement ps = conn.prepareStatement("select * from external_database where id = ?");
@@ -20,7 +19,7 @@ public class externalDB {
 			String dbuser = null;
 			String dbpw = null;
 			String dburi = null;
-			
+			String typ = null;
 			ResultSet rs = ps.executeQuery();
 			
 			while(rs.next()) {
@@ -28,14 +27,27 @@ public class externalDB {
 				dbuser = rs.getString("username");
 				dbpw = rs.getString("password");
 				dburi = rs.getString("uri");
+				typ  = rs.getString("typ");
 			}
 			
 			if(dbname == null)
 				return null;
 			conn.close();
-			conn = DriverManager.getConnection("jdbc:mysql://"+dburi+"/"+dbname+"?user="+dbuser+"&password="+dbpw);
 			
-			Statement s = conn.createStatement();
+			if(typ.toLowerCase().trim().equals("mysql")) {
+				Class.forName("com.mysql.jdbc.Driver");
+				conn = DriverManager.getConnection("jdbc:mysql://"+dburi+"/"+dbname+"?user="+dbuser+"&password="+dbpw);
+			} else if(typ.toLowerCase().trim().equals("postgresql")) {
+				Class.forName("org.postgresql.Driver");
+				conn = DriverManager.getConnection("jdbc:postgresql://"+dburi+"/"+dbname+"?user="+dbuser+"&password="+dbpw);
+			} else if(typ.toLowerCase().trim().equals("oracledb")) {
+				Class.forName("oracle.jdbc.driver.OracleDriver");
+				conn = DriverManager.getConnection("jdbc:oracle:thin:@"+dburi+":"+dbname, dbuser, dbpw);
+			} else {
+				throw new Exception("databse typ: "+typ+" not supported.");
+			}
+			
+			Statement s = conn.createStatement(ResultSet.TYPE_FORWARD_ONLY,ResultSet.CONCUR_UPDATABLE);
 			s.execute(q);
 			rs = s.getResultSet();
 			

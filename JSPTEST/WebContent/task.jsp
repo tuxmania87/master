@@ -254,8 +254,8 @@
 									}
 									out.println("</tr>");
 
-									r1.beforeFirst();
-									r2.beforeFirst();
+									//r1.beforeFirst();
+									//r2.beforeFirst();
 									
 									while (r1.next()) {
 										out.println("<tr>");

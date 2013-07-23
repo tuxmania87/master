@@ -55,6 +55,7 @@ public class QueryUtils {
 	public static String orderList[] = { "OR", "<=", ">=", "<", ">", "=",
 			"IS NULL", "IS NOT NULL", "EXISTS", "ANY", "ALL" };
 
+	public static String validDBtypes[] = { "mysql", "postgresql", "oracle" };
 	public static String commutativeOperators[] = { "=", "OR", "AND", "+" };
 	public static String comparisonOperators[] = { "<", "<=", ">", ">=", "=" };
 	public static String subQueryOperators[] = { "EXISTS", "ANY", "SOME", "ALL" };
@@ -1094,7 +1095,7 @@ public class QueryUtils {
 		return root;
 	}
 	
-	public static ZExp testf1(ZExp exp, Vector<ZFromItem> fromList, QueryHandler qh) {
+	public static ZExp correctDecimalPlaces(ZExp exp, Vector<ZFromItem> fromList, QueryHandler qh) {
 		if (exp instanceof ZExpression) {
 			ZExpression z = (ZExpression) exp;
 			if(z.getOperator().equals("=") || 
@@ -1153,7 +1154,7 @@ public class QueryUtils {
 				ZExpression newExp = new ZExpression(z.getOperator());
 				Iterator<ZExp> it = z.getOperands().iterator();
 				while(it.hasNext()) {
-					newExp.addOperand(testf1(it.next(),fromList,qh));
+					newExp.addOperand(correctDecimalPlaces(it.next(),fromList,qh));
 				
 				}
 				return newExp;

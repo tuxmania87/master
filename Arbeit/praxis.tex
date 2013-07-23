@@ -26,27 +26,27 @@ Im folgendem Abschnitt beschreiben wir die Struktur des Programms und gehen, in 
 
 \subsection{Datenbankstruktur}
 
-Wir benutzen eine Datenbank um Aufgabenstellungen, Nutzer, Lösungsversuche und vieles mehr abzuspeichern. Im folgenden werden die einzelnen Tabellen erläutert. Ein ER-Diagramm zur verwendeten Datenbankstruktur finden wir im Anhang. 
+Wir benutzen eine Datenbank um Aufgabenstellungen, Nutzer, Lösungsversuche und vieles mehr abzuspeichern. Im folgenden werden die einzelnen Tabellen erläutert. Wir verwenden dazu bewusst eine abstraktere Form der Beschreibung. Begründet ist dies, durch die Vielfalt der verschiedenen DBMS und ihrer verschiedenen Auslegung der Data Defintion Language. Im Prototypen verwenden wir das DBMS MySQL, man könnte aber alle DBMS verwenden, die einen JDBC Connector haben.
 
 \textbf{attempts} (\underline{id}, userid $\to$ user(id), taskid $\to$ tasks(id), timeat ,sqlstatement ,correct)
 
 Die Tabelle \verb|attempts| speichert je einen Lösungsversuch eines Benutzers. Dabei wird die SQL-Anfrage (\verb|sqlstatement|) eines Benutzers (mit der ID \verb|userid|) mit der Uhrzeit (\verb|timeat|) abgespeichert. Weiterhin wird vermerkt, welche Aufgabe (\verb|taskid|) der Student lösen wollte und, ob dieser Korrekt war.
 
-\textbf{dbschema} (taskid $\to$ tasks(id), schema)
+\textbf{dbschema} (taskid $\to$ tasks(id), name, schema)
 
-In der Tabelle \verb|dbschema| speichern wir zu jeder Aufgabe \verb|taskid|, wie die Struktur der Tabelle dafür aussieht. Wir speichern dazu eine, möglichst SQL-92 konforme, \verb|CREATE TABLE|-Anweisung im Attribut \verb|schema|.
+In der Tabelle \verb|dbschema| speichern wir zu jeder Aufgabe \verb|taskid|, wie die Struktur der Tabelle dafür aussieht. Wir speichern dazu, möglichst SQL-92 konforme, \verb|CREATE TABLE|-Anweisungen im Attribut \verb|schema|. Wir ordnen dem Schema außerdem einen Namen zu, damit es später einfach wiederzufinden ist.
 
-\textbf{external\_database} (id, uri, dbname, username, password)
+\textbf{external\_database} (id, uri, dbname, username, password, typ)
 
-Die Tabelle \verb|external_database| speichert die Zugriffsdaten (\verb|username,password|) einer externen Datenbank, die verwendet wird, um die notwendigen Bedingung einer Äquivalenz zu prüfen. Weiterhin speichern wir den Zugriffspfad auf diese Datenbank (\verb|uri|) und den Datenbanknamen (\verb|dbname|).
+Die Tabelle \verb|external_database| speichert die Zugriffsdaten (\verb|username,password|) einer externen Datenbank, die verwendet wird, um die notwendigen Bedingung einer Äquivalenz zu prüfen. Weiterhin speichern wir den Zugriffspfad auf diese Datenbank (\verb|uri|) und den Datenbanknamen (\verb|dbname|). Schließlich speichern wir noch den Typ. Im Moment werden mysql, postgresql und oracle als Typ unterstützt. Wir gehen später darauf ein, wie wir die Funktionalität auf noch mehr Datenbanken ausweiten können.
 
 \textbf{samplesolutions} (id, taskid, sqlstatement)
 
 Die Musterlösung für eine Aufgabe, wird in der Tabelle \verb|samplesolutions| gespeichert. Wir erfassen dabei die Aufgabennummer (\verb|taskid|), sowie die Musterlösung als SQL-Anfrage (\verb|sqlstatement|). Wir verwenden einen künstlichen Schlüssel \verb|id|, da es unter Umständen mehrere Musterlösungen zu einer Aufgabe geben kann.
 
-\textbf{tasks} (id, description, createdAt$^0$)
+\textbf{tasks} (id, description, respectColumnOrder, schemaid, createdAt$^0$)
 
-Die Aufgaben werden in der Tabelle \verb|tasks| gespeichert. Wir versehen jede Aufgabe mit einer \verb|id| und einer Beschreibung, in Form eines Sachtextes (\verb|description|). Optional können wir noch vermerken, wann die Aufgabe eingetragen wurde.
+Die Aufgaben werden in der Tabelle \verb|tasks| gespeichert. Wir versehen jede Aufgabe mit einer \verb|id| und einer Beschreibung, in Form eines Sachtextes (\verb|description|). Wir speichern, ob die Reihenfolge der Spalten (im \verb|SELECT|-Teil) eingehalten werden muss und, erfassen außerdem, welches Datenbankschema zu dieser Aufgabe zugeordnet werden soll. Optional können wir noch vermerken, wann die Aufgabe eingetragen wurde.
 
 \textbf{tasks\_db} (taskid $\to$ tasks(id), dbid $\to$ external\_database(id))
 
@@ -60,36 +60,49 @@ Einzelne Benutzer werden in der Tabelle \verb|users| erfasst. Neben den übliche
 
 In diesem Abschnitt werden wir die wichtigsten Klassen und Funktionen auflisten und erläutern. Eine vollständige Dokumentation aller Klassen, ist im Quellcode als Javadocs-Kommentare vorhanden. (TODO: evt Anhang).
 
-Im wesentlichen besteht das Programm aus zwei Hauptklassen. Mit diesen Hauptklassen können wir den gesamten Programmablauf steuern. Eingebettet werden diese Klassen dann, in eine JSP-Umgebung.
+Das Programm beinhaltet mehrere Prozesse, die sich aus der Abfolge mehrere Funktionen zusammensetzen. Im Folgenden werden alle wesentlichen Prozesse und deren Zusammensetzung erläutert. Wir gehen dabei auch auf Möglichkeiten zur Anpassung des Programms ein.
 
-\subsubsection{QueryUtils}
+\subsubsection{Prozess: Standardisieren einer SQL-Anfrage} 
 
-Die erste wesentliche Klasse ist \verb|QueryUtils|. Wie der Name andeutet, handelt es sich um eine Sammlung von Funktionen, die es erleichtert einzelne Teilschritte abzuarbeiten. Wir erläutern nun wichtige Funktionen dieser Klasse.
+Wir beschäftigen uns zu erst mit einer der Hauptfunktionen: das Standardisieren einer SQL-Anfrage. Die Klasse \verb|QueryHandler| kümmert sich um das Standardisieren einer SQL-Anfrage. Für jede SQL-Anfrage wird ein separates Objekt dieser Klasse erzeugt. Anschließend importieren wir das, zu Grunde liegende, Datenbankschema in das Objekt. Dies geschieht mit der Methode: \\\verb|boolean createTable(String createTableStatement)|\\
+Die Methode erwartet pro Aufruf ein, wenn möglich SQL-92 konformes, \verb|CREATE TABLE|-Statement. Nachdem wir das Datenbankschema eingelesen haben, importieren wir noch die zu standardisierende Anfrage. Dies geschieht mit der Methode:\\\verb|setOriginalStatement(String s)|\\ Das eingegebene Statement wird dann mit Hilfe des ZQL-Parsers eingelesen. Etwaige Fehler beim Parsen werden per Exception an den Nutzer weitergereicht. Mehr dazu im Abschnitt >>Webinterface<<. Wir kopieren das Statement außerdem, so dass wir intern zwei ZQuery-Objekte speichern, zum einen die Originalanfrage im Objekt \textbf{original}, die niemals verändert wird, zum Anderen eine Arbeitskopie im Objekt \textbf{workingCopy}, welche wir dann standardisieren. Nun ist das Datenbankschema eingelesen und die, zu verarbeitende, Anfrage liegt vor. Wir können den Standardisierungsprozess nun starten, mit der Methode: \\\verb|ZQuery[] equalize(boolean respect)|\\ 
+Als Eingabeparameter erhält sie die Information, ob die Reihenfolge im \verb|SELECT| respektiert werden soll, oder nicht. Im Abschnitt >>externe Datenbanken<< haben wir bereits darüber diskutiert, dass diese Funktion durchaus interessant sein kann. Weiterhin beobachten wir, dass die Methode nicht eine Anfrage, sondern ein Array von Anfragen zurückliefert. Wir erinnern uns an die Problematik der Selbstverbunde. Dort werden mehrere Permutationen der Tabellen unter \verb|FROM| auf die Anfrage angewandt. Es entstehen dann mehrere Anfragen, die alle semantisch äquivalent sind, aber Aufgrund ihrer unterschiedlichen Struktur alle, mit der Lösung des Lernenden abgeglichen werden müssen.
 
-Die Funktion \verb|addImplicitFormulas(ZExp exp, QueryHandler q)| erhält den Wurzelknoten eines Ausdrucks als \verb|exp|. Weiterhin übergeben wir ein Objekt vom Typ \verb|QueryHandler|. In dieser Klasse werden implizite Formeln hinzugefügt. Wie in Abschnitt \ref{subsubsec:implicitformulas} beschrieben, werden dem Ausdruck \verb|exp|  Formeln hinzugefügt, wenn der jeweilige vorhandene Operator nicht kommutativ ist. In einem solchen Fall fügen wir den gegenteiligen Operator mit hinzu. Der so entstandene Ausdruck wird neu konstruiert und zurückgegeben.
+Die Funktion \verb|equalize| startet die Funktion:\\
+\verb|handleQUERY(ZQuery q)|\\Zu beachten ist der Parameter. Da die Abfrage während des Standardisierens verändert wird, ist die ursprüngliche Anfrage des Studenten, unwiederbringlich, verändert. Damit dies nicht geschieht, entscheiden wir nun welche Anfrage zum Standardisieren übergeben wird. Wir übergeben hier das Objekt \textit{workingCopy}.
 
-Die Funktionen \verb|double adjust(String attribute, QueryHandler q)| und \\\verb|int places(String attribute, QueryHandler q)| funktionieren genau so, wie in Abschnitt \ref{subsubsec:implicitformulas} beschrieben. Sie werden als Hilfsfunktionen für \verb|addImplicitFormulas| benötigt.
+\verb|handleQUERY| speichert zunächst alle Metainformationen der Anfrage in einem Objekt der Klasse \verb|MetaQueryInfo|. Wie dies genau geschieht behandeln wir später, in diesem Kapitel. Anschließend verarbeitet \verb|handleQUERY| mit Hilfe der Methode:\\
+\verb|handleFROM|\\
+den \verb|FROM|-Teil unserer Anfrage. Die Verarbeitung hängt vom \verb|SELECT|-Teil ab. Wie bereits in Kapitel \ref{chap:theorie} besprochen, werden, abhängig vom \verb|SELECT|-Teil, die Tabellen zunächst sortiert. Anschließend erhalten alle Tabellen einen künstlichen Alias, der fortlaufend ist. In der Standardeinstellung des Programmes ist dies \verb|a1, a2, a3, ...| Die verwendeten Aliase werden nun in einer \textit{HashMap} als Attribut \textbf{Zuordnung} in der Klasse QueryHandler gespeichert. 
 
-Mit der Funktion \verb|String compareMetaInfos(MetaQueryInfo m1, MetaQueryInfo m2)| vergleichen wir zwei Mengen von Metainformationen zweier Anfragen. Wir benutzen dies, um die Informationen, welche beim Preprocessing gesammelt wurden, auszuwerten. Die Funktion erstellt eine Zeichenkette, welche die Informationen und Hinweise beinhaltet, die beim Vergleich der Metainformationen aufgefallen sind.
+Anschließend bearbeiten wir den \verb|SELECT|-Teil unserer Anfrage mit der Funktion:\\
+\verb|Vector<ZSelectItem> handleSELECTClause(Vector<ZSelectItem> sel)|\\
+Im wesentlichen ändern wir hier vorhandene Aliase in unsere automatisch erzeugten. Finden wir dabei Attribute, die keine Aliase besitzen und es mehrere Tabellen unter \verb|FROM| gibt, die dieses konkrete Attribut beinhalten, lösen wir eine Fehlermeldung aus, wegen Uneindeutigkeit.
 
-Da wir wollen, dass unsere Formel die KNF einhält, müssen wir das Distributivgesetz anwenden. Dies geschieht mit der Funktion \verb|ZExp distribute(ZExp r)|. Sie erhält den Wurzelknoten eines Ausdrucks und liefert einen neuen Wurzelknoten zurück, der dann den Ausdruck in KNF darstellt.
+Jetzt erstellen wir Permutationen der Tabellen in der \verb|FROM|-Liste. Wir gehen dabei vor, wie im Kapitel \ref{chap:theorie} beschrieben. Sind in unter \verb|FROM| keine zwei gleichen Tabelle, dann enthält die Menge der Permutationen nur die ursprüngliche Anordnung. Die nun folgenden Schritte werden für jede permutierte \verb|FROM|-Liste durchgeführt.
 
-Aufgrund der Besonderen Struktur des ZQL-Parserbaumes können Situationen entstehen, in denen wir, die in Abschnitt \ref{subsubsec:opcomp} beschrieben, Operatorkompression durchführen müssen. Dies geschieht mit der Funktion \verb|ZExp operatorCompression(ZExp exp, ZExp parent)|. Dabei stellt \verb|exp| den Wurzelnoten eines Ausdrucks dar. \verb|parent| bezeichnet den Elternknoten, initial ist dieser \verb|null|, wenn es keinen Elternknoten von \verb|exp| gibt. Zurückgeliefert wird ein neuer Wurzelknoten.
+\verb|equalize| fährt fort mit der Methode: \verb|ZExp handleWHERE(ZExp exp)|.\\
+Innerhalb dieser Methode erledigen wir alle Arbeiten, die im Abschnitt >>WHERE-Teil<< in Kapitel \ref{chap:theorie} erläutert wurden. Zunächst führen wir die künstlichen Aliase ein mit der Funktion \verb|makeAlias|. Dies geschieht in ähnlicher Weise, wie im \verb|SELECT|-Teil. \verb|makeAlias| sucht auch nach Unterabfragen. Findet es solche, werden diese ersetzt durch ihre standardisierte Form, indem der Standardisierungsprozess für diese rekursiv aufgerufen wird. Danach transformieren wir, mit der Funktion \verb|transformToKNF|, die aktuelle Form des \verb|WHERE|-Ausdrucks in eine konjunktive Normalform. Dabei bedient sich \verb|transformToKNF| der Funktionen:\\
+\verb|operatorCompression, pushDownNegate| und \verb|distribute|. Die Vorgehensweise entspricht der besprochenen im theoretischen Bereich dieser Arbeit. Wir ersetzen danach Unterabfragen durch \verb|EXISTS|-Unterabfragen, wenn möglich. Anschließend werden implizite Formeln hinzugefügt sowie arithmetische und logische Ausdrücke ausgewertet, soweit dies möglich ist. Gerade durch die letzten, beiden Teilschritte, kann es passieren, dass die konjunktive Normalform wieder zerstört worden ist. Daher wenden wir an dieser Stelle erneut \verb|transformToKNF| an. Als letzten Schritt sortieren wir den Ausdruck so, wie ausführlich im Bereich \ref{subsec:sort} beschrieben. Die Sortierung beinhaltet auch die Duplikateliminierung bei doppelten \verb|AND|- oder \verb|OR|-Operanden.
 
-\subsubsection{QueryHandler}
+\verb|handleQUERY| wendet sich jetzt dem \verb|GROUP BY|-Teil zu. Dieser wird in zwei Teilen abgearbeitet. ZQL trennt \verb|GROUP BY|- vom \verb|HAVING|-Teil. Im \verb|GROUP BY|-Teil sortieren wir lediglich lexikographisch, wie schon im \verb|SELECT|-Teil. Der \verb|HAVING|-Teil wird mit der Funktion \verb|handleWHERE| behandelt, da sich beide Ausdrücke strukturell gleichen.
 
-Die Klasse \verb|QueryHandler| ist für genau eine konkrete SQL-Anfrage zuständig. Diese Klasse beinhaltet daher kaum Klassenfunktionen (statische Funktionen), wie sie bei der Klasse \verb|QueryUtils| zu finden sind. Dreh- und Angelpunkt ist die Funktion \verb|ZQuery handleQUERY(ZQuery q)|. Sie erhält eine SQL-Anfrage, bearbeitet diese, und liefert sie dann zurück. 
+Der entstandene SQL-Ausdruck, in Form eines \verb|ZQuery|-Objektes, wird von \verb|handleQUERY| direkt zu \verb|equalize| zurückgeliefert. Der Standardisierungsprozess ist damit beendet. Abbildung \ref{fig:execPlan} soll die Reihenfolge der abgearbeiteten Funktionen noch einmal verdeutlichen. Schwarze Pfeile bedeuten eine iterative Abarbeitung und blaue Pfeile bedeuten Unterprogrammabrufe innerhalb einer Methode.
 
-Im ersten Schritt ruft sie die Funktion \verb|void handleFROMClause(Vector<ZFromItem> from)| auf. In dieser Funktion werden die Aliase der Tabellen automatisch benannt. Etwaige vorherige Aliase werden in einer HashMap gespeichert.
+\begin{figure}[h]
+\includegraphics[scale=0.39]{Bilder/execPlan.png}
+\caption{Einfacher Programmablaufplan}
+\label{fig:execPlan}
+\end{figure}
 
-Im nächsten Schritt ruft \verb|handleQuqery| die Funktion \verb|handleWHEREClause| auf. Diese Funktion kann als Hauptfunktion des gesamten Programms gesehen werden, da hier die meiste Arbeit verrichtet wird. \verb|handleWHEREClause| benennt zunächst alle Attribute in der \verb|WHERE|-Klausel um, indem der automatische Alias vom vorherigen Schritt eingefügt wird. Haben die Attribute bereits einen Alias als Präfix, so wird dieser durch den automatischen Alias ausgetauscht. Hat ein Attribut keinen Alias als Präfix, so wird im Datenbankschema gesucht, zu welcher Tabelle, die unter \verb|FROM| auftaucht, das Attribut gehört. Finden wir keine solche Tabelle oder finden wir mehrere Tabellen mit solchen Attributen, beendet die Funktion die Arbeit und wirft eine Exception, die den Sachverhalt erläutert. Nun wird die KNF hergestellt, indem alle Schritte vom Abschnitt \ref{subsubsec:implicitformulas} ausgeführt werden. Dabei helfen die Funktionen \verb|operatorCompression|, \verb|pushDownNegate| und \verb|distribute| der Klasse \verb|QueryUtils|. Anschließend werden Unterabfragen in \verb|EXISTS|-Unterabfragen umgewandelt mit \verb|replaceSubqueries| und syntaktische Varianten ersetzen wir mit \verb|replaceSyntacticVariantes|. Beide Funktionen sind wieder Teil der \verb|QueryUtils|-Klasse. Nun fügen wir implizite Formeln hinzu und werten arithmetische Ausdrücke aus mit \verb|evaluateArithmetic|.
-Der letzte Schritt ist die Sortierung nach den Kriterien, die in Abschnitt \ref{subsec:sort} erläutert wurden. Dies passiert in der Funktion \verb|sortedTree|, die sich auch die, dafür eigenen, Interfaces \verb|OperatorComparer| und \verb|LeafOrder| bedient. Es ist darauf hinzuweisen, dass für Unterabfragen jeweils wieder die Funktion \verb|handleQuery| ausgeführt wird. Damit ist die Abarbeitung des \verb|WHERE|-Teils beendet.
+\subsubsection{Prozess: Verwenden von externen Datenbanken} 
 
-Die Abarbeitung des \verb|GROUP BY|-Teils ist dem des \verb|WHERE|-Teils beinahe gleich, daher wird hier auf detaillierte Beschreibungen verzichtet. Die Funktion \verb|handleQuery| gibt nun die neue, standardisierte Anfrage zurück.
 
-\subsubsection{Webinterface}
+\subsection{Webinterface}
 
 Das Programm soll, mit Hilfe der Java Server Pages (JSP), als Webseite darstellbar sein. 
+
+\subsection{Externe Datenbanken}
 
 
 \subsection{Technische Details}

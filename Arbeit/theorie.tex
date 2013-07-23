@@ -186,9 +186,14 @@ Im \verb|SELECT|-Teil brauchen wir im Normalfall keine Änderungen vornehmen. Da
 \subsection{FROM-Teil}
 \label{subsec:from}
 
-Wir beginnen mit der Betrachtung der \verb|FROM|-Klausel. Da die Reihenfolge der Spaltennamen im \verb|SELECT|-Teil oft von der Aufgabenstellung vorgeschrieben ist, wird diese auch nicht verändert.
+Unter einer bestimmten Voraussetzung, können wir die Tabellen unter \verb|FROM| lexikographisch sortieren. Besteht der \verb|SELECT|-Teil nicht nur aus dem Wildcard \verb|*|, dann ist die Reihenfolge der Spalten im Ergebnis nur von der Reihenfolge der Attribute und Aggregationsfunktionen im \verb|SELECT|-Teil abhängig. Haben wir aber einen \verb|SELECT|-Teil, der nur aus \verb|*| besteht, dann hängt die Reihenfolge der Tabellen von ihrer Reihenfolge unter \verb|FROM| ab. Betrachten wir dazu folgende Beispielanfragen:
+\begin{verbatim}
+1: SELECT * FROM emp e, dept d
+2: SELECT * FROM dept d, emp e
+\end{verbatim}
+In Anfrage 1 erhalten wir erst alle Spalten der Tabelle \verb|emp| und danach alle Spalten der Tabelle \verb|dept|. In Anfrage 2 ist das Verhalten genau umgekehrt. Daher ist klar, dass wir die Tabellen, die im \verb|FROM|-Teil auftauchen genau dann sortieren können, wenn der \verb|SELECT|-Teil nicht nur aus \verb|*| besteht.
 
-Im \verb|FROM| Teil werden zunächst alle auftretenden Tabellennamen lexikographisch sortiert. Danach werden automatische Aliase erzeugt. Sind bereits Aliase vergeben wurden, so werden diese ebenfalls durch die automatischen Aliase ersetzt. Eine Hashtabelle speichert frühere Zuweisungen, damit im \verb|SELECT|-, \verb|WHERE|-, \verb|GROUP BY|- und \verb|ORDER BY|-Teil die Aliase ebenfalls korrekt ersetzt werden.
+Danach werden automatische Aliase erzeugt. Sind bereits Aliase vergeben wurden, so werden diese ebenfalls durch die automatischen Aliase ersetzt. Eine Hashtabelle speichert frühere Zuweisungen, damit im \verb|SELECT|-, \verb|WHERE|-, \verb|GROUP BY|- und \verb|ORDER BY|-Teil die Aliase ebenfalls korrekt ersetzt werden.
 
 Hatten die vorkommenden Tabellen im \verb|FROM|-Teil keinen Alias wird nur der küsntliche Alias eingeführt.
 

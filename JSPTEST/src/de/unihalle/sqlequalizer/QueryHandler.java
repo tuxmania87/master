@@ -272,6 +272,20 @@ public class QueryHandler {
 		String aliasname = "a";
 		Iterator<ZFromItem> zfrom = from.iterator();
 
+		if(this.original.getSelect().size() > 1 || !((ZSelectItem) this.original.getSelect().get(0)).isWildcard()) {
+			//sort
+			class t_sorter implements Comparator<ZFromItem> {
+
+				@Override
+				public int compare(ZFromItem o1, ZFromItem o2) {
+					return o1.getTable().toString().compareTo(o2.getTable().toString());
+				}
+				
+			}
+			
+			Collections.sort(from, new t_sorter());
+		}
+		
 		while (zfrom.hasNext()) {
 			ZFromItem z = zfrom.next();
 			if (z.getAlias() != null) {
@@ -303,20 +317,34 @@ public class QueryHandler {
 
 			// Exceptions like *
 			if (z.isWildcard()) {
-				ret.add(z);
+				if(sel.size() == 1)
+					ret.add(z);
+				else {
+					if(z.getTable() == null) {
+						throw new Exception("The wildcard * can only appear alone or with a table prefix.");
+					} else {
+						String prefix = Zuordnung.get(z.getTable());
+						if(prefix == null) {
+							throw new Exception("There is no table alias named: "+z.getTable());
+						} else {
+							ZSelectItem newItem = new ZSelectItem(prefix+".*");
+							ret.add(newItem);
+						}
+					}
+				}
 				continue;
 			}
 
-			String[] split = z.getColumn().split("\\.");
+			
 			// if there is already an alias, replace it
 			// else look table up and set correct alias
-			if (split.length == 2) {
-				String addString = Zuordnung.get(split[0]) + "." + split[1];
+			if (z.getTable() != null) {
+				String addString = Zuordnung.get(z.getTable()) + "." + z.getColumn();
 				if (z.getAggregate() != null) {
 					addString = z.getAggregate() + "(" + addString + ")";
 				}
 				ret.add(new ZSelectItem(addString));
-			} else if (split.length == 1) {
+			} else  {
 				String targetTable = null;
 				Iterator<Table> i = tables.iterator();
 				while (i.hasNext()) {
@@ -341,11 +369,11 @@ public class QueryHandler {
 				String foundTable = Zuordnung.get(targetTable);
 
 				if (foundTable == null) {
-					throw new Exception("Column name unknown: " + split[0]
+					throw new Exception("Column name unknown: " + z.getColumn()
 							+ " is not contained by any table in FROM!");
 				}
 
-				String addString = foundTable + "." + split[0];
+				String addString = foundTable + "." + z.getColumn();
 				if (z.getAggregate() != null) {
 					addString = z.getAggregate() + "(" + addString + ")";
 				}
@@ -405,7 +433,7 @@ public class QueryHandler {
 		whereCondition = QueryUtils.addImplicitFormulas(whereCondition, q);
 		whereCondition = QueryUtils.evaluateArithmetic(whereCondition);
 		
-		whereCondition = QueryUtils.testf1(whereCondition, from, q);
+		whereCondition = QueryUtils.correctDecimalPlaces(whereCondition, from, q);
 
 		
 		// KNF must be restored because we added possibly and nodes in between
@@ -482,6 +510,15 @@ public class QueryHandler {
 	}
 
 	public ZQuery[] equalize(boolean respect) throws Exception {
+		
+		if(original == null) {
+			throw new Exception("There is no SQL-Statement to process. Make sure you set the statement before equalizing!");
+		}
+		
+		if(tables.size() == 0) {
+			throw new Exception("There is no database schema set. SQL-Equalizer has to know about schema!");
+		}
+		
 		this.respectColumnOrder = respect;
 		if (parent != null)
 			aliascount = parent.aliascount;
