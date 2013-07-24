@@ -44,7 +44,7 @@ public class externalDB {
 				Class.forName("oracle.jdbc.driver.OracleDriver");
 				conn = DriverManager.getConnection("jdbc:oracle:thin:@"+dburi+":"+dbname, dbuser, dbpw);
 			} else {
-				throw new Exception("databse typ: "+typ+" not supported.");
+				throw new Exception("database type: "+typ+" not supported.");
 			}
 			
 			Statement s = conn.createStatement(ResultSet.TYPE_FORWARD_ONLY,ResultSet.CONCUR_UPDATABLE);

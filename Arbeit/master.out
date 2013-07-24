@@ -53,11 +53,8 @@
 \BOOKMARK [2][-]{subsection.4.2.1}{Funktionsweise}{section.4.2}% 53
 \BOOKMARK [1][-]{section.4.3}{Auflistung der Software}{chapter.4}% 54
 \BOOKMARK [0][-]{chapter.5}{Praktische Umsetzung}{}% 55
-\BOOKMARK [1][-]{section.5.1}{Dokumentation}{chapter.5}% 56
-\BOOKMARK [2][-]{subsection.5.1.1}{Datenbankstruktur}{section.5.1}% 57
-\BOOKMARK [2][-]{subsection.5.1.2}{Programmstruktur}{section.5.1}% 58
-\BOOKMARK [2][-]{subsection.5.1.3}{Webinterface}{section.5.1}% 59
-\BOOKMARK [2][-]{subsection.5.1.4}{Externe Datenbanken}{section.5.1}% 60
-\BOOKMARK [2][-]{subsection.5.1.5}{Technische Details}{section.5.1}% 61
-\BOOKMARK [0][-]{chapter.6}{Ausblick}{}% 62
-\BOOKMARK [0][-]{chapter.7}{Anhang}{}% 63
+\BOOKMARK [1][-]{section.5.1}{Datenbankstruktur}{chapter.5}% 56
+\BOOKMARK [1][-]{section.5.2}{Programmstruktur}{chapter.5}% 57
+\BOOKMARK [1][-]{section.5.3}{Webinterface}{chapter.5}% 58
+\BOOKMARK [0][-]{chapter.6}{Ausblick}{}% 59
+\BOOKMARK [0][-]{chapter.7}{Anhang}{}% 60

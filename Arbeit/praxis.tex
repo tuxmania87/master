@@ -20,11 +20,10 @@
 %\item Tracking von Fehlern/ Fehlversuchen pro Aufgabe/User
 %\end{itemize}
 
-\section{Dokumentation}
 
 Im folgendem Abschnitt beschreiben wir die Struktur des Programms und gehen, in übersichtlicher Form, auf die einzelnen Klassen und Funktionen des Programms ein. Eine noch detaillierte Fassung der Dokumentation findet sich im Quelltext als Javadocs-Kommentare.
 
-\subsection{Datenbankstruktur}
+\section{Datenbankstruktur}
 
 Wir benutzen eine Datenbank um Aufgabenstellungen, Nutzer, Lösungsversuche und vieles mehr abzuspeichern. Im folgenden werden die einzelnen Tabellen erläutert. Wir verwenden dazu bewusst eine abstraktere Form der Beschreibung. Begründet ist dies, durch die Vielfalt der verschiedenen DBMS und ihrer verschiedenen Auslegung der Data Defintion Language. Im Prototypen verwenden wir das DBMS MySQL, man könnte aber alle DBMS verwenden, die einen JDBC Connector haben.
 
@@ -56,7 +55,7 @@ Es kann unter Umständen möglich sein, pro Aufgabe mehrere externe Datenbanken 
 
 Einzelne Benutzer werden in der Tabelle \verb|users| erfasst. Neben den üblichen Kontoinformationen, wie \verb|name, password| speichern wir auch, ob der Nutzer ein Dozent ist. Diese Information ist wichtig, um zu entscheiden, ob ein Nutzer auch Aufgaben einpflegen darf.
 
-\subsection{Programmstruktur}
+\section{Programmstruktur}
 
 In diesem Abschnitt werden wir die wichtigsten Klassen und Funktionen auflisten und erläutern. Eine vollständige Dokumentation aller Klassen, ist im Quellcode als Javadocs-Kommentare vorhanden. (TODO: evt Anhang).
 
@@ -87,25 +86,92 @@ Innerhalb dieser Methode erledigen wir alle Arbeiten, die im Abschnitt >>WHERE-T
 
 \verb|handleQUERY| wendet sich jetzt dem \verb|GROUP BY|-Teil zu. Dieser wird in zwei Teilen abgearbeitet. ZQL trennt \verb|GROUP BY|- vom \verb|HAVING|-Teil. Im \verb|GROUP BY|-Teil sortieren wir lediglich lexikographisch, wie schon im \verb|SELECT|-Teil. Der \verb|HAVING|-Teil wird mit der Funktion \verb|handleWHERE| behandelt, da sich beide Ausdrücke strukturell gleichen.
 
-Der entstandene SQL-Ausdruck, in Form eines \verb|ZQuery|-Objektes, wird von \verb|handleQUERY| direkt zu \verb|equalize| zurückgeliefert. Der Standardisierungsprozess ist damit beendet. Abbildung \ref{fig:execPlan} soll die Reihenfolge der abgearbeiteten Funktionen noch einmal verdeutlichen. Schwarze Pfeile bedeuten eine iterative Abarbeitung und blaue Pfeile bedeuten Unterprogrammabrufe innerhalb einer Methode.
+Der entstandene SQL-Ausdruck, in Form eines \verb|ZQuery|-Objektes, wird von \verb|handleQUERY| direkt zu \verb|equalize| zurückgeliefert. Der Standardisierungsprozess ist damit beendet. Abbildung \ref{fig:execPlan} soll die Reihenfolge der abgearbeiteten Funktionen noch einmal verdeutlichen. 
 
 \begin{figure}[h]
+\centering
 \includegraphics[scale=0.39]{Bilder/execPlan.png}
 \caption{Einfacher Programmablaufplan}
 \label{fig:execPlan}
 \end{figure}
 
-\subsubsection{Prozess: Verwenden von externen Datenbanken} 
+\subsection*{Prozess: Verwenden von externen Datenbanken} 
 
+Nachdem wir den Prozess der Standardisierung ausführlich betrachtet haben, kommen wir nun zum zweiten, großen Prozess. Es handelt sich hierbei um das Ausführen der zwei Anfragen auf externen Datenbanken und dem Vergleich der Ergebnismengen. Hierfür verwenden wir hauptsächlich die Klasse \verb|QueryUtils|, welche eine Sammlung von nützlichen Funktionen zum Behandeln der SQL-Anfragen beinhaltet. Doch zunächst beginnen wir mit dem Ausführen einer SQL-Anfrage auf einer externen Datenbank. Grundsätzlich können zu jeder Aufgabe beliebig viele externe Datenbanken angegeben werden. Die Lösungen würden dann auf allen diesen Datenbanken ausgeführt werden. Dies ist nützlich, um verschiedene Datenbankzustände zu testen. Weiterhin können so Eigenheiten unterschiedlicher DBMS aufgezeigt werden. 
 
-\subsection{Webinterface}
+Alle, uns zur Verfügung stehende, externe Datenbanken sind wiederum in unserer internen Datenbank abgespeichert, in Form von ID, Hostname, Port, Datenbankname, Benutzername, Passwort und Typ. Unterstützte Typen sind zur Zeit MySQL, PostgreSQL und Oracle. Allerdings kann die Funktionalität jederzeit erweitert werden. Notwendig ist dazu lediglich das Einpflegen des jeweiligen JDBC-Connectors. Die statische Klasse \verb|externalDB| regelt nun das Ausführen einer eingegebene SQL-Anfrage \verb|q| auf der externen Datenbank mit der ID \verb|dbid|. \\
+\verb|static ResultSet executeQueryOn(String q, int dbid)|\\
+Die Methode \verb|executeQueryOn| liefert ein \verb|ResultSet| zurück. Dabei extrahiert sie zunächst die Zugangsdaten für die externe Datenbank mit Hilfe der \verb|dbid|. Im zweiten Schritt wird der korrekte JDBC-Connector geladen und eine Datenbankverbindung geöffnet. Nach dem Ausführen der Anfrage \verb|q|, wird die Ergebnismenge in Form eines \verb|ResultSet| zurückgegeben. Möchte man weitere DBMS unterstützen, so müssen in dieser Methode die JDBC-Connector eingepflegt werden.
 
-Das Programm soll, mit Hilfe der Java Server Pages (JSP), als Webseite darstellbar sein. 
+Wie bereits im Kapitel \ref{chap:theorie} besprochen, entfernen wir ,vor dem Ausführen der Anfragen auf externen Datenbanken, das \verb|ORDER BY|-Statement von der Lösung des Lernenden, wenn die Musterlösung kein solches Statement enthält.
 
-\subsection{Externe Datenbanken}
+Nach dem Ausführen der Anfragen erhalten wir zwei Objekte vom Typ \verb|ResultSet|, nämlich \verb|r1| und \verb|r2|. Um zu prüfen, ob beide Ergebnismengen identisch sind, bedienen wir uns eine Funktion aus der Klasse \verb|QueryUtils|.\\
+\verb|boolean isIdenticalResultSets(ResultSet r1, ResultSet r2)|\\
+Die Methode geht recht intuitiv vor. Wir gehen iterativ alle Tupel durch und für jedes Tupel prüfen wir, Schritt für Schritt, ob alle Spalteneinträge identisch sind. Sind Spaltenlängen, Zeilenlängen oder Inhalte der Spalten nicht identisch, so sind beide Ergebnismengen ebenfalls nicht identisch. Die Reihenfolge der Tupel ist vorgegeben durch die \verb|ORDER BY|-Statements beider Anfragen. Die Reihenfolge der Spalten ist vorgegeben durch das \verb|SELECT|-Statement. Bereits im Schritt der Standardisierung wurden die \verb|SELECT|-Einträge sortiert, wenn ausdrücklich in der Aufgabenstellung notiert war, dass die Spaltenreihenfolge keine Rolle spielt. Aus diesen Gründen ist es legitim, die Ergebnismengen in dieser Art zu vergleichen.
 
+\subsection*{Prozess: Auswerten von Metainformationen} 
 
-\subsection{Technische Details}
+Im Prozess: Standardisierung haben wir bereits erfahren, dass vor dem Anpassen der SQL-Anfrage, Metainformationen über diese abgespeichert werden. Dazu wird ein Objekt der Klasse \verb|MetaQueryInfo| erstellt. Dem Konstruktor wird die, zu analysierende, SQL-Anfrage in Form eines \verb|ZQuery| übergeben. Mit Hilfe verschiedener Hilfsfunktionen werden dann Informationen über die SQL-Anfrage gesammelt und gespeichert. Beispiele für diese Informationen sind: Anzahl der Verbunde, Größe der \verb|SELECT|-Liste, Anzahl der Tabellen unter \verb|FROM|, Anzahl von Unterabfragen, e.t.c. 
 
-Die Umsetzung einiger, in Kapitel \ref{chap:theorie}, Sachverhalte ist in der Praxis etwas komplexer, als theoretisch erdacht. Im Folgenden Abschnitt gehen wir daher auf Implementierungsdetails einiger Funktionen ein, die sich etwas komplexer gestalten. Es soll damit ein Eindruck vermittelt werden, wie die theoretischen Sachverhalte in ein konkretes Programm übertragbar sind.
+Die Informationen sind einzeln nicht interessant. Nur der Vergleich der Metainformationen von der Musterlösung mit der Lösung des Lernenden, geben Aufschluss über etwaige Fehler. Diesen Vergleich übernimmt eine statische Funktion aus der Klasse \verb|QueryUtils|.\\
+\verb|static String compareMetaInfos(MetaQueryInfo m1, MetaQueryInfo m2)|\\
+Um die Art des Vergleiches zu verstehen, muss darauf hingewiesen werden, dass alle gespeicherten Attribute in einem Objekt vom Typ \verb|MetaQueryInfo| entweder vom Typ \textbf{int} oder vom Typ \textbf{boolean} sind. Ganzzahlige Attribute verwenden wir um die Anzahl von etwas festzustellen, also \mbox{z. B.} die Anzahl von Formeln im \verb|WHERE|-Teil. Attribute vom Typ \textbf{boolean} benutzen wir, um festzustellen, ob einzelne Teile einer Anfrage existieren oder nicht.
 
+Der Vergleich erfolgt nun automatisch. Die Methode \verb|compareMetaInfos|, geht iterativ alle Attribute der Objekte \verb|m1| und \verb|m2| durch und erzeugt dabei dynamisch eine Hinweismeldung in Form eines \textbf{String}. Ist das jeweilige Attribut ganzzahlig, so wird geprüft ob das von \verb|m1| größer, kleiner oder gleich im Vergleich zu dem von \verb|m2| ist. Ist es nicht gleich, dann wird eine Meldung erzeugt. Bei der erzeugten Meldung erscheint allerdings nicht einfach der Attributsname, da dies zu kryptisch und unverständlich gegenüber einem Nutzer wäre. Stattdessen kennt die Klasse \verb|QueryUtils| ein Wörterbuch, in Form einer \verb|HashMap|. In dieser ist für jedes Attribut ein Ausgabe-String abgespeichert, der für Nutzer verständlicher ist. Ähnlich wird dann auch mit den Attributen verfahren, die vom Typ \textbf{boolean} sind. Das angesprochene Wörterbuch kann später auch dazu verwendet werden, um Ausgaben in mehreren Sprachen umzusetzen.
+Ein Auszug aus dem Programmcode ist in Abbildung \ref{fig:comparecode} zu sehen.
+
+\begin{figure}[h]
+\lstset{language=Java,tabsize=2}
+\begin{lstlisting}
+String res = "";
+	for (Field f : m1.getClass().getDeclaredFields()) {
+		if (f.getType().toString().equals("int")) {
+			String word = null;
+			if (f.getInt(m1) < f.getInt(m2)) {
+				word = messages.get("less");
+			} else if (f.getInt(m1) > f.getInt(m2)) {
+				word = messages.get("more");
+			}
+			if (word != null) {
+				String x = "There are " + word + " "
+					+ messages.get(f.getName()) + " in the "
+					+ messages.get("samplesolution") + " (" + f.getInt(m1)
+					+ ") than in yours (" + f.getInt(m2) + ").";
+				res += x + "<br>";
+			}
+\end{lstlisting}
+\caption{Quellcode zum Vergleich von ganzzahligen Metainformationen}
+\label{fig:comparecode}
+\end{figure}
+
+\section{Webinterface}
+
+JSP dient dazu, unser Programm dem Nutzer zugänglich zu machen. Im wesentlichen steuert es dabei die, eben erläuterten, Prozesse. Dieser Teil ist nur prototypisch umgesetzt und durchaus beliebig erweiterbar. Die Grundfunktionalität ist allerdings implementiert. Nachdem sich der Nutzer über die \textbf{login.jsp} eingeloggt hat, sieht er auf der Hauptseite eine kleine Übersicht seiner bisherigen Lösungsversuche. Über das Navigationsmenü links, welches mit der \textbf{nav.jsp} realisiert wurden ist, kann der Nutzer nun die Aufgabensammlung einsehen. Nachdem er eine Aufgabe gewählt hat, wird mit der \textbf{task.jsp} die Aufgabenstellung dargestellt.
+
+Zunächst sieht der Nutzer die Aufgabenstellung in Textform. Anschließend sehen wir welche Tabellen uns, für die Lösung der Aufgabe, zur Verfügung stehen. Darunter befindet sich ein Eingabefeld (1), in dem der Nutzer nun seine Lösung in Form einer SQL-Anfrage stellen kann.
+
+Nachdem der Nutzer seine Lösung eingetragen und durch betätigen des \textit{submit}-Knopfes eingereicht hat, werden die Daten per POST-Methode wieder an die task.jsp gesendet. Die Seite wird wieder aufgebaut und nun um mehrere Ausgaben erweitert. Unter dem Textfeld zur Eingabe der Lösung findet der Nutzer nun seine geparste Eingabe (2). Weiterhin stößt die \textbf{task.jsp} den \verb|equalize| Prozess an. Unter der geparsten Eingabe sieht der Nutzer jetzt auch die standardisierte Eingabe (3). Ein Beispiel ist in Abbildung \ref{fig:screen_prog1} dargestellt.
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.7]{Bilder/screen_prog1}
+\caption{Eingabe (1), geparste Eingabe (2) und standardisierte Eingabe (3)}
+\label{fig:screen_prog1}
+\end{figure}
+
+Nun erstellt die \textbf{task.jsp} drei Blöcke. Im ersten Block (4) sehen wir, ob die standardisierte Musterlösung mit der Lösung des Nutzers gematcht werden konnte. Dazu vergleicht die \textbf{task.jsp} die standardisierte Lösung des Nutzers mit allen standardisierten Lösungen der Musterlösung. Passt eine der standardisierten Musterlösung, so wird dies dem Nutzer mitgeteilt. Falls nicht, so wird darauf hingewiesen, dass dieser Schritt erfolglos war und im nächsten Schritt, die Anfragen auf externen Datenbanken ausgeführt werden.
+
+Im zweiten Block (5) lässt die \textbf{task.jsp} beide Anfragen auf der externen Datenbank ausführen, falls Schritt 1 fehlgeschlagen ist. Wir brauchen hier nicht jede der Musterlösungen ausführen, weil alle das gleiche zurückgeben. Danach werden die Ergebnisse verglichen. Gibt es keine Übereinstimmungen der Ergebnisse, so werden beide Ergebnismengen als Tabellen visualisiert, damit der Nutzer schnell prüfen kann, welche Tupel fehlen oder überflüssig sind. Sind beide Ergebnismengen allerdings identisch, wird dem Nutzer mitgeteilt, das nicht entschieden werden konnte, ob seien Lösung korrekt ist.
+
+Im letzten und dritten Block (6) wird der Vergleich der Metainformationen ausgegeben. Außerdem wird dem Nutzer mitgeteilt, welche Teile seiner Anfrage mit denen der Musterlösung übereinstimmen. Diese Informationen erhält der Nutzer auch wenn bereits Schritt 1 zum Erfolg geführt hat. Mit diesen Informationen sollte es dem Nutzer möglich sein, einen neuen -- hoffentlich erfolgreichen -- Versuch zu starten.
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.7]{Bilder/screen_prog2}
+\caption{Matchingstatus (4), Ergebnistupelvergleich (5) und Hinweise (6)}
+\label{fig:screen_prog2}
+\end{figure}
+
+Nach all diesen Schritten speichert die \textbf{task.jsp} den Versuch der Lösung in der internen Datenbank ab.
+
+Für Dozenten steht noch die Seite acp.jsp bereit. Hier können neue Datenbankschemata, neue externe Datenbanken, neue Nutzer und neue Aufgabenstellungen eingepflegt werden.

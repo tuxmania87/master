@@ -41,7 +41,7 @@ public class QueryUtils {
 		mes.put("parserTreeDepth", "parser tree depth");
 		mes.put("less", "less");
 		mes.put("more", "more");
-		mes.put("firstquery", "the sample solution");
+		mes.put("samplesolution", "the sample solution");
 		mes.put("aWITHSPACE", "a ");
 		mes.put("noSPACE", "no ");
 		mes.put("one", "one");
@@ -254,8 +254,7 @@ public class QueryUtils {
 		return -1;
 	}
 
-	public static boolean isIdenticalResultSets(ResultSet r1, ResultSet r2,
-			boolean row, boolean column) throws SQLException {
+	public static boolean isIdenticalResultSets(ResultSet r1, ResultSet r2) throws SQLException {
 			
 			ResultSetMetaData m1 = r1.getMetaData();
 			ResultSetMetaData m2 = r2.getMetaData();
@@ -696,7 +695,7 @@ public class QueryUtils {
 				if (word != null) {
 					String x = "There are " + word + " "
 							+ messages.get(f.getName()) + " in the "
-							+ messages.get("firstquery") + " (" + f.getInt(m1)
+							+ messages.get("samplesolution") + " (" + f.getInt(m1)
 							+ ") than in yours (" + f.getInt(m2) + ").";
 					res += x + "<br>";
 				}

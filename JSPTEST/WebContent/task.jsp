@@ -231,7 +231,7 @@
 							if (r1 != null && r2 != null) {
 								try {
 									
-									if (QueryUtils.isIdenticalResultSets(r1, r2, t.respectRow, t.respectColumn)) {
+									if (QueryUtils.isIdenticalResultSets(r1, r2)) {
 										out.println("<br><span style=\"color:red;font-weight:bold;font-size:large;\">sample-solution and your query returned the same data but your solution could not be matched against any valid sample solution.</span><br>");
 										
 									} else { throw new RuntimeException(); }

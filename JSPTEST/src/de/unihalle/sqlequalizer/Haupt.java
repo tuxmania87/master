@@ -33,7 +33,7 @@ public class Haupt {
 		q2.createTable("create table dept (deptno int, dname varchar(500), location varchar(500))");
 		q2.createTable("create table test (a int references emp(sal) not null, b int, c int, d int, x int, y int)");
 
-		q2.setOriginalStatement("select e.ename from emp e, emp x, dept d, test a, test b where e.sal > 200 and a.b = 2 ;");
+		q2.setOriginalStatement("select empno from emp union select deptno from dept union select \"2\" from test");
 		System.out.println(q2.original);
 		
 		ZQuery[] moreRes =  q2.equalize(true);

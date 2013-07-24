@@ -69,13 +69,9 @@
 \contentsline {subsection}{\numberline {4.2.1}Funktionsweise}{67}{subsection.4.2.1}
 \contentsline {section}{\numberline {4.3}Auflistung der Software}{68}{section.4.3}
 \contentsline {chapter}{\numberline {5}Praktische Umsetzung}{69}{chapter.5}
-\contentsline {section}{\numberline {5.1}Dokumentation}{69}{section.5.1}
-\contentsline {subsection}{\numberline {5.1.1}Datenbankstruktur}{69}{subsection.5.1.1}
-\contentsline {subsection}{\numberline {5.1.2}Programmstruktur}{70}{subsection.5.1.2}
+\contentsline {section}{\numberline {5.1}Datenbankstruktur}{69}{section.5.1}
+\contentsline {section}{\numberline {5.2}Programmstruktur}{70}{section.5.2}
 \contentsline {subsubsection}{Prozess: Standardisieren einer SQL-Anfrage}{71}{section*.56}
-\contentsline {subsubsection}{Prozess: Verwenden von externen Datenbanken}{73}{section*.58}
-\contentsline {subsection}{\numberline {5.1.3}Webinterface}{73}{subsection.5.1.3}
-\contentsline {subsection}{\numberline {5.1.4}Externe Datenbanken}{73}{subsection.5.1.4}
-\contentsline {subsection}{\numberline {5.1.5}Technische Details}{73}{subsection.5.1.5}
-\contentsline {chapter}{\numberline {6}Ausblick}{74}{chapter.6}
-\contentsline {chapter}{\numberline {7}Anhang}{77}{chapter.7}
+\contentsline {section}{\numberline {5.3}Webinterface}{75}{section.5.3}
+\contentsline {chapter}{\numberline {6}Ausblick}{78}{chapter.6}
+\contentsline {chapter}{\numberline {7}Anhang}{81}{chapter.7}
