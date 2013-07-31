@@ -4,9 +4,9 @@ Ein Ansatz besteht darin beide SQL-Anfragen einer Standardisierung zu unterziehe
 
 Mit der Standardisierung der Anfragen können wir jedoch nur ein hinreichendes Kriterium abdecken. Schaffen wir es nicht, mit Hilfe der Standardisierung, zwei Anfragen syntaktisch, und damit auch semantisch, gleich zu machen, so möchten wir sicher gehen, dass die Anfragen tatsächlich nicht semantisch äquivalent sind. Dazu testen wir die Anfrage gegen ein notwendiges Kriterium. Wir führen sowohl die Anfrage der Musterlösung, als auch die Anfrage des Lernenden auf einer echten Datenbank mit konkreten Daten aus. Liefern beide Anfrage unterschiedliche Ergebnistupel, so wissen wir sicher, dass unsere Anfragen nicht semantisch äquivalent sein können. 
 
-Einen ungeklärten Fall haben wir, wenn die beiden Anfragen durch Standardisierung nicht angepasst werden konnten und die Ergebnistupel beider Anfragen auf der konkreten Datenbank identisch sind. In diesem, dritten Fall, gelingt es uns keine Aussage über die semantische Äquivalenz zu treffen. Daher ist es wünschenswert, das Auftreten dieses Falles so gut es geht, zu minimieren.
+Einen ungeklärten Fall haben wir, wenn die beiden Anfragen durch Standardisierung nicht angepasst werden konnten und die Ergebnistupel beider Anfragen auf der konkreten Datenbank identisch sind. In diesem, dritten Fall, gelingt es uns keine Aussage über die semantische Äquivalenz zu treffen. Daher ist es wünschenswert, das Auftreten dieses Falles, so gut es geht, zu minimieren.
 
-Zu Bemerken ist hierbei, dass im folgendem Kapitel die theoretischen Grundlagen behandelt werden, die notwendig sind um zwei SQL-Anfragen auf semantische Äquivalenz zu prüfen. Dabei werden hier insbesondere auch Ideen vorgestellt, die nicht im praktischem Teil, dem Programm, auftauchen. Die Erklärung für diese Beschränkungen erfolgt in diesem Kapitel sowie im Abschnitt \ref{subsec:grenzenparser} und im Kapitel \ref{chap:praxis}.
+Zu Bemerken ist hierbei, dass im folgendem Kapitel die theoretischen Grundlagen behandelt werden, die notwendig sind, um zwei SQL-Anfragen auf semantische Äquivalenz zu prüfen. Dabei werden hier insbesondere auch Ideen vorgestellt, die nicht im praktischem Teil, dem Programm, auftauchen. 
 
 \section{Hintergrund}
 
@@ -31,7 +31,7 @@ Neben solchen syntaktischen Varianten, kann es auch sein, dass unnötige Bedingu
 SELECT * FROM emp e WHERE e.enr > 5 AND e.enr <> 2
 \end{verbatim}
 
-Unser Programm müsste nun erkennen, dass das Attribut \verb|enr| bereits beschränkt ist, und der Wert 2 nicht mehr auftreten kann. Das Programm, was zu dieser Arbeit entwickelt wird, kann mit solchen redundanten Eigenschaften nicht umgehen. Es wäre auch eher ein Problem für einen ``semantic checker'', da es hier nicht auf zwei verschiedene Anfragen ankommt. Hier ist bereits diese eine Anfrage in sich selbst zu kompliziert. Mit derlei Problemen beschäftigt sich das SQLLint-Projekt der Martin-Luther-Universität Halle-Wittenberg, mehr dazu im Artikel \cite{brass1} und \cite{brass2}.
+Unser Programm müsste nun erkennen, dass das Attribut \verb|enr| bereits beschränkt ist, und der Wert 2 nicht mehr auftreten kann. Das Programm, was zu dieser Arbeit entwickelt wird, kann mit solchen redundanten Eigenschaften nicht umgehen. Es wäre auch eher ein Problem für einen ``semantic checker'', da es hier nicht auf zwei verschiedene Anfragen ankommt. Hier ist bereits diese eine Anfrage in sich selbst zu kompliziert. Mit solchen Problemen beschäftigt sich bereits andere Lernplattformen, die wir bereits im Kapitel \ref{chap:forschung} betrachtet haben.
 
 Weitere Probleme sind Operatoren, die sich auf andere abbilden lassen. Man kann nie wissen, in welcher Art und Weise der Lernende die Aufgabe formulieren wird. Man betrachte dazu folgende zwei Anfragen:
 \begin{verbatim}
@@ -48,9 +48,9 @@ Im folgendem Abschnitt erläutern wir einzelne Schritte unseres Vorgehens. Dabei
 
 \subsection{Standardisierung}
 
-Im ersten Ansatz unterziehen wir jeder Anfrage einem Standardisierungsprozess. Alle vorkommenden Variablen im FROM-Teil werden nach ihrem Namen lexikographisch sortiert und erhalten einen automatisch generierten Alias. Diese Aliase werden in allen anderen Teilen der SQL-Anfrage ersetzt durch bereits vorhandene oder eingeführt, falls vorher keine Aliase benutzt worden. Die meiste Arbeit wird im WHERE-Teil erledigt. 
+Im ersten Ansatz unterziehen wir jeder Anfrage einem Standardisierungsprozess. Ziel dabei ist es, die zwei Anfragen durch legale Umformungen so anzupassen, dass sie syntaktisch äquivalent werden. Dazu beginnen wir mit dem lexikographischem Sortieren alle vorkommenden Tabellen im FROM-Teil. Anschließend erhalten diese eine automatisch generierte Tupelvariable. Diese werden in allen anderen Teilen der SQL-Anfrage ersetzt durch bereits vorhandene, oder eingeführt, falls vorher keine Tupelvariablen benutzt worden sind. Die meiste Arbeit wird dann im WHERE-Teil erledigt. 
 
-Zunächst ersetzen wir syntaktische Varianten durch einheitliche Schreibweisen und entfernen syntaktische Details. Nachdem der Ausdruck des WHERE-Teils auf eine standardisierte Form (konjunktive Normalform) gebracht wurde sortieren wir den Ausdruck so, dass eine gewisse Ordnung bezüglich der Operatoren vorliegt. Weitere Anpassungen sind das Ersetzen von jedweden Unterabfragen durch äquivalente EXISTS-Unterabfragen. Im nächsten Schritt werden Verbunde (engl. Joins) kritisch untersucht und ggf. ersetzt oder vereinfacht. 
+Dort ersetzen wir syntaktische Varianten durch einheitliche Schreibweisen und entfernen syntaktische Details. Nachdem der Ausdruck des WHERE-Teils auf eine standardisierte Form (konjunktive Normalform) gebracht wurde sortieren wir den Ausdruck so, dass eine gewisse Ordnung bezüglich der Operatoren vorliegt. Weitere Anpassungen sind das Ersetzen von jedweden Unterabfragen durch äquivalente EXISTS-Unterabfragen. Im nächsten Schritt werden Verbunde (engl. Joins) kritisch untersucht und ggf. ersetzt oder vereinfacht. 
 
 Die Operatorenvielfalt ist ein Problem, was auf zwei unterschiedliche Arten angegangen werden kann. Wir diskutieren sowohl das Hinzufügen von implizierten Formeln, als auch das Ersetzen von Formeln durch eine repräsentante Formel des gleichen Typs. Zum Abschluss werden noch GROUP BY- und ORDER BY-Ausdrücke auf ähnliche Weise angepasst.
 
@@ -99,21 +99,21 @@ Konnten wir, durch die Standardisierung beider Anfragen, keine semantische Äqui
 \subsection{Preprocessing}
 \label{subsec:preprocessing}
 
-Im Abschitt >>Forschungsstand<< haben wir bereits einige Lernplattformen/ -projekte zum Thema SQL kennen gelernt. Viele dieser Plattformen möchten dem Lernenden genügend Feedback beim Lernprozess geben. Dies ist nicht nur sinnvoll, damit der Student schneller auf korrekte Lösungen stößt, sonder auch, weil die Standardhinweise eines SQL-Systems meist nur auf syntaktische Fehler hinweisen. Einen großen Beitrag zur Verbesserung von Fehlermeldungen hat das Projekt SQLLint vorzuweisen, da es Fehlermeldungen und Hinweise konkreterer Natur ausgibt. Hervorzuheben ist noch einmal, dass es sich hierbei um semantische Fehlermeldungen handelt. Schon nach kurzer Einlernzeit sinkt die Anzahl syntaktischer Fehler bei Lernenden. Dafür machen diese mehr semantische Fehler, was um so schlimmer ist, da bisher kaum oder keine Warnhinweise für solche Fehler, in üblichen DBMS, existierten. 
+Im Abschitt >>Forschungsstand<< haben wir bereits einige Lernplattformen/ -projekte zum Thema SQL kennen gelernt. Viele dieser Plattformen möchten dem Lernenden genügend Feedback beim Lernprozess geben. Dies ist nicht nur sinnvoll, damit der Student schneller auf korrekte Lösungen stößt, sonder auch, weil die Standardhinweise eines SQL-Systems meist nur auf syntaktische Fehler hinweisen.
 
-Dennoch sollen in dieser Arbeit zwei SQL-Anfragen verglichen werden. Wir können hier also nicht alle Ideen des SQLLint übernehmen. Egal ob das Matchen der Musterlösung und der Lösung des Lernenden gelingt oder nicht, wir möchten dem Lernenden ein Feedback geben, an dem er idealerweise sehen kann, warum das Matching nicht gelungen ist. 
+Da in dieser Arbeit zwei SQL-Anfragen verglichen werden sollen, können wir nicht viele Ideen der >>semantic checker<< übernehmen. Dennoch möchten wir dem Lernenden auch ein Feedback über mögliche semantische Fehler geben. Egal ob das Matchen der Musterlösung und der Lösung des Lernenden gelingt oder nicht ein solches Feedback über semantische Fehler ist in jedem Fall hilfreich.
 
-Dies geschieht in folgender Art und Weise. Direkt nach dem Parsen und noch bevor wir irgendwelche Anpassungen vornehmen, analysieren wir beide Anfragen und sammeln Metainformationen über diese. Nachdem wir beide Anfragen standardisiert haben, vergleichen wir die Metainformationen beider Anfragen systematisch miteinander. Fallen uns Unterschiede auf, so teilen wir dies dem Lernenden als Hinweis mit. Neben dem Bloßen Vergleich von Metainformationen sind noch andere Kriterien für den Vergleich interessant. So vergleichen wir weiterhin, ob beide Anfragen die gleichen Tabellen unter \verb|FROM| ansprechen. Auch interessiert uns in diesem Zusammenhang ob Teile der SQL-Anfragen miteinander übereinstimmen. Wir prüfen also, ob \verb|SELECT|, \verb|WHERE|, \verb|FROM|, \verb|GROUP BY| und \verb|ORDER BY| jeweils identisch sind. So können wir dem Lernenden deutlich machen, dass \mbox{z. B.} der \verb|WHERE|-Teil seiner Lösung korrekt ist, aber der \verb|SELECT|-Teil noch nicht übereinstimmt.
+Dies geschieht in folgender Art und Weise. Direkt nach dem Parsen und noch bevor wir irgendwelche Anpassungen vornehmen, analysieren wir beide Anfragen und sammeln Metainformationen über diese. Nachdem wir beide Anfragen standardisiert haben, vergleichen wir die Metainformationen beider Anfragen systematisch miteinander. Fallen uns Unterschiede auf, so teilen wir dies dem Lernenden als Hinweis mit. Neben dem Bloßen Vergleich von Metainformationen sind noch andere Kriterien für den Vergleich interessant. So vergleichen wir weiterhin, ob beide Anfragen die gleichen Tabellen unter \verb|FROM| ansprechen. Auch interessiert uns in diesem Zusammenhang ob Teile der SQL-Anfragen miteinander übereinstimmen. Wir prüfen also, ob \verb|SELECT|, \verb|WHERE|, \verb|FROM|, \verb|GROUP BY| und \verb|ORDER BY| der beiden Anfragen jeweils zueinander identisch sind. So können wir dem Lernenden deutlich machen, dass \mbox{z. B.} der \verb|WHERE|-Teil seiner Lösung korrekt ist, aber der \verb|SELECT|-Teil noch nicht mit dem der Musterlösung übereinstimmt.
 
 \subsubsection*{atomarer Formeln unter WHERE / Baumtiefe}
 
-Die Studentenanfrage enthält vor der Transformation durch unser Programm mehr atomare Formeln als die Musterlösung, so wurden offensichtlich unnötige Formeln oder doppelte Formeln aufgeschrieben. Stellt unser Programm fest, dass beide Lösungen dennoch gleich sind, so muss dem Studenten mitgeteilt werden, dass er redundante Formeln eingebaut hat, welche die Lösung unnötig verkomplizieren. 
+Enthält die Anfrage des Lernenden, vor der Transformation durch unser Programm, mehr atomare Formeln als die Musterlösung, so wurden offensichtlich unnötige Formeln oder doppelte Formeln aufgeschrieben. Stellt unser Programm fest, dass beide Lösungen dennoch gleich sind, so muss dem Lernenden mitgeteilt werden, dass er redundante Formeln eingebaut hat, welche die Lösung unnötig verkomplizieren. 
 
-Gleichzeitig kann die unterschiedliche Tiefe des Parserbaumes der \verb|WHERE|-Klausel auch auf redundante Formeln hinweisen, die unser Programm durch Konstanten ersetzt hat, beispielsweise arithmetisch/logische Ausdrücke, die nur Konstanten als Operanden haben und damit bereits auswertbar sind.
+Gleichzeitig kann die unterschiedliche Tiefe des Parserbaumes der \verb|WHERE|-Klausel auch auf redundante Formeln hinweisen, die unser Programm durch Konstanten ersetzt hat. Beispiele dafür sind arithmetisch/logische Ausdrücke, die nur Konstanten als Operanden haben und somit auswertbar und verkürzbar sind.
 
 \subsubsection*{Existenz von Teilen der SQL-Anfrage}
 
-Geraden wenn der Lernende eine falsche Lösung einsendet, kann es sein, dass er sogar wichtige Teile einer Anfrage nicht benutzt, die aber von der Musterlösung verwendet wird. So ist es sinnvoll zu vergleichen, ob sowohl die Musterlösung, als auch die Lösung des Studenten einen nicht leeren \verb|SELECT-, FROM-, WHERE-, GROUP BY-| und \verb|ORDER BY-|Teil hat. Unterschiede müssen dem Lernenden mitgeteilt werden. Dabei ist sowohl die Information interessant, ob ein gewisser Teil existiert, als auch die Anzahl der Attribute oder Formeln im jeweiligen Teil der Anfrage.
+Geraden wenn der Lernende eine falsche Lösung einsendet, kann es sein, dass er sogar wichtige Teile einer Anfrage nicht benutzt, die aber von der Musterlösung verwendet werden. So ist es sinnvoll zu vergleichen, ob sowohl die Musterlösung, als auch die Lösung des Studenten einen nicht leeren \verb|SELECT-, FROM-, WHERE-, GROUP BY-| und \verb|ORDER BY-|Teil hat. Unterschiede müssen dem Lernenden mitgeteilt werden. Dabei ist sowohl die Information interessant, ob ein gewisser Teil existiert, als auch die Anzahl der Attribute oder Formeln im jeweiligen Teil der Anfrage.
 
 \subsubsection*{Anzahl von JOINs / Unterabfragen}
 
@@ -123,7 +123,7 @@ Sehr viele Fehler bei Anfängern finden sich im Bereich JOINs. Gerade deswegen i
 
 Wie im vorherigen Abschnitt bereits erklärt ist der ZQL-Parserbaum nicht binär. Dadurch kann es durch zu vorsichtige Klammersetzung passieren, dass ein Teilbaum mit zwei Ebenen entsteht, obwohl nur ein Operator beteiligt ist. Erklärt ist dies im Abschnitt >>Funktionsweise des Parsers<<. Die dort vorgestellte Operatorkompression ist ein Verfahren um unnötige Klammerungen zu entfernen. Ist die Gleichheit der Lösung des Studenten mit der Musterlösung durch unser Programm gezeigt, aber die Studentenlösung musste mehr Operatorkompressionen durchführen, so hat der Student unnötige Klammern gesetzt, welche die Lösung wiederum unnötig verkomplizieren. Dies muss ihm durch unser Programm mitgeteilt werden.
 
-Folgende Metainformationen möchten wir im Vorfeld sammeln:
+Es folgt eine Zusammenfassung der Informationen, die wir im Zuge des Sammelns der Metainformationen speichern wollen.
 
 \begin{itemize}
 \item Anzahl der JOIN Bedingungen
@@ -134,16 +134,16 @@ Folgende Metainformationen möchten wir im Vorfeld sammeln:
 \item Anzahl atomarer Formeln im \verb|HAVING|-Teil
 \item Anzahl Tabellen in \verb|FROM|-Teil
 \item Anzahl Attribute im \verb|SELECT|-Teil *
-\item existiert ein \verb|DISTINCT|
-\item existiert ein \verb|GROUP BY| *
+\item Existiert ein \verb|DISTINCT|?
+\item Existiert ein \verb|GROUP BY|? *
 	\begin{itemize}
-	\item wenn ja, tauchen Variablennamen und Aggregationsfunktionen auch im SELECT-Teil auf?
+	\item Wenn ja, tauchen Variablennamen und Aggregationsfunktionen auch im SELECT-Teil auf?
 	\end{itemize}	 
-\item existiert ein \verb|HAVING BY|
-\item Tiefe des Parserbaums kann Aufschluss über unnötige Klammerung geben. Siehe dazu Abschnitt >>Wie funktioniert der Parser<<
+\item Existiert ein \verb|HAVING BY|?
+\item Tiefe des Parserbaums 
 \end{itemize}
 
-Unterscheiden sich Musterlösung und Lösung des Studenten in den mit * markierten Punkten ist es extrem unwahrscheinlich, dass beide Lösungen die gleichen Tupel zurückliefern würden. Hier möchten wir im Vorfeld dem Lernenden eine Warnung anzeigen, dass er höchstwahrscheinlich etwas vergessen hat. Alle anderen Punkte werden im Anschluss an die eigentliche Analyse der Anfragen abgeglichen. So sind etwa folgende Meldungen denkbar:
+Unterscheiden sich Musterlösung und Lösung des Studenten in den mit * markierten Punkten ist es extrem unwahrscheinlich, dass beide Lösungen die gleichen Tupel zurückliefern würden. In einem solchen Fall möchten wir dem Lernenden eine Warnung anzeigen, die beinhaltet, dass er höchstwahrscheinlich etwas vergessen hat. Im Allgemeinen vergleichen wir jede Metainformation der Musterlösung mit der jeweiligen Information der Lösung des Lernenden. So sind folgende Meldungen denkbar:
 
 \begin{itemize}
 \item ``Die Musterlösung enthält zwei Joins, aber ihre Lösung enthält keinen Join.''
@@ -165,23 +165,23 @@ Folgende zusätzliche Vergleiche führen wir nach der Standardisierung beider An
 Möglich wären auch deutlichere Hinweise, \mbox{z. B.} die Angaben welche Tabellen unter \verb|FROM| in der ML vorkommen und in der LL nicht. Allerdings könnten solche Meldungen zu viel von der ML preis geben.
 
 
-Zusammenfassend kann man Folgendes sagen: Das Preprocessing wird direkt nach dem Parsen einer SQL-Anfrage durchgeführt. Es sammelt Metainformationen über die Anfrage. Da wir zwei Anfragen vergleichen, werden diese Metainformationen einzeln für jede Anfrage gespeichert. Dann beginnen wir mit dem zweiten Schritt, dem Angleichen der SQL-Anfragen. Dazu verwenden wir Strategien, die in folgenden Kapiteln besprochen werden.
+Zusammenfassend kann man Folgendes sagen: Das Preprocessing wird direkt nach dem Parsen einer SQL-Anfrage durchgeführt. Es sammelt Metainformationen über die Anfrage. Da wir zwei Anfragen vergleichen, werden diese Metainformationen einzeln für jede Anfrage gespeichert. Dann beginnen wir mit den weiteren Schritten, die im Folgenden detailliert erläutert werden.
 
-Egal ob die Ergebnisse im zweiten Schritt erfolgreich waren oder nicht, wir geben danach einen Vergleich der Metainformationen aus. Zusätzlich führen wir weitere Vergleiche mit den standardisierten Anfragen durch. Beispiele wurden eben bereits genannt. Das soll dem Lernenden bei falschen Lösungen Anhaltspunkte geben, wie eine richtige Lösung aussehen könnte. Bei einer korrekten Lösung, können solche Hinweise trotzdem nützlich sein, denn die Anfrage des Lernenden kann trotz Korrektheit zu lang bzw. kompliziert sein. Dies würde bei einem Vergleich der gesammelten Metainformationen deutlich werden.
+Egal ob die Ergebnisse in diesen weiteren Schritt erfolgreich waren oder nicht, wir geben danach einen Vergleich der Metainformationen aus. Zusätzlich führen wir weitere Vergleiche mit den standardisierten Anfragen durch, welche eben bereits dokumentiert worden. Das soll dem Lernenden bei falschen Lösungen Anhaltspunkte geben, wie eine richtige Lösung aussehen könnte. Bei einer korrekten Lösung, können solche Hinweise trotzdem nützlich sein, denn die Anfrage des Lernenden kann trotz Korrektheit zu lang bzw. zu kompliziert sein. Dies würde bei einem Vergleich der gesammelten Metainformationen deutlich werden.
 
 \section{Standardisierung von SQL-Anfragen}
 
-Zunächst verfolgen wir den Ansatz zwei SQL-Anfragen zu vergleichen, indem wir sie standardisieren. Die Kriterien der Standardisierung werden im Detail behandelt. Standardisiert man die Musterlösung, als auch die Lösung des Lernenden nach den gleichen Kriterien, so kann man danach durch einen einfachen Stringvergleich auf die Äquivalenz schließen. 
+Zunächst verfolgen wir den Ansatz zwei SQL-Anfragen zu vergleichen, indem wir sie standardisieren. Wir erhoffen uns durch die Standardisierung eine syntaktische Äquivalenz beider Anfragen zu erreichen. Dies würde automatisch eine semantische Äquivalenz bedeuten. Die Kriterien der Standardisierung werden im Detail behandelt. Standardisiert man die Musterlösung, als auch die Lösung des Lernenden nach den gleichen Kriterien, so kann man danach durch einen einfachen Stringvergleich auf die syntaktische, und damit auch auf die semantische, Äquivalenz schließen. 
 
 \subsection{Entfernen von syntaktischen Details}
 
-Das Entfernen von syntaktischen Details übernimmt zum großen Teil bereits der Parser. Er entfernt unnötige Leerzeichen, Kommentare sowie unnötige Klammern. Aufgrund der Arbeitsweise des Parsers gibt es allerdings Situationen, in dem der Parser scheinbar nicht alle unnötigen Klammern entfernt. Wie im Abschnitt >>Verwendeter Parser<< erläutert wird, sind die geparsten Bäume nicht binär. Ein Baum wie in Abbildung \ref{baum1} zu sehen, ist daher zu vermeiden. 
+Das Entfernen von syntaktischen Details übernimmt zu einem Teil bereits der Parser. Er entfernt unnötige Leerzeichen, Kommentare sowie unnötige Klammern. Aufgrund der Arbeitsweise des Parsers gibt es allerdings Situationen, in denen der Parser scheinbar nicht alle unnötigen Klammern entfernt. Wie im Abschnitt >>Verwendeter Parser<< erläutert wurde, sind die geparsten Bäume nicht binär. Unnötige Klammerungen müssen daher eventuell nachträglich entfernt werden. Dazu stellen wir noch eine Methode vor.
 
 Der Parser hilft allerdings dabei die SQL-Anfrage in einer Datenstruktur zu überführen, die frei von allen syntaktischen Details ist. Dazu gehören Leerzeichen, Tabs, Zeilenumbrüche und Groß-/ Kleinschreibung von Schlüsselwörtern.
 
 \subsection{SELECT-Teil}
 
-Im \verb|SELECT|-Teil brauchen wir im Normalfall keine Änderungen vornehmen. Das einzige, was hier anpassbar wäre, ist die Reihenfolge der einzelnen Attribute bzw. Aggregationsfunktionen. Diese ist aber im Standardfall vorgegeben. Ist für eine Aufgabenstellung aber explizit vermerkt, dass die Reihenfolge der Spalten keine Rolle spielt, so sortieren wir die Spaltennamen lexikographisch. Eine weitere Besonderheit stellen die Spaltenüberschriften dar. Hier muss wieder vermerkt werden, ob Spaltenüberschriften von Bedeutung sind. Ist dies nicht der Fall, so entfernen wir aus dem \verb|SELECT|-Teil alle Spaltenüberschriften. 
+Im \verb|SELECT|-Teil brauchen wir im Normalfall keine Änderungen vornehmen. Das einzige, was hier anpassbar wäre, ist die Reihenfolge der einzelnen Attribute bzw. Aggregationsfunktionen. Diese ist aber im Standardfall vorgegeben. Ist für eine Aufgabenstellung aber explizit vermerkt, dass die Reihenfolge der Spalten keine Rolle spielt, so sortieren wir die Spaltennamen lexikographisch. Dies muss der Dozent beim Einstellen der Aufgabe explizit vermerken. Eine weitere Besonderheit stellen die Spaltenüberschriften dar. Hier muss wieder vermerkt werden, ob Spaltenüberschriften von Bedeutung sind. Ist dies nicht der Fall, so entfernen wir aus dem \verb|SELECT|-Teil alle Spaltenüberschriften. 
 
 \subsection{FROM-Teil}
 \label{subsec:from}
@@ -193,11 +193,11 @@ Unter einer bestimmten Voraussetzung, können wir die Tabellen unter \verb|FROM|
 \end{verbatim}
 In Anfrage 1 erhalten wir erst alle Spalten der Tabelle \verb|emp| und danach alle Spalten der Tabelle \verb|dept|. In Anfrage 2 ist das Verhalten genau umgekehrt. Daher ist klar, dass wir die Tabellen, die im \verb|FROM|-Teil auftauchen genau dann sortieren können, wenn der \verb|SELECT|-Teil nicht nur aus \verb|*| besteht.
 
-Danach werden automatische Aliase erzeugt. Sind bereits Aliase vergeben wurden, so werden diese ebenfalls durch die automatischen Aliase ersetzt. Eine Hashtabelle speichert frühere Zuweisungen, damit im \verb|SELECT|-, \verb|WHERE|-, \verb|GROUP BY|- und \verb|ORDER BY|-Teil die Aliase ebenfalls korrekt ersetzt werden.
+Danach werden automatische Tupelvariablen erzeugt. Sind bereits Tupelvariablen vom Nutzer vergeben wurden, so werden diese ebenfalls durch die automatischen ersetzt. Eine Hashtabelle speichert frühere Zuweisungen, damit im \verb|SELECT|-, \verb|WHERE|-, \verb|GROUP BY|- und \verb|ORDER BY|-Teil die Tupelvariablen ebenfalls korrekt ersetzt werden.
 
-Hatten die vorkommenden Tabellen im \verb|FROM|-Teil keinen Alias wird nur der küsntliche Alias eingeführt.
+Hatten die vorkommenden Tabellen im \verb|FROM|-Teil keine Tupelvariablen, so werden künstliche eingeführt.
 
-\begin{figure}
+\begin{figure}[h]
 Eingabe: \\\verb|SELECT e.id, e.name, d.region FROM emp e, dep d WHERE e.depid = d.id|\\
 
 Anpassung: \\\verb|SELECT a2.id, a2.name, a1.region FROM dep a1, emp a2 WHERE a2.depid = a1.id|\\
@@ -207,18 +207,22 @@ Anpassung: \\\verb|SELECT a2.id, a2.name, a1.region FROM dep a1, emp a2 WHERE a2
 \subsection{WHERE-Teil}
 \label{subsec:where}
 
-Aufgrund der Eigenheiten des ZQL-Parsers ist es möglich, dass eine unnötige Klammerung nicht entfernt wird. Beispiele dafür sind im Abschnitt >>ZQL-Parser<< zu finden. Es ist daher wünschenswert eine Normalform des \verb|WHERE|-Teils zu erreichen. In diesem Fall wurde die konjunktive Normalform (KNF) gewählt.
-
+Es ist wünschenswert eine Normalform des \verb|WHERE|-Teils zu erreichen, da dies die Übersichtlichkeit steigert und eine wichtige Voraussetzung zum Bearbeiten ist. Wir möchten den \verb|WHERE|-Teil in eine konjunktive Normalform (KNF) überführen, da Anwender oft SQL-Anfragen formulieren, die konjunktiv einzelne Bedingungen verknüpfen. 
 
 \subsubsection{Entfernung unnötiger Klammerungen}
 \label{subsubsec:opcomp}
 
-Ein Ausdruck \verb|((a > 5)  and ((b > 5) and (c > 5)))| enthält unnötige Klammern, da der Operator \verb|and| als Operand von einem weiteren \verb|and| vorkommt. Folgender Ausdruck ist äquivalent: \verb|((a > 5)  and (b > 5) and (c > 5))|. Diese spezielle Form der Klammerung entsteht aus der Tatsache, dass der ZQL-Parserbaum nicht binär ist und beide eben genannten Beispiele nicht den gleichen Baum beschreiben. Als ersten Schritt in Richtung KNF möchten wir solche unnötigen Klammern entfernen. 
+Ein Ausdruck \verb|((a > 5)  AND ((b > 5) AND (c > 5)))| enthält unnötige Klammern, da der Operator \verb|AND| als Operand von einem weiteren \verb|AND| vorkommt. Folgender Ausdruck ist äquivalent: \verb|((a > 5) AND (b > 5) AND (c > 5))|. Diese spezielle Form der Klammerung entsteht aus der Tatsache, dass der ZQL-Parserbaum nicht binär ist und beide eben genannten Beispiele nicht den gleichen Baum beschreiben. Als ersten Schritt in Richtung KNF möchten wir solche unnötigen Klammern entfernen. 
 
-Es ist daher wünschenswert, wenn ein Operator X einen Ausdruck als Kindknoten besitzt, indem X ebenfalls der Operator ist, den Operator X im Kindknoten zu eliminieren. Alle Kinder vom eliminierten Kindknoten an hängen wir nun an den verbleibenden Operatorknoten X. Damit hätte man den Ausdruck vereinfacht, da die assoziative Klammerung wegfällt. Wir nennen dieses Vorgehen im Folgenden Operatorkompression. Verbildlicht wird dieser Vorgang im Abschnitt >>Funktionsweise des Parsers<<.
+Es ist daher wünschenswert, wenn ein Operator $op1$ einen Operanden als Kindknoten besitzt, der wiederum $op1$ repräsentiert, den Kindknoten zu eliminieren. Alle Kinder vom eliminierten Kindknoten hängen wir nun an den verbleibenden Operatorknoten $op1$ an. Damit hätte man den Ausdruck vereinfacht, da die assoziative Klammerung wegfällt. Wir nennen dieses Vorgehen im Folgenden \textbf{Operatorkompression}. Verbildlicht wird dieser Vorgang in Abbildung \ref{fig:opcomp}.
 
-Gegeben sei der ZQL-Parsebaum $B=(V,E)$. Es sei $child(v) = \{ w : w\in V \wedge (v,w)\in E\}$, also die Menge aller Kindknoten von $v$. Gibt es einen Knoten $w\in child(v)$ mit $v=w$, so wird Knoten $w$ eliminiert und alle Kindknoten von $w$ werden zu Kindknoten von $v$, also $child(v) = child(v) \cup child(w)$. 
-$E=E\backslash \{ (w,x) : x\in child(w)\} \cup \{(v,x) x\in child(w)\}$ und $V=V\backslash \{w\}$.
+\begin{figure}[h]
+BILD
+\caption{Operatorkompression}
+\label{fig:opcomp}
+\end{figure}
+
+Gegeben sei der ZQL-Parsebaum $B=(V,E)$. Es sei $children(v) = \{ w : w\in V \wedge (v,w)\in E\}$, also die Menge aller Kindknoten von $v$. Gilt $v\in V$ und sei $v$ ein innerer Knoten, dann muss $v$ einen Operator repräsentieren, den wir mit $\mathit{operator}(v)$ erhalten. Gibt es einen Knoten $w\in child(v)$ mit $\mathit{operator}(v)=\mathit{operator}(w)$, so wird Knoten $w$ eliminiert und alle Kindknoten von $w$ werden zu Kindknoten von $v$, also $child(v) := child(v) \cup child(w)$ und $E=E\backslash \{ (w,x) : x\in child(w)\} \cup \{(v,x) x\in child(w)\}$ und $V=V\backslash \{w\}$.
 
 Im Sinne des Vergleiches der Komplexität der Musterlösung mit der Komplexität der Lösung des Lernenden ist es sinnvoll zu speichern, ob und wie oft eine solche Operatorkompression durchgeführt werden musste.
 
@@ -243,15 +247,15 @@ Umwandlung Teil 2: & Umwandlung Teil 3:\\
 
 Im letzten Schritt haben wir die Formel \verb|((a <= 5) or ((b <= 5) and (c <= 5)))| erhalten. Durch Anwenden des Distributivgesetzes können wir diese Formel im letzten Schritt umformen zu: \verb|((a <= 5) or (b <= 5)) and ((a <= 5) or (c <= 5))|
 
-Im Allgemeinen durchsuchen wir den Parserbaum auf Konstellationen, in denen ein Knoten mit dem Operator \verb|OR|, Elternknoten von einem \verb|AND|-Knoten ist. Dann müssen wir auf diesen Teilbaum das Distributivgesetz anwenden. Wir wiederholen diesen Vorgang, bis kein \verb|OR|-Knoten mehr vor einem \verb|AND|-Knoten erscheint.
+Im Allgemeinen durchsuchen wir den Parserbaum auf Konstellationen, in denen ein Knoten mit dem Operator \verb|OR|, Elternknoten von einem \verb|AND|-Knoten ist. Dann müssen wir auf diesen Teilbaum das Distributivgesetz anwenden. Wir wiederholen diesen Vorgang, bis kein \verb|OR|-Knoten mehr Vorfahr eines \verb|AND|-Knotens ist.
 
 \subsection{Ersetzung von syntaktischen Varianten}
 
 Um eine Anfrage zu standardisieren müssen wir den syntaktischen Zucker entfernen. Dies geschieht, indem man nur eine syntaktische Schreibweise anerkennt und alle anderen Schreibweisen in die zulässige umgewandelt. 
 
-Mit dem Operator \verb|BETWEEN| testen wir ob ein gegebener Ausdruck zwischen zwei Werten, upper und lower, befindet. Wir schreiben den Ausdruck \verb|e BETWEEN upper AND lower| äquivalent um, in dem wir nur Vergleichsoperatoren benutzten. \\Unser Ausdruck lautet dann: \verb|e >= upper AND e <= lower|.
+Mit dem Operator \verb|BETWEEN| testen wir ob ein gegebener Ausdruck zwischen zwei Werten, lower und upper, befindet. Wir schreiben den Ausdruck \verb|e BETWEEN lower AND upper| äquivalent um, in dem wir nur Vergleichsoperatoren benutzten. \\Unser Ausdruck lautet dann: \verb|e >= lower AND e <= upper|.
 
-Der Operator \verb|IN| prüft, ob ein gegebener Ausdruck einem bestimmten Wert aus einer Liste zugewiesen ist. Die Liste kann dabei als Unterabfrage oder als Liste von Konstanten beschrieben werden. Handelt es sich um eine Liste von Konstanten, so können wir \\\verb|e IN (const1, const2, ..., constn)| ersetzen, in dem wir prüfen ob \verb|expression| einen der konstanten Werte annimmt. Wir verknüpfen also $n$ Vergleiche disjunktiv miteinander. Wir erhalten dadurch: \verb|e = const1 OR e = const2 OR ... OR e = constn|.
+Der Operator \verb|IN| prüft, ob ein gegebener Ausdruck einem bestimmten Wert aus einer Liste zugewiesen ist. Die Liste kann dabei als Unterabfrage oder als Liste von Konstanten beschrieben werden. Handelt es sich um eine Liste von Konstanten, so können wir \\\verb|e IN (const1, const2, ..., constn)| ersetzen, in dem wir prüfen ob \verb|e| einen der konstanten Werte annimmt. Wir verknüpfen also $n$ Vergleiche disjunktiv miteinander. Wir erhalten dadurch: \verb|e = const1 OR e = const2 OR ... OR e = constn|.
 
 Ähnlich dazu verhält sich der Operator \verb|ALL|. Er tritt in folgender Form auf:\\
 \verb|operand comparison_operator ALL (subquery)|. Dabei kann \verb|subquery| auch eine Liste von Konstanten sein. Es wird in jedem Fall geprüft ob der Operand und jedes der Listenelemente in der Vergleichsrelation enthalten ist. Haben wir als \verb|subquery| eine Liste von Konstanten, so ist dies äquivalent mit dem paarweisen Vergleich von \verb|operand| und jedem Listenelement. Diese $n$ Vergleiche werden dann konjunktiv verknüpft, also: \\
@@ -296,7 +300,7 @@ Wir behandeln in diesem Abschnitt nur echte Unterabfragen, das heißt die Untera
 
 \subsubsection*{ALL-Unterabfragen}
 
-\verb|ALL|-Unterabfragen haben immer das Muster: \verb|operand comparison_operator ALL (subquery)|. Dabei handelt es sich bei einem \verb|comparision_operator| um einen Operator aus der Menge: \verb|{=,<>,>,<,>=,<=}|. Die Unterabfrage \verb|subquery| liefert eine Liste von Attributen. Dann wir so verfahren wie bereits im letzten Abschnitt erklärt. Unser Ziel ist es, diese Unterabfrage, wenn möglich, zu ersetzen durch eine \verb|EXISTS|-Unterabfrage. Um diese Umwandlung nachzuvollziehen, wandeln wir zunächst die Unterabfrage mit \verb|ALL| in eine Unterabfrage mit \verb|ANY| um. Dazu ersetzen wir den \verb|comparison_operator| mit seinem gegenteiligem Operator. Folgende Paare sind jeweils voneinander gegenteilige Operatoren: \verb|{ {<,>=}, {>,<=}, {=,<>} }|. Danach ersetzen wir \verb|ALL| mit \verb|ANY| und kapseln die gesamte Unterabfrage mit einem \verb|NOT|. 
+\verb|ALL|-Unterabfragen haben immer das Muster: \verb|operand comparison_operator ALL (subquery)|. Dabei handelt es sich bei einem \verb|comparision_operator| um einen Operator aus der Menge: \verb|{=,<>,>,<,>=,<=}|. Die Unterabfrage \verb|subquery| liefert eine Liste von Attributen. Dann wird so verfahren wie bereits im letzten Abschnitt erklärt. Unser Ziel ist es, diese Unterabfrage, wenn möglich, zu ersetzen durch eine \verb|EXISTS|-Unterabfrage. Um diese Umwandlung nachzuvollziehen, wandeln wir zunächst die Unterabfrage mit \verb|ALL| in eine Unterabfrage mit \verb|ANY| um. Dazu ersetzen wir den \verb|comparison_operator| mit seinem gegenteiligem Operator. Folgende Paare sind jeweils voneinander gegenteilige Operatoren: \verb|{ {<,>=}, {>,<=}, {=,<>} }|. Danach ersetzen wir \verb|ALL| mit \verb|ANY| und kapseln die gesamte Unterabfrage mit einem \verb|NOT|. 
 
 %\begin{figure}
 \begin{lstlisting}[mathescape]
@@ -314,7 +318,7 @@ WHERE NOT( $t_1\ $opposite(comparison_operator$)$ ANY (
 )
 \end{lstlisting}
 
-Diese \verb|ANY|-Unterabfrage können wir nun in eine \verb|EXISTS|-Unterabfrage transformieren. Wie das genau durchgeführt wird, behandeln wir im nächsten Abschnitt.
+Diese \verb|ANY|-Unterabfrage können wir nun in eine \verb|EXISTS|-Unterabfrage transformieren. Wie das genau durchgeführt wird, behandeln wir im nächsten Absatz.
 
 %\caption{Umwandeln von \verb|ALL|- in \verb|ANY|-Unterabfrage}
 %\label{fig:all_ex2}
@@ -340,7 +344,7 @@ WHERE EXISTS(
 )
 \end{lstlisting}
 
-Wie wir am Ergebnis der Umwandlung erkennen, verstößt $t_2$ im \verb|SELECT|-Teil der \verb|EXISTS|-Unterabfrage bereits gegen unsere Konvention: Im \verb|SELECT|-Teil einer \verb|EXISTS|-Unterabfrage steht nur die Konstante \verb|1|. Es empfiehlt sich daher, die Normierung des \verb|SELECT|-Teils von \verb|EXISTS|-Unterabfragen erst nach dem Umwandeln von Unterabfragen durchzuführen.
+Wie wir am Ergebnis der Umwandlung erkennen, verstößt $t_2$ im \verb|SELECT|-Teil der \verb|EXISTS|-Unterabfrage bereits gegen unsere Konvention: ``Im \verb|SELECT|-Teil einer \verb|EXISTS|-Unterabfrage steht nur die Konstante \verb|1|''. Es empfiehlt sich daher, die Normierung des \verb|SELECT|-Teils von \verb|EXISTS|-Unterabfragen erst nach dem Umwandeln von Unterabfragen durchzuführen.
 
 
 \subsubsection*{IN-Unterabfragen}
@@ -357,23 +361,23 @@ Alle, eben genannten, Umwandlungen können nur durchgeführt werden, wenn bestim
 \item Die Unteranfrage für $t_2$ darf keine Nullwerte liefern. 
 \end{enumerate}
 
-Wir haben im Abschnitt \verb|FROM|-Teil bereits festgelegt, dass sämtliche Aliase der Tupelvariablen automatisch erzeugt werden. Dies gilt in natürlicher Weise auch für Unterabfragen. Der Prozess erstreckt sich von Einführung von Aliasen, falls vorher keine Vorhanden waren, bis hin zur Umbenennung bereits vorhandener Aliase, sodass niemals identische Aliase innerhalb einer SQL-Anfrage vorkommen können. Damit erfüllen wir bereits die Bedingung 1 und 2. 
+Wir haben im Abschnitt \verb|FROM|-Teil bereits festgelegt, dass sämtliche Tupelvariablen automatisch erzeugt werden. Dies gilt in natürlicher Weise auch für Unterabfragen. Der Prozess erstreckt sich von Einführung von Tupelvariablen, falls vorher keine Vorhanden waren, bis hin zur Umbenennung bereits vorhandener, sodass niemals identische Tupelvariablen innerhalb einer SQL-Anfrage vorkommen können. Damit erfüllen wir bereits die Bedingung 1 und 2. 
 
 Da es nicht entscheidbar ist, ob eine Unterabfrage \verb|NULL|-Werte liefern kann, vereinfachen wir das Entscheidungskriterium dafür. Wenn eine der zugehörigen Spalten in $t_2$ so definiert ist, dass \verb|NULL|-Werte laut Definition des Datenbankschemas erlaubt sind, so gehen wir davon aus, dass die Unterabfrage \verb|NULL|-Werte liefern wird. Wir wandeln, in einem solchen Fall, die Unterabfrage nicht um.
 
 \subsubsection{Andere Unteranfragen}
 
-Ungewöhnliche Unterabfragen, wie \mbox{z. B.} Unterabfragen unter \verb|FROM|, werden hier nicht betrachtet. Im Allgemeinen werden solche Unterabfragen kaum gebraucht und machen die Anfrage meist nur viel komplexer als notwendig.
+Ungewöhnlichere Unterabfragen, wie \mbox{z. B.} Unterabfragen unter \verb|FROM|, werden hier nicht betrachtet. Im Allgemeinen werden solche Unterabfragen kaum gebraucht und machen die Anfrage meist nur viel komplexer als notwendig. Der vorgestellte Parser unterstützt außerdem keine Unterabfragen unter \verb|FROM|. Er versteht nur Listen von Relationen mit Tupelvariablen.
 
 \subsection{Operatorenvielfalt}
 
-Im folgenden Abschnitt soll geklärt werden wie mit verschiedenen Schreibweisen von ein- und demselben Ausdruck umgegangen werden soll. Betrachtet man sich \mbox{z. B.} \verb|A > 5| ist dieser Ausdruck äquivalent mit \verb|5 < A|. Wenn wir wissen, dass \verb|A| ein ganzzahlige Variable ist, dann sind auch folgende Äquivalenzen wahr: \verb|A >= 6| sowie \verb|6 <= A|. Wir betrachten nun zwei verschiedene Ansätze um mit diesem Problem umzugehen. Der erste Ansatz beschäftigt sich damit, alle implizierten Schreibweisen mit in die Formel aufzunehmen. Damit stellt man sicher, dass sich alle korrekten Schreibweisen einer Formel in der Anfrage befinden. Der zweite Ansatz beschäftigt sich damit, nur bestimmte Schreibweisen zuzulassen und alle anderen durch die zulässigen zu ersetzen.
+Im folgenden Abschnitt soll geklärt werden wie mit verschiedenen Schreibweisen von ein- und demselben Ausdruck umgegangen werden soll. Betrachtet man sich \mbox{z. B.} \verb|A > 5| ist dieser Ausdruck äquivalent mit \verb|5 < A|. Wenn wir wissen, dass \verb|A| ein ganzzahlige Variable ist, dann sind auch folgende Äquivalenzen wahr: \verb|A >= 6| sowie \verb|6 <= A|. Wir betrachten nun zwei verschiedene Ansätze, die diese Probleme lösen sollen. Der erste Ansatz beschäftigt sich damit, alle implizierten Schreibweisen mit in die Formel aufzunehmen. Damit stellt man sicher, dass sich alle korrekten Schreibweisen einer Formel in der Anfrage befinden. Der zweite Ansatz beschäftigt sich damit, nur bestimmte Schreibweisen zuzulassen und alle anderen durch die zulässigen zu ersetzen.
 
 \subsubsection{Analyse der unterschiedlichen Operatoren}
 
-Wir unterscheiden im wesentlichen zwei Arten von Operatoren. Zunächst haben wir Operatoren, bei denen wir die Operanden in beliebiger Reihenfolge anordnen können. Wir nennen diese Operatoren, kommutative Operatoren. Dies sind \verb|{ =, AND, OR, +, *}|. Alle anderen Operatoren sind demnach nicht kommutativ, da wir die Reihenfolge der Operanden nicht ändern können, ohne den Ausdruck zu verfälschen. Zu dieser Gruppe von Operatoren zählen insbesondere \verb|{ >=, >, <, <=, -, /, }|. Eine dritte Gruppe bilden unäre Operatoren, die nur ein Operanden kennen. Diese Gruppe ist aber im Sinne der Anordnung uninteressant, da wir hier keine mehrdeutig aufgeschrieben Varianten haben.
+Wir unterscheiden im wesentlichen zwei Arten von Operatoren. Zunächst haben wir Operatoren, bei denen wir die Operanden in beliebiger Reihenfolge anordnen können. Wir nennen diese Operatoren, kommutative Operatoren. Dies sind \verb|{ =, AND, OR, +, *}|. Alle anderen Operatoren sind demnach nicht kommutativ, da wir die Reihenfolge der Operanden nicht ändern können, ohne den Ausdruck zu verfälschen. Zu dieser Gruppe von Operatoren zählen \verb|{ >=, >, <, <=, -, /, }|. Eine dritte Gruppe bilden unäre Operatoren, die nur einen Operanden kennen. Diese Gruppe ist aber im Sinne der Anordnung uninteressant, da wir hier keine mehrdeutig aufgeschrieben Varianten haben.
 
-Ziel ist es, nach wie vor, eine gewisse Ordnung zu definieren, so dass nach der Standardisierung semantisch gleiche Anfragen auch syntaktisch gleich sind. Betrachten wir nun einen Ausdruck mit einem Operator $op$ und $n$ Operanden, die wir als $child_i$ bezeichnen. Ist $op$ ein kommutativer Operator, so können wir die Operanden $child_i$ beliebig anordnen ohne den Sinn des Ausdrucks zu verändern. Dies tun wir, in dem wir eine bestimmte Sortierreihenfolge etablieren. Diese finden wir im späteren Abschnitt \ref{subsec:sort}.
+Ziel ist es nach wie vor, eine gewisse Ordnung zu definieren, so dass nach der Standardisierung semantisch gleiche Anfragen auch syntaktisch gleich sind. Betrachten wir nun einen Ausdruck mit einem Operator $op$ und $n$ Operanden, die wir fortlaufen mit $\mathit{child_1},...,\mathit{child_i},...,\mathit{child_n}$ bezeichnen. Ist $op$ ein kommutativer Operator, so können wir die Operanden $child_i$ beliebig anordnen ohne den Sinn des Ausdrucks zu verändern. Dies tun wir, indem wir eine bestimmte Sortierreihenfolge etablieren. Diese finden wir im späteren Abschnitt \ref{subsec:sort}.
 
 Diese Sortierung ist nicht möglich, wenn $op$ nicht kommutativ ist. In einem solchen Fall müssen wir also die äquivalenten Schreibweisen des Ausdrucks mit in unsere Formel aufnehmen und konjunktiv mit dem Originalausdruck verknüpfen. Im folgenden Beispiel sei angenommen, dass $a$ vom Typ \verb|INT| ist.
 Zu beachten ist, dass im Beispiel der Operator $>$ nicht kommutativ ist und daher all seine weiteren Schreibweisen hinzugefügt werden müssen.
@@ -411,7 +415,7 @@ $M_8$ & $\{\ A<X, A\leq X-\mathit{adjust}(A) \}$\\
 
 \end{tabular}
 
-Beim Vergleich mit $>$ und $<$ ist es wichtig zu wissen, wie viel Nachkommastellen die numerischen Variablen $A$ und $B$ besitzen. Es sei $\mathit{places}(A)$ die Anzahl der Nachkommastellen der Zahl $A$. Dann bezeichnen wir mit $\mathit{adjust}(A) = 1 / (10^{\mathit{places}(A)})$, einen angepassten Wert, der sich nach der Stelligkeit der Variable A richtet.
+Beim Vergleich mit $>$ und $<$ ist es wichtig zu wissen, wie viele Nachkommastellen die numerischen Variablen $A$ und $B$ besitzen. Es sei $\mathit{places}(A)$ die Anzahl der Nachkommastellen der Zahl $A$. Dann bezeichnen wir mit $\mathit{adjust}(A) = 1 / (10^{\mathit{places}(A)})$, einen angepassten Wert, der sich nach der Stelligkeit der Variable A richtet.
 
 Betrachten wir als Beispiel ein Attribut \verb|salery|, welches als \verb|NUMERIC(4,2)| definiert ist. Wir wissen also, dass \verb|salery| zwei Nachkommastellen hat. Betrachten wir nun die Aussage \verb|salery >= 5|.
 Wir haben auf einer Seite eine Variable (\verb|salery|) und auf der anderen Seite eine numerische Konstante (\verb|5|). Dieses Muster passt also auf $M_7$ und auf $M_6$. In $M_7$ heißt es $A\geq X+\mathit{adjust}(A)$. Bezogen auf unser Beispiel ist \verb|A=salery| und \verb|x+adjust(salery)=5|. Wir berechnen also: 
@@ -420,7 +424,7 @@ Wir erhalten also \verb|x=4,99|, weil \verb|x+0,01=5|. Somit ergänzen wir unser
 
 Finden wir Ausdrücke mit $>,<,\leq,\geq$, welche als Argumente Variablen oder Konstanten haben, so unterscheiden wir also grundsätzlich drei Fälle.
 
-Fall 1 $(M_5,M_6)$: Beide Operanden sind Variablen oder Konstanten. In diesem Fall ergänzen wir nur den jeweils symmetrischen Operator. Da beide Operanden Variablen sind, macht es weniger Sinn jeweils $\leq,\geq$ oder $<,>$ zu ersetzen, da normalerweise ein künstliches hinzufügen eines Summanden auf einer Seite, die Anfrage unnatürlich aussehen lässt. Es ist aber auch kein Problem diese Ersetzungen auch durchzuführen, wenn beide Operanden Variablen sind. Die Anfrage wird dann natürlich noch weiter künstlich aufgebläht.
+Fall 1 $(M_5,M_6)$: Beide Operanden sind Variablen. In diesem Fall ergänzen wir nur den jeweils symmetrischen Operator. Da beide Operanden Variablen sind, macht es weniger Sinn jeweils $\leq,\geq$ oder $<,>$ zu ersetzen, da normalerweise ein künstliches hinzufügen eines Summanden auf einer Seite, die Anfrage unnatürlich aussehen lässt. Es ist aber auch kein Problem diese Ersetzungen dennoch durchzuführen, wenn beide Operanden Variablen sind. Die Anfrage wird dann natürlich noch weiter künstlich aufgebläht.
 
 Fall 2 $(M_7,M_8)$: Einer der beiden Operanden ist eine numerische Konstante und der andere ist eine Variable. In diesem Fall fügen wir alle implizierten Gleichungen hinzu, also insbesondere die Operatoren $\leq,\geq,<,>$. Zu beachten ist hier, dass nicht nur Gleichungen der Form $A>X$ dazu führen, dass alle Ausdrücke von $M_7$ hinzugefügt werden. Auch wenn eine Gleichung der Form $Var1\geq 5.2$ auftaucht, werden Ersetzungen durchgeführt. Diese Gleichung passt auf das Muster $A\geq X+\mathit{adjust}(A)$. Angenommen $Var1$ hat maximal eine Nachkommastelle, so würden dann folgende Gleichungen impliziert werden: $\{\ Var1>5.1\ ,\ 5.1<Var1\ ,\ 5.2 \leq Var1\ \}$.
 
@@ -428,11 +432,13 @@ Fall 3: Beide Operanden sind numerische Konstanten. In dem Fall wird die logisch
 
 In einem anschließenden Schritt werden arithmetisch/logische Ausdrücke ausgewertet und durch ihre Ergebnis ersetzt. Dieser Schritt muss BOTTOM-UP geschehen, damit man auch mehrere Ersetzungen nach oben, im Parserbaum, weiterreicht. Haben wir am Ende einen SQL-Ausdruck dessen \verb|WHERE|-Teil aus \verb|false| besteht, dann haben wir eine Anfrage gefunden, die immer das leere Ergebnis liefern wird. In diesem Fall müssen wir natürlich eine Fehlermeldung ausgeben.
 
+Sollten wir durch das Hinzufügen implizierter Formeln jetzt einige Formeln doppelt in unserer Anfrage haben, so werden diese bei der Sortierung entfernt.
+
 \subsubsection{Beschränkung der Operatorenvielfalt}
 
-Ein weiterer Ansatz das Problem der äquivalenten Formeln anzugehen ist es, bestimmte Operatoren zu >>verbieten<<. Das soll bedeuten, wir definieren verbotene Operatoren, welche am Ende der Umwandlungen nicht mehr in der SQL-Anfrage vorkommen dürfen. Dies wird erreicht, indem wir jeden verbotenen Operator umwandeln in einen nicht-verbotenen Operator. Das Prinzip ähnelt dem eben Vorgestellten. Wir betrachten wieder die Mengen $M_i$. Des Weiteren hat jede Menge $M_i$ einen Repräsentanten $r(M_i)$. Finden wir nun in der zu bearbeitenden Anfrage eine Formel $f$, die auf eine der Ausdrücke $a\in M_i$ passt, so ersetzen wir $f$ mit $r(M_i)$. Folgende Tabelle soll die Mengen und deren Repräsentanten beschreiben.
+Ein weiterer Ansatz das Problem der äquivalenten Formeln anzugehen, ist es bestimmte Operatoren zu >>verbieten<<. Das soll bedeuten, dass wir verbotene Operatoren definieren, welche am Ende der Umwandlungen nicht mehr in der SQL-Anfrage vorkommen dürfen. Dies wird erreicht, indem wir jeden verbotenen Operator umwandeln in einen zugehörigen, nicht-verbotenen Operator. Das Prinzip ähnelt dem eben Vorgestellten. Wir betrachten wieder die Mengen $M_i$. Des Weiteren hat jede Menge $M_i$ einen Repräsentanten $r(M_i)$. Finden wir nun in der zu bearbeitenden Anfrage eine Formel $f$, die auf eine der Ausdrücke $a\in M_i$ passt, so ersetzen wir $f$ mit $r(M_i)$. Folgende Tabelle soll die Mengen und deren Repräsentanten beschreiben.
 
-Im folgenden sind alle Variablennamen $A,B,C$ keine (komplexe) Ausrücke. Es handelt sich also jeweils um Blattknoten im Parserbaum. Ferner bezeichnen wir $X,Y$ als numerische Konstanten.\\
+Im Folgenden sind alle Variablennamen $A,B,C$ keine (komplexe) Ausrücke. Es handelt sich also jeweils um Blattknoten im Parserbaum. Ferner bezeichnen wir $X,Y$ als numerische Konstanten.\\
 
 \begin{tabular}{lll}
 $i$ & $M_i$ & $r(M_i)$ \\
@@ -445,7 +451,7 @@ $7$ & $\{\ A\geq B, B\leq A \}$ & $A\geq B$\\
 $8$ & $\{\ A>X\ ,\ X<A,A\geq X+\mathit{adjust}(X)\ ,\ X\leq A - \mathit{adjust}(X)\ \}$ & $A>X$\\
 \end{tabular}
 
-Im Folgenden soll ein Beispiel die Prozedur verdeutlichen.\\
+Ein Beispiel soll die Prozedur verdeutlichen.\\
 
 Es sei unsere Ausgangsanfrage: \begin{verbatim}SELECT * FROM testtable WHERE X = 6 - Y\end{verbatim}
 
@@ -454,7 +460,7 @@ Die Formel $X=6-Y$ finden wir in $M_1$ in Form von $A=B-C$. Wir ersetzen nun als
 Ein Problem bei der Verwendung von Repräsentanten durch Einschränkung der Operatorenvielfalt ist, dass es zu überlappenden Mengen kommen kann. Damit ist gemeint, dass ein Ausdruck auf mindestens zwei Mengen $M_i$ und $M_j$ mit $i\neq j$ passt. Man muss sich in einem solchen Fall fragen, welchen Ausdruck man als Repräsentanten wählt. Es gibt mehrere Arten mit diesem Problem umzugehen. Auf der einen Seite könnte man die Mengen so umgestalten, dass alle Mengen $M_i$ jeweils, paarweise disjunkte Mengen darstellen, dann käme es zu keiner derartigen Überlappung. Zum anderen könnte man eine Ordnung vorschreiben. Würde ein Ausdruck $expr$ auf die Mengen $M_i$ und $M_j$ mit $i\neq j$ passen wählen wir den Repräsentanten $r(M_i)$ genau dann, wenn $i < j$, ansonsten wählen wir $r(M_j)$.
 
 In unserem Programm verwenden wir nicht diesen Ansatz, sondern wir fügen implizierte Formeln hinzu.
-
+%TODO Korrekturmarke
 \subsubsection{Einschränkungen bei arithmetischen Ausdrücken}
 \label{subsubsec:arithmetic}
 
@@ -477,19 +483,21 @@ Nun können wir die Reihenfolge der Operanden permutieren. Im letzten Schritt m�
 
 Im zweiten Ansatz gestaltet sich das Problem etwas einfacherer. Wie bereits im ersten Ansatz eliminieren wir die Operatoren $-$ und $/$. Da wir am Ende nur eine Schreibweise als zugelassen betrachten, müssen wir nun festlegen, welche Schritte an jedem Ausdruck ausgeführt werden müssen. Wir entscheiden uns für folgende Konvention: Alle Variablen werden via äquivalenten Umformungen auf die linke Seite der Gleichung gebracht und alle numerischen Konstanten werden auf die rechte Seite der Gleichung gebracht. Im nächsten Schritt entfernen wir doppelte Minus- bzw. Divisionszeichen, aus $-(-2)$ wird also $+2$ und aus $1/1/E$ wird $E$. Nun rechnen wir den Wert des arithmetischen Ausdrucks auf der rechten Seite aus, da dieser nun nur noch aus Konstanten besteht. Die Linke Seite sortieren wir lexikographisch nach Namen der Variablen. Es muss daran erinnert werden, dass diese Namen automatisch generiert worden sind, sodass sichergestellt ist, dass wir Übereinstimmungen später finden können.
 
+Zusammenfassend kann gesagt werden, dass eine Behandlung von komplexeren arithmetischen Ausdrücken möglich, aber nicht einfach umzusetzen ist. Wir haben nur Ansätze präsentiert, die in einem ausgearbeiteten Zustand das Problem der Standardisierung solcher arithmetischen Ausdrücke lösen könnten. Denkbar wären auch andere Ansätze, wie \mbox{z. B.} mehrfaches substituieren von zwei Operanden zu einer Variablen.  Alles in allem bedarf es bei diesem Problem noch weiterer Forschung.
+
 %genaueres Vorgehen unklar
 
 \subsubsection{transitiv-implizierte Formeln}
 
-Formeln können auch transitiv-impliziert sein. Steht in der Musterlösung die Formel \verb|A>B AND B>C| und der Student hat geschrieben \verb|A>B AND A>C|, so sind beide Aussagen logisch identisch. Leider erkennt dies unser bisheriger Ansatz nicht. Um solche Formeln zu erkennen, müssen wir auch alle transitiv-implizierten Formeln hinzufügen. Dabei gibt es verschiedene Fälle. 
+Formeln können auch transitiv-impliziert sein. Steht in der Musterlösung die Formel \verb|A>B AND B>C| und der Student hat geschrieben \verb|A>B AND A>C AND B>C|, so sind beide Aussagen logisch identisch. Leider erkennt dies unser bisheriger Ansatz nicht. Um solche Formeln zu erkennen, müssen wir auch alle transitiv-implizierten Formeln hinzufügen. Dabei gibt es verschiedene Fälle. 
 
 Existiert in der Formel nur eine Relation $R$, so wie im Beispiel eben $R=\ '>'$, dann können wir im Ansatz des Hinzufügens implizierter Formeln die transitive Hülle von $R$ berechnen und die entstandenen Paare der Ausgangsformel hinzufügen. Wollen wir keine implizierten Formeln hinzufügen, sondern nur bestimmte Schreibweisen erlauben, so können wir zunächst die transitive Hülle $R^+$ berechnen und danach eine transitive Reduktion durchführen. Zu beachten ist bei diesem Ansatz, dass es nicht für jede Relation eine eindeutige transitive Reduktion gibt. 
 
-Komplexer wird das Problem, wenn eine Formel verschiedene Relationen enthält, wie \mbox{z. B.} \verb|A>B AND B=9|. Diese Formel impliziert eine weitere Formel transitiv, weil die Relationen $>$ und $=$ zueinander kompatibel sind. Inkompatible Relationen sind $>,\geq$ zu $\leq,<$. Die Relation $=$ ist zu jedweder Relation kompatibel. Haben wir also eine Mischformel mit mehreren kompatiblen Relationen, dann ordnen wir das entstehende transitive Paar der allgemeineren Relation zu. In unserem Beispiel entsteht das Paar $(A,9)$. Da $>$ allgemeiner ist als $=$ ordnen wir $(A,9) \in >$ zu. Auch hier können wir die implizierten Formeln der Ausgangsformel hinzufügen (Ansatz Hinzufügen der Implikationen) oder danach die transitive Reduktion berechnen, wie oben bereits erwähnt. Ein Ansatz eines Algorithmus für solche Mischformeln wäre einen Graph zu erzeugen mit Operanden als Knoten und Relation als Kantenbeschriftung. Zwei Knoten sind genau dann miteinander verbunden, wenn sie durch eine Relation $R_i$ miteinander in der Formel verknüpft sind. $R_i$ ist dann auch die Kantenbeschriftung. Wenn auf einem Pfad alle Relationen zueinander kompatibel sind, wird mit üblichen Methoden die transitive Hülle bestimmt, indem neue Kanten eingezeichnet werden. Beschriftet werden diese Kanten mit dem allgemeineren der Relationen, die auf dem Pfad liegt. So erhalten wir alle transitiv-implizierten Paare.
+Komplexer wird das Problem, wenn eine Formel verschiedene Relationen enthält, wie \mbox{z. B.} \\\verb|A>B AND B=9|. Diese Formel impliziert eine weitere Formel transitiv, weil die Relationen $>$ und $=$ zueinander kompatibel sind. Inkompatible Relationen sind jeweils $>,\geq$ zu $\leq,<$. Die Relation $=$ ist zu jedweder Relation kompatibel. Haben wir also eine Mischformel mit mehreren kompatiblen Relationen, dann ordnen wir das entstehende transitive Paar der allgemeineren Relation zu. In unserem Beispiel entsteht das Paar $(A,9)$. Da $>$ allgemeiner ist als $=$ ordnen wir $(A,9)$ der Relation '$>$' zu. Auch hier können wir die implizierten Formeln der Ausgangsformel hinzufügen (Ansatz Hinzufügen der Implikationen) oder danach die transitive Reduktion berechnen, wie oben bereits erwähnt. Ein Ansatz eines Algorithmus für solche Mischformeln wäre einen Graph zu erzeugen mit Operanden als Knoten und Relation als Kantenbeschriftung. Zwei Knoten sind genau dann miteinander verbunden, wenn sie durch eine Relation $R_i$ miteinander in der Formel verknüpft sind. $R_i$ ist dann auch die Kantenbeschriftung. Wenn auf einem Pfad alle Relationen zueinander kompatibel sind, wird mit üblichen Methoden die transitive Hülle bestimmt, indem neue Kanten eingezeichnet werden. Beschriftet werden diese Kanten mit dem allgemeineren der Relationen, die auf dem Pfad liegt. So erhalten wir alle transitiv-implizierten Paare.
 
 \subsubsection{implizierte Domänen}
 
-Ein weiterer Problempunkt sind implizierte Domänen von Tupelvariablen. Es geht darum zu erfassen welchen Wertebereich einzelne Tupelvariablen durch die Formeln in der SQL-Anfrage zugewiesen bekommen. Dabei können semantische Widersprüche entdeckt werden, wie \mbox{z. B.} \verb|A>9 AND A<9|. Diese Widersprüche führen meist zu einer leeren Antwort des SQL-Systems. Eine Hinweis würde dem Lernenden klar machen, dass diese Bedingung wahrscheinlich nicht gewollt ist. Die Erfassung des Wertebereichs deckt aber auch weitere Einsatzgebiete ab. So können auch unnötige Bedingungen erkannt werden, wie \mbox{z. B.} \verb|A>9 AND A>5|. Die letzte Bedingung wird ja bereits durch die erste Bedingung impliziert. Unser Matching-Ansatz würde in diesem Fall die Lösungen nicht unifizieren können, obwohl sie äquivalent sind. Man könnte hier aber auch argumentieren, dass die Lösung des Lernenden unnötige Formeln enthält, die keinen Nutzen für die Anfrage haben, und damit unser System, korrekterweise, keine Übereinstimmung erkennt. Andererseits wäre es hilfreich, wenn ein vorgeschalteter semantic checker solche Probleme erkennt, um entweder den Lernenden vorab ein Feedback zu geben oder, um solche unnötigen Formeln bei der Bearbeitung zu ignorieren. 
+Ein weiterer Problempunkt sind implizierte Domänen von Attributen. Es geht darum zu erfassen welchen Wertebereich einzelne Attribute durch die Formeln in der SQL-Anfrage zugewiesen bekommen. Dabei können semantische Widersprüche entdeckt werden, wie \mbox{z. B.} \verb|A>9 AND A<9|. Diese Widersprüche führen meist zu einer leeren Antwort des SQL-Systems. Eine Hinweis würde dem Lernenden klar machen, dass diese Bedingung wahrscheinlich nicht gewollt ist. Die Erfassung des Wertebereichs deckt aber auch weitere Einsatzgebiete ab. So können auch unnötige Bedingungen erkannt werden, wie \mbox{z. B.} \verb|A>9 AND A>5|. Die letzte Bedingung wird ja bereits durch die erste Bedingung impliziert. Unser Matching-Ansatz würde in diesem Fall die Lösungen nicht unifizieren können, obwohl sie äquivalent sind. Man könnte hier aber auch argumentieren, dass die Lösung des Lernenden unnötige Formeln enthält, die keinen Nutzen für die Anfrage haben, und damit unser System, korrekterweise, keine Übereinstimmung erkennt. Andererseits wäre es hilfreich, wenn ein vorgeschalteter semantic checker solche Probleme erkennt, um entweder den Lernenden vorab ein Feedback zu geben oder, um solche unnötigen Formeln bei der Bearbeitung zu ignorieren. 
 
 Da dieses Problem eher in den Bereich semantic checking gehört wird dieses Feature nicht im Programm auftauchen. Will man dem Programm später aber semantische Prüfer vorschalten, wäre dies auf jeden Fall ein wichtiges und sinnvolles Feature.
 
@@ -507,31 +515,40 @@ Muss das Programm erweitert werden und wir möchten den Ansatz des Hinzufügen i
 
 Bei der Verwendung von eingeschränkten Operatoren gestaltet sich dieser Ansatz bereits als schwierig. Hier muss man nicht nur die neue Menge $M_k$ angeben, sondern sich auch Gedanken machen, was ein geeigneter Repräsentant dieser Menge ist. Unter Umständen kann das Auswählen eines ungünstigen Repräsentanten zu unerwarteten Problemen, wie dem Verkomplizieren der Anfrage, führen.
 
-Es bietet sich aus diesen Umständen eher an, das Hinzufügen von implizierten Gleichungen zu verwenden.
+Aufgrund dieser Umstände werden in unserer Anwendung implizierte Formeln hinzugefügt.
 
 \subsection{Sortierung}
 \label{subsec:sort}
 
-Im aktuell betrachteten Ansatz möchten wir zwei Anfragen dadurch vergleichen, dass wir sowohl die Musterlösung, als auch die Studentenlösung einer Standardisierung unterziehen. Ein ganz wesentlicher Aspekt dabei ist, die Art der Sortierung. Wir betrachten dazu im Folgenden, ZQL-Parserbäume. Wie genau diese Bäume aussehen ist im Kapitel \ref{chap:software} beschrieben. Im wesentlichen ist es aber ein gewurzelter Baum. Dabei stellen Knoten entweder Operatoren, Konstanten oder Variablen dar. Ein Operator $o_1$ kann natürlicherweise, als Kindknoten, wiederum einen Operator $o_2$ haben. Es sei $T(r)$ der gewurzelte Baum mit Wurzelknoten $r$. Wir bezeichnen mit der Menge $\mathit{children}(r)$, die Kindknoten von $r$ in folgender Art und Weise: $\textit{child}(r) = \{c_1, c_2, ..., c_n\}$. Dabei erscheint das Kind $c_i$ direkt links vom Kind $c_j$ genau dann, wenn $j = i + 1$. Anders ausgedrückt: Bei einer Breitensuche über $T(r)$ würden wir erst $c_i$ und im Anschluss daran $c_j$ auffinden, genau dann wenn $j = i + 1$.
+Ein wesentlicher Aspekt bei der Standardisierung ist die Art der Sortierung. Wir betrachten dazu im Folgenden, ZQL-Parserbäume. Im wesentlichen ist dies ein gewurzelter Baum. Dabei stellen Knoten entweder Operatoren, Konstanten oder Variablen dar. Ein Operator $o_1$ kann natürlicherweise, als Kindknoten, wiederum einen Operator $o_2$ haben. Es sei $T(r)$ der gewurzelte Baum mit Wurzelknoten $r$. Wir bezeichnen mit der Menge $\mathit{children}(r)$, die Kindknoten von $r$ in folgender Art und Weise: $\textit{child}(r) = \{c_1, c_2, ..., c_n\}$. Dabei erscheint das Kind $c_i$ direkt links vom Kind $c_j$ genau dann, wenn $j = i + 1$. Anders ausgedrückt: Bei einer Breitensuche über $T(r)$ würden wir erst $c_i$ und im Anschluss daran $c_j$ auffinden, genau dann wenn $j = i + 1$.
 
-Es sei $T(r)$ unser ZQL-Parserbaum. Ist der Operator, den $r$ repräsentiert, kommutativ, so können wir alle Kinder $c_i$ in beliebiger Reihenfolge permutieren und würden den Ausdruck, den $T(r)$ darstellt nicht semantisch verändern. Für unsere Standardisierung ist es aber wichtig, dass wir dennoch eine Ordnung auf solchen Operatoren festlegen, damit unsere Parserbäume am Ende vergleichbar sind. Wir überlegen uns dazu folgende Ordnung: 
+Es sei $T(r)$ unser ZQL-Parserbaum. Ist der Operator, den $r$ repräsentiert, kommutativ, so können wir alle Kinder $c_i$ in beliebiger Reihenfolge permutieren und würden den Ausdruck, den $T(r)$ darstellt nicht semantisch verändern. Für unsere Standardisierung ist es aber wichtig, dass wir dennoch eine Ordnung auf solchen Operatoren festlegen, damit unsere Parserbäume am Ende vergleichbar sind. Wir verwenden die Ordnung, die in Abbildung \ref{fig:sortorder} dargestellt ist. Ein niedrigerer Wert der $\mathit{order}$-Funktion bedeutet dabei eine höhere Priorität.
 
-\begin{tabular}{|lllllllll|}
+\begin{figure}[h]
+\centering
+\begin{tabular}{|l|l|l|l|l|l|l|l|l|}
 \hline
-$r\in \textit{Relation}$ & OR & $\le$ & $\ge$ & $>$ & $<$ & $=$ & IS NULL & IS NOT NULL  \\
+$r\in \textit{Relation}$ & OR & $\le$ & $\ge$ & $>$ & $<$ & $=$ & IS NULL & IS NOT NULL  \\\hline
 $\textit{order}(r)$ & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8\\ 
 \hline
-\end{tabular}\\
+\end{tabular}
+\caption{Reihenfolge der Sortierung eines WHERE-Ausdrucks}
+\label{fig:sortorder}
+\end{figure}
 
 Die Kinder vom Baum $T(r)$ müssen so angeordnet werden, dass für alle Kinder paarweise das Folgende gilt. Dabei seien $c_i,c_j\in\mathit{children}(r)$ und $r$ muss kommutativ sein.
 
 $$\forall c_i,c_j : i\neq j \to  ( i<j \leftrightarrow order(i) < order(j) ) $$
 
-In Worten ausgedrückt: Für alle, paarweise verschiedenen, Kinder von $T(r)$ gilt: $c_i$ erscheint genau dann vor $c_j$ im Baum (bezüglich eine Breitensuche), wenn die oben angegebene Ordnung eingehalten wird. Dies wird nicht initial der Fall sein, daher müssen wir die Kinder so umsortieren, dass diese Bedingung erfüllt ist. 
+In Worten ausgedrückt: Für alle, paarweise verschiedenen, Kinder von $T(r)$ gilt: $c_i$ erscheint genau dann vor $c_j$ im Baum (bezüglich eine Breitensuche), wenn die oben angegebene Ordnung eingehalten wird. Dies wird initial nicht der Fall sein, daher müssen wir die Kinder so umsortieren, dass diese Bedingung erfüllt ist. 
 
 Ist $r$ nicht kommutativ, so können wir die Kinder von $r$ nicht umsortieren. Wir verfahren dann rekursiv direkt mit den Kindern weiter, da diese ja wieder kommutative Operatoren sein können. Weiterhin kann es sein, dass eins der Kinder von $r$ eine Konstante oder Variable ist, also ein Blattknoten, der keinen weiteren Baum aufspannt. Der $\mathit{order}$-Wert für eine Konstante ist immer 0 und für eine Variable immer $-1$. Damit ist sichergestellt, dass auf gleicher Baumebene immer zuerst Variablen, dann Konstanten und dann Teilbäume erscheinen, vorausgesetzt, der Elternknoten repräsentiert einen kommutativen Operator.
 Sind alle Kindknoten Variablen, so werden diese lexikographisch sortiert. Sind alle Kindknoten Konstanten, so wird der entsprechende Ausdruck ausgewertet, da wir dann die Situation haben, dass ein Operator mit Operandenkonstanten gegeben ist und dieser Ausdruck ist auswertbar. Wir ersetzen dann den Baum $T(r)$ mit $eval(T(r))$, wobei $eval$ den arithmetisch/logischen Ausdruck auswertet und sein Ergebnis zurückliefert.
 
+Die Abbildung \ref{fig:pesudocode1} soll den bisherigen Prozess darstellen. Dabei sortiert die Methode \verb|sortiere_menge| die eingegebene Menge gemäß der Ordnung in Abbildung \ref{fig:sortorder}.
+
+\begin{figure}[h]
+\centering
 \begin{verbatim}
 sortiere(rootnode r) {
    if( children(r) = {} ) 
@@ -544,7 +561,9 @@ sortiere(rootnode r) {
    }
 }
 \end{verbatim}
-
+\caption{Pseudocode: Erster Teil der Sortierung}
+\label{fig:pesudocode1}
+\end{figure}
 Folgendes Beispiel soll diese Arbeitsweise verdeutlichen:
 
 Wir betrachten den Ausdruck \verb| a>5 AND (b=2 OR c IS NULL) AND (d=5 OR a<6)|. Dieser ist in Abbildung \ref{fig:sort_ex0} als ZQL-Parserbaum zu sehen. Ziel ist es nun, diesen Baum nach unserem Verfahren zu sortieren.
@@ -563,7 +582,7 @@ Wir bemerken, dass wir einen kommutativen Operator (AND) als Wurzelknoten haben 
 \label{fig:sort_ex1}
 \end{figure}
 
-Wir fahren dann fort und führen sortieren rekursiv auf den Kindknoten $c_1,c_2$ und $c_3$ auf. Am Ende erhalten wir den Ausdruck \verb| (b=2 OR c IS NULL) AND (a<6 OR d=5) AND a<5|, welcher durch den Baum in Abbildung \ref{fig:sort_exfin1} dargestellt wird.
+Wir fahren dann fort und sortieren die Kindknoten $c_1,c_2$ und $c_3$ rekursiv. Am Ende erhalten wir den Ausdruck \verb| (b=2 OR c IS NULL) AND (a<6 OR d=5) AND a<5|, welcher durch den Baum in Abbildung \ref{fig:sort_exfin1} dargestellt wird.
 
 \begin{figure}
 \includegraphics[scale=0.55]{Bilder/sort_exfin1.png}
@@ -573,9 +592,9 @@ Wir fahren dann fort und führen sortieren rekursiv auf den Kindknoten $c_1,c_2$
 
 Wenn wir uns Abbildung \ref{fig:sort_exfin1} genauer betrachten, so fällt auf, dass keine eindeutige Ordnung zugrunde liegt. Die beiden Bäume $T(c_1)$ und $T(c_2)$ repräsentieren beide den Operator \verb|OR|. Es ist mit den bisherigen Regeln nicht klar, was passiert, wenn zwei Geschwisterknoten, den gleichen Operator repräsentieren.
 
-Haben wir also den Fall, dass zwei Kindknoten $c_i,c_j$ von $T(r)$ den gleichen Operator repräsentieren müssen wir rekursiv die beiden Teilbäume $T(c_i)$ und $T(c_j)$ untersuchen. Wir begehen dabei eine gleichzeitge und schrittweise Tiefensuche in beiden Bäumen durch, in dem wir sukzessive einen Schritt einer Tiefensuche in einem Baum, dann im anderen Baum durchführen und schließlich einen nächsten Schritt, in gleicher Weise durchführen. Wir bezeichen die Knoten, bei denen sich die Tiefensuche in einem aktuellen Moment befindet als $v_i\in T(c_i)$ und $v_j\in T(c_j)$. Sobald in einem Schritt $v_i \neq v_j$ ist, entscheiden wir anhand von $\mathit{order}(v_i)$ und $\mathit{order}(v_j)$, welcher Teilbaum vor dem anderen erscheinen soll. $T(c_i)$ erscheint damit vor $T(c_j)$, wenn $\mathit{order}(v_i) < \mathit{order}(v_j)$. Dabei schließen wir Blattknoten von der Betrachtung aus. Trifft die Tiefensuche also in einem Schritt auf beiden Seiten auf Blattknoten, so werden diese nicht mit einbezogen.
+Haben wir also den Fall, dass zwei Kindknoten $c_i,c_j$ von $T(r)$ den gleichen Operator repräsentieren müssen wir rekursiv die beiden Teilbäume $T(c_i)$ und $T(c_j)$ untersuchen. Wir führen dabei eine gleichzeitge und schrittweise Tiefensuche in beiden Bäumen durch, indem wir sukzessive einen Schritt einer Tiefensuche in einem Baum, dann im anderen Baum durchführen und schließlich einen nächsten Schritt, in gleicher Weise durchführen. Wir bezeichen die Knoten, bei denen sich die Tiefensuche in einem aktuellen Moment befindet als $v_i$ für $T(c_i)$ und $v_j$ für $T(c_j)$. Sobald in einem Schritt $v_i \neq v_j$ ist, entscheiden wir anhand von $\mathit{order}(v_i)$ und $\mathit{order}(v_j)$, welcher Teilbaum vor dem anderen erscheinen soll. $T(c_i)$ erscheint damit vor $T(c_j)$, wenn $\mathit{order}(v_i) < \mathit{order}(v_j)$. Dabei schließen wir Blattknoten von der Betrachtung aus, es sind also nur innere Knoten von Bedeutung.
 
-Ist die Tiefensuche beendet und es gab zu keine Zeitpunkt zwei innere Knoten in beiden Bäumen mit unterschiedlichen Operatoren, so sind offensichtlich die beiden Teilbäume $T(c_i)$ und $T(c_j)$ strukturell gleich, sie haben also identische innere Knoten. In diesem Fall unterscheiden sich beide Bäume nur durch ihre Blattknoten. Wir bezeichnen die Blattknoten von $T(c_i)$ mit $leaf(c_i)$ und in entsprechender Weise $leaf(c_j)$ die Blattknoten von $T(c_j)$. Wir sortieren diese Blattknotenmengen jetzt lexikographisch. Es ist offensichtlich, dass beide Blattknotenmengen gleich mächtig sind, da ansonsten bereits ein Unterscheid beim Tiefensuchvergleich aufgefallen wäre. Wir gehen jetzt sukzessive beide, sortieren Blattknotenmengen durch und vergleichen jeweils das $i.$ Element dieser Mengen, wobei $1\le i \le n$, mit $n=\vert \mathit{leaf}(c_i)\vert = \vert \mathit{leaf}(c_j) \vert$. Unterscheiden sich die $i.$ Elemente der zwei Mengen, dann erscheint $T(c_i)$ vor $T(c_j)$, wenn das i. Element in $\mathit{leaf(c_i)}$ lexikographisch kleiner ist als das i. Element in $\mathit{leaf(c_j)}$.
+Ist die Tiefensuche beendet und gab es zu keinem Zeitpunkt zwei innere Knoten in beiden Bäumen mit unterschiedlichen Operatoren, so sind offensichtlich die beiden Teilbäume $T(c_i)$ und $T(c_j)$ strukturell gleich, sie haben also identische innere Knoten. In diesem Fall unterscheiden sich beide Bäume nur durch ihre Blattknoten. Wir bezeichnen die Blattknoten von $T(c_i)$ mit $leaf(c_i)$ und in entsprechender Weise $leaf(c_j)$ die Blattknoten von $T(c_j)$. Wir sortieren diese Blattknotenmengen jetzt lexikographisch. Es ist offensichtlich, dass beide Blattknotenmengen gleich mächtig sind, da ansonsten bereits ein Unterscheid beim Tiefensuchvergleich aufgefallen wäre. Wir gehen jetzt sukzessive beide, sortieren Blattknotenmengen durch und vergleichen jeweils das $i.$ Element dieser Mengen, wobei $1\le i \le n$, mit $n=\vert \mathit{leaf}(c_i)\vert = \vert \mathit{leaf}(c_j) \vert$. Unterscheiden sich die $i.$ Elemente der zwei Mengen, dann erscheint $T(c_i)$ vor $T(c_j)$, wenn das i. Element in $\mathit{leaf(c_i)}$ lexikographisch kleiner ist als das i. Element in $\mathit{leaf(c_j)}$.
 
 Zu beachten ist, dass wenn innerhalb eines Teilbaumes $T(c_i)$ wieder die Situation eintritt, dass es zwei Kinder $d_i,d_j\in\mathit{children}(c_i)$ gibt, mit $d_i=d_j$, aber $i\neq j$, dann wird dieser Fall zuerst behandelt. Wir behandeln also Kinder mit gleichen repräsentierten Operatoren von den Blättern aus, also Bottom-Up.
 
@@ -596,11 +615,11 @@ Wir gehen nun sukzessive beide Mengen durch und vergleichen zunächst das 1. Ele
 \label{fig:sort_exfinb1}
 \end{figure}
 
-Ist das Sortieren abgeschlossen, entfernen wir noch unnötige Duplikate. Hat der Operator \verb|AND| zwei gleiche Operanden $o_1,o_2$, die äquivalent sind ($o_1 \equiv o_2$), so können wir einen der beiden Operanden streichen. Gleiches gilt für den Operator \verb|OR|. Durch die Sortierung stehen solche Duplikatskandidaten immer nebeneinander. Wir durchsuchen den Baum daher iterativ nach Duplikaten und entfernen diese.
+Ist das Sortieren abgeschlossen, entfernen wir noch unnötige Duplikate. Hat der Operator \verb|AND| zwei gleiche Operanden $o_1,o_2$, die äquivalent sind ($T(o_1) \equiv T(o_2)$), so können wir einen der beiden Operanden streichen. Gleiches gilt für den Operator \verb|OR|. Durch die Sortierung stehen solche Duplikatskandidaten immer nebeneinander. Wir durchsuchen den Baum daher iterativ nach Duplikaten und entfernen diese.
 
 \subsection{GROUP BY / HAVING}
 
-Bisher haben wir den SELECT-, FROM- und WHERE-Teil einer SQL-Anfrage bearbeitet und betrachtet. Anfragen, die einen GROUP BY-Teil enthalten müssen auch nach festen Regeln angepasst werden. Da die Reihenfolge innerhalb dieses Teils unwichtig ist, sortieren wir die Spaltennamen lexikographisch. Diese sind bereits automatisch benannt nach dem Schema \verb|aN| mit $N\in \{1,2,...\}$ (siehe Unterabschnitt \ref{subsec:from}). Demzufolge erscheinen zuerst Tabellennamen und dann Aggregationsfunktionen.
+Bisher haben wir den SELECT-, FROM- und WHERE-Teil einer SQL-Anfrage bearbeitet. Anfragen, die einen GROUP BY-Teil enthalten müssen auch nach festen Regeln angepasst werden. Da die Reihenfolge innerhalb dieses Teils unwichtig ist, sortieren wir die Spaltennamen lexikographisch. Die Tupelvariablen sind bereits automatisch benannt nach dem Schema \verb|aN| mit $N\in \{1,2,...\}$ (siehe Unterabschnitt \ref{subsec:from}). Demzufolge erscheinen zuerst Tabellennamen und dann Aggregationsfunktionen.
 
 Der HAVING-Teil wiederum ähnelt von seiner Struktur dem WHERE-Teil. Es handelt sich ebenso um einen komplexeren Ausdruck. Wir behandeln daher den HAVING-Teil so, wie den WHERE-Teil im Unterabschnitt \ref{subsec:where}.
 
@@ -626,9 +645,9 @@ SELECT * FROM emp e, emp f, dept d WHERE f.sal < 1000 AND e.id = f.id
 
 Wir bemerken, dass beide Anfragen semantisch äquivalent sind. Allerdings prüfen wir in der Musterlösung das Gehalt mit der ersten Tupelvariable und in der Anfrage des Lernenden mit der zweiten Tupelvariable. Unser Programm erkennt daher keine Äquivalenz zwischen beiden Anfragen. Problem ist hierbei der Selbstverbund. Wir können daher im \verb|WHERE|-Teil die Tupelvariablen $e$ und $f$ beliebig tauschen und erhalten immer das gleiche Ergebnis. 
 
-Wir können Selbstverbunde erhalten, indem wir aus einer Anfrage mit Selbstverbund, mehrere Anfragen konstruieren. Dabei permutieren wir für jede erstellte Anfrage die Tabellen unter \verb|FROM| und substituieren dann im \verb|WHERE, GROUP BY| und \verb|ORDER BY|-Teil die Aliase gemäß der jeweiligen Permutation. Um den Prozess zu verdeutlichen, betrachten noch einmal unser Beispiel. 
+Wir können Selbstverbunde erhalten, indem wir aus einer Anfrage mit Selbstverbund, mehrere Anfragen konstruieren. Dabei permutieren wir für jede erstellte Anfrage die Tabellen unter \verb|FROM| und substituieren dann im \verb|WHERE, GROUP BY| und \verb|ORDER BY|-Teil die Tupelvariablen gemäß der jeweiligen Permutation. Um den Prozess zu verdeutlichen, betrachten noch einmal unser Beispiel. 
 
-Wir erstellen aus dem \verb|FROM|-Teil eine Liste der Aliase: \verb|[e, f, d]|. Dann gruppieren wir die Liste, so dass sich alle gleichen Tabellen in einer Gruppe befinden: \verb|[ [e, f], [d] ]|. Nun erstellen wir alle Permutationen, indem alle inneren Gruppen permutiert werden. Danach entfernen wir die Gruppierungen wieder und erhalten die folgenden, permutierten Listen:
+Wir erstellen aus dem \verb|FROM|-Teil eine Liste der Tupelvariablen: \verb|[e, f, d]|. Dann gruppieren wir die Liste, so dass sich alle gleichen Tabellen in einer Gruppe befinden: \verb|[ [e, f], [d] ]|. Nun erstellen wir alle Permutationen, indem alle inneren Gruppen permutiert werden. Danach entfernen wir die Gruppierungen wieder und erhalten die folgenden, permutierten Listen:
 \begin{verbatim}
 [ [e, f], [d] ]  =>  [ e, f, d ]
 [ [f, e], [d] ]  =>  [ f, e, d ]
@@ -666,15 +685,16 @@ Zu beachten ist, dass in Anfrage 2 auch das Verbundskriterium getauscht wird. Au
 
 \subsection{Abschluss}
 
-Wir fassen die einzelnen Schritte noch einmal kurz zusammen: Zunächst haben wir den \verb|FROM|-Teil der Anfrage vereinheitlicht, indem wir einheitliche Tupelvariablen erzeugt haben, nachdem alle Tabellen im \verb|FROM|-Teil lexikographisch sortiert wurden. Alle neu erzeugten Variablennamen wurden im Rest der Anfrage korrekt eingesetzt bzw. ersetzt. Finden wir in diesem Schritt im \verb|FROM|-Teil bereits zwei gleiche Tabellen mit unterschiedlichen Aliasen, so könnte ein Selbstverbund dadurch entstehen. Um mehrdeutigen zu vermeiden, erzeugen wir eine Kopie der vorliegenden Anfrage und vertauschen die gleichen Tabellennamen im \verb|FROM|-Teil. Wir erhalten somit für jeden Selbstverbund einen zusätzlich zu untersuchenden Baum. Am Ende prüfen wir ob einer dieser Bäume syntaktisch äquivalent ist mit einem der erzeugen Bäumde, der zweiten Anfrage. Danach haben wir den \verb|WHERE|-Teil bearbeitet. Wir haben zunächst unnötige Klammern entfernt und die Formeln in die KNF überführt. Danach haben wir einfache syntaktische Varianten ersetzt um eine einheitlichere Darstellung zu erhalten. Dazu gehörte es auch Unteranfragen aufzulösen oder, wenn nicht möglich, in eine \verb|EXISTS|-Unteranfrage zu überführen. Anschließend haben wir innere Verbunde (JOINs), die im \verb|FROM|-Teil formuliert wurden, in den \verb|WHERE|-Teil überführt. Eine der letzten Schritte war das Behandeln der Vielfalt der Operatoren. Hier haben wir für alle nicht-kommutativen Operatoren ihre alternativen Schreibweisen konjunktiv-verknüpft mit in die Formel aufgenommen. Nach diesem Schritt müssen wir nun die KNF wiederherstellen, da diese durch hinzufügen von \verb|AND|-Knoten zerstört sein kann. Schlussendlich haben wir den gesamten \verb|WHERE|-Teil sortiert, um eine Vereinheitlichung zu erreichen. Anschließend sortierten wir die Attribute innerhalb des \verb|ORDER BY|-Statements lexikographisch. Der Ausdruck im \verb|HAVING|-Teil, wurde genauso behandelt wie der Ausdruck des \verb|WHERE|-Teils. 
+Wir fassen die einzelnen Schritte noch einmal kurz zusammen: Zunächst haben wir den \verb|FROM|-Teil der Anfrage vereinheitlicht, indem wir einheitliche Tupelvariablen erzeugt haben, nachdem alle Tabellen im \verb|FROM|-Teil lexikographisch sortiert wurden. Alle neu erzeugten Tupelvariablen wurden im Rest der Anfrage korrekt eingesetzt bzw. ersetzt. Finden wir in diesem Schritt im \verb|FROM|-Teil bereits zwei gleiche Tabellen mit unterschiedlichen Tupelvariablen, so könnte ein Selbstverbund dadurch entstehen. Um mehrdeutigen zu vermeiden, erzeugen wir eine Kopie der vorliegenden Anfrage und vertauschen die gleichen Tabellennamen im \verb|FROM|-Teil. Wir erhalten somit für jeden Selbstverbund einen zusätzlich zu untersuchenden Baum. Am Ende prüfen wir ob einer dieser Bäume syntaktisch äquivalent ist mit einem der erzeugen Bäumde, der zweiten Anfrage. Danach haben wir den \verb|WHERE|-Teil bearbeitet. Wir haben zunächst unnötige Klammern entfernt und die Formeln in die KNF überführt. Danach haben wir einfache syntaktische Varianten ersetzt um eine einheitlichere Darstellung zu erhalten. Dazu gehörte es auch Unteranfragen aufzulösen oder, wenn nicht möglich, in eine \verb|EXISTS|-Unteranfrage zu überführen. Eine der letzten Schritte war das Behandeln der Vielfalt der Operatoren. Hier haben wir für alle nicht-kommutativen Operatoren ihre alternativen Schreibweisen konjunktiv-verknüpft mit in die Formel aufgenommen. Nach diesem Schritt müssen wir nun die KNF wiederherstellen, da diese durch hinzufügen von \verb|AND|-Knoten zerstört sein kann. Schlussendlich haben wir den gesamten \verb|WHERE|-Teil sortiert, um eine Vereinheitlichung zu erreichen. Anschließend sortierten wir die Attribute innerhalb des \verb|GROUP BY|-Statements lexikographisch. Der Ausdruck im \verb|HAVING|-Teil, wurde genauso behandelt wie der Ausdruck des \verb|WHERE|-Teils. 
 
 \section{Weitere Betrachtungen}
 
 \subsection{JOINS}
+\label{subsec:joins}
 
 Wir betrachten in diesem Abschnitt die Behandlung von JOINs. Wir untersuchen wie wir die unterschiedlichen Verbundstypen vereinfachen oder in eine einheitliche Form umwandeln können. Weiterhin interessiert uns die Frage, wie wir unnötige JOINs erkennen können. Wir diskutieren in wie weit eine automatische Entfernung von unnötigen JOINs Sinn macht und wie das Feedback für den Lernenden aussehen kann.
 
-Vorab möchten wir bemerken, dass die Standardisierung und Eliminierung von JOINs eine fortgeschrittene Strategie darstellt. Diese wird daher nicht im Prototypen auftauchen. Dennoch betrachten wir die theretischen Grundlagen ausreichend und tiefgründig, so dass eine Implementation leicht möglich sein wird.
+Vorab möchten wir bemerken, dass die Standardisierung und Eliminierung von JOINs eine fortgeschrittene Strategie darstellt. Diese wird daher nicht im Prototypen auftauchen. Dennoch betrachten wir die theoretischen Grundlagen ausreichend und tiefgründig, so dass eine nachträgliche Implementation leicht möglich sein wird.
 
 \subsubsection*{CROSS JOIN}
 
@@ -682,7 +702,7 @@ Ein \verb|CROSS JOIN| zweier Relationen liefert das kartesische Produkt beider z
 
 \subsubsection*{NATURAL JOIN}
 
-Ein natürlicher Verbund (NV) ist ein Verbund im \verb|FROM|-Teil. Er wird markiert durch die Schlüsselworte \verb|NATURAL JOIN ON|. Der Verbund zweier Relationen erfolgt über die Attribute, die in beiden Relationen die gleiche Bezeichnung haben. Gibt es keine solchen Attribute, ist das Ergebnis das kartesische Produkt beider Relationen.
+Ein natürlicher Verbund (NV) ist ein Verbund im \verb|FROM|-Teil. Er wird markiert durch die Schlüsselworte \verb|NATURAL JOIN|. Der Verbund zweier Relationen erfolgt über die Attribute, die in beiden Relationen die gleiche Bezeichnung haben. Gibt es keine solchen Attribute, ist das Ergebnis das kartesische Produkt beider Relationen.
 
 Es gibt zwei Möglichkeiten natürliche Verbunde zu standardisieren. Die erste Möglichkeit besteht darin,   alle Verbundskriterien zu durchsuchen. Stellt man fest, dass die Attribute bei einem Verbundskriterium identisch sind, so handelt es sich um einen natürlichen Verbund. Man könnte diese Kriterien nun streichen und mit dem Schlüsselwort \verb|NATURAL JOIN| explizit kennzeichnen, dass es sich um einen NV handelt. Bei dieser Möglichkeit können aber Probleme auftreten. Angenommen der Lernende L reicht eine Lösung ein, die einen natürliche Verbund zwischen \verb|t1| und \verb|t2| explizit enthält. Weiterhin gibt es kein namensgleiches Attribut in \verb|t1| und \verb|t2|, so dass der natürliche Verbund im Prinzip ein kartesisches Produkt ist. In der Musterlösung stehen \verb|t1| und \verb|t2| nur unter \verb|FROM| um eben dieses Produkt zu erzeugen. Die Methode 1 würde nun garkeine Anpassung machen, da es kein Kriterium für einen potentiellen natürlichen Verbund in der Anfrage des L findet. Als Folge können wir die beiden Anfragen nicht matchen, obwohl beide das gleiche tun.
 
@@ -691,7 +711,7 @@ Die zweite Möglichkeit besteht darin explizite natürliche Verbunde umzuschreib
 Beide Methoden haben einen gewissen Aufwand zu bewältigen. Bei Methode 1 müssen wir alle Verbundskriterien durchsuchen, was im schlimmsten Fall alle atomaren Formeln im \verb|WHERE|-Teil sein können. In Methode 2 müssen wir zwei Relationen paarweise nach gleichnamigen Attributen durchsuchen.
 Wir entscheiden uns für die 2. Methode, da Methode 1, wie oben erwähnt, Schwächen bei der Umwandlung hat. Weil wir den \verb|NATURAL JOIN| unter \verb|FROM| also auflösen, schreiben wir diesen gleich als \verb|INNER JOIN| unter die \verb|WHERE|-Bedingung, wie das  Beispiel \ref{bsp:natjoin} zeigt (angenommen \textit{table1} und \textit{table2} haben beide eine gleichnamige Spalte namens \textit{id}).
 
-Die eben aufgeführten Transformationen sind nur möglich, wenn der \verb|SELECT|-Teil nicht aus der Wildcard \verb|*| besteht. Bei einem NV wird in einem solchen Fall die Spalte mit dem gleichnamigen Attribut in der zweiten Tabelle eliminiert. Bei einem Verbund mit expliziter Angabe des Verbundskriterium wird dies nicht realisiert. Deswegen sind natürliche Verbunde, die im \verb|SELECT|-Teil die Wildcard \verb|*| enthalten, nicht in explizite Verbunde unter \verb|WHERE| überführbar.
+Die eben aufgeführten Transformationen sind nur möglich, wenn der \verb|SELECT|-Teil nicht aus der Wildcard \verb|*| besteht. Bei einem NV wird in einem solchen Fall die Spalte mit dem gleichnamigen Attribut in der zweiten Tabelle eliminiert. Bei einem Verbund mit expliziter Angabe des Verbundskriterium wird dies nicht realisiert. Deswegen sind natürliche Verbunde, die im \verb|SELECT|-Teil nur das Wildcard \verb|*| enthalten, nicht in explizite Verbunde unter \verb|WHERE| überführbar.
 
 \begin{figure}
 \begin{verbatim}
@@ -802,7 +822,7 @@ Umwandlung:\\
 
 \subsubsection{JOIN-Eliminierung}
 
-Im vorherigem Abschnitt haben wir bereits alle üblichen Verbunde betrachtet und gezeigt, wie wir diese äquivalent umformen können. Wir haben erreicht, dass alle Verbunde unter \verb|FROM| ersetzt wurden zu \verb|CROSS JOIN| mit Auswahlkriterien unter \verb|WHERE|. Wir möchten daher in diesem Abschnitt klären, welche Möglichkeiten es gibt, die so entstandenen Verbunde, zu eliminieren, wenn sich herausstellt, dass sie überflüssig sind.
+Im vorherigem Abschnitt haben wir bereits alle üblichen Verbunde betrachtet und gezeigt, wie wir diese äquivalent umformen können. Wir haben erreicht, dass alle Verbunde unter \verb|FROM| ersetzt wurden zu \verb|CROSS JOIN| mit Auswahlkriterien unter \verb|WHERE|. Wir möchten daher in diesem Abschnitt klären, welche Möglichkeiten es gibt, die so entstandenen Verbunde zu eliminieren, wenn sich herausstellt, dass sie überflüssig sind.
 
 Wenn nur Schlüsselattribute einer Tupelvariable X benutzt werden und diese mit \hyphenation{Fremd-schlüs-sel-at-tri-but-en} einer anderen Tupelvariable Y verglichen werden, dann ist X überflüssig.
 
@@ -812,9 +832,9 @@ Die mögliche Anwendung ist natürlicherweise die Entfernung einer Relation bei 
 Das Verfahren wird in der Arbeit \cite{joinelem2} näher vorgestellt und läuft im wesentlichen in 4 Schritten ab.
 
 \begin{enumerate}
-\item Wir bilden zunächst transitive Spaltenäquivalenzklassen von allen Joinprädikaten. Ist als \verb|A=B| und \verb|B=C|, dann können wir transitiv ableiten, dass ebenso \verb|A=C| gilt. Alle drei Spalten, \verb|A,B,C| befinden sich dann in einer Äquivalenzklasse.
+\item Wir bilden zunächst transitive Spaltenäquivalenzklassen von allen Joinprädikaten. Ist also \verb|A=B| und \verb|B=C|, dann können wir transitiv ableiten, dass ebenso \verb|A=C| gilt. Alle drei Spalten, \verb|A,B,C| befinden sich dann in einer Äquivalenzklasse.
 
-\item Alle Tabellen unter \verb|FROM|, die mit RI-Joins verknüpft sind, werden in zwei Gruppen eingeteilt. Tabellen in der R-Gruppe sind entfernbar (removable) und Tabellen in der N-Gruppe sind nicht entfernbar (non-removable). Die notwendige Bedingung, die bestimmt, wann eine Tabelle in die R-Gruppe gehört ist, dass es eine parent-table für irgendeine RI. Dies ist jedoch nicht die einzige notwendige Bedingung. Andere, zu erfüllende Bedingung, sind weitaus komplexer und sind für die Präsentation des Ansatzes dieser Methode zu umfangreich. Nachzulesen ist das detaillierte Verfahren in der Arbeit \cite{joinelem2}.
+\item Alle Tabellen unter \verb|FROM|, die mit RI-Joins verknüpft sind, werden in zwei Gruppen eingeteilt. Tabellen in der R-Gruppe sind entfernbar (removable) und Tabellen in der N-Gruppe sind nicht entfernbar (non-removable). Die notwendige Bedingung, die bestimmt, wann eine Tabelle in die R-Gruppe gehört ist, dass die Tabelle eine parent-table für irgendeine RI ist. Dies ist jedoch nicht die einzige notwendige Bedingung. Andere, zu erfüllende Bedingung, sind weitaus komplexer und sind für die Präsentation des Ansatzes dieser Methode zu umfangreich. Nachzulesen ist das detaillierte Verfahren in der Arbeit \cite{joinelem2}.
 
 \item Alle Tabellen in der R-Gruppe werden entfernt.
 
@@ -915,7 +935,7 @@ Der Algorithmus ist nicht in unserem Programm implementiert. Wir beschreibe ihn 
 
 \subsection{verbale Beschreibung}
 
-Es sei $\mathcal{K}$ die Menge aller Attribute, die als Aausgabespalten unter \verb|SELECT| vorkommen.
+Es sei $\mathcal{K}$ die Menge aller Attribute, die als Ausgabespalten unter \verb|SELECT| vorkommen.
 Wir fügen im nächsten Schritt nun alle Attribute $A$ zu $\mathcal{K}$ hinzu, für die $A=c$ bzw. $c=A$ in der \verb|WHERE|-Bedingung auftaucht. Hierbei wird, wie bereits erwähnt, vorausgesetzt, dass die Bedingung eine Konjunktion ist. Weiterhin ist zu bemerken, dass Unterabfragen vom Algorithmus ignoriert werden.
 
 Solange eine der folgenden Aktionen zu einer Veränderung unseres Zustands führt, machen wir Folgendes:
@@ -966,10 +986,6 @@ return YES
 \end{lstlisting}
 
 
-Beispiel:
-
-mit EMP und DEPT
-
 \section{SQL-Anfragen auf externen Datenbanken}
 
 Bis jetzt haben wir verschiedene Methoden und Ansätze diskutiert, die sich auf das Erfüllen der hinreichenden Bedingung, einer semantischen Äquivalenz, konzentriert haben. In den vorherigen Abschnitten dieses Kapitels haben wir festgestellt, dass eine, durch Überführung, erhaltene syntaktische Äquivalenz zweier SQL-Anfragen automatisch deren semantische Äquivalenz bedeutet. Wie Eingangs erwähnt, ist das Problem, zwei SQL-Anfragen auf semantische Äquivalenz zu prüfen, im Allgemeinen nicht entscheidbar. Aus diesem Grund kann es passieren, dass unsere, bisher erarbeiteten Methoden, bei einigen, semantisch äquivalenten, Anfragen keinen Erfolg bringen. Die Anfragen sind dann semantisch äquivalent, aber wir können sie nicht durch unsere Methoden aneinander anpassen. 
@@ -982,7 +998,7 @@ Im Detail gibt es allerdings einige Feinheiten zu beachten, wenn man die Anfrage
 
 \subsection{unterschiedliche DBMS}
 
-Obwohl es, in gewissen Abständen, zur Herausgabe eines Standards für SQL durch die ISO kommt, unterscheiden sich die existierenden DBMS bei der Handhabung und Implementation von SQL-Features. Die aktuellste Version ist zur Zeit SQL:2008. Die verschiedenen Hersteller varieren diesen Standard allerdings, durch Entfernung oder Hinzufügen von Funktionalitäten. Diese Änderungen sind sowohl in der Data Definiton Langauge (DDL), der Data Manipulation Language (DML) als auch der Data Control Language (DCL) zu finden. Wir gehen im Folgenden auf einige Unterschiede ein. Da wir im Hinblick auf diese Arbeit gerne unabhängig von den Herstellern verschiedner DBMS sein wollen, ist für uns Interessant, welche Schnittmenge von Funktionalitäten alle DBMS gemeinsam haben. Nach heutigem Stand können wir sagen, dass DB2, MSSQL, MySQL, Oracle und Informix mindestens den SQL-92 Standard erfüllen. PostgreSQL hat zusätzlich noch das Konzept der Sichten, erlaubt aber nicht diese zu aktualisieren (update). Um diese Restriktion zu umgehen, führt PostgreSQL ein, nicht vom Standard vorgesehenes, Konzept von Regeln ein, auf das wir nicht näher eingehen wollen. Ist unsere Anfrage also SQL-92 konform, so können wir diese ohne Probleme auf allen gängigen DBMS ausführen.
+Obwohl es, in gewissen Abständen, zur Herausgabe eines Standards für SQL durch die ISO kommt, unterscheiden sich die existierenden DBMS bei der Handhabung und Implementation von SQL-Features. Die aktuellste Version des SQL-Standards ist zur Zeit: SQL:2008. Die verschiedenen Hersteller variieren diesen Standard allerdings, durch Entfernung oder Hinzufügen von Funktionalitäten. Diese Änderungen sind sowohl in der Data Definiton Langauge (DDL), der Data Manipulation Language (DML) als auch der Data Control Language (DCL) zu finden. Wir gehen im Folgenden auf einige Unterschiede ein. Da wir im Hinblick auf diese Arbeit gerne unabhängig von den Herstellern verschiedner DBMS sein wollen, ist für uns Interessant, welche Schnittmenge von Funktionalitäten alle DBMS gemeinsam haben. Nach heutigem Stand können wir sagen, dass DB2, MSSQL, MySQL, Oracle und Informix mindestens den SQL-92 Standard erfüllen. PostgreSQL hat zusätzlich noch das Konzept der Sichten, erlaubt aber nicht diese zu aktualisieren (update). Um diese Restriktion zu umgehen, führt PostgreSQL ein, nicht vom Standard vorgesehenes, Konzept von Regeln ein, auf das wir nicht näher eingehen wollen. Ist unsere Anfrage also SQL-92 konform, so können wir diese ohne Probleme auf allen gängigen DBMS ausführen.
 
 Betrachten wir nun ein paar Unterschiede im Detail. Von den, oben genannten, DBMS verstehen nur PostgreSQL, MySQL und Oracle das Schlüsselwort \verb|NATURAL JOIN| unter \verb|FROM|. \verb|FULL JOIN|, also die Vereinigung eines \verb|LEFT OUTER| und \verb|RIGHT OUTER| Join verstehen alle DBMS, bis auf MySQL. Alle DBMS verstehen aber das explizite kartesische  Produkt, \verb|CROSS JOIN|. Dieser Sachverhalt kommt uns entgegen, da wir versuchen im ersten Teil, der Standardisierung, alle Joins als kartesisches Produkt mit Auswahl zu formulieren, falls das möglich ist. Können wir bestimmte Joins nicht umschreiben, kann es zu Laufzeitfehlern kommen, welche später in diesem Kapitel behandelt werden.
 
@@ -1010,7 +1026,7 @@ Der zweite Fall zeichnet sich dadurch aus, dass die Musterlösung kein \verb|ORD
 
 Der dritte Fall wäre dann genau umgekehrt. Hier hat also die Musterlösung ein \verb|ORDER BY|-Statement, die Lösung des Lernenden aber nicht. Hier ist offensichtlich eine Reihenfolge gewünscht. Wir werden daher keine Anpassung in einem solchen Fall durchführen. Unterscheiden sich die Musterlösung und die Lösung des Lernenden nur durch das \verb|ORDER BY|-Statement, erhält der Lernende ohnehin eine Meldung, dass der Rest der Anfrage übereinstimmt, so wie im Bereich Preprocessing erläutert.
 
-Der letzte Fall ist für uns nicht relevant. In beiden Anfragen befindet sich ein \verb|ORDER BY| und daher können wir auch keine Anpassungen vornehmen. 
+Der letzte Fall ist für uns nicht relevant. In beiden Anfragen befindet sich dann ein \verb|ORDER BY| und daher können wir auch keine Anpassungen vornehmen. 
 
 Nachdem wir dann die zwei Anfragen auf der Datenbank ausgeführt haben erhalten wir zwei Ergebnistupel. Stellt sich durch einen schrittweise Vergleich heraus, dass beide Ergebnismengen identisch sind, müssen wir dem Studenten mitteilen, dass es nicht entscheidbar ist, ob seine Lösung korrekt ist oder nicht. In einem solchen Fall muss der Dozent entweder eine Mail erhalten, um die Lösung manuell zu prüfen, oder dem Studenten wird angezeigt, dass er diese Lösung doch in der nächsten Übung vorstellen soll, um deren Korrektheit zu prüfen.
 
@@ -1022,7 +1038,7 @@ Bei der Ausführung von SQL-Anfragen auf realen Datenbanken können verschieden 
 
 Einer der typischsten Fehler ist der Syntaxfehler. Der Lernende hat also eine Lösung angegeben, die nicht in das Syntaxschema einer SQL-Anfrage passt. Die Hauptursachen für solche Fehler sind falsche Anordnung von Schlüsselwörtern oder gar >>Rechtschreibfehler<<. Jedoch kann es auch sein, dass der Lernende Syntax benutzt hat, welche nur ein bestimmtes SQL-System versteht, \mbox{z. B.} PostgreSQL. Wird die Anfrage aber auf einer Oracle Datenbank ausgeführt, versteht das DBMS diese Anfrage eventuell nicht und es kommt zu einem Syntaxfehler, der auf einem anderen DBMS keiner wäre. Wir könnten den Fehler verhindern, in dem wir in einem vorherigen Schritt prüfen, ob die Anfrage SQL-92 konform ist. Eine andere Lösung ist es, zu jeder Anfrage zu speichern, für welches konkretes DBMS sie gedacht ist. Dann könnte man sich sicher sein, dass der Syntaxfehler auch einen Fehler für alle SQL-Systeme darstellt. Wenn man keine gesonderte Behandlung in Betracht zieht, so kann man den Fehler, wie üblich, dem Nutzer anzeigen mit dem Vermerk, dass der Syntaxfehler eventuell zu DBMS spezifisch ist. In unserem Prototypen reichen wir derartige Syntaxfehler an den Nutzer weiter.
 
-Ein weiterer Fehlertyp ist der semantische Fehler. Wie bereits, in der Einführung dieser Arbeit, erwähnt, ist dies ein Fehlertyp, der schwer zu entdecken ist. Typische Vertreter sind inkonsistente Bedingungen, also \verb|WHERE|-Bedingungen, die entweder immer die leere Menge liefern, oder die immer die gesamten Tabellen als Ergebnistupel liefern, da die \verb|WHERE|-Bedingung allgemeingültig ist (Tautologie). Die eben genannten Fälle erkennt unser Programm, da es mit der Methode \verb|eval| die Ausdrücke, so weit möglich, auswertet. Andere semantische Fehler, wie unnötige JOINs und unnötiges DISTINCT wurden bereits im Kapitel \ref{chap:theorie} behandelt. Unser Programm wird davon allerdings nichts umsetzen, da es einen größeren Aufwand darstellt, diese Methoden zu implementieren. Es gibt weitere semantische Fehler, die unser Programm nicht berücksichtigt. Hier sei verwiesen auf die Arbeit \cite{brass2}. 
+Ein weiterer Fehlertyp ist der semantische Fehler. Wie bereits, in der Einführung dieser Arbeit, erwähnt, ist dies ein Fehlertyp, der schwer zu entdecken ist. Typische Vertreter sind inkonsistente Bedingungen, also \verb|WHERE|-Bedingungen, die entweder immer die leere Menge liefern, oder die immer die gesamten Tabellen als Ergebnistupel liefern, da die \verb|WHERE|-Bedingung allgemeingültig ist (Tautologie). Die eben genannten Fälle erkennt unser Programm, da es mit der Methode \verb|eval| die Ausdrücke so weit möglich auswertet. Andere semantische Fehler, wie unnötige JOINs und unnötiges DISTINCT wurden bereits im Kapitel \ref{chap:theorie} behandelt. Unser Programm wird davon allerdings nichts umsetzen, da es einen größeren Aufwand darstellt diese Methoden zu implementieren. Es gibt weitere semantische Fehler, die unser Programm nicht berücksichtigt. Hier sei verwiesen auf die Arbeit \cite{brass2}. 
 
 In Hinblick auf syntaktische und semantische Fehler sollten wir uns fragen, welche Anfrage wir, zur Ausführung auf der realen Datenbank, einsetzen wollen. Zur Wahl stehen dabei die Anfrage, die der Lernende eingibt und die Anfrage, die unser Programm im ersten Schritt durch Standardisierung erzeugt. 
 

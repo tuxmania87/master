@@ -4,7 +4,7 @@
 
 Auf der Webseite vom \cite{zql1} Projekt ist der Open-Source-Parser ZQL zu finden, welcher in der Lage ist SQL zu parsen und in Datenstrukturen zu überführen. Der Parser selbst ist mit \cite{javacc1} geschrieben, einem  Java-Parsergenerator (zu vergleichen mit dem populärem Unix yacc Generator).
 
-ZQL bietet Unterstützung für \verb|SELECT-|, \verb|INSERT-|, \verb|DELETE-|, \verb|COMMIT-|, \verb|ROLLBACK-|, \verb|UPDATE-| und \verb|SET TRANSACTION-|Ausdrücke. Wichtig für diese Arbeit sind dabei insbesondere \verb|SELECT-| und \verb|UPDATE-|Ausdrücke, sowie -- die leider nicht enthaltenen -- \verb|CREATE TABLE-|Ausdrücke.
+ZQL bietet Unterstützung für \verb|SELECT-|, \verb|INSERT-|, \verb|DELETE-|, \verb|COMMIT-|, \verb|ROLLBACK-|, \verb|UPDATE-|, \verb|SET|- und \verb|S TRANSACTION-|Ausdrücke. Wichtig für diese Arbeit sind dabei insbesondere \verb|SELECT-| und \verb|UPDATE-|Ausdrücke, sowie -- die leider nicht enthaltenen -- \verb|CREATE TABLE-|Ausdrücke.
 
 \subsection{Funktionsweise des Parsers}
 
@@ -31,11 +31,11 @@ Das Interface \verb|ZExp| bildet eine abstrakte Oberklasse für drei verschieden
 Wir klären in diesem Abschnitt nun genauer, wie der Parser SQL-Anfragen in interne Datenstrukturen überführt.
 Dazu müssen die Datentypen des Parserpaketes zunächst erläutert werden. Anschließend stellen wir eine Beispielanfrage und ihre Überführung in die Datenstrukturen des Parsers vor. Daraus leiten wir auch die Schwächen bzw. Grenzen des Parsers ab. Wir stellen im Folgenden dar, was für relevante Attribute und Methoden die jeweiligen Klassen besitzen. Da viele Klassen durch Vererbung entstehen, werden wir der Übersicht halber auch abgeleitete relevante Attribute und Funktionen mit einbeziehen.
 
-Die Klasse \textbf{ZFromItem} bezeichnet genau eine Tupelvariable. Gespeichert wird in dieser Klasse daher der \textit{Name der Tabelle} und ein möglicher \textit{Alias}.
+Die Klasse \textbf{ZFromItem} bezeichnet genau eine Tupelvariable samt Relation. Gespeichert wird in dieser Klasse daher der \textit{Name der Relation} und eine mögliche Tupelvariable als \textit{Alias}.
 
-Ähnlich ist die Klasse \textbf{ZSelectItem} aufgebaut. Sie speichert den Namen des Attributs und einen eventuell angegebene Tupelvariable. Weiterhin wird festgehalten, ob das SelectItem ein Ausdruck ist wie \mbox{z. B.} in \verb|SELECT a+b|. In diesem Fall würde man über die Funktion \verb|getExpression()| ein Objekt einer Klasse erhalten, die von \verb|ZExp| erben muss. Zu beachten ist dabei, dass ein Ausdruck in ZQL immer einen Operator und mindestens einen Operanden besitzen muss. Deswegen fallen Spaltennamen nicht in diese Kategorie, sondern sind unter Konstanten zu finden. Weiterhin wird gespeichert, ob es sich um eine Wildcard \verb|*| handelt oder ob das Item eine Aggregatesfunktion ist. Bei \verb|SELECT AVG(sal) FROM ...| würde der Name des Items \verb|sal| sein und die Aggregatsfunktion ist dann \verb|AVG|. 
+Ähnlich ist die Klasse \textbf{ZSelectItem} aufgebaut. Sie speichert den Namen des Attributs und einen eventuell angegebene Tupelvariable. Weiterhin wird festgehalten, ob das SelectItem ein Ausdruck ist wie \mbox{z. B.} in \verb|SELECT a+b|. In diesem Fall würde man über die Funktion \verb|getExpression()| ein Objekt einer Klasse erhalten, das das Interface \verb|ZExp| implementieren muss. Zu beachten ist dabei, dass ein Ausdruck in ZQL immer einen Operator und mindestens einen Operanden besitzen muss. Deswegen fallen Spaltennamen nicht in diese Kategorie, sondern sind unter Konstanten zu finden. Weiterhin wird gespeichert, ob es sich um eine Wildcard \verb|*| handelt oder ob das Item eine Aggregatesfunktion ist. Bei \verb|SELECT AVG(sal) FROM ...| würde der Name des Items \verb|sal| sein und die Aggregatsfunktion ist dann \verb|AVG|. 
 
-Der \verb|WHERE|-Teil wird dargestellt mit Hilfe der Klasse \textbf{ZExpression}. Diese Klasse implementiert das Interface \verb|ZExp|. Ein Objekt der Klasse \verb|ZExpression| besteht immer aus einem Operator und mehreren Operanden. Ein Operator ist ein gültiger String. Was ZQL für gültige Operatoren kennt wird im Anhang aufgeführt. Ein Ausdruck speichert seine Operanden als \textit{Vector} von Objekten, die das Interface \verb|ZExp| implementieren. Demnach kann ein Operand vom Typ \verb|ZExpression, ZConstant| oder \verb|ZQuery| sein.
+Der \verb|WHERE|-Teil wird dargestellt mit Hilfe der Klasse \textbf{ZExpression}. Diese Klasse implementiert das Interface \verb|ZExp|. Ein Objekt der Klasse \verb|ZExpression| besteht immer aus einem Operator und mehreren Operanden. Ein Operator ist ein gültiger String. Ein Ausdruck speichert seine Operanden als \textit{Vector} von Objekten, die das Interface \verb|ZExp| implementieren. Demnach kann ein Operand vom Typ \verb|ZExpression, ZConstant| oder \verb|ZQuery| sein.
 Wichtig ist auch zu bemerken, dass ZQL nicht nur zwei Operanden pro Ausdruck kennt. 
 
 Ein üblicher Syntaxbaum ist binär, wobei die Wurzel den Operator mit der höchsten Priorität darstellt. Alle Teilbäume sind als Ausdrücke zu verstehen, jeweils mit Operator als Wurzelknoten und Operanden als Kindknoten. Dabei kann ein Operand auch ein weiterer Ausdruck sein. Generell wird dabei das Prinzip der Assoziativität benutzt um \mbox{z. B.} für gleichrangige Operatoren eine Auswertungsreihenfolge festzulegen.
@@ -119,9 +119,9 @@ In Abbildung \ref{fig:parseTree} sieht man nun den geparsten Baum der \verb|WHER
 \subsection{Grenzen des Parsers}
 \label{subsec:grenzenparser}
 
-Der Parser kann keine \verb|CREATE TABLE|-Statements parsen. Somit ist es im Rahmen dieser Arbeit notwendig, den Parser zu erweitern, damit Tabellen in eigene Datenstrukturen geparst werden können. Für die Arbeit ist es zunächst nur notwendig Name und Datentyp der Spalten in eine interne Datenstruktur zu überführen. Dabei wird nur zwischen Zahlen und Sonstigem (Text) unterschieden. Unser Programm soll in der Lage sein, einfache arithmetische Operationen durchzuführen. Dazu ist das wissen um Datentypen der Variablen von Nöten.
+Der Parser kann keine \verb|CREATE TABLE|-Statements parsen. Somit ist es im Rahmen dieser Arbeit notwendig, den Parser zu erweitern, damit Tabellen in eigene Datenstrukturen geparst werden können. Für die Arbeit ist es zunächst nur notwendig Name, Datentyp, Fremdschlüsselbeziehungen und NULL-Informationen der Spalten in eine interne Datenstruktur zu überführen. Dabei wird beim Typ nur zwischen Zahlen und Sonstigem (Text) unterschieden. Wir speichern außerdem, wie viele Nachkommastellen ein Attribut haben kann. Unser Programm soll in der Lage sein, einfache arithmetische Operationen durchzuführen. Dazu ist das wissen um Datentypen der Variablen von Nöten.
 
-Weiterhin ist der ZQL-Parser nicht in der Lage \verb|JOINS| über die Schlüsselworte \\\verb#ON [LEFT OUTER|RIGHT OUTER|INNER] JOIN# zu realisieren. Der Parser erkennt nur innere \verb|JOINS|, die im \verb|WHERE|-Teil formuliert worden. Das soll für diese Arbeit ohne weitere Bedeutung sein, da dennoch Strategien entwickelt werden, wie man mit derartigen \verb|JOINS| umgeht. Es muss an der Stelle nur erwähnt werden, dass das Programm, welches im Rahmen dieser Arbeit entsteht, mit derartigen \verb|JOINS| nicht umgehen kann.
+Der ZQL-Parser versteht das \verb|FROM|-Statement als Liste von Relationen mit optionalen Tupelvariablen. Dadurch leiten sich mehrere Einschränkungen ab. ZQL ist dadurch nicht in der Lage \verb|JOINS| über die Schlüsselworte \\\verb#ON [LEFT OUTER|RIGHT OUTER|INNER] JOIN# zu erkennen. Der Parser erkennt nur innere \verb|JOINS|, die im \verb|WHERE|-Teil formuliert worden. Der ZQL-Parser unterstützt daher auch keine Unterabfragen unter \verb|FROM|. Eine Möglichkeit diesem Problem zu begegnen ist es, solche Unterabfragen vor dem Parsen zu Entfernen und danach unverändert wieder einzufügen. Es wäre allerdings wünschenswerter wenn der ZQL-Parser erweitert würde, so dass auch ein \verb|ZQuery| als \verb|ZFromItem| benutzt werden kann.
 
 Trotz dieser Einschränkungen sind alle Konzepte, die in dieser Arbeit vorgestellt werden einfach auf jedweden SQL-Parser übertragbar.
 
@@ -169,7 +169,7 @@ Das \textbf{response}-Objekt ist das genaue Gegenstück zum request-Objekt. Es e
 
 Das \textbf{session}-Objekt regelt alle wichtigen Funktionen für die aktuelle Session. Wir können hier die Session-ID abfragen, sowie Objekte zur Session hinzufügen und entfernen.
 
-Als letztes, möchten wir das \textbf{out}-Objekt erwähnen. Es repräsentiert einen BufferedWriterm, genauer JSPWriter. Das Objekt kennt im Wesentlichen die Funktionen \verb|print| und \verb|println|. In PHP entspricht dies einem \verb|echo| oder \verb|print| Befehl. Der so gedruckte Text, wird zur Laufzeit in die entstehende HTML-Datei geschrieben. 
+Als letztes, möchten wir das \textbf{out}-Objekt erwähnen. Es repräsentiert einen BufferedWriter, genauer JSPWriter. Das Objekt kennt im Wesentlichen die Funktionen \verb|print| und \verb|println|. In PHP entspricht dies einem \verb|echo| oder \verb|print| Befehl. Der so gedruckte Text, wird zur Laufzeit in die entstehende HTML-Datei geschrieben. 
 
 Das Folgende Beispiel soll die Verwendung der impliziten Objekte verdeutlichen, ist aber, aus Platzgründen, stark vereinfacht.
 \lstset{language=Java}
@@ -187,7 +187,7 @@ Cookies gespeichert.
 
 \section{Auflistung der Software}
 
-Um die Programmierung nachzuvollziehen, werden im Folgenden, alle Programme mit Versionsnummer angegeben. Weiterhin wird vermerkt, wo die Software im Internet zu finden ist.
+Um die Programmierung nachzuvollziehen wird im Folgenden die verwendete Software aufgelistet. Wir vermerken dabei Name, Version, Kurzbeschreibung sowie die Webpräsenz der Software.
 
 \begin{tabular}{p{10cm}r}
 \textbf{Software}: ZQL-Parser & \textbf{Version}: 2011-08-26\\
@@ -205,4 +205,22 @@ Um die Programmierung nachzuvollziehen, werden im Folgenden, alle Programme mit 
 \textbf{Software}: Oracle JDK  & \textbf{Version}:1.6.0\\
 \multicolumn{2}{p{1\textwidth}}{\textbf{Beschreibung}: Das Java-JDK ist notwendig um Programme zu übersetzen und auszuführen. Wir verwenden Version 1.6.0, da im universitärem Umfeld, in dessen Rahmen unser Programm entsteht, häufig noch diese Version verwendet wird. Unser Programm ist jedoch auch kompatibel zu JDK 1.7.0.}\\
 \multicolumn{2}{l}{\textbf{URL}: \url{http://www.oracle.com/technetwork/java/javase/downloads/index.html}}
+\end{tabular}\\
+
+\begin{tabular}{p{10cm}r}
+\textbf{Software}: JDBC-Connector für MySQL  & \textbf{Version}:5.1.25\\
+\multicolumn{2}{p{1\textwidth}}{\textbf{Beschreibung}: Java Database Connectivity (JDBC) ist eine Datenbankschnittstelle der Java-Plattform, die eine einheitliche Schnittstelle zu Datenbanken verschiedener Hersteller bietet und speziell auf relationale Datenbanken ausgerichtet ist. JDBC ist in seiner Funktion als universelle Datenbankschnittstelle vergleichbar mit z. B. ODBC unter Windows oder DBI unter Perl. Zu den Aufgaben von JDBC gehört es, Datenbankverbindungen aufzubauen und zu verwalten, SQL-Anfragen an die Datenbank weiterzuleiten und die Ergebnisse in eine für Java nutzbare Form umzuwandeln und dem Programm zur Verfügung zu stellen. Für jede spezifische Datenbank sind eigene Treiber erforderlich, die die JDBC-Spezifikation implementieren. Diese Treiber werden meist vom Hersteller des Datenbank-Systems geliefert.}\\
+\multicolumn{2}{l}{\textbf{URL}: \url{http://dev.mysql.com/downloads/connector/j/}}
+\end{tabular}\\
+
+\begin{tabular}{p{10cm}r}
+\textbf{Software}: JDBC-Connector für PostgreSQL  & \textbf{Version}:9.2-1003\\
+\multicolumn{2}{p{1\textwidth}}{\textbf{Beschreibung}: siehe JDBC-Connector für MySQL}\\
+\multicolumn{2}{l}{\textbf{URL}: \url{http://jdbc.postgresql.org/download.html}}
+\end{tabular}\\
+
+\begin{tabular}{p{10cm}r}
+\textbf{Software}: JDBC-Connector für Oracle Database & \textbf{Version}:-\\
+\multicolumn{2}{p{1\textwidth}}{\textbf{Beschreibung}: siehe JDBC-Connector für MySQL}\\
+\multicolumn{2}{l}{\textbf{URL}: \url{http://www.oracle.com/technetwork/database/features/jdbc/index-091264.html}}
 \end{tabular}\\
