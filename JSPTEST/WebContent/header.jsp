@@ -10,7 +10,8 @@ if( !request.getRequestURI().split("/")[request.getRequestURI().split("/").lengt
 	if(en.hasMoreElements()) params = "?";
 	while(en.hasMoreElements()) {
 		String next= en.nextElement().toString();
-		params +=next + "=" +request.getParameter(next) + "&";
+		String val = request.getParameter(next).equals("logout") ? "" : request.getParameter(next);
+		params +=next + "=" + val + "&";
 	}
 	if(params.length() > 0)
 		params = params.substring(0, params.length()-1);
@@ -18,6 +19,7 @@ if( !request.getRequestURI().split("/")[request.getRequestURI().split("/").lengt
 	response.setStatus(HttpServletResponse.SC_MOVED_TEMPORARILY);
 	response.setHeader("Location", "login.jsp?refer="+request.getRequestURI()+params); 
 }
+
 
 %>
 

@@ -142,7 +142,7 @@
 						firststep_matching = false;
 						for(int i = 0; i<q2.length; i++) {
 							System.out.println(i+" "+q2[i].toString());
-							if(q.toString().equals(q2[i].toString()))
+							if(q.toString().toLowerCase().equals(q2[i].toString().toLowerCase()))
 								firststep_matching = true;
 						}
 						
@@ -226,7 +226,7 @@
 										t.externalDbs[i]);
 							} catch (Exception e) {
 								out.println("Error while executing your query on databse with real data:<br>"
-										+ e.toString());
+										+ "<span style='color:red;font-weight:bold;>"+ e.toString() + "</span>");
 							}
 							if (r1 != null && r2 != null) {
 								try {
@@ -323,6 +323,13 @@
 		<% out.println(compareAfter+"<br>"+compare); %>
 		
 		<% } %>
+				
+				<%
+				
+				if(request.getSession().getAttribute("dozent") != null)
+					out.println(qh_ss.after.currentQuery);
+				
+				%>
 					
 		</div>
 		
@@ -345,7 +352,13 @@
 		prep.setInt(3, t.id);
 		prep.setString(4, new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
 		
-		prep.setString(5, qh.original.toString());
+		if(qh.original == null) {
+			prep.setString(5,request.getParameter("user_solution"));	
+		} else {
+			prep.setString(5, qh.original.toString());	
+		}
+		
+		
 		prep.setInt(6, firststep_matching?1:0);
 		
 		prep.execute();

@@ -851,7 +851,7 @@ public class QueryUtils {
 				
 				if ((q1.getWhere() != null
 						&& q2.getWhere() != null && !q1
-						.getWhere().toString().equals(q2.getWhere().toString()))
+						.getWhere().toString().toLowerCase().equals(q2.getWhere().toString().toLowerCase()))
 						|| (q1.getWhere() == null && q2
 								.getWhere() != null)
 						|| ((q1.getWhere() != null && q2
@@ -861,7 +861,7 @@ public class QueryUtils {
 				
 				if ((q1.getGroupBy() != null
 						&& q2.getGroupBy() != null && !q1
-						.getGroupBy().toString().equals(q2.getGroupBy().toString()))
+						.getGroupBy().toString().toLowerCase().equals(q2.getGroupBy().toString().toLowerCase()))
 						|| (q1.getGroupBy() == null && q2
 								.getGroupBy() != null)
 						|| ((q1.getGroupBy() != null && q2

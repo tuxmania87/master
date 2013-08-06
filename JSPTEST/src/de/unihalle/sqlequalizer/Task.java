@@ -26,8 +26,11 @@ public class Task {
 		try {
 			PreparedStatement ps = c
 					.prepareStatement("select  t.id,schemaid,description,schem,respectColumnorder from tasks t left join dbschema d on schemaid=d.id where t.id = ?");
+			
 			ps.setInt(1, id);
 
+			//System.out.println("select  t.id,schemaid,description,schem,respectColumnorder from tasks t left join dbschema d on schemaid=d.id where t.id = "+id);
+			
 			ResultSet rs = ps.executeQuery();
 
 			
@@ -36,7 +39,10 @@ public class Task {
 				
 				this.id = rs.getInt("id");
 				text = rs.getString("description");
-				dbschema = rs.getString("schem").split(";");
+				
+				if(rs.getString("schem") != null) {
+					dbschema = rs.getString("schem").split(";");
+				}
 				schemaid = rs.getInt("schemaid");
 				respectColumn = rs.getBoolean("respectColumnorder");
 				//load Sample Solutions

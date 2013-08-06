@@ -44,8 +44,8 @@ public class Login {
 	
 	public static boolean isDozent(String u) {
 		try {
-		Class.forName("org.sqlite.JDBC");
-		Connection conn = DriverManager.getConnection("jdbc:sqlite:e:\\users\\robert\\workspace\\jsptest\\test.db");
+		
+		Connection conn = Connector.getConnection();
 		
 		String q = "select 1 from users where name = ? and isDozent = 1";
 		
