@@ -520,16 +520,21 @@ Aufgrund dieser Umstände werden in unserer Anwendung implizierte Formeln hinzug
 \subsection{Sortierung}
 \label{subsec:sort}
 
-Ein wesentlicher Aspekt bei der Standardisierung ist die Art der Sortierung. Wir betrachten dazu im Folgenden, ZQL-Parserbäume. Im wesentlichen ist dies ein gewurzelter Baum. Dabei stellen Knoten entweder Operatoren, Konstanten oder Variablen dar. Ein Operator $o_1$ kann natürlicherweise, als Kindknoten, wiederum einen Operator $o_2$ haben. Es sei $T(r)$ der gewurzelte Baum mit Wurzelknoten $r$. Wir bezeichnen mit der Menge $\mathit{children}(r)$, die Kindknoten von $r$ in folgender Art und Weise: $\textit{child}(r) = \{c_1, c_2, ..., c_n\}$. Dabei erscheint das Kind $c_i$ direkt links vom Kind $c_j$ genau dann, wenn $j = i + 1$. Anders ausgedrückt: Bei einer Breitensuche über $T(r)$ würden wir erst $c_i$ und im Anschluss daran $c_j$ auffinden, genau dann wenn $j = i + 1$.
+Ein wesentlicher Aspekt bei der Standardisierung ist die Art der Sortierung. Wir betrachten dazu im Folgenden ZQL-Parserbäume. Im wesentlichen sind dies gerichtete Bäume. Dabei stellen Knoten entweder Operatoren, Konstanten oder Variablen dar. Ein Operator $o_1$ kann natürlicherweise, als Kindknoten, wiederum einen Operator $o_2$ haben. Es sei $T(r)$ der Baum mit Wurzelknoten $r$. Wir bezeichnen mit $\mathit{children}(r)$, die Kindknoten von $r$ in folgender Art und Weise: $\textit{children}(r) = (c_1, c_2, ..., c_n)$. Dabei erscheint das Kind $c_i$ direkt links vom Kind $c_j$ genau dann, wenn $j = i + 1$. Anders ausgedrückt: Bei einer Breitensuche über $T(r)$ würden wir erst $c_i$ und im Anschluss daran $c_j$ auffinden, genau dann wenn $j = i + 1$.
 
-Es sei $T(r)$ unser ZQL-Parserbaum. Ist der Operator, den $r$ repräsentiert, kommutativ, so können wir alle Kinder $c_i$ in beliebiger Reihenfolge permutieren und würden den Ausdruck, den $T(r)$ darstellt nicht semantisch verändern. Für unsere Standardisierung ist es aber wichtig, dass wir dennoch eine Ordnung auf solchen Operatoren festlegen, damit unsere Parserbäume am Ende vergleichbar sind. Wir verwenden die Ordnung, die in Abbildung \ref{fig:sortorder} dargestellt ist. Ein niedrigerer Wert der $\mathit{order}$-Funktion bedeutet dabei eine höhere Priorität.
+Es sei $T(r)$ unser ZQL-Parserbaum. Ist der Operator, mit dem $r$ markiert ist, kommutativ, so können wir alle Kinder $c_i$ in beliebiger Reihenfolge permutieren und würden den Ausdruck, den $T(r)$ darstellt nicht semantisch verändern. Für unsere Standardisierung ist es aber wichtig, dass wir dennoch eine Ordnung auf solchen Operatoren festlegen, damit unsere Parserbäume am Ende vergleichbar sind. Wir verwenden die Ordnung, die in Abbildung \ref{fig:sortorder} dargestellt ist. Ein niedrigerer Wert der $\mathit{order}$-Funktion bedeutet dabei eine höhere Priorität. Hat ein Kindknoten $c_i$ eine höhere Priorität als ein Kindknoten $c_j$, so steht $c_i$ weiter links in der Liste der Kinder. Zu beachten ist, dass Spaltennamen die höchste Priorität haben, gefolgt von den Konstanten, welchen die zweithöchste Priorität zugeordnet sind. Wir gehen bei der Herstellung der Ordnung im Baum von unten nach oben vor, also bottom-up. Damit können wir sicherstellen, dass beim Behandeln eines Knotens $v$, die Kinder $children(v)$ bereits korrekt sortiert sind, da wir ja mit den Blattknoten beginnen.
 
-\begin{figure}[h]
-\centering
-\begin{tabular}{|l|l|l|l|l|l|l|l|l|}
+\begin{figure}[h]\
+\begin{tabular}{|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|}
 \hline
-$r\in \textit{Relation}$ & OR & $\le$ & $\ge$ & $>$ & $<$ & $=$ & IS NULL & IS NOT NULL  \\\hline
-$\textit{order}(r)$ & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8\\ 
+$r\in \textit{Relation}$ & Variable & Konstante & OR & $\le$ & $\ge$ & $<$ & $>$ & $=$& $+$ & $-$  & IS NULL\\\hline
+$\textit{order}(r)$ & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11\\ 
+\hline
+\end{tabular}\newline
+\begin{tabular}{|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|}
+\hline
+$r\in \textit{Relation}$ & IS NOT NULL & EXISTS & ANY & ALL  \\\hline
+$\textit{order}(r)$ & 12 & 13 & 14 & 15 \\ 
 \hline
 \end{tabular}
 \caption{Reihenfolge der Sortierung eines WHERE-Ausdrucks}
@@ -538,84 +543,118 @@ $\textit{order}(r)$ & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8\\
 
 Die Kinder vom Baum $T(r)$ müssen so angeordnet werden, dass für alle Kinder paarweise das Folgende gilt. Dabei seien $c_i,c_j\in\mathit{children}(r)$ und $r$ muss kommutativ sein.
 
-$$\forall c_i,c_j : i\neq j \to  ( i<j \leftrightarrow order(i) < order(j) ) $$
+$$\forall c_i,c_j : i\neq j \wedge order(c_i) \neq order(c_j) \to  ( i<j \leftrightarrow order(c_i) < order(c_j) ) $$
 
 In Worten ausgedrückt: Für alle, paarweise verschiedenen, Kinder von $T(r)$ gilt: $c_i$ erscheint genau dann vor $c_j$ im Baum (bezüglich eine Breitensuche), wenn die oben angegebene Ordnung eingehalten wird. Dies wird initial nicht der Fall sein, daher müssen wir die Kinder so umsortieren, dass diese Bedingung erfüllt ist. 
 
-Ist $r$ nicht kommutativ, so können wir die Kinder von $r$ nicht umsortieren. Wir verfahren dann rekursiv direkt mit den Kindern weiter, da diese ja wieder kommutative Operatoren sein können. Weiterhin kann es sein, dass eins der Kinder von $r$ eine Konstante oder Variable ist, also ein Blattknoten, der keinen weiteren Baum aufspannt. Der $\mathit{order}$-Wert für eine Konstante ist immer 0 und für eine Variable immer $-1$. Damit ist sichergestellt, dass auf gleicher Baumebene immer zuerst Variablen, dann Konstanten und dann Teilbäume erscheinen, vorausgesetzt, der Elternknoten repräsentiert einen kommutativen Operator.
-Sind alle Kindknoten Variablen, so werden diese lexikographisch sortiert. Sind alle Kindknoten Konstanten, so wird der entsprechende Ausdruck ausgewertet, da wir dann die Situation haben, dass ein Operator mit Operandenkonstanten gegeben ist und dieser Ausdruck ist auswertbar. Wir ersetzen dann den Baum $T(r)$ mit $eval(T(r))$, wobei $eval$ den arithmetisch/logischen Ausdruck auswertet und sein Ergebnis zurückliefert.
+Dies klärt die Ordnung in unserem Parserbaum, wenn die Liste der Kinder stets mit paarweise unterschiedlichen Operatoren markiert ist. Es ist also ungeklärt wie wir Kindknoten sortieren, wenn diese mit gleichen Operatoren markiert sind. Dabei müssen wir zwei Fälle unterscheiden.: Zwei Kindknoten markieren den gleichen Operator $o$ und zwei Kindknoten bezeichnen je Spaltennamen oder Konstanten. Beide Fälle lassen sich mit einer Methode lösen, die wir jetzt besprechen werden.
 
-Die Abbildung \ref{fig:pesudocode1} soll den bisherigen Prozess darstellen. Dabei sortiert die Methode \verb|sortiere_menge| die eingegebene Menge gemäß der Ordnung in Abbildung \ref{fig:sortorder}.
+Markieren zwei Kindknoten $c_i,c_j$ den gleichen Operator $o = operator(c_i) = operator(c_j)$ so wissen wir, durch das bottom-up-Vorgehen bereits, dass die Kinder von $c_i$ und $c_j$ bereits korrekt sortiert sind. Wir untersuchen dann die beiden Bäume $T(c_i)$ und $T(c_j)$ schrittweise rekursiv in einer Tiefensuche. Diese Tiefensuche geschieht in beiden Bäumen schrittweise und gleichzeitig. Wir bezeichnen die Knoten, bei denen sich die Tiefensuche gerade befindet als $v_i$ für den Baum $T(c_i)$ und $v_j$ für den Baum $T(c_j)$. Stellen wir in einem Schritt der Tiefensuche fest, dass die beiden Knoten sich unterscheiden, also $v_i \neq v_j$ gilt, so entscheiden wir anhand von $order(v_i)$ und $order(v_j)$ welcher Baum vor dem anderen erscheint. Hier gilt wieder, dass $T(c_i)$ vor dem Baum $T(c_j)$ erscheint, wenn $order(v_i) < order(v_j)$. 
+
+Dieses Vorgehen funktioniert ebenso, wenn zwei Knoten entweder Spaltennamen oder Konstanten bezeichnen. Wir müssen hier nur festlegen, welcher Spaltenname bzw. Konstantenname Vorrang vor einem jeweils anderen hat. Wir entscheiden uns hier für die lexikographische Ordnung. Haben wir bei der Tiefensuche nie den Fall, dass sich $v_i$ und $v_j$ unterscheiden, so sind beide Teilbäume identisch und die Reihenfolge ist nicht wichtig. Einer der Teilbäume wird im Anschluss der Sortierung dann entfernt, sofern der Elternknoten beider Teilbäume den Operator \verb|AND| oder \verb|OR| markiert.
+
+Um den Prozess der Sortierung deutlich zu machen Betrachten wir uns zunächst das Verfahren als Pseudocode, um im Anschluss daran ein detailliertes Beispiel zu betrachten. Zur Vereinfachung wird im Pseudocode Bubblesort zur Sortierung der Kinderelemente verwendet. In unserem Programm wird die Sortierung über die javaeigene Sort-Funtkion geregelt, die mit Hilfe eines Comparers die Liste mit Quicksort sortiert. Weiterhin bezeichnen wir mit $a <_{lexik} b$, ob a lexikographisch kleiner ist als b. $swap(l_i,l_j)$ tauscht Element $l_i$ mit $l_j$ in der Liste $l=(l_1,...,l_n)$. 
+
+Die Funktion \verb|dualDFS(v,w)| ist nicht im Pseudocode erläutert und wird daher kurz erklärt. Sie führt die schrittweise Tiefensuche auf $T(v)$ und $T(w)$ aus, wie oben beschrieben. Findet die Funktion zwei unterschiedliche Knoten $v_i$ und $v_j$ so gibt sie diese zurück. Andernfalls wird \verb|false| zurückgegeben.
+
+Die Abbildungen \ref{fig:pesudocode1} und \ref{fig:pesudocode2} stellen den bisherigen Prozess dar.
+
+\begin{figure}[h]
+\lstset{tabsize=2,language=java,keywordstyle=\color{javapurple}\bfseries,
+stringstyle=\color{javared},
+commentstyle=\color{javagreen},
+morecomment=[s][\color{javadocblue}]{/**}{*/}}
+
+\begin{lstlisting}[mathescape]
+sortiere_liste(Liste l=($l_1$,...,$l_n$)) {
+	for(i=0; i<n; i++) {
+		for(j=0; j<n; j++) {
+			if ($l_i$ ist Konstante AND $l_j$ ist Konstante && $l_j <_{lexik} l_i$)
+					swap($l_i,l_j$);
+			else if ($l_i$ ist Spaltenname && $l_j$ ist Spaltenname
+				&& $l_j <_{lexik} l_i$)
+					swap($l_i,l_j$);
+			else if ($l_i$ ist Operator AND $l_j$ ist Operator
+				&& operator($l_j$) == operator($l_i$)) {
+					$v_i, v_j$ = dualDFS($l_i,l_j$);
+					if($v_i$ != false) {
+						/*Sind $v_i,v_j$ Operatoren  entscheidet order(), 
+						  ob getauscht wird. Sind beides Spaltennamen oder 
+						  Konstanten entscheidet die lexikographische Ordnung 
+						  */
+						  maybe swap($v_i,v_j$);
+					}
+			} 
+			else {
+				  if(order($l_j$) < order($l_i$)) 
+				  		swap($l_i,l_j$);
+			}
+		}
+	}
+}\end{lstlisting}			
+\caption{Pseudocode: Sortieren von Listenelementen}
+\label{fig:pesudocode1}
+\end{figure}
+
+\begin{figure}[h]
+\lstset{tabsize=2,language=java,keywordstyle=\color{javapurple}\bfseries,
+stringstyle=\color{javared},
+commentstyle=\color{javagreen},
+morecomment=[s][\color{javadocblue}]{/**}{*/}}
+\begin{lstlisting}[mathescape]
+sortiere(rootnode r) {
+   if( children(r).isEmpty() )  return;        
+   foreach( c in children(r)) {
+      sortiere(c);
+   }           
+   if( kommutativ(r) ) {
+      sortiere_liste(children(r));
+   }
+}
+\end{lstlisting}
+\caption{Pseudocode: Rekursiver Sortierprozess}
+\label{fig:pesudocode2}
+\end{figure}
+
+Wir wollen dieses Verfahren nun an einem Beispiel verdeutlichen. Wir betrachten dazu den Ausdruck \verb| a>5 AND (2=b OR c IS NULL) AND (d=5 OR a<6)|, der in Abbildung \ref{fig:sort_1} als Baum dargestellt ist. Wir gehen davon aus, dass a,b,c und d Spaltennamen sind und keine Stringkonstanten.
+
+\begin{figure}[h]
+\includegraphics[scale=0.6]{Bilder/sort_1.png}
+\caption{Sortierbeispiel: Ausgangsbaum}
+\label{fig:sort_1}
+\end{figure}
+
+Wir führen zunächst den rekursiven Abstieg bis zu den Blattknoten durch. Wir steigen dann rekursiv auf und betrachten dabei jeweils Knoten, die Kindknoten besitzen. Als erstes Treffen wir dabei auf den Teilbaum, der den Ausdruck \verb|a > 5| repräsentiert. Da der Operator \verb|>| nicht kommutativ ist, können wir die Reihenfolge der Kinder nicht ändern und fahren weiter fort. Im rekursiven Aufstieg treffen wir jetzt auf den Teilbaum, der den Ausdruck \verb|2=b| repräsentiert. Da \verb|=| kommutativ ist, sortieren wir nun die Kinder Anhand ihrer \verb|order()|-Werte. Dabei stellt sich heraus, dass \verb|order(b) = 1 < 2 = order(2)| und damit müssen die Kinder getauscht werden. Wir erhalten den Ausdruck: \verb|b=2|. 
+Wir erreichen nun den Teilbaum, der den Ausdruck \verb|(b=2) OR (c IS NULL)| repräsentiert. Da aber \verb|order(=) < order(IS NULL)| ist, müssen wir die Kindknoten nicht vertauschen.
+Wir fahren mit dem rekursiven Aufstieg fort und stoßen auf den Teilbaum, der \verb|d=5| repräsentiert. Da \verb|order(d) > order(5)| müssen wir die Kindknoten nicht tauschen. Wir fahren fort und treffen auf den Ausdruck \verb|a < 6| der ebenfalls nicht abgeändert werden kann, da \verb|<| nicht kommutativ ist. 
+Beim Aufstieg stoßen wir nun auf den Ausdruck \verb|(d=5) OR (a<6)|. Hier müssen wir eine Vertauschung der Kindknoten durchführen, da \verb|order(=) > order(<)|. Wie in Abbildung \ref{fig:sort_step1} zu erkennen, erhalten wir den Ausdruck \verb|(a<6) OR (d=5)|.
 
 \begin{figure}[h]
 \centering
-\begin{verbatim}
-sortiere(rootnode r) {
-   if( children(r) = {} ) 
-      return;
-   if( kommutativ(r) ) {
-      sortiere_menge(children(r));
-   }
-   foreach( c in children(r)) {
-      sortiere(c);
-   }
-}
-\end{verbatim}
-\caption{Pseudocode: Erster Teil der Sortierung}
-\label{fig:pesudocode1}
-\end{figure}
-Folgendes Beispiel soll diese Arbeitsweise verdeutlichen:
-
-Wir betrachten den Ausdruck \verb| a>5 AND (b=2 OR c IS NULL) AND (d=5 OR a<6)|. Dieser ist in Abbildung \ref{fig:sort_ex0} als ZQL-Parserbaum zu sehen. Ziel ist es nun, diesen Baum nach unserem Verfahren zu sortieren.
-
-\begin{figure}
-\includegraphics[scale=0.6]{Bilder/sort_ex0.png}
-\caption{Sortierbeispiel: Ausgangsbaum}
-\label{fig:sort_ex0}
+\includegraphics[scale=0.5]{Bilder/sort_step1.png}
+\caption{Sortierbeispiel: Umsortierung der Teilbäume}
+\label{fig:sort_step1}
 \end{figure}
 
-Wir bemerken, dass wir einen kommutativen Operator (AND) als Wurzelknoten haben und sortieren daher die unmittelbaren Kinder von AND, also \verb|{>,OR,OR}| zu \verb|{OR,OR,>}|, wie in Abbildung \ref{fig:sort_ex1} zu sehen ist.
+Nun treffen wir auf die zweite Ebene des Baumes und die Teilbäume mit den Wurzeln \verb|>, OR| und \verb|OR|. Da \verb|order(OR) < order(>)| gilt, ist klar, dass der Teilbaum mit \verb|>| als Wurzelknoten nach ganz rechts rücken muss. Noch zu klären ist welcher der beiden Teilbäume mit \verb|OR| als Wurzel als erstes Kind von \verb|AND| erscheint. Dazu müssen wir die schrittweise Tiefensuche auf beiden Bäumen ausführen. Wie wir in Abbildung \ref{fig:sort_step2} dabei feststellen können, unterscheiden sich die Knoten bereits in der ersten Iteration der Tiefensuche.
 
-\begin{figure}
-\includegraphics[scale=0.55]{Bilder/sort_ex12.png}
-\caption{Sortierbeispiel: Sortierung der ersten Ebene}
-\label{fig:sort_ex1}
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.55]{Bilder/sort_step2.png}
+\caption{Sortierbeispiel: Schrittweise Tiefensuche}
+\label{fig:sort_step2}
 \end{figure}
 
-Wir fahren dann fort und sortieren die Kindknoten $c_1,c_2$ und $c_3$ rekursiv. Am Ende erhalten wir den Ausdruck \verb| (b=2 OR c IS NULL) AND (a<6 OR d=5) AND a<5|, welcher durch den Baum in Abbildung \ref{fig:sort_exfin1} dargestellt wird.
+ Da \verb|order(<) < order(=)| müssen wir die Teilbäume mit \verb|OR| als Wurzel ebenso tauschen. Wir erhalten dann den Baum, der in Abbildung \ref{fig:sort_zwischen4} zu sehen ist.
 
-\begin{figure}
-\includegraphics[scale=0.55]{Bilder/sort_exfin1.png}
-\caption{Sortierbeispiel: Vorläufiges Ende des Sortierens}
-\label{fig:sort_exfin1}
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.55]{Bilder/sort_zwischen4.png}
+\caption{Sortierbeispiel: Ende des Sortierens}
+\label{fig:sort_zwischen4}
 \end{figure}
 
-Wenn wir uns Abbildung \ref{fig:sort_exfin1} genauer betrachten, so fällt auf, dass keine eindeutige Ordnung zugrunde liegt. Die beiden Bäume $T(c_1)$ und $T(c_2)$ repräsentieren beide den Operator \verb|OR|. Es ist mit den bisherigen Regeln nicht klar, was passiert, wenn zwei Geschwisterknoten, den gleichen Operator repräsentieren.
-
-Haben wir also den Fall, dass zwei Kindknoten $c_i,c_j$ von $T(r)$ den gleichen Operator repräsentieren müssen wir rekursiv die beiden Teilbäume $T(c_i)$ und $T(c_j)$ untersuchen. Wir führen dabei eine gleichzeitge und schrittweise Tiefensuche in beiden Bäumen durch, indem wir sukzessive einen Schritt einer Tiefensuche in einem Baum, dann im anderen Baum durchführen und schließlich einen nächsten Schritt, in gleicher Weise durchführen. Wir bezeichen die Knoten, bei denen sich die Tiefensuche in einem aktuellen Moment befindet als $v_i$ für $T(c_i)$ und $v_j$ für $T(c_j)$. Sobald in einem Schritt $v_i \neq v_j$ ist, entscheiden wir anhand von $\mathit{order}(v_i)$ und $\mathit{order}(v_j)$, welcher Teilbaum vor dem anderen erscheinen soll. $T(c_i)$ erscheint damit vor $T(c_j)$, wenn $\mathit{order}(v_i) < \mathit{order}(v_j)$. Dabei schließen wir Blattknoten von der Betrachtung aus, es sind also nur innere Knoten von Bedeutung.
-
-Ist die Tiefensuche beendet und gab es zu keinem Zeitpunkt zwei innere Knoten in beiden Bäumen mit unterschiedlichen Operatoren, so sind offensichtlich die beiden Teilbäume $T(c_i)$ und $T(c_j)$ strukturell gleich, sie haben also identische innere Knoten. In diesem Fall unterscheiden sich beide Bäume nur durch ihre Blattknoten. Wir bezeichnen die Blattknoten von $T(c_i)$ mit $leaf(c_i)$ und in entsprechender Weise $leaf(c_j)$ die Blattknoten von $T(c_j)$. Wir sortieren diese Blattknotenmengen jetzt lexikographisch. Es ist offensichtlich, dass beide Blattknotenmengen gleich mächtig sind, da ansonsten bereits ein Unterscheid beim Tiefensuchvergleich aufgefallen wäre. Wir gehen jetzt sukzessive beide, sortieren Blattknotenmengen durch und vergleichen jeweils das $i.$ Element dieser Mengen, wobei $1\le i \le n$, mit $n=\vert \mathit{leaf}(c_i)\vert = \vert \mathit{leaf}(c_j) \vert$. Unterscheiden sich die $i.$ Elemente der zwei Mengen, dann erscheint $T(c_i)$ vor $T(c_j)$, wenn das i. Element in $\mathit{leaf(c_i)}$ lexikographisch kleiner ist als das i. Element in $\mathit{leaf(c_j)}$.
-
-Zu beachten ist, dass wenn innerhalb eines Teilbaumes $T(c_i)$ wieder die Situation eintritt, dass es zwei Kinder $d_i,d_j\in\mathit{children}(c_i)$ gibt, mit $d_i=d_j$, aber $i\neq j$, dann wird dieser Fall zuerst behandelt. Wir behandeln also Kinder mit gleichen repräsentierten Operatoren von den Blättern aus, also Bottom-Up.
-
-Als Beispiel betrachten wir den Baum in Abbildung \ref{fig:sort_exfinb0}.
-
-\begin{figure}
-\includegraphics[scale=0.55]{Bilder/sort_exfinb0.png}
-\caption{Sortierbeispiel: strukturell identische Teilbäume}
-\label{fig:sort_exfinb0}
-\end{figure}
-
-Wie wir sehen, sind alle inneren Knoten gleich. Es unterscheiden sich nur die Blattknoten, weshalb eine simultane Tiefensuche über $T(c_1)$ und $T(c_2)$ keine Unterschiede aufgezeigt hat. Die Menge der Blattknoten sind $\mathit{leaf}(c_1) = \{d,4,a,5\}$ und $\mathit{leaf}(c_2) = \{b,2,c,3\}$. Wir sortieren diese Mengen nun und erhalten: $\mathit{leaf'}(c_1) = \{4,5,a,d\}$ und $\mathit{leaf'}(c_2) = \{2,3,b,c\}$.
-Wir gehen nun sukzessive beide Mengen durch und vergleichen zunächst das 1. Element beider Mengen. Diese beiden ersten Elemente unterscheiden sich bereits und weil $4 > 2$ müssen die beiden Bäume $T(c_1)$ und $T(c_2)$ vertauscht werden. Wir erhalten also den finalen, sortierten Baum, der in Abbildung \ref{fig:sort_exfinb1} zu sehen ist.
-
-\begin{figure}
-\includegraphics[scale=0.55]{Bilder/sort_exfinb1.png}
-\caption{Sortierbeispiel: umsortierte Teilbäume}
-\label{fig:sort_exfinb1}
-\end{figure}
-
-Ist das Sortieren abgeschlossen, entfernen wir noch unnötige Duplikate. Hat der Operator \verb|AND| zwei gleiche Operanden $o_1,o_2$, die äquivalent sind ($T(o_1) \equiv T(o_2)$), so können wir einen der beiden Operanden streichen. Gleiches gilt für den Operator \verb|OR|. Durch die Sortierung stehen solche Duplikatskandidaten immer nebeneinander. Wir durchsuchen den Baum daher iterativ nach Duplikaten und entfernen diese.
+Ist das Sortieren abgeschlossen, entfernen wir noch unnötige Duplikate. Haben die Operatoren \verb|AND| oder \verb|OR| zwei gleiche Operanden $o_1,o_2$, die äquivalent sind ($T(o_1) \equiv T(o_2)$), so können wir einen der beiden Operanden streichen. Gleiches gilt für den Operator \verb|OR|. Durch die Sortierung stehen solche Duplikatskandidaten immer nebeneinander. Wir durchsuchen den Baum daher iterativ nach Duplikaten und entfernen diese.
 
 \subsection{GROUP BY / HAVING}
 

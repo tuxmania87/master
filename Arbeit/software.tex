@@ -4,7 +4,7 @@
 
 Auf der Webseite vom \cite{zql1} Projekt ist der Open-Source-Parser ZQL zu finden, welcher in der Lage ist SQL zu parsen und in Datenstrukturen zu überführen. Der Parser selbst ist mit \cite{javacc1} geschrieben, einem  Java-Parsergenerator (zu vergleichen mit dem populärem Unix yacc Generator).
 
-ZQL bietet Unterstützung für \verb|SELECT-|, \verb|INSERT-|, \verb|DELETE-|, \verb|COMMIT-|, \verb|ROLLBACK-|, \verb|UPDATE-|, \verb|SET|- und \verb|S TRANSACTION-|Ausdrücke. Wichtig für diese Arbeit sind dabei insbesondere \verb|SELECT-| und \verb|UPDATE-|Ausdrücke, sowie -- die leider nicht enthaltenen -- \verb|CREATE TABLE-|Ausdrücke.
+ZQL bietet Unterstützung für \verb|SELECT-|, \verb|INSERT-|, \verb|DELETE-|, \verb|COMMIT-|, \verb|ROLLBACK-|, \verb|UPDATE-|, \verb|SET|- und \verb|TRANSACTION-|Ausdrücke. Wichtig für diese Arbeit sind dabei insbesondere \verb|SELECT-| und \verb|UPDATE-|Ausdrücke, sowie -- die leider nicht enthaltenen -- \verb|CREATE TABLE-|Ausdrücke.
 
 \subsection{Funktionsweise des Parsers}
 
@@ -23,17 +23,48 @@ Das Interface \verb|ZStatement| bildet eine abstrakte Oberklasse für alle mögl
 Das Interface \verb|ZExp| bildet eine abstrakte Oberklasse für drei verschiedene Arten von Ausdrücken:
 
 \begin{itemize}
-\item \verb|ZConstant| - Konstanten vom Typ \verb|NULL, NUMBER, STRING| oder \verb|UNKNOWN|. Dazu gehören auch Spaltennamen. Dies sind keine Konstanten im eigentlichen Sinne, sondern vielmehr im Sinne eines Parserbaumes. Im ZQL-Parserbaum sind Elemente entweder eine SQL-Anfrage (Query), ein Ausdruck, bestehend aus Operator und Operanden, oder eine Konstante. Spaltennamen fallen in die Kategorie Konstanten, da sie keine Ausdrücke oder SQL-Anfragen sind. Der Typ hierfür ist dann \verb|COLUMNAME|.
+\item \verb|ZConstant| - Konstanten vom Typ \verb|NULL, NUMBER, STRING, COLUMNNAME| oder \verb|UNKNOWN|. Spaltennamen gehören hier also zu Konstanten im Sinne eines Parserbaumes. Im ZQL-Parserbaum sind Elemente entweder eine SQL-Anfrage (Query), ein Ausdruck, bestehend aus Operator und Operanden, oder eine Konstante. Spaltennamen fallen in die Kategorie Konstanten, da sie keine Ausdrücke oder SQL-Anfragen sind. 
 \item \verb|ZExpression| - Ein SQL-Ausdruck bestehend aus einem Operator und einen oder mehreren Operanden
 \item \verb|ZQuery| - Eine \verb|SELECT| Anfrage ist auch ein Ausdruck
 \end{itemize}
 
 Wir klären in diesem Abschnitt nun genauer, wie der Parser SQL-Anfragen in interne Datenstrukturen überführt.
-Dazu müssen die Datentypen des Parserpaketes zunächst erläutert werden. Anschließend stellen wir eine Beispielanfrage und ihre Überführung in die Datenstrukturen des Parsers vor. Daraus leiten wir auch die Schwächen bzw. Grenzen des Parsers ab. Wir stellen im Folgenden dar, was für relevante Attribute und Methoden die jeweiligen Klassen besitzen. Da viele Klassen durch Vererbung entstehen, werden wir der Übersicht halber auch abgeleitete relevante Attribute und Funktionen mit einbeziehen.
+Dazu müssen die Datentypen des Parserpaketes zunächst erläutert werden. Anschließend stellen wir eine Beispielanfrage und ihre Überführung in die Datenstrukturen des Parsers vor. Daraus leiten wir auch die Schwächen bzw. Grenzen des Parsers ab. Wir stellen im Folgenden dar, was für relevante Attribute und Methoden die jeweiligen Klassen besitzen. Da viele Klassen durch Vererbung entstehen, werden wir der Übersicht halber auch abgeleitete relevante Attribute und Funktionen mit einbeziehen. 
+
+Wir verwenden im Folgenden eine Art Pseudocode. Elemente in einem Array oder Vector werden einfach als Menge \verb|{elem1, elem2, elem3}| dargestellt. Objekte werden vereinfacht dargestellt als Ansammlung von Attributen. Dies ist legitim, da die Methoden fast ausschließlich nur getter und setter sind. Ein Objekt o mit dem Attribut ``name'' und den Wert ``Otto'' schreiben wir daher als: 
+\verb|o = { [name=Otto] }|
 
 Die Klasse \textbf{ZFromItem} bezeichnet genau eine Tupelvariable samt Relation. Gespeichert wird in dieser Klasse daher der \textit{Name der Relation} und eine mögliche Tupelvariable als \textit{Alias}.
 
-Ähnlich ist die Klasse \textbf{ZSelectItem} aufgebaut. Sie speichert den Namen des Attributs und einen eventuell angegebene Tupelvariable. Weiterhin wird festgehalten, ob das SelectItem ein Ausdruck ist wie \mbox{z. B.} in \verb|SELECT a+b|. In diesem Fall würde man über die Funktion \verb|getExpression()| ein Objekt einer Klasse erhalten, das das Interface \verb|ZExp| implementieren muss. Zu beachten ist dabei, dass ein Ausdruck in ZQL immer einen Operator und mindestens einen Operanden besitzen muss. Deswegen fallen Spaltennamen nicht in diese Kategorie, sondern sind unter Konstanten zu finden. Weiterhin wird gespeichert, ob es sich um eine Wildcard \verb|*| handelt oder ob das Item eine Aggregatesfunktion ist. Bei \verb|SELECT AVG(sal) FROM ...| würde der Name des Items \verb|sal| sein und die Aggregatsfunktion ist dann \verb|AVG|. 
+Der Aufbau der Klasse \textbf{ZSelectItem} ist komplexer. Sie ist verantwortlich Spaltennamen, Konstanten, Tupelvariablen, Ausdrücke und Aggregationsfunktionen zu speichern. Bevor wir den Aufbau dieser Klasse an einem Beispiel verdeutlichen, gehen wir jetzt alle Attribute dieser Klasse im Detail ein.
+
+%\begin{figure}[h]
+\begin{tabular}{lp{.8\textwidth}}
+\verb|wildcard| & Haben wir nur das Wildcard \verb|*| wird hier der boolsche Wert \verb|true| gespeichert, ansonsten ist dieser Wert \verb|false|.\\
+\verb|aggregate| & Handelt es sich beim aktuellen Gegenstand um eine Aggregationsfunktion, so wird der Name dieser hier gespeichert.\\
+\verb|alias| & Hier wird eine alternative Spaltenüberschrift als \verb|STRING| gespeichert.\\
+\verb|columnname| & Hier wird der Spaltenname gespeichert. Ist eine Konstante angegeben, so wird diese hier ebenfalls gespeichert. Stringkonstanten werden dabei mit eingeschlossenen, doppelten Anführungszeichen gespeichert, damit sie von Spaltennamen unterschieden werden können. Numerische Konstanten werden als String gespeichert. Handelt es sich um einen zusammengesetzten Term, so wird dieser hier gespeichert. In jedem Fall werden Tupelvariablen nicht im Attribut \verb|columnname| gespeichert.\\
+\verb|table| & In diesem Attribut wird die Tupelvariable abgespeichert. Haben wir in \verb|columnname| einen zusammengesetzten Term gespeichert, so werden die Tupelvariablen dieses Terms hier ebenso abgespeichert, indem die Spaltennamen aus dem Term entfernt werden. Deutlich wird dieses Vorgehen im folgenden Beispiel.\\
+\verb|expression| & In diesem Attribut wird immer ein Term gespeichert. Dabei ist es nicht wichtig, ob dieser einfach oder zusammengesetzt ist. Er wird so gespeichert wie er vom Nutzer aufgeschrieben wurde, das bedeutet insbesondere, dass die Tupelvariablen nicht extrahiert worden sind.\\
+\end{tabular}
+%\caption{Aufbau der Klasse \textbf{ZSelectItem}}
+%\label{fig:zselitem}
+%\end{figure}
+
+Folgendes Beispiel soll die Struktur von \verb|ZSelectItem| erläutern. Wir betrachten dazu den folgenden \verb|SELECT|-Ausdruck: \begin{verbatim}SELECT e.sal AS "Spalte1", "Konstante" AS "Spalte2, 
+e.sal + x.empno AS "Spalte3", avg(e.sal) AS "Spalte"4\end{verbatim} Um das Beispiel übersichtlich zu gestalten, geben wir nur Attribute an, die nicht leer sind oder vom Standardwert abweichen.
+
+\begin{figure}[h]
+\begin{verbatim}
+{ [alias=Spalte1], [columnname=sal], [table=e], [expression=e.sal] }
+{ [alias=Spalte2], [columnname="Konstante"], [expression="Konstante"] }
+{ [alias=Spalte3], [columnname=empno], [table=e + x], 
+  [expression=e.sal + x.empno] }
+{ [aggregate = "avg"], [alias=Spalte4], [columnname=sal], [table=e], 
+  [expression=avg(e.sal)] }
+\end{verbatim}
+\caption{Geparste Objekte vom Typ \textbf{ZSelectItem}}
+\end{figure}
 
 Der \verb|WHERE|-Teil wird dargestellt mit Hilfe der Klasse \textbf{ZExpression}. Diese Klasse implementiert das Interface \verb|ZExp|. Ein Objekt der Klasse \verb|ZExpression| besteht immer aus einem Operator und mehreren Operanden. Ein Operator ist ein gültiger String. Ein Ausdruck speichert seine Operanden als \textit{Vector} von Objekten, die das Interface \verb|ZExp| implementieren. Demnach kann ein Operand vom Typ \verb|ZExpression, ZConstant| oder \verb|ZQuery| sein.
 Wichtig ist auch zu bemerken, dass ZQL nicht nur zwei Operanden pro Ausdruck kennt. 
@@ -90,20 +121,19 @@ FROM emp e, dept d
 WHERE e.sal > 1000 AND e.did = d.id 
 ORDER BY e.sal DESC\end{verbatim}
 
-Die ganze Anfrage wird in einem Objekt vom Typ \verb|ZQuery| eingebettet. Wir gehen nun nacheinander die Bestandteile dieses Objektes durch. Wir schreiben vereinfacht eine Art Pseudocode. Elemente in einem Array oder Vector werden einfach als Menge \verb|{elem1, elem2, elem3}| dargestellt. Objekte werden vereinfacht dargestellt als Ansammlung von Attributen. Dies ist legitim, da die Methoden fast ausschließlich nur getter und setter sind. Ein Objekt o mit dem Attribut ``name'' und den Wert ``Otto'' schreiben wir daher als: 
-\verb|o = { [name=Otto] }|
+Die ganze Anfrage wird in einem Objekt vom Typ \verb|ZQuery| eingebettet. Wir gehen nun nacheinander die Bestandteile dieses Objektes durch. 
 
-Der \textbf{SELECT}-Teil wird durch einen \textit{Vector} dargestellt. Alle Items sind vom Typ \textit{ZSelectItem}. \verb|SelectVector = { selItem1, selItem2, selItem3 }|.
+Der \textbf{SELECT}-Teil wird durch einen \textit{Vector} dargestellt. Alle Items sind vom Typ \textit{ZSelectItem}. \verb|SelectVector = { sel1, sel2, sel3 }|.
 
-\verb|selItem1 = { [Table=e], [Column=name], [Expression=false], [Wildcard=false] }|
+\verb|sel1 = { [Table=e], [Column=name], [Expression=e.name], [Wildcard=false] }|
 
-\verb|selItem2 = { [Table=null], [Column=sal], [Expression=false], [Wildcard=false] }|
+\verb|sel2 = { [Column=sal], [Expression=sal], [Wildcard=false] }|
 
-\verb|selItem3 = { [Table=null], [Column=dname], [Expression=false], [Wildcard=false] }|
+\verb|sel3 = { [Column=dname], [Expression=dname], [Wildcard=false] }|
 
 Auch im \verb|FROM|-Teil finden wir einen \textit{Vector}, der nun aus Objekten vom Typ \verb|ZFromItem| besteht. \verb|FromVector = { fromItem1, fromItem2 }|.
 
-\verb|fromItem1 = { [Table=emp], [Alias=e] }|
+\verb|fromItem1 = { [Table=emp], [Alias=e] }|\\
 \verb|fromItem2 = { [Table=dept], [Alias=d] }|
 
 Kommen wir nun zum komplexeren Teil, dem \verb|WHERE|-Ausdruck. Da diese Struktur baumartig ist, lässt sich dies zunächst besser in einem Bild ausdrücken.
@@ -115,6 +145,8 @@ Kommen wir nun zum komplexeren Teil, dem \verb|WHERE|-Ausdruck. Da diese Struktu
 \end{figure}
 
 In Abbildung \ref{fig:parseTree} sieht man nun den geparsten Baum der \verb|WHERE|-Bedingung. Die gestrichelten K"asten sollen andeuten, dass es sich um den \textit{Vector} von Klassen handelt, die \verb|ZExp| implementieren, während durchgezogene Kasten konkrete Objekte sein sollen.
+
+TODO: ORDER BY
 
 \subsection{Grenzen des Parsers}
 \label{subsec:grenzenparser}

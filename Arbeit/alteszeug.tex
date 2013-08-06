@@ -18,7 +18,7 @@ Der SQL-Tutor lässt außerdem den eingesendeten Lösungsvorschlag auf einer SQL
 
 \subsection*{Abgrenzung zum SQL-Tutor}
 
-Der Grundgedanke des SQL-Tutors überschneidet sich durchaus mit dem Ansatz dieser Arbeit. Ein Grundpfeiler des SQL-Tutors ist es, dem Studenten detailliertes Feedback über seine semantischen und syntaktischen Fehler zu geben. Das Programm was im Zuge dieser Arbeit entsteht soll weniger semantische Fehler analysieren, als viel mehr versuchen zwei SQL-Anfragen zu vergleichen, unabhängig davon wie sie aufgeschrieben sind. Des Weiteren bedient sich der SQL-Tutor einer Testdatenbank mit realen Testdaten. Unser Programm soll nur das Datenbankschema kennen und ohne Daten bestimmen, ob zwei Anfragen das gleiche Ergebnis liefern. Erst in einem optionalen zweiten Schritt prüfen wir in unserem Programm, ob beide Anfragen gleiche Ergebnisse auf konkreten Daten liefern. Hat bereits der erster Schritt ein positives Ergebnis gemeldet, dann ist der zweite Schritt unnötig. Der SQL-Tutor operiert allerdings zur Ermittlung der Übereinstimmung nur auf Testdaten. Bei ungünstig gewählten Testdaten kann es passieren, dass der Eindruck entsteht zwei Anfragen wären gleich, obwohl sie es nicht sind. Entstehen kann dies, weil auf den vorhanden Testdaten zufällig beide Anfragen die gleichen Ergebnisse liefern könnten.
+Der Grundgedanke des SQL-Tutors überschneidet sich durchaus mit dem Ansatz dieser Arbeit. Ein Grundpfeiler des SQL-Tutors ist es, dem Studenten detailliertes Feedback über seine semantischen und syntaktischen Fehler zu geben. Das Programm was im Zuge dieser Arbeit entsteht soll weniger semantische Fehler analysieren, als viel mehr versuchen zwei SQL-Anfragen zu vergleichen, unabhängig davon wie sie aufgeschrieben sind. Sowohl der SQL-Tutor als auch unser Programm benutzen reale Datenbanken mit realen Testdaten. Während der SQL-Tutor diesen Test allerdings für einen Nachweis der Äquivalenz beider Anfragen benutzt, benutzen wir den Test, um eine semantische Äquivalenz auszuschließen. Bei ungünstig gewählten Testdaten kann es beim SQL-Tutor daher passieren, dass der Eindruck entsteht zwei Anfragen wären gleich, obwohl sie es nicht sind. Entstehen kann dies, weil auf den vorhanden Testdaten zufällig beide Anfragen die gleichen Ergebnisse liefern könnten.
 
 \section{SQL-Exploratorium}
 
@@ -56,7 +56,7 @@ Hierbei handelt es sich nur um ein Tool, was aufgrund früherer Antworten des St
 
 \section{WIN-RBDI}
 
-Das Programm WINRBDI, welches in \cite{winrbdi1} beschrieben wird verfolgt einen weiteren, interessanten Ansatz. Anstelle von fest vorgegebenen Demoanfragen, wird die eingegebene Anfrage zunächst in esql eingebettet. Die Ausführung der Anfrage wird dann schrittweise durchgeführt. Der Student hat also die Möglichkeit die Anfrage im Schrittmodus, ähnlich eines Debugger, oder im Fortsetzen-Modus auszuführen. Im Schrittmodus wird jeder Teilschritt der Abarbeitung der Anfrage aufgezeigt. Es werden temporär erzeugte Tabellen angegeben sowie auch eine Erklärung welcher Teil der Anfrage für den aktuellen Abarbeitungsschritt verantwortlich ist. So soll es dem Studenten möglich sein, die unmittelbaren Konsequenzen seiner SQL-Anfrage für die Abarbeitung zu begreifen. 
+Das Programm WINRBDI, welches in \cite{winrbdi1} beschrieben wird verfolgt einen weiteren, interessanten Ansatz.  Die Ausführung der Anfrage wird schrittweise durchgeführt. Der Student hat also die Möglichkeit die Anfrage im Schrittmodus, ähnlich eines Debugger, oder im Fortsetzen-Modus auszuführen. Im Schrittmodus wird jeder Teilschritt der Abarbeitung der Anfrage aufgezeigt. Es werden temporär erzeugte Tabellen angegeben sowie auch eine Erklärung welcher Teil der Anfrage für den aktuellen Abarbeitungsschritt verantwortlich ist. So soll es dem Studenten möglich sein, die unmittelbaren Konsequenzen seiner SQL-Anfrage für die Abarbeitung zu begreifen. 
 
 Des Weiteren hilft dieser Ansatz dem Studenten die Abarbeitung einer Anfrage zu Visualisieren, indem die von der WHERE-Klausel betroffene Spalten markiert werden. Dies hilft gerade Lernanfängern bei der Visualisierung von Konzepten wie JOINs.
 
@@ -83,11 +83,11 @@ Wir nehmen im Folgenden an, dass die SQL-Anfragen keine Datentyp Operationen ent
 \subsection{Bedingungen ohne Unteranfragen}
 
 WHERE-Bedingungen, die keine Unteranfrage enthalten, können mit bestimmten Methoden entschieden werden. Ein Beispiel dafür sind die Algorithmen von Guo, Sun und Weiss \cite{decideable1}. Als erster Schritt wird die Negation \verb|NOT| so weit wie möglich an die atomaren Formeln weitergereicht, indem die \verb|DE-MORGAN|'sche Regeln angewendet werden. Dadurch drehen sich die Vergleichsoperatoren um, wir sprechen hierbei von dem >>gegenteiligem Operator<<. Die Menge $O=\{ \{\leq,>\} , \{\geq,<\} , \{ =, =\}, \{\neq,\neq\} \}$ enthält jeweils 2er Mengen von einem Operator und seinem >>gegenteiligem Operator<<. Im nächsten Schritt wird die Bedingung in die disjunktive Normalform (DNF) umgeformt, so dass folgende Struktur entsteht: $\phi_1 \vee ... \vee \phi_n$. Diese ist genau dann konsistent, wenn mindestens ein $\phi_i$ konsistent ist. Nun können wir die Methoden aus \cite{decideable1} anwenden. Im wesentlichen handelt es sich dabei um einen gerichteten Graphen, in dem Knoten markiert sind mit >>Tupelvariable.Attribut<< und Kanten mit $<$ oder $\leq$. Dann werden Intervalle von möglichen Werten für jeden Knoten berechnet. Dabei ist zu beachten, dass die SQL-Datentypen, wie \verb|NUMERIC(1)|, das Intervall zusätzlich einschränken.
-Wenn es endlich viele mögliche Werte für einen Knoten gibt, dann können Ungleich-Bedingungen ($t_1<>t_2$) zwischen Knoten wichtig werden und ein Graphfärbungsproblem kodieren. Daher erwarten wir keinen effizienten Algorithmus, wenn es viele $<>$ Bedingungen gibt. In allen anderen Fällen ist die Methode in \cite{decideable1} schnell. Anzumerken ist allerdings noch, dass die Umwandlung in DNF zu exponentiellem Wachstum in der Größe der Anfrage führen kann.
+Wenn es endlich viele mögliche Werte für einen Knoten gibt, dann können Ungleich-Bedingungen ($t_1<>t_2$) zwischen Knoten wichtig werden und ein Graphfärbungsproblem kodieren. Daher erwarten wir keinen effizienten Algorithmus, wenn es viele $<>$ Bedingungen gibt. In allen anderen Fällen ist die Methode in \cite{decideable1} schnell. Anzumerken ist allerdings noch, dass die Umwandlung in DNF zu exponentiellem Wachstum in der Größe der Anfrage führen kann. Zu erwähnen ist, dass der Algorithmus vom SQLLint-Projekt auch Nullwerte behandelt im Gegensatz zu den Algorithmen von Guo, Sun und Weiss \cite{decideable1}.
 
 \subsection{Unteranfragen}
 
-Um unnötige Betrachtungen zu vermeiden, beschäftigt sich das SQLLint-Projekt nur mit \verb|EXISTS|-Unteranfragen. Alle anderen Unteranfragen (\verb|IN,>=ALL,| etc.) können auf die \verb|EXISTS|-Unteranfrage reduziert werden. Oracle führt solche Umwandlungen durch, bevor der Optimierer beginnt an der Anfrage zu arbeiten.
+Um unnötige Betrachtungen zu vermeiden, beschäftigt sich das SQLLint-Projekt nur mit \verb|EXISTS|-Unterabfragen. Alle anderen Unteranfragen (\verb|IN,>=ALL,| etc.) können auf die \verb|EXISTS|-Unteranfrage reduziert werden. Oracle führt solche Umwandlungen durch, bevor der Optimierer beginnt an der Anfrage zu arbeiten.
 
 Die Idee zur Behandlung von Unteranfragen stammt aus bekannten Methoden der automatischen Beweiser. Hierzu wird in der Arbeit \cite{brass1} eine Variante der Skolemisierung vorgestellt. Das genaue Vorgehen wird in in jenem Artikel erklärt.
 
@@ -109,9 +109,9 @@ Zu weiteren unnötigen logischen Komplikationen zählen zu allgemeine Vergleichs
 
 \subsection{Laufzeitfehler}
 
-Als Bemerkung ist festzuhalten, dass sich das SQLLint-Projekt auch mit Laufzeitfehlern beschäftigt. Als Beispiel stelle man sich folgende SQL-Bedingung vor: \verb|A=(SELECT ...)| Es muss hier sichergestellt werden, dass die \verb|SELECT|-Unteranfrage nur einen Rückgabewert hat. Solche Fehler sind schwierig zu finden, da sie nicht immer Auftreten müssen. 
+Als Bemerkung ist festzuhalten, dass sich das SQLLint-Projekt auch mit Laufzeitfehlern beschäftigt. Als Beispiel stelle man sich folgende SQL-Bedingung vor: \verb|A=(SELECT ...)| Es muss hier sichergestellt werden, dass die \verb|SELECT|-Unteranfrage nur einen Rückgabewert hat. Solche Fehler sind schwierig zu finden, da sie nicht immer auftreten müssen. 
 
-Wie das SQLLint-Projekt damit umgeht, soll hier nicht weiter besprochen werden. Details dazu sind zu finden in \cite{brass2}. 
+In \cite{brass2} wird ein Verfahren angegeben, wie man den Beweis, das solche Laufzeitfehler für eine gegebene Anfrage und Datenbankschema nicht auftreten können, auf einen Konsistenzbeweis zurückführen kann.
 
 \subsection*{Zusammenhang zu dieser Arbeit}
 
