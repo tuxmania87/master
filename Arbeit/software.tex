@@ -7,6 +7,7 @@ Auf der Webseite vom \cite{zql1} Projekt ist der Open-Source-Parser ZQL zu finde
 ZQL bietet Unterstützung für \verb|SELECT-|, \verb|INSERT-|, \verb|DELETE-|, \verb|COMMIT-|, \verb|ROLLBACK-|, \verb|UPDATE-|, \verb|SET|- und \verb|TRANSACTION-|Ausdrücke. Wichtig für diese Arbeit sind dabei insbesondere \verb|SELECT-| und \verb|UPDATE-|Ausdrücke, sowie -- die leider nicht enthaltenen -- \verb|CREATE TABLE-|Ausdrücke.
 
 \subsection{Funktionsweise des Parsers}
+\label{subsec:funktionparser}
 
 ZQL kennt zwei grundlegende Interfaces \verb|ZExp| und \verb|ZStatement|. Wichtig für die weiterführende Erklärung ist, dass genau drei Klassen das Interface \verb|ZExp| implementieren. Diese werden im Folgenden auch vorgestellt. Es handelt sich um \verb|ZExpression, ZConstant, ZQuery|.
 
@@ -102,7 +103,7 @@ Wir erhalten also aus obigen \verb|WHERE|-Ausdruck:
 
 So erklärt sich auch die Verwendung eines \textit{Vector} zur Speicherung der Operanden.
 
-Die Klasse \textbf{ZConstant} dient zur Darstellung von SQL-Konstanten. Sie speichert den Wert der Konstante sowie den Typ. Als Typen kommen in Frage: \verb|NULL, NUMBER, STRING, UNKNOWN|. Da die Typen selbsterklärend sind, wird auf eine detaillierte Beschreibung verzichtet. Wie bereits erwähnt zählen auch Spaltennamen zu Konstanten, sie erhalten den Typ \verb|COLUMNNAME|. Begründet ist dies dadurch, dass ein Spaltenname kein Operator mit Operanden ist.
+Die Klasse \textbf{ZConstant} dient zur Darstellung von SQL-Konstanten. Sie speichert den Wert der Konstante sowie den Typ. Als Typen kommen in Frage: \verb|NULL, NUMBER, STRING, UNKNOWN, COLUMNNAME|. Spaltennamen zählen hier auch zu Konstanten, da ein Spaltenname kein Operator mit Operanden ist, was einer \verb|ZExpression| entsprechen würde.
 
 Ein Objekt der Klasse \textbf{ZGroupBy} speichert im Wesentlichen zwei Informationen. Die \verb|GROUP BY| Ausdrücke werden gespeichert in einem \textit{Vector} von Klassen, die das \verb|ZExp| Interface implementiert haben. Der optionale \verb|HAVING BY| Ausdruck wird als Objekt einer der Klassen gespeichert, welche \verb|ZExp| implementieren. Typischerweise wird das ein Objekt der Klasse \verb|ZExpression| sein.
 
@@ -139,21 +140,25 @@ Auch im \verb|FROM|-Teil finden wir einen \textit{Vector}, der nun aus Objekten 
 Kommen wir nun zum komplexeren Teil, dem \verb|WHERE|-Ausdruck. Da diese Struktur baumartig ist, lässt sich dies zunächst besser in einem Bild ausdrücken.
 
 \begin{figure}[h]
-\includegraphics[scale=0.51]{Bilder/parserbaum.png}
+\centering
+\includegraphics[scale=0.51]{Bilder/where_teil.png}
 \caption{Geparster Baum der WHERE Bedingung des Beispiels}
 \label{fig:parseTree}
 \end{figure}
 
 In Abbildung \ref{fig:parseTree} sieht man nun den geparsten Baum der \verb|WHERE|-Bedingung. Die gestrichelten K"asten sollen andeuten, dass es sich um den \textit{Vector} von Klassen handelt, die \verb|ZExp| implementieren, während durchgezogene Kasten konkrete Objekte sein sollen.
 
-TODO: ORDER BY
+Der \verb|ORDER BY|-Teil wird wiederum als \textit{Vector} von \textit{ZOrderBy}-Objekten gspeichert.\\
+\verb|OrderByVector = { orderBy1 }|.
+
+\verb|orderBy1 = { [asc = false], [expression = e.sal] }|
 
 \subsection{Grenzen des Parsers}
 \label{subsec:grenzenparser}
 
-Der Parser kann keine \verb|CREATE TABLE|-Statements parsen. Somit ist es im Rahmen dieser Arbeit notwendig, den Parser zu erweitern, damit Tabellen in eigene Datenstrukturen geparst werden können. Für die Arbeit ist es zunächst nur notwendig Name, Datentyp, Fremdschlüsselbeziehungen und NULL-Informationen der Spalten in eine interne Datenstruktur zu überführen. Dabei wird beim Typ nur zwischen Zahlen und Sonstigem (Text) unterschieden. Wir speichern außerdem, wie viele Nachkommastellen ein Attribut haben kann. Unser Programm soll in der Lage sein, einfache arithmetische Operationen durchzuführen. Dazu ist das wissen um Datentypen der Variablen von Nöten.
+Der Parser kann keine \verb|CREATE TABLE|-Statements parsen. Somit ist es im Rahmen dieser Arbeit notwendig, den Parser zu erweitern, damit Tabellen in eigene Datenstrukturen geparst werden können. Für die Arbeit ist es zunächst nur notwendig Name, Datentyp, Fremdschlüsselbeziehungen und NULL-Informationen der Spalten in eine interne Datenstruktur zu überführen. Dabei wird beim Typ nur zwischen Zahlen und Sonstigem (Text) unterschieden. Wir speichern außerdem, wie viele Nachkommastellen ein Attribut haben kann. Unser Programm soll in der Lage sein, einfache arithmetische Operationen durchzuführen. Dazu ist das Wissen um Datentypen der Variablen von Nöten.
 
-Der ZQL-Parser versteht das \verb|FROM|-Statement als Liste von Relationen mit optionalen Tupelvariablen. Dadurch leiten sich mehrere Einschränkungen ab. ZQL ist dadurch nicht in der Lage \verb|JOINS| über die Schlüsselworte \\\verb#ON [LEFT OUTER|RIGHT OUTER|INNER] JOIN# zu erkennen. Der Parser erkennt nur innere \verb|JOINS|, die im \verb|WHERE|-Teil formuliert worden. Der ZQL-Parser unterstützt daher auch keine Unterabfragen unter \verb|FROM|. Eine Möglichkeit diesem Problem zu begegnen ist es, solche Unterabfragen vor dem Parsen zu Entfernen und danach unverändert wieder einzufügen. Es wäre allerdings wünschenswerter wenn der ZQL-Parser erweitert würde, so dass auch ein \verb|ZQuery| als \verb|ZFromItem| benutzt werden kann.
+Der ZQL-Parser versteht das \verb|FROM|-Statement als Liste von Relationen mit optionalen Tupelvariablen. Dadurch leiten sich mehrere Einschränkungen ab. ZQL ist dadurch nicht in der Lage \verb|JOINS| über die Schlüsselworte \\\verb#  ON [LEFT OUTER|RIGHT OUTER|INNER] JOIN# \\zu erkennen. Der Parser erkennt nur innere \verb|JOINS|, die im \verb|WHERE|-Teil formuliert worden. Der ZQL-Parser unterstützt daher auch keine Unterabfragen unter \verb|FROM|. Eine Möglichkeit diesem Problem zu begegnen ist es, solche Unterabfragen vor dem Parsen zu Entfernen und danach unverändert wieder einzufügen. Es wäre allerdings wünschenswerter wenn der ZQL-Parser erweitert würde, so dass auch ein \verb|ZQuery| als \verb|ZFromItem| benutzt werden kann.
 
 Trotz dieser Einschränkungen sind alle Konzepte, die in dieser Arbeit vorgestellt werden einfach auf jedweden SQL-Parser übertragbar.
 
@@ -189,7 +194,7 @@ exception & java.lang.Throwable \\\hline
 \end{figure}
 
 
-Man könnte die JSP als Erweiterung der Servlets ansehen, da die JSP alle Funktionen dieser übernehmen. Zusätzlich können auch eigene Tag-Libraries erstellt werden. JSP funktioniert ähnlich wie ASP oder PHP. Sowohl Java-Servlets, als auch die JSP, haben die Aufgabe Javacode per HTML dem Nutzer verfügbar zu machen. Im Gegensatz zu den Java-Servlets, die komplett aus Javacode bestehen, bestehen JSP-Dateien aus HTML mit kurzen Einschüben von Javacode. Während man also bei den Servlets HTML-Ausgaben nur innerhalb einer Funktion bewerkstelligen kann, ist es möglich bei den JSP direkt HTML auszuschreiben.
+Man könnte die JSP als Erweiterung der Servlets ansehen, da die JSP alle Funktionen dieser übernehmen. Zusätzlich können auch eigene Tag-Libraries erstellt werden. JSP funktioniert ähnlich wie ASP oder PHP. Sowohl Java-Servlets, als auch die JSP, haben die Aufgabe die Ausführung von Javacode dem Nutzer  per HTML verfügbar zu machen. Im Gegensatz zu den Java-Servlets, die komplett aus Javacode bestehen, bestehen JSP-Dateien aus HTML mit kurzen Einschüben von Javacode. Während man also bei den Servlets HTML-Ausgaben nur innerhalb einer Funktion bewerkstelligen kann, ist es möglich bei den JSP direkt HTML auszuschreiben.
 
 \subsection{Funktionsweise}
 
@@ -203,7 +208,7 @@ Das \textbf{session}-Objekt regelt alle wichtigen Funktionen für die aktuelle S
 
 Als letztes, möchten wir das \textbf{out}-Objekt erwähnen. Es repräsentiert einen BufferedWriter, genauer JSPWriter. Das Objekt kennt im Wesentlichen die Funktionen \verb|print| und \verb|println|. In PHP entspricht dies einem \verb|echo| oder \verb|print| Befehl. Der so gedruckte Text, wird zur Laufzeit in die entstehende HTML-Datei geschrieben. 
 
-Das Folgende Beispiel soll die Verwendung der impliziten Objekte verdeutlichen, ist aber, aus Platzgründen, stark vereinfacht.
+Das folgende Beispiel soll die Verwendung der impliziten Objekte verdeutlichen, ist aber, aus Platzgründen, stark vereinfacht.
 \lstset{language=Java}
 \begin{lstlisting}
 <%@page import="java.util.Date"%>

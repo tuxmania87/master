@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.3-1.40.12 (MiKTeX 2.9) (preloaded format=pdflatex 2012.8.27)  6 AUG 2013 19:22
+This is pdfTeX, Version 3.1415926-2.3-1.40.12 (MiKTeX 2.9) (preloaded format=pdflatex 2012.8.27)  8 AUG 2013 15:32
 entering extended mode
 **master.tex
 (E:\Users\Robert\Desktop\Arbeit\master\Arbeit\master.tex
@@ -1400,7 +1400,7 @@ File: ufplmbb.fd 2003/10/30 Fontinst v1.914 font definitions for U/fplmbb.
 [16]
 Kapitel 3.
 (E:\Users\Robert\Desktop\Arbeit\master\Arbeit\software.tex
-Overfull \hbox (3.1362pt too wide) in paragraph at lines 26--27
+Overfull \hbox (3.1362pt too wide) in paragraph at lines 27--28
 [][]\T1/txtt/m/n/12 ZConstant \T1/txr/m/n/12 - Kon-stan-ten vom Typ []\T1/txtt/
 m/n/12 NULL, NUMBER, STRING, COLUMNNAME \T1/txr/m/n/12 oder []\T1/txtt/m/n/12 U
 NKNOWN\T1/txr/m/n/12 .
@@ -1409,7 +1409,7 @@ NKNOWN\T1/txr/m/n/12 .
 [17
 
 ]
-Underfull \hbox (badness 1132) in paragraph at lines 47--48
+Underfull \hbox (badness 1132) in paragraph at lines 48--49
 []\T1/txr/m/n/12 In die-sem At-tri-but wird die Tu-pel-va-ria-ble ab-ge-spei-ch
 ert. Ha-ben wir in
  []
@@ -1418,48 +1418,48 @@ ert. Ha-ben wir in
 File: Bilder/where_syntax.png Graphic file (type png)
 
 <use Bilder/where_syntax.png>
-Package pdftex.def Info: Bilder/where_syntax.png used on input line 86.
+Package pdftex.def Info: Bilder/where_syntax.png used on input line 87.
 (pdftex.def)             Requested size: 258.56422pt x 176.35767pt.
 
 <Bilder/with_zql.png, id=460, 488.82625pt x 155.58125pt>
 File: Bilder/with_zql.png Graphic file (type png)
 
 <use Bilder/with_zql.png>
-Package pdftex.def Info: Bilder/with_zql.png used on input line 98.
+Package pdftex.def Info: Bilder/with_zql.png used on input line 99.
 (pdftex.def)             Requested size: 342.17603pt x 108.90611pt.
- [20 <E:/Users/Robert/Desktop/Arbeit/master/Arbeit/Bilder/where_syntax.png>]
-Overfull \hbox (18.07098pt too wide) in paragraph at lines 111--113
+
+Overfull \hbox (58.08076pt too wide) in paragraph at lines 106--107
+\T1/txr/m/n/12 Kon-stan-te so-wie den Typ. Als Ty-pen kom-men in Fra-ge: []\T1/
+txtt/m/n/12 NULL, NUMBER, STRING, UNKNOWN, COLUMNNAME\T1/txr/m/n/12 .
+ []
+
+[20 <E:/Users/Robert/Desktop/Arbeit/master/Arbeit/Bilder/where_syntax.png>]
+Overfull \hbox (18.07098pt too wide) in paragraph at lines 112--114
 []\T1/txr/m/n/12 Letztendlich ver-ei-nigt die Klas-se \T1/txr/bx/n/12 ZQue-ry \
 T1/txr/m/n/12 die eben vor-ge-stell-ten Klas-sen. Die Funk-ti-on []\T1/txtt/m/n
 /12 getSelect()
  []
 
 [21 <E:/Users/Robert/Desktop/Arbeit/master/Arbeit/Bilder/with_zql.png>]
-<Bilder/parserbaum.png, id=473, 968.61874pt x 373.395pt>
-File: Bilder/parserbaum.png Graphic file (type png)
+<Bilder/where_teil.png, id=473, 968.61874pt x 373.395pt>
+File: Bilder/where_teil.png Graphic file (type png)
 
-<use Bilder/parserbaum.png>
-Package pdftex.def Info: Bilder/parserbaum.png used on input line 142.
+<use Bilder/where_teil.png>
+Package pdftex.def Info: Bilder/where_teil.png used on input line 144.
 (pdftex.def)             Requested size: 493.98903pt x 190.42892pt.
 
-Overfull \hbox (27.36385pt too wide) in paragraph at lines 142--143
-[][] 
+Overfull \hbox (27.36385pt too wide) in paragraph at lines 144--145
+ [][] 
  []
 
-[22 <E:/Users/Robert/Desktop/Arbeit/master/Arbeit/Bilder/parserbaum.png>]
-Overfull \hbox (13.35388pt too wide) in paragraph at lines 156--157
-[]\T1/txtt/m/n/12 ON [LEFT OUTER|RIGHT OUTER|INNER] JOIN \T1/txr/m/n/12 zu er-k
-en-nen. Der Par-ser er-kennt nur in-ne-re []\T1/txtt/m/n/12 JOINS\T1/txr/m/n/12
- ,
- []
-
-<Bilder/jsp.png, id=482, 415.5525pt x 556.0775pt>
+[22 <E:/Users/Robert/Desktop/Arbeit/master/Arbeit/Bilder/where_teil.png (PNG co
+py)>] <Bilder/jsp.png, id=481, 415.5525pt x 556.0775pt>
 File: Bilder/jsp.png Graphic file (type png)
  <use Bilder/jsp.png>
-Package pdftex.def Info: Bilder/jsp.png used on input line 168.
+Package pdftex.def Info: Bilder/jsp.png used on input line 173.
 (pdftex.def)             Requested size: 124.6667pt x 166.82454pt.
 
-Overfull \hbox (37.61143pt too wide) in paragraph at lines 173--185
+Overfull \hbox (37.61143pt too wide) in paragraph at lines 178--190
 [][] 
  []
 
@@ -1470,62 +1470,62 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 )>] (E:\Users\Robert\AppData\Roaming\MiKTeX\2.9\tex\latex\listings\lstlang1.sty
 File: lstlang1.sty 2004/09/05 1.3 listings language file
 )
-Overfull \hbox (12.0pt too wide) in paragraph at lines 224--229
+Overfull \hbox (12.0pt too wide) in paragraph at lines 229--234
 [][] 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 224--229
+Underfull \hbox (badness 10000) in paragraph at lines 229--234
 
  []
 
 
-Overfull \hbox (12.0pt too wide) in paragraph at lines 230--235
+Overfull \hbox (12.0pt too wide) in paragraph at lines 235--240
 [][] 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 230--235
+Underfull \hbox (badness 10000) in paragraph at lines 235--240
 
  []
 
 
-Overfull \hbox (12.0pt too wide) in paragraph at lines 236--241
+Overfull \hbox (12.0pt too wide) in paragraph at lines 241--246
 [][] 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 236--241
+Underfull \hbox (badness 10000) in paragraph at lines 241--246
 
  []
 
 
-Overfull \hbox (12.0pt too wide) in paragraph at lines 242--247
+Overfull \hbox (12.0pt too wide) in paragraph at lines 247--252
 [][] 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 242--247
+Underfull \hbox (badness 10000) in paragraph at lines 247--252
 
  []
 
 [25]
-Overfull \hbox (12.0pt too wide) in paragraph at lines 248--253
+Overfull \hbox (12.0pt too wide) in paragraph at lines 253--258
 [][] 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 248--253
+Underfull \hbox (badness 10000) in paragraph at lines 253--258
 
  []
 
 )
-Overfull \hbox (43.74193pt too wide) in paragraph at lines 254--74
+Overfull \hbox (43.74193pt too wide) in paragraph at lines 259--74
 [][] 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 254--74
+Underfull \hbox (badness 10000) in paragraph at lines 259--74
 
  []
 
@@ -1535,116 +1535,123 @@ Kapitel 4.
 
 ] [28] [29]
 [30] [31] [32] [33]
-Underfull \hbox (badness 10000) in paragraph at lines 201--202
+Underfull \hbox (badness 10000) in paragraph at lines 199--200
 
  []
 
 
-Overfull \hbox (5.8739pt too wide) in paragraph at lines 203--204
+Overfull \hbox (5.8739pt too wide) in paragraph at lines 201--202
 []\T1/txtt/m/n/12 SELECT a2.id, a2.name, a1.region FROM dep a1, emp a2 WHERE a2
 .depid = a1.id 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 203--204
+Underfull \hbox (badness 10000) in paragraph at lines 201--202
 
  []
 
-[34] [35] <Bilder/not_graph1.png, id=568, 468.75125pt x 444.66125pt>
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[34] [35] <Bilder/op_comp.png, id=567, 603.25375pt x 256.96pt>
+File: Bilder/op_comp.png Graphic file (type png)
+
+<use Bilder/op_comp.png>
+Package pdftex.def Info: Bilder/op_comp.png used on input line 233.
+(pdftex.def)             Requested size: 241.29723pt x 102.78217pt.
+
+<Bilder/not_graph1.png, id=568, 468.75125pt x 444.66125pt>
 File: Bilder/not_graph1.png Graphic file (type png)
 
 <use Bilder/not_graph1.png>
-Package pdftex.def Info: Bilder/not_graph1.png used on input line 236.
+Package pdftex.def Info: Bilder/not_graph1.png used on input line 249.
 (pdftex.def)             Requested size: 234.37505pt x 222.33008pt.
 
 <Bilder/not_graph2.png, id=569, 468.75125pt x 444.66125pt>
 File: Bilder/not_graph2.png Graphic file (type png)
 
 <use Bilder/not_graph2.png>
-Package pdftex.def Info: Bilder/not_graph2.png used on input line 236.
+Package pdftex.def Info: Bilder/not_graph2.png used on input line 249.
 (pdftex.def)             Requested size: 234.37505pt x 222.33008pt.
 
-Overfull \hbox (48.7739pt too wide) in paragraph at lines 233--238
+Overfull \hbox (48.7739pt too wide) in paragraph at lines 246--251
 [][] 
  []
 
-<Bilder/not_graph3.png, id=570, 468.75125pt x 444.66125pt>
+[36 <E:/Users/Robert/Desktop/Arbeit/master/Arbeit/Bilder/op_comp.png (PNG copy)
+>] <Bilder/not_graph3.png, id=577, 479.7925pt x 444.66125pt>
 File: Bilder/not_graph3.png Graphic file (type png)
 
 <use Bilder/not_graph3.png>
-Package pdftex.def Info: Bilder/not_graph3.png used on input line 242.
-(pdftex.def)             Requested size: 234.37505pt x 222.33008pt.
+Package pdftex.def Info: Bilder/not_graph3.png used on input line 255.
+(pdftex.def)             Requested size: 239.89565pt x 222.33008pt.
 
-<Bilder/not_graph4.png, id=571, 468.75125pt x 348.30125pt>
+<Bilder/not_graph4.png, id=578, 468.75125pt x 348.30125pt>
 File: Bilder/not_graph4.png Graphic file (type png)
 
 <use Bilder/not_graph4.png>
-Package pdftex.def Info: Bilder/not_graph4.png used on input line 242.
+Package pdftex.def Info: Bilder/not_graph4.png used on input line 255.
 (pdftex.def)             Requested size: 234.37505pt x 174.15019pt.
 
-Overfull \hbox (50.0494pt too wide) in paragraph at lines 239--244
+Overfull \hbox (50.0494pt too wide) in paragraph at lines 252--257
 [][] 
  []
 
-[36 <E:/Users/Robert/Desktop/Arbeit/master/Arbeit/Bilder/not_graph1.png> <E:/Us
+[37 <E:/Users/Robert/Desktop/Arbeit/master/Arbeit/Bilder/not_graph1.png> <E:/Us
 ers/Robert/Desktop/Arbeit/master/Arbeit/Bilder/not_graph2.png> <E:/Users/Robert
-/Desktop/Arbeit/master/Arbeit/Bilder/not_graph3.png> <E:/Users/Robert/Desktop/A
-rbeit/master/Arbeit/Bilder/not_graph4.png>]
-Overfull \hbox (7.63043pt too wide) in paragraph at lines 260--264
+/Desktop/Arbeit/master/Arbeit/Bilder/not_graph3.png (PNG copy)> <E:/Users/Rober
+t/Desktop/Arbeit/master/Arbeit/Bilder/not_graph4.png>]
+Overfull \hbox (7.63043pt too wide) in paragraph at lines 273--277
 []\T1/txtt/m/n/12 operand operator elem1 AND ... AND operand operator elemn\T1/
 txr/m/n/12 . Die-se syn-tak-ti-sche An-
  []
 
-[37]
-Overfull \hbox (17.88846pt too wide) in paragraph at lines 303--304
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[38]
+Overfull \hbox (17.88846pt too wide) in paragraph at lines 318--319
 []\T1/txtt/m/n/12 ALL\T1/txr/m/n/12 -Unterabfragen ha-ben im-mer das Mus-ter: [
 ]\T1/txtt/m/n/12 operand comparison_operator ALL (subquery)\T1/txr/m/n/12 .
  []
 
-[38]
-Overfull \hbox (20.9434pt too wide) in paragraph at lines 347--348
-[]\T1/txr/m/n/12 Wie wir am Er-geb-nis der Um-wand-lung er-ken-nen, ver-stöÿt $
-\OML/txmi/m/it/12 t[]$ \T1/txr/m/n/12 im []\T1/txtt/m/n/12 SELECT\T1/txr/m/n/12
- -Teil der []\T1/txtt/m/n/12 EXISTS\T1/txr/m/n/12 -Unterabfrage
- []
-
-[39] [40] [41]
-Underfull \hbox (badness 10000) in paragraph at lines 404--405
+[39] [40] [41] [42]
+Underfull \hbox (badness 10000) in paragraph at lines 426--427
 
  []
 
-[42]
-Overfull \hbox (3.98366pt too wide) in paragraph at lines 420--422
-\T1/txr/m/n/12 sen al-so, dass []\T1/txtt/m/n/12 salery \T1/txr/m/n/12 zwei Nac
+
+Overfull \hbox (3.98366pt too wide) in paragraph at lines 442--444
+\T1/txr/m/n/12 sen al-so, dass []\T1/txtt/m/n/12 salary \T1/txr/m/n/12 zwei Nac
 h-kom-mas-tel-len hat. Be-trach-ten wir nun die Aus-sa-ge []\T1/txtt/m/n/12 sal
-ery >= 5\T1/txr/m/n/12 .
- []
-
-
-Overfull \hbox (17.13554pt too wide) in paragraph at lines 422--424
-\T1/txr/m/n/12 Wir er-hal-ten al-so []\T1/txtt/m/n/12 x=4,99\T1/txr/m/n/12 , we
-il []\T1/txtt/m/n/12 x+0,01=5\T1/txr/m/n/12 . So-mit er-gän-zen wir un-se-re Au
-s-gangs-for-mel []\T1/txtt/m/n/12 salery >= 5
+ary >= 5\T1/txr/m/n/12 .
  []
 
 [43]
-Underfull \hbox (badness 10000) in paragraph at lines 441--442
+Overfull \hbox (17.13554pt too wide) in paragraph at lines 444--446
+\T1/txr/m/n/12 Wir er-hal-ten al-so []\T1/txtt/m/n/12 x=4,99\T1/txr/m/n/12 , we
+il []\T1/txtt/m/n/12 x+0,01=5\T1/txr/m/n/12 . So-mit er-gän-zen wir un-se-re Au
+s-gangs-for-mel []\T1/txtt/m/n/12 salary >= 5
+ []
+
+[44]
+Underfull \hbox (badness 10000) in paragraph at lines 471--472
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 454--455
+Underfull \hbox (badness 10000) in paragraph at lines 484--485
 
  []
 
-[44] [45]
-Overfull \hbox (2.74696pt too wide) in paragraph at lines 492--493
+[45] [46]
+Overfull \hbox (2.74696pt too wide) in paragraph at lines 520--521
 \T1/txr/m/n/12 Formeln kön-nen auch transitiv-impliziert sein. Steht in der Mus
 -ter-lö-sung die For-mel []\T1/txtt/m/n/12 A>B AND B>C
  []
 
-[46] [47] [48] [49]
-Overfull \hbox (1.37958pt too wide) in paragraph at lines 583--584
+[47] [48] [49] [50]
+Overfull \hbox (1.37958pt too wide) in paragraph at lines 611--612
 [][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
  []
 
@@ -1654,122 +1661,127 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-<Bilder/sort_1.png, id=691, 774.895pt x 348.30125pt>
+<Bilder/sort_1.png, id=700, 774.895pt x 348.30125pt>
 File: Bilder/sort_1.png Graphic file (type png)
  <use Bilder/sort_1.png>
-Package pdftex.def Info: Bilder/sort_1.png used on input line 622.
+Package pdftex.def Info: Bilder/sort_1.png used on input line 650.
 (pdftex.def)             Requested size: 464.94058pt x 208.98236pt.
 
+[51]
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[50] <Bilder/sort_step1.png, id=700, 853.1875pt x 272.01625pt>
+[52] <Bilder/sort_step1.png, id=740, 853.1875pt x 272.01625pt>
 File: Bilder/sort_step1.png Graphic file (type png)
 
 <use Bilder/sort_step1.png>
-Package pdftex.def Info: Bilder/sort_step1.png used on input line 634.
+Package pdftex.def Info: Bilder/sort_step1.png used on input line 662.
 (pdftex.def)             Requested size: 426.59271pt x 136.00778pt.
- [51]
+
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-<Bilder/sort_step2.png, id=733, 762.85pt x 348.30125pt>
+<Bilder/sort_step2.png, id=742, 762.85pt x 348.30125pt>
 File: Bilder/sort_step2.png Graphic file (type png)
 
 <use Bilder/sort_step2.png>
-Package pdftex.def Info: Bilder/sort_step2.png used on input line 643.
+Package pdftex.def Info: Bilder/sort_step2.png used on input line 671.
 (pdftex.def)             Requested size: 419.5688pt x 191.56627pt.
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-<Bilder/sort_zwischen4.png, id=735, 842.14626pt x 348.30125pt>
+<Bilder/sort_zwischen4.png, id=744, 842.14626pt x 348.30125pt>
 File: Bilder/sort_zwischen4.png Graphic file (type png)
 
 <use Bilder/sort_zwischen4.png>
-Package pdftex.def Info: Bilder/sort_zwischen4.png used on input line 652.
+Package pdftex.def Info: Bilder/sort_zwischen4.png used on input line 680.
 (pdftex.def)             Requested size: 463.18188pt x 191.56627pt.
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[52 <E:/Users/Robert/Desktop/Arbeit/master/Arbeit/Bilder/sort_1.png>] [53 <E:/U
+[53 <E:/Users/Robert/Desktop/Arbeit/master/Arbeit/Bilder/sort_1.png>] [54 <E:/U
 sers/Robert/Desktop/Arbeit/master/Arbeit/Bilder/sort_step1.png (PNG copy)> <E:/
 Users/Robert/Desktop/Arbeit/master/Arbeit/Bilder/sort_step2.png (PNG copy)>]
-[54 <E:/Users/Robert/Desktop/Arbeit/master/Arbeit/Bilder/sort_zwischen4.png>]
-[55] [56] [57]
-Overfull \hbox (67.4209pt too wide) in paragraph at lines 769--770
+
+LaTeX Warning: Reference `subsec:select' on page 55 undefined on input line 701
+.
+
+[55 <E:/Users/Robert/Desktop/Arbeit/master/Arbeit/Bilder/sort_zwischen4.png>]
+[56] [57] [58]
+Overfull \hbox (67.4209pt too wide) in paragraph at lines 799--800
 \T1/txr/m/n/12 Bei ei-nem []\T1/txtt/m/n/12 OUTER JOIN \T1/txr/m/n/12 un-ter-sc
 hei-den wir zwi-schen ei-nem []\T1/txtt/m/n/12 LEFT OUTER JOIN \T1/txr/m/n/12 u
 nd ei-nem []\T1/txtt/m/n/12 RIGHT OUTER JOIN\T1/txr/m/n/12 .
  []
 
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-[58] [59] [60]
-Underfull \hbox (badness 10000) in paragraph at lines 853--855
+[59] [60] [61]
+Underfull \hbox (badness 10000) in paragraph at lines 883--885
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 856--858
+Underfull \hbox (badness 10000) in paragraph at lines 886--888
 
  []
 
-[61]
-Overfull \hbox (23.23955pt too wide) in paragraph at lines 880--881
+[62]
+Overfull \hbox (23.23955pt too wide) in paragraph at lines 910--911
 []\T1/txr/m/n/12 Da es Fremd-schlüs-sel ge-ben kann, die []\T1/txtt/m/n/12 NULL
 \T1/txr/m/n/12 -Werte er-lau-ben, ist es not-wen-dig, ein []\T1/txtt/m/n/12 IS 
 NOT NULL\T1/txr/m/n/12 -
  []
 
-[62] <Bilder/joinelem_g1.png, id=837, 611.28375pt x 354.32375pt>
+[63] <Bilder/joinelem_g1.png, id=844, 611.28375pt x 354.32375pt>
 File: Bilder/joinelem_g1.png Graphic file (type png)
 
 <use Bilder/joinelem_g1.png>
-Package pdftex.def Info: Bilder/joinelem_g1.png used on input line 906.
+Package pdftex.def Info: Bilder/joinelem_g1.png used on input line 936.
 (pdftex.def)             Requested size: 244.50917pt x 141.72697pt.
 
-<Bilder/joinelem_g2.png, id=838, 644.4075pt x 351.3125pt>
+<Bilder/joinelem_g2.png, id=845, 644.4075pt x 351.3125pt>
 File: Bilder/joinelem_g2.png Graphic file (type png)
 
 <use Bilder/joinelem_g2.png>
-Package pdftex.def Info: Bilder/joinelem_g2.png used on input line 913.
+Package pdftex.def Info: Bilder/joinelem_g2.png used on input line 943.
 (pdftex.def)             Requested size: 257.75844pt x 140.5225pt.
 
-<Bilder/joinelem_g3.png, id=839, 271.0125pt x 344.28625pt>
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+<Bilder/joinelem_g3.png, id=846, 271.0125pt x 344.28625pt>
 File: Bilder/joinelem_g3.png Graphic file (type png)
 
 <use Bilder/joinelem_g3.png>
-Package pdftex.def Info: Bilder/joinelem_g3.png used on input line 920.
+Package pdftex.def Info: Bilder/joinelem_g3.png used on input line 950.
 (pdftex.def)             Requested size: 108.40306pt x 137.71205pt.
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[63 <E:/Users/Robert/Desktop/Arbeit/master/Arbeit/Bilder/joinelem_g1.png (PNG c
-opy)> <E:/Users/Robert/Desktop/Arbeit/master/Arbeit/Bilder/joinelem_g2.png (PNG
- copy)>] [64 <E:/Users/Robert/Desktop/Arbeit/master/Arbeit/Bilder/joinelem_g3.p
-ng (PNG copy)>] [65]
+[64 <E:/Users/Robert/Desktop/Arbeit/master/Arbeit/Bilder/joinelem_g1.png (PNG c
+opy)>] [65 <E:/Users/Robert/Desktop/Arbeit/master/Arbeit/Bilder/joinelem_g2.png
+ (PNG copy)> <E:/Users/Robert/Desktop/Arbeit/master/Arbeit/Bilder/joinelem_g3.p
+ng (PNG copy)>] [66]
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\@ifnextchar' on input line 988.
+(hyperref)                removing `\@ifnextchar' on input line 1018.
 
 
-Overfull \hbox (12.47072pt too wide) in paragraph at lines 1007--1008
+Overfull \hbox (12.47072pt too wide) in paragraph at lines 1037--1038
 [][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
  []
 
-[66] [67] [68] [69]
-Overfull \hbox (10.37903pt too wide) in paragraph at lines 1066--1067
+[67] [68] [69] [70]
+Overfull \hbox (10.37903pt too wide) in paragraph at lines 1096--1097
 []\T1/txr/m/n/12 Der drit-te Fall wä-re dann ge-nau um-ge-kehrt. Hier hat al-so
  die Mus-ter-lö-sung ein []\T1/txtt/m/n/12 ORDER BY\T1/txr/m/n/12 -Statement,
  []
 
-[70]) [71]
+[71]) [72] [73]
 Kapitel 5.
-(E:\Users\Robert\Desktop\Arbeit\master\Arbeit\praxis.tex [72
+(E:\Users\Robert\Desktop\Arbeit\master\Arbeit\praxis.tex [74
 
 ]
 Overfull \hbox (37.00334pt too wide) in paragraph at lines 44--45
@@ -1784,42 +1796,42 @@ Overfull \hbox (10.46014pt too wide) in paragraph at lines 66--69
 on-for-mes, []\T1/txtt/m/n/12 CREATE TABLE\T1/txr/m/n/12 -Statement.
  []
 
-[73] [74] <Bilder/execPlan.png, id=949, 1108.14pt x 833.23059pt>
+[75] [76] <Bilder/execPlan.png, id=962, 1108.14pt x 833.23059pt>
 File: Bilder/execPlan.png Graphic file (type png)
 
 <use Bilder/execPlan.png>
 Package pdftex.def Info: Bilder/execPlan.png used on input line 93.
 (pdftex.def)             Requested size: 432.17287pt x 324.95862pt.
- [75] [76 <E:/Users/Robert/Desktop/Arbeit/master/Arbeit/Bilder/execPlan.png>] [
-77] [78]
-<Bilder/screen_prog1.png, id=990, 557.08125pt x 216.81pt>
+ [77] [78 <E:/Users/Robert/Desktop/Arbeit/master/Arbeit/Bilder/execPlan.png>] [
+79] [80]
+<Bilder/screen_prog1.png, id=1004, 557.08125pt x 216.81pt>
 File: Bilder/screen_prog1.png Graphic file (type png)
 
 <use Bilder/screen_prog1.png>
 Package pdftex.def Info: Bilder/screen_prog1.png used on input line 157.
 (pdftex.def)             Requested size: 389.95422pt x 151.76596pt.
- [79 <E:/Users/Robert/Desktop/Arbeit/master/Arbeit/Bilder/screen_prog1.png>]
-<Bilder/screen_prog2.png, id=998, 547.2947pt x 579.66562pt>
+ [81 <E:/Users/Robert/Desktop/Arbeit/master/Arbeit/Bilder/screen_prog1.png>]
+<Bilder/screen_prog2.png, id=1011, 547.2947pt x 579.66562pt>
 File: Bilder/screen_prog2.png Graphic file (type png)
 
 <use Bilder/screen_prog2.png>
 Package pdftex.def Info: Bilder/screen_prog2.png used on input line 170.
 (pdftex.def)             Requested size: 383.10367pt x 405.76317pt.
-) [80 <E:/Users/Robert/Desktop/Arbeit/master/Arbeit/Bilder/screen_prog2.png>]
+) [82 <E:/Users/Robert/Desktop/Arbeit/master/Arbeit/Bilder/screen_prog2.png>]
 Kapitel 6.
-(E:\Users\Robert\Desktop\Arbeit\master\Arbeit\ausblick.tex [81
+(E:\Users\Robert\Desktop\Arbeit\master\Arbeit\ausblick.tex [83
 
-] [82])
+] [84])
 (E:\Users\Robert\Desktop\Arbeit\master\Arbeit\master.brf)
 \tf@brf=\write6
- [83] [84
+ [85] [86
 
-] [85]
+] [87]
 Kapitel 7.
-[86
+[88
 
 ] (E:\Users\Robert\Desktop\Arbeit\master\Arbeit\anhang.tex)
-(E:\Users\Robert\Desktop\Arbeit\master\Arbeit\erklaerung.tex) [87
+(E:\Users\Robert\Desktop\Arbeit\master\Arbeit\erklaerung.tex) [89
 
 
 
@@ -1834,18 +1846,30 @@ Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 132.
 Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 132.
 Package rerunfilecheck Info: File `master.out' has not changed.
 (rerunfilecheck)             Checksum: 13256B6EFADC0B7FBB553688498B6C1B;4243.
-Package rerunfilecheck Info: File `master.brf' has not changed.
-(rerunfilecheck)             Checksum: AECF0FD306B0CD57C52D5A1E35838F95;1317.
+
+
+Package rerunfilecheck Warning: File `master.brf' has changed.
+(rerunfilecheck)                Rerun to get bibliographical references right.
+
+Package rerunfilecheck Info: Checksums for `master.brf':
+(rerunfilecheck)             Before: D6F087FAF309776271DF494982B5DFD4;1317
+(rerunfilecheck)             After:  012E18D43910650164F2D47290D92949;1317.
+
+LaTeX Warning: There were undefined references.
+
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 132.
  ) 
 Here is how much of TeX's memory you used:
- 23204 strings out of 494045
- 419098 string characters out of 3145966
- 563477 words of memory out of 3000000
- 25538 multiletter control sequences out of 15000+200000
+ 23218 strings out of 494045
+ 419327 string characters out of 3145966
+ 563712 words of memory out of 3000000
+ 25546 multiletter control sequences out of 15000+200000
  75330 words of font info for 109 fonts, out of 3000000 for 9000
  716 hyphenation exceptions out of 8191
- 65i,12n,71p,1938b,1802s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 65i,12n,71p,1938b,1808s stack positions out of 5000i,500n,10000p,200000b,50000s
 {C:/Program Files (x86)/MiKTeX 2.9/fonts/enc/dvips/fontname/8r.enc}<C:/Progra
 m Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr10.pfb><E:/Users/Rob
 ert/AppData/Roaming/MiKTeX/2.9/fonts/type1/public/mathpazo/fplmbb.pfb><E:/Users
@@ -1854,16 +1878,17 @@ rs/Robert/AppData/Roaming/MiKTeX/2.9/fonts/type1/public/txfonts/rtxr.pfb><E:/Us
 ers/Robert/AppData/Roaming/MiKTeX/2.9/fonts/type1/public/txfonts/rtxsc.pfb><E:/
 Users/Robert/AppData/Roaming/MiKTeX/2.9/fonts/type1/public/txfonts/t1xbtt.pfb><
 E:/Users/Robert/AppData/Roaming/MiKTeX/2.9/fonts/type1/public/txfonts/t1xtt.pfb
-><E:/Users/Robert/AppData/Roaming/MiKTeX/2.9/fonts/type1/public/txfonts/txsy.pf
-b><E:/Users/Robert/AppData/Roaming/MiKTeX/2.9/fonts/type1/public/txfonts/txsyc.
-pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/urw/helvetic/uhvb8a.pfb><C:/
-Program Files (x86)/MiKTeX 2.9/fonts/type1/urw/palatino/uplr8a.pfb><C:/Program 
-Files (x86)/MiKTeX 2.9/fonts/type1/urw/times/utmb8a.pfb><C:/Program Files (x86)
-/MiKTeX 2.9/fonts/type1/urw/times/utmr8a.pfb><C:/Program Files (x86)/MiKTeX 2.9
-/fonts/type1/urw/times/utmri8a.pfb>
-Output written on master.pdf (87 pages, 804779 bytes).
+><E:/Users/Robert/AppData/Roaming/MiKTeX/2.9/fonts/type1/public/txfonts/txex.pf
+b><E:/Users/Robert/AppData/Roaming/MiKTeX/2.9/fonts/type1/public/txfonts/txsy.p
+fb><E:/Users/Robert/AppData/Roaming/MiKTeX/2.9/fonts/type1/public/txfonts/txsyc
+.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/urw/helvetic/uhvb8a.pfb><C:
+/Program Files (x86)/MiKTeX 2.9/fonts/type1/urw/palatino/uplr8a.pfb><C:/Program
+ Files (x86)/MiKTeX 2.9/fonts/type1/urw/times/utmb8a.pfb><C:/Program Files (x86
+)/MiKTeX 2.9/fonts/type1/urw/times/utmr8a.pfb><C:/Program Files (x86)/MiKTeX 2.
+9/fonts/type1/urw/times/utmri8a.pfb>
+Output written on master.pdf (89 pages, 893399 bytes).
 PDF statistics:
- 1191 PDF objects out of 1200 (max. 8388607)
- 388 named destinations out of 1000 (max. 500000)
- 604 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 1208 PDF objects out of 1440 (max. 8388607)
+ 393 named destinations out of 1000 (max. 500000)
+ 609 words of extra memory for PDF output out of 10000 (max. 10000000)
 
