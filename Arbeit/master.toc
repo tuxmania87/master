@@ -56,18 +56,19 @@
 \contentsline {subsection}{\numberline {4.3.7}Sortierung}{50}{subsection.4.3.7}
 \contentsline {subsection}{\numberline {4.3.8}GROUP BY / HAVING}{54}{subsection.4.3.8}
 \contentsline {subsection}{\numberline {4.3.9}ORDER BY}{55}{subsection.4.3.9}
-\contentsline {subsection}{\numberline {4.3.10}Selbstverbunde}{56}{subsection.4.3.10}
-\contentsline {subsection}{\numberline {4.3.11}Abschluss}{57}{subsection.4.3.11}
+\contentsline {subsection}{\numberline {4.3.10}Aggregatsfunktionen}{56}{subsection.4.3.10}
+\contentsline {subsection}{\numberline {4.3.11}Selbstverbunde}{56}{subsection.4.3.11}
+\contentsline {subsection}{\numberline {4.3.12}Abschluss}{57}{subsection.4.3.12}
 \contentsline {section}{\numberline {4.4}Weitere Betrachtungen}{58}{section.4.4}
 \contentsline {subsection}{\numberline {4.4.1}JOINS}{58}{subsection.4.4.1}
-\contentsline {subsubsection}{JOIN-Eliminierung}{62}{section*.58}
+\contentsline {subsubsection}{JOIN-Eliminierung}{63}{section*.58}
 \contentsline {subsection}{\numberline {4.4.2}unn\IeC {\"o}tiges DISTINCT}{66}{subsection.4.4.2}
 \contentsline {subsection}{\numberline {4.4.3}verbale Beschreibung}{67}{subsection.4.4.3}
 \contentsline {subsection}{\numberline {4.4.4}Algorithmus aus \cite {sql1folien}}{67}{subsection.4.4.4}
 \contentsline {section}{\numberline {4.5}SQL-Anfragen auf externen Datenbanken}{68}{section.4.5}
 \contentsline {subsection}{\numberline {4.5.1}unterschiedliche DBMS}{69}{subsection.4.5.1}
-\contentsline {subsection}{\numberline {4.5.2}Visualisierung von Ergebnistupeln}{70}{subsection.4.5.2}
-\contentsline {subsection}{\numberline {4.5.3}Behandeln von Fehlern}{71}{subsection.4.5.3}
+\contentsline {subsection}{\numberline {4.5.2}Visualisierung von Ergebnistupeln}{71}{subsection.4.5.2}
+\contentsline {subsection}{\numberline {4.5.3}Behandeln von Fehlern}{72}{subsection.4.5.3}
 \contentsline {chapter}{\numberline {5}Praktische Umsetzung}{74}{chapter.5}
 \contentsline {section}{\numberline {5.1}Datenbankstruktur}{74}{section.5.1}
 \contentsline {section}{\numberline {5.2}Programmstruktur}{75}{section.5.2}
