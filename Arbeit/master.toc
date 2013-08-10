@@ -1,80 +1,163 @@
+\boolfalse {citerequest}\boolfalse {citetracker}\boolfalse {pagetracker}\boolfalse {backtracker}\relax 
+\defcounter {refsection}{0}\relax 
 \select@language {ngerman}
+\defcounter {refsection}{0}\relax 
 \contentsline {chapter}{\numberline {1}Einleitung / Motivation}{4}{chapter.1}
+\defcounter {refsection}{0}\relax 
 \contentsline {section}{\numberline {1.1}Motivation}{4}{section.1.1}
+\defcounter {refsection}{0}\relax 
 \contentsline {section}{\numberline {1.2}Aufgabenstellung}{5}{section.1.2}
+\defcounter {refsection}{0}\relax 
 \contentsline {section}{\numberline {1.3}Aufbau der Arbeit}{6}{section.1.3}
+\defcounter {refsection}{0}\relax 
 \contentsline {section}{\numberline {1.4}Produkt}{7}{section.1.4}
+\defcounter {refsection}{0}\relax 
 \contentsline {chapter}{\numberline {2}Forschungsstand und Einordnung}{9}{chapter.2}
+\defcounter {refsection}{0}\relax 
 \contentsline {section}{\numberline {2.1}Einleitung}{9}{section.2.1}
+\defcounter {refsection}{0}\relax 
 \contentsline {section}{\numberline {2.2}SQL-Tutor}{9}{section.2.2}
+\defcounter {refsection}{0}\relax 
 \contentsline {section}{\numberline {2.3}SQL-Exploratorium}{10}{section.2.3}
+\defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {2.3.1}Interactive Examples}{11}{subsection.2.3.1}
+\defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {2.3.2}SQL Knowledge Tester}{11}{subsection.2.3.2}
+\defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {2.3.3}Weiteres}{12}{subsection.2.3.3}
+\defcounter {refsection}{0}\relax 
 \contentsline {subsubsection}{Adaptive Navigation for SQL Questions}{12}{section*.5}
+\defcounter {refsection}{0}\relax 
 \contentsline {section}{\numberline {2.4}WIN-RBDI}{12}{section.2.4}
+\defcounter {refsection}{0}\relax 
 \contentsline {section}{\numberline {2.5}SQLLint}{13}{section.2.5}
+\defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {2.5.1}Algorithmus zum Finden von inkonsistenten Bedingungen}{14}{subsection.2.5.1}
+\defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {2.5.2}Bedingungen ohne Unteranfragen}{14}{subsection.2.5.2}
+\defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {2.5.3}Unteranfragen}{15}{subsection.2.5.3}
+\defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {2.5.4}Unn\IeC {\"o}tige logische Komplikationen}{15}{subsection.2.5.4}
+\defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {2.5.5}Laufzeitfehler}{16}{subsection.2.5.5}
+\defcounter {refsection}{0}\relax 
 \contentsline {chapter}{\numberline {3}Verwendete Software}{17}{chapter.3}
+\defcounter {refsection}{0}\relax 
 \contentsline {section}{\numberline {3.1}SQL-Parser}{17}{section.3.1}
+\defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {3.1.1}\IeC {\"u}ber den SQL-Parser: ZQL}{17}{subsection.3.1.1}
+\defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {3.1.2}Funktionsweise des Parsers}{17}{subsection.3.1.2}
+\defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {3.1.3}Grenzen des Parsers}{23}{subsection.3.1.3}
+\defcounter {refsection}{0}\relax 
 \contentsline {section}{\numberline {3.2}JavaServer Pages}{23}{section.3.2}
+\defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {3.2.1}Funktionsweise}{24}{subsection.3.2.1}
+\defcounter {refsection}{0}\relax 
 \contentsline {section}{\numberline {3.3}Auflistung der Software}{25}{section.3.3}
+\defcounter {refsection}{0}\relax 
 \contentsline {chapter}{\numberline {4}Theoretische Betrachtungen}{27}{chapter.4}
+\defcounter {refsection}{0}\relax 
 \contentsline {section}{\numberline {4.1}Hintergrund}{28}{section.4.1}
+\defcounter {refsection}{0}\relax 
 \contentsline {section}{\numberline {4.2}Workflow}{29}{section.4.2}
+\defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {4.2.1}Standardisierung}{29}{subsection.4.2.1}
+\defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {4.2.2}Test mit konkreten Daten}{29}{subsection.4.2.2}
+\defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {4.2.3}Preprocessing}{30}{subsection.4.2.3}
+\defcounter {refsection}{0}\relax 
 \contentsline {section}{\numberline {4.3}Standardisierung von SQL-Anfragen}{33}{section.4.3}
+\defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {4.3.1}Entfernen von syntaktischen Details}{33}{subsection.4.3.1}
+\defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {4.3.2}SELECT-Teil}{34}{subsection.4.3.2}
+\defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {4.3.3}FROM-Teil}{34}{subsection.4.3.3}
+\defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {4.3.4}WHERE-Teil}{35}{subsection.4.3.4}
+\defcounter {refsection}{0}\relax 
 \contentsline {subsubsection}{Entfernung unn\IeC {\"o}tiger Klammerungen}{35}{section*.19}
+\defcounter {refsection}{0}\relax 
 \contentsline {subsubsection}{NOT aufl\IeC {\"o}sen}{36}{section*.21}
+\defcounter {refsection}{0}\relax 
 \contentsline {subsubsection}{Anwenden des Distributivgesetzes}{37}{section*.22}
+\defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {4.3.5}Ersetzung von syntaktischen Varianten}{38}{subsection.4.3.5}
+\defcounter {refsection}{0}\relax 
 \contentsline {subsubsection}{Andere Unteranfragen}{41}{section*.29}
+\defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {4.3.6}Operatorenvielfalt}{41}{subsection.4.3.6}
+\defcounter {refsection}{0}\relax 
 \contentsline {subsubsection}{Analyse der unterschiedlichen Operatoren}{42}{section*.30}
+\defcounter {refsection}{0}\relax 
 \contentsline {subsubsection}{Hinzuf\IeC {\"u}gen implizierter Formeln}{43}{section*.33}
+\defcounter {refsection}{0}\relax 
 \contentsline {subsubsection}{Beschr\IeC {\"a}nkung der Operatorenvielfalt}{45}{section*.34}
+\defcounter {refsection}{0}\relax 
 \contentsline {subsubsection}{Einschr\IeC {\"a}nkungen bei arithmetischen Ausdr\IeC {\"u}cken}{46}{section*.35}
+\defcounter {refsection}{0}\relax 
 \contentsline {subsubsection}{Komplexere arithmetische Ausdr\IeC {\"u}cke -- Standardisierung}{46}{section*.36}
+\defcounter {refsection}{0}\relax 
 \contentsline {subsubsection}{Komplexere arithmetische Ausdr\IeC {\"u}cke -- Operatorenbeschr\IeC {\"a}nkung}{47}{section*.37}
+\defcounter {refsection}{0}\relax 
 \contentsline {subsubsection}{transitiv-implizierte Formeln}{47}{section*.38}
+\defcounter {refsection}{0}\relax 
 \contentsline {subsubsection}{implizierte Dom\IeC {\"a}nen}{48}{section*.39}
+\defcounter {refsection}{0}\relax 
 \contentsline {subsubsection}{Diskussion der beiden Ans\IeC {\"a}tze}{49}{section*.40}
+\defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {4.3.7}Sortierung}{50}{subsection.4.3.7}
-\contentsline {subsection}{\numberline {4.3.8}GROUP BY / HAVING}{54}{subsection.4.3.8}
-\contentsline {subsection}{\numberline {4.3.9}ORDER BY}{55}{subsection.4.3.9}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {4.3.8}GROUP BY / HAVING}{55}{subsection.4.3.8}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {4.3.9}ORDER BY}{56}{subsection.4.3.9}
+\defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {4.3.10}Aggregatsfunktionen}{56}{subsection.4.3.10}
+\defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {4.3.11}Selbstverbunde}{56}{subsection.4.3.11}
-\contentsline {subsection}{\numberline {4.3.12}Abschluss}{57}{subsection.4.3.12}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {4.3.12}Abschluss}{58}{subsection.4.3.12}
+\defcounter {refsection}{0}\relax 
 \contentsline {section}{\numberline {4.4}Weitere Betrachtungen}{58}{section.4.4}
+\defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {4.4.1}JOINS}{58}{subsection.4.4.1}
-\contentsline {subsubsection}{JOIN-Eliminierung}{63}{section*.58}
-\contentsline {subsection}{\numberline {4.4.2}unn\IeC {\"o}tiges DISTINCT}{66}{subsection.4.4.2}
-\contentsline {subsection}{\numberline {4.4.3}verbale Beschreibung}{67}{subsection.4.4.3}
-\contentsline {subsection}{\numberline {4.4.4}Algorithmus aus \cite {sql1folien}}{67}{subsection.4.4.4}
-\contentsline {section}{\numberline {4.5}SQL-Anfragen auf externen Datenbanken}{68}{section.4.5}
-\contentsline {subsection}{\numberline {4.5.1}unterschiedliche DBMS}{69}{subsection.4.5.1}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{JOIN-Eliminierung}{64}{section*.61}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {4.4.2}unn\IeC {\"o}tiges DISTINCT}{67}{subsection.4.4.2}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {4.4.3}verbale Beschreibung}{68}{subsection.4.4.3}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {4.4.4}Algorithmus}{68}{subsection.4.4.4}
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {4.5}SQL-Anfragen auf externen Datenbanken}{69}{section.4.5}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {4.5.1}unterschiedliche DBMS}{70}{subsection.4.5.1}
+\defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {4.5.2}Visualisierung von Ergebnistupeln}{71}{subsection.4.5.2}
-\contentsline {subsection}{\numberline {4.5.3}Behandeln von Fehlern}{72}{subsection.4.5.3}
-\contentsline {chapter}{\numberline {5}Praktische Umsetzung}{74}{chapter.5}
-\contentsline {section}{\numberline {5.1}Datenbankstruktur}{74}{section.5.1}
-\contentsline {section}{\numberline {5.2}Programmstruktur}{75}{section.5.2}
-\contentsline {subsubsection}{Prozess: Standardisieren einer SQL-Anfrage}{76}{section*.63}
-\contentsline {section}{\numberline {5.3}Webinterface}{81}{section.5.3}
-\contentsline {chapter}{\numberline {6}Schlussteil}{83}{chapter.6}
-\contentsline {section}{\numberline {6.1}Zusammenfassung}{83}{section.6.1}
-\contentsline {section}{\numberline {6.2}Ausblick}{84}{section.6.2}
-\contentsline {chapter}{\numberline {7}Anhang}{88}{chapter.7}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {4.5.3}Behandeln von Fehlern}{73}{subsection.4.5.3}
+\defcounter {refsection}{0}\relax 
+\contentsline {chapter}{\numberline {5}Praktische Umsetzung}{75}{chapter.5}
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {5.1}Datenbankstruktur}{75}{section.5.1}
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {5.2}Programmstruktur}{76}{section.5.2}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{Prozess: Standardisieren einer SQL-Anfrage}{77}{section*.65}
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {5.3}Webinterface}{82}{section.5.3}
+\defcounter {refsection}{0}\relax 
+\contentsline {chapter}{\numberline {6}Schlussteil}{84}{chapter.6}
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {6.1}Zusammenfassung}{84}{section.6.1}
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {6.2}Ausblick}{85}{section.6.2}
+\defcounter {refsection}{0}\relax 
+\contentsline {chapter}{\numberline {7}Literatur}{87}{chapter.7}
+\defcounter {refsection}{0}\relax 
+\contentsline {chapter}{\numberline {8}Anhang}{88}{chapter.8}

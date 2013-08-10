@@ -48,7 +48,7 @@
 \BOOKMARK [2][-]{subsection.4.4.1}{JOINS}{section.4.4}% 48
 \BOOKMARK [2][-]{subsection.4.4.2}{unn\366tiges DISTINCT}{section.4.4}% 49
 \BOOKMARK [2][-]{subsection.4.4.3}{verbale Beschreibung}{section.4.4}% 50
-\BOOKMARK [2][-]{subsection.4.4.4}{Algorithmus aus sql1folien}{section.4.4}% 51
+\BOOKMARK [2][-]{subsection.4.4.4}{Algorithmus}{section.4.4}% 51
 \BOOKMARK [1][-]{section.4.5}{SQL-Anfragen auf externen Datenbanken}{chapter.4}% 52
 \BOOKMARK [2][-]{subsection.4.5.1}{unterschiedliche DBMS}{section.4.5}% 53
 \BOOKMARK [2][-]{subsection.4.5.2}{Visualisierung von Ergebnistupeln}{section.4.5}% 54
@@ -60,4 +60,5 @@
 \BOOKMARK [0][-]{chapter.6}{Schlussteil}{}% 60
 \BOOKMARK [1][-]{section.6.1}{Zusammenfassung}{chapter.6}% 61
 \BOOKMARK [1][-]{section.6.2}{Ausblick}{chapter.6}% 62
-\BOOKMARK [0][-]{chapter.7}{Anhang}{}% 63
+\BOOKMARK [0][-]{chapter.7}{Literatur}{}% 63
+\BOOKMARK [0][-]{chapter.8}{Anhang}{}% 64

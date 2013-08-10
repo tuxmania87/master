@@ -195,7 +195,7 @@ Da wir im \verb|SELECT|-Teil jegliche Wildcards durch Spaltennamen ersetzt haben
 
 Hatten die vorkommenden Tabellen im \verb|FROM|-Teil keine Tupelvariablen, so werden künstliche eingeführt.
 
-\begin{figure}[h]
+\begin{figure}[H]
 Eingabe: \\\verb|SELECT e.id, e.name, d.region FROM emp e, dep d WHERE e.depid = d.id|\\
 
 Anpassung: \\\verb|SELECT a2.id, a2.name, a1.region FROM dep a1, emp a2 WHERE a2.depid = a1.id|\\
@@ -228,7 +228,7 @@ Ein Ausdruck \verb|((a > 5)  AND ((b > 5) AND (c > 5)))| enthält unnötige Klam
 
 Es ist daher wünschenswert, wenn ein Operator $op1$ einen Operanden als Kindknoten besitzt, der wiederum $op1$ repräsentiert, den Kindknoten zu eliminieren. Alle Kinder vom eliminierten Kindknoten hängen wir nun an den verbleibenden Operatorknoten $op1$ an. Damit hätte man den Ausdruck vereinfacht, da die assoziative Klammerung wegfällt. Dieses Vorgehen funktioniert nur bei assoziativen, nicht arithmetischen Operatoren, dies ist darin begründet, dass der Parser arithmetische Operatoren in einem binären Baum parst und linksassoziativ klammert. Wir nennen dieses Vorgehen im Folgenden \textbf{Operatorkompression}. Verbildlicht wird dieser Vorgang in Abbildung \ref{fig:opcomp}. $T(x), T(y)$ und $T(z)$ stellen dabei beliebige Teilbäume dar.
 
-\begin{figure}[h]
+\begin{figure}[H]
 \centering
 \includegraphics[scale=0.4]{Bilder/op_comp.png}
 \caption{Operatorkompression}
@@ -279,7 +279,7 @@ Der Operator \verb|ANY| ist beinahe äquivalent zu \verb|ALL| mit dem Unterschie
 
 Befindet sich im \verb|WHERE|-Teil eine \verb|EXISTS|-Unterabfrage, so können wir den \verb|SELECT|-Teil dieser Unterabfrage vereinfachen. Da wir nur wissen wollen ob es Ergebnistupel aus der Unterabfrage gibt, benötigen wir keine konkreten Spalten aus der Unterabfrage. Daher ersetzen wir den \verb|SELECT|-Teil von \verb|EXISTS|-Unterabfragen zu:\verb|SELECT 1|. Ein Beispiel dieser Umwandlung ist in Abbildung \ref{fig:exists_ex1} zu sehen.
 
-\begin{figure}[h]
+\begin{figure}[H]
 \begin{verbatim}
 SELECT e.sal FROM emp e WHERE EXISTS (
     SELECT expression FROM dept d 
@@ -294,7 +294,7 @@ SELECT e.sal FROM emp e WHERE EXISTS (
 \end{figure}
 
 
-%\begin{figure}[h]
+%\begin{figure}[H]
 %\begin{tabular}{ccl}
 %\verb|A BETWEEN B AND C| & $\to$  & \verb|A >= B AND A <= C|\\
 %\verb|SELECT ALL| & $\to$ & \verb|SELECT|\\
@@ -392,7 +392,7 @@ Ziel ist es nach wie vor, eine gewisse Ordnung zu definieren, so dass nach der S
 
 Hat eine Formel einen nicht kommutativen Operator, so ist diese Sortierung nicht möglich. In einem solchen Fall müssen wir sicherstellen, dass sowohl die Musterlösung als auch die Lösung des Lernenden, die gleiche Repräsentation der Formel enthält. Ist \verb|a| eine Variable vom Typ \verb|INT|, dann sind verschiedene Repräsentationen von: \verb|a < 5| \mbox{z. B.} \verb|5 > a, a <= 4, 4 >= a|. Wir untersuchen nun zwei Ansätze, die sich mit diesem Problem beschäftigen. Im ersten Ansatz fügen wir, zu einer Formel mit einem nicht kommutativen Operator, alle implizierten Schreibweisen hinzu. Ein Beispiel dafür ist in Abbildung \ref{fig:sampleadd} zu sehen. Im zweiten Ansatz analysieren wir die Formel mit dem nicht kommutativen Operator und wählen eine bestimmte Repräsentation dieser Formel. Dadurch ist sichergestellt, dass sich in allen standardisierten SQL-Anfragen nur eine bestimme Version der Formel befindet. Ein Beispiel dafür finden wir in Abbildung \ref{fig:samplerep}. Wir gehen davon aus, dass das Attribut \verb|sal| ganzzahlig ist.
 
-\begin{figure}[h]
+\begin{figure}[H]
 \centering
 \begin{verbatim}
 Eingabe: SELECT * FROM emp e WHERE e.sal >= 1001
@@ -404,7 +404,7 @@ Ausgabe: SELECT * FROM emp e
 \label{fig:sampleadd}
 \end{figure}
 
-\begin{figure}[h]
+\begin{figure}[H]
 \centering
 \begin{verbatim}
 Eingabe: SELECT * FROM emp e WHERE e.sal >= 1001
@@ -552,7 +552,7 @@ Ein wesentlicher Aspekt bei der Standardisierung ist die Art der Sortierung. Dab
 
 Es sei $T(r)$ unser ZQL-Parserbaum. Ist der Operator, mit dem $r$ markiert ist, kommutativ, so können wir alle Kinder $c_i$ in beliebiger Reihenfolge permutieren und würden den Ausdruck, den $T(r)$ darstellt nicht semantisch verändern. Für unsere Standardisierung ist es aber wichtig, dass wir dennoch eine Ordnung auf solchen Operatoren festlegen, damit unsere Parserbäume am Ende vergleichbar sind. Wir verwenden die Ordnung, die in Abbildung \ref{fig:sortorder} dargestellt ist. Ein niedrigerer Wert der $\mathit{order}$-Funktion bedeutet dabei eine höhere Priorität. Hat ein Kindknoten $c_i$ eine höhere Priorität als ein Kindknoten $c_j$, so steht $c_i$ weiter links in der Liste der Kinder. Zu beachten ist, dass Spaltennamen die höchste Priorität haben, gefolgt von den Konstanten, welchen die zweithöchste Priorität zugeordnet sind. Wir gehen bei der Herstellung der Ordnung im Baum von unten nach oben vor, also bottom-up. Damit können wir sicherstellen, dass beim Behandeln eines Knotens $v$, die Kinder $children(v)$ bereits korrekt sortiert sind, da wir ja mit den Blattknoten beginnen.
 
-\begin{figure}[h]\
+\begin{figure}[H]\
 \begin{tabular}{|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|}
 \hline
 $r\in \textit{Relation}$ & Variable & Konstante & OR & $\le$ & $\ge$ & $<$ & $>$ & $=$& $+$ & $-$  & IS NULL\\\hline
@@ -587,7 +587,7 @@ Die Funktion \verb|dualDFS(v,w)| ist nicht im Pseudocode erläutert und wird dah
 
 Die Abbildungen \ref{fig:pesudocode1} und \ref{fig:pesudocode2} stellen den bisherigen Prozess dar.
 
-\begin{figure}[h]
+\begin{figure}[H]
 \lstset{tabsize=2,language=java,keywordstyle=\color{javapurple}\bfseries,
 stringstyle=\color{javared},
 commentstyle=\color{javagreen},
@@ -624,7 +624,7 @@ sortiere_liste(Liste l=($l_1$,...,$l_n$)) {
 \label{fig:pesudocode1}
 \end{figure}
 
-\begin{figure}[h]
+\begin{figure}[H]
 \lstset{tabsize=2,language=java,keywordstyle=\color{javapurple}\bfseries,
 stringstyle=\color{javared},
 commentstyle=\color{javagreen},
@@ -646,7 +646,7 @@ sortiere(rootnode r) {
 
 Wir wollen dieses Verfahren nun an einem Beispiel verdeutlichen. Wir betrachten dazu den Ausdruck \verb| a>5 AND (2=b OR c IS NULL) AND (d=5 OR a<6)|, der in Abbildung \ref{fig:sort_1} als Baum dargestellt ist. Wir gehen davon aus, dass a,b,c und d Spaltennamen sind und keine Stringkonstanten.
 
-\begin{figure}[h]
+\begin{figure}[H]
 \includegraphics[scale=0.6]{Bilder/sort_1.png}
 \caption{Sortierbeispiel: Ausgangsbaum}
 \label{fig:sort_1}
@@ -657,7 +657,7 @@ Wir erreichen nun den Teilbaum, der den Ausdruck \verb|(b=2) OR (c IS NULL)| rep
 Wir fahren mit dem rekursiven Aufstieg fort und stoßen auf den Teilbaum, der \verb|d=5| repräsentiert. Da \verb|order(d) > order(5)| müssen wir die Kindknoten nicht tauschen. Wir fahren fort und treffen auf den Ausdruck \verb|a < 6| der ebenfalls nicht abgeändert werden kann, da \verb|<| nicht kommutativ ist. 
 Beim Aufstieg stoßen wir nun auf den Ausdruck \verb|(d=5) OR (a<6)|. Hier müssen wir eine Vertauschung der Kindknoten durchführen, da \verb|order(=) > order(<)|. Wie in Abbildung \ref{fig:sort_step1} zu erkennen, erhalten wir den Ausdruck \verb|(a<6) OR (d=5)|.
 
-\begin{figure}[h]
+\begin{figure}[H]
 \centering
 \includegraphics[scale=0.5]{Bilder/sort_step1.png}
 \caption{Sortierbeispiel: Umsortierung der Teilbäume}
@@ -666,7 +666,7 @@ Beim Aufstieg stoßen wir nun auf den Ausdruck \verb|(d=5) OR (a<6)|. Hier müss
 
 Nun treffen wir auf die zweite Ebene des Baumes und die Teilbäume mit den Wurzeln \verb|>, OR| und \verb|OR|. Da \verb|order(OR) < order(>)| gilt, ist klar, dass der Teilbaum mit \verb|>| als Wurzelknoten nach ganz rechts rücken muss. Noch zu klären ist welcher der beiden Teilbäume mit \verb|OR| als Wurzel als erstes Kind von \verb|AND| erscheint. Dazu müssen wir die schrittweise Tiefensuche auf beiden Bäumen ausführen. Wie wir in Abbildung \ref{fig:sort_step2} dabei feststellen können, unterscheiden sich die Knoten bereits in der ersten Iteration der Tiefensuche.
 
-\begin{figure}[h]
+\begin{figure}[H]
 \centering
 \includegraphics[scale=0.55]{Bilder/sort_step2.png}
 \caption{Sortierbeispiel: Schrittweise Tiefensuche}
@@ -675,7 +675,7 @@ Nun treffen wir auf die zweite Ebene des Baumes und die Teilbäume mit den Wurze
 
  Da \verb|order(<) < order(=)| müssen wir die Teilbäume mit \verb|OR| als Wurzel ebenso tauschen. Wir erhalten dann den Baum, der in Abbildung \ref{fig:sort_zwischen4} zu sehen ist.
 
-\begin{figure}[h]
+\begin{figure}[H]
 \centering
 \includegraphics[scale=0.55]{Bilder/sort_zwischen4.png}
 \caption{Sortierbeispiel: Ende des Sortierens}
@@ -806,7 +806,7 @@ Zunächst ist zu klären, wie der \verb|OUTER JOIN| alternativ formuliert werden
 
 Um die Umwandlung eines \verb|LEFT OUTER JOIN| zu demonstrieren, betrachten wir folgendes Beispiel:
 
-\begin{figure}[h]
+\begin{figure}[H]
 \begin{verbatim}
 SELECT e.empno, e.job, d.dname 
 FROM dept d 
@@ -824,7 +824,7 @@ Ziel ist es also zwei SQL-Anfragen zu formulieren, die jeweils für die oben gen
 Für die SQL-Anfrage, welche die Menge der Verbundspartner angibt, übernehmen wir zunächst den \verb|SELECT|-Teil. Die zwei Tabellen, die am Verbund beteiligt sind werden im \verb|FROM|-Teil nun als \verb|CROSS JOIN| aufgeschrieben, also mit Komma getrennt. Der \verb|WHERE|-Teil wird ebenfalls vom gegebenen \verb|OUTER JOIN|-Statement übernommen und durch die Angabe des Verbundskriteriums ergänzt.
 Wir erhalten also die folgende Anfrage bezüglich unseres Beispiels:
 
-\begin{figure}[h]
+\begin{figure}[H]
 \begin{verbatim}
 SELECT e.empno, e.job, d.dname 
 FROM dept d, emp e
@@ -837,7 +837,7 @@ ORDER BY e.empno
 
 Nun muss noch die Teilmenge aller Tupel hinzugefügt werden, die keinen Verbundspartner haben. Wir übernehmen zunächst wieder den \verb|SELECT|-Teil der Ursprungsanfrage, ersetzen aber alle Spaltennamen der ``rechten'' Tabelle mit \verb|NULL|, weil diese Werte aufgrund fehlender Verbundspartner nicht belegt sind. Diese Ersetzungen müssen ebenso im \verb|WHERE|-Teil stattfinden. Die rechte Tablle wird aus dem \verb|FROM|-Teil gestrichen. Nun passen wir den \verb|WHERE|-Teil an. Hier könnte man auf die Idee kommen mit einem \verb|NOT IN| Semijoin zu prüfen, dass auch nur Tupel ohne Verbundspartner aufgenommen werden. Erlaubt  das Verbundskriterium in der ``linken'' Tabelle \verb|NULL|-Werte, so würden diese Einträge nicht erscheinen. Bei einem \verb|LEFT OUTER JOIN| sind diese Tupel aber mit erfasst. Es bietet sich daher eine \verb|NOT EXISTS|-Unterabfrage an. 
 
-\begin{figure}[h]
+\begin{figure}[H]
 \begin{verbatim}
 SELECT NULL, NULL, d.dname
 FROM dept d 
@@ -851,7 +851,7 @@ ORDER BY e.empno
 
 Nun müssen beide Anfragen mit einem \verb|UNION ALL| verknüpft werden. Dabei müssen wir das \verb|ORDER BY|-Statement ausklammern, da dieses erst auf dem Datensatz, der mit \verb|UNION ALL| erzeugt wurde, ausgeführt wird. Unser Endergebnis bezogen auf unser Beispiel lautet also:
 
-\begin{figure}[h]
+\begin{figure}[H]
 \begin{verbatim}
 SELECT e.empno, e.job, d.dname FROM dept d, emp e
 WHERE d.deptno = e.deptno AND d.loc <> 'CHICAGO'
@@ -865,9 +865,9 @@ ORDER BY empno
 \caption{OUTER JOIN Umwandlung, finaler Schritt}
 \end{figure}
 
-Bei diesem Vorgehen kann es passieren, dass bei bestimmten SQL-Anfragen nach der Umwandlung in einen \verb|OUTER-JOIN| klar wird, dass dieser äquivalent zu einem \verb|INNER JOIN| ist. Dazu betrachten wir kurz das folgende Beispiel:
+Bei diesem Vorgehen kann es passieren, dass bei bestimmten SQL-Anfragen nach der Umwandlung in einen \verb|OUTER-JOIN| klar wird, dass dieser äquivalent zu einem \verb|INNER JOIN| ist. Dazu betrachten wir das Beispiel in Abbildung \ref{fig:outer_s1}.
 
-\begin{figure}[h]
+\begin{figure}[H]
 \begin{verbatim}
 SELECT e.empno, e.job, d.dname 
 FROM dept d 
@@ -876,11 +876,12 @@ WHERE e.sal > 2000
 ORDER BY e.empno
 \end{verbatim}
 \caption{OUTER JOIN: Spezialfall}
+\label{fig:outer_s1}
 \end{figure}
 
-Wie wir sehen, taucht im \verb|WHERE|-Teil ein Attribut der ``rechten'' Tabelle auf, was formal zu folgendem Endergebnis führen würde.
+Wie wir sehen, taucht im \verb|WHERE|-Teil ein Attribut der ``rechten'' Tabelle auf, was formal zu der Anfrage führen würde, die wir in Abbildung \ref{fig:outer_s2} sehen.
 
-\begin{figure}[h]
+\begin{figure}[H]
 \begin{verbatim}
 SELECT e.empno, e.job, d.dname FROM dept d, emp e
 WHERE d.deptno = e.deptno AND e.sal > 2000
@@ -891,11 +892,12 @@ WHERE NOT EXISTS(
 AND NULL > 2000
 \end{verbatim}
 \caption{OUTER JOIN: Spezialfall Endergebnis}
+\label{fig:outer_s2}
 \end{figure}
 
 Wie man hier sieht, kann die Bedingung \verb|NULL > 2000| nie erfüllt werden, abgesehen davon, dass es sich um einen Syntaxfehler handelt. Daher muss die zweite Anfrage komplett gestrichen werden und wir erhalten die Anfrage in Abbildung \ref{fig:outjoinspez2}, was nun ein üblicher \verb|INNER JOIN| ist.
 
-\begin{figure}[h]
+\begin{figure}[H]
 \begin{verbatim}
 SELECT e.empno, e.job, d.dname FROM dept d, emp e
 WHERE d.deptno = e.deptno AND e.sal > 2000
@@ -915,13 +917,15 @@ Dies waren alle notwendigen Schritte um einen \verb|LEFT OUTER JOIN| äquivalent
 
 Nach dieser Betrachtung müssen wir jedoch feststellen, dass die Umwandlung eines \verb|OUTER JOIN| recht vielschichtig und aufwendig ist. Es ist zwar möglich diesen äquivalent umzuformen, allerdings wird der Ausdruck dadurch enorm aufgebläht. Weiterhin funktioniert diese Umwandlung nur in eine Richtung problemlos, nämlich vom \verb|JOIN| zum \verb|UNION|-Ausdruck. Umgekehrt ist es sehr aufwendig festzustellen, ob ein \verb|UNION ALL| auch ein \verb|OUTER JOIN| ist, da man zum Beispiel Vergleiche mit \verb|NULL|-Werten (wie im Beispiel: \verb|NULL > 2000|) gewöhnlich nicht ausschreibt oder gar entfernt. Unser Programm soll \verb|OUTER JOIN| daher nicht in einen \verb|UNION ALL| Ausdruck umwandeln. Wir beschränken uns in der Praxis also darauf, einen \verb|OUTER JOIN| unter \verb|FROM| rein syntaktisch zu erkennen und nicht umzuwandeln. 
 
+Es sei an dieser Stelle auf die Arbeit \cite{outer2inner} verwiesen, in der ein Verfahren vorgestellt wird, welches \verb|OUTER JOIN| äquivalent in \verb|INNER JOIN| umwandelt. Das Verfahren ist komplex und mehrstufig, kann aber mit allen \verb|OUTER JOIN| umgehen. Der entstandene \verb|INNER JOIN| ist allerdings aufgebläht und nicht mehr lesbar, da er künstlich konstruiert ist. Im Rahmen unserer Arbeit interessiert dieser Fakt nur am Rande, im Zuge einer Erweiterung der semantischen Funktionen unseres Programmes, ist dieser Ansatz aber sicherlich erwähnenswert und interessant.
+
 \subsubsection*{INNER JOIN}
 
 Unter einem \verb|INNER JOIN| verstehen wir den Verbund zweier Tabellen unter \verb|FROM|, mit den Schlüsselworten \verb|INNER JOIN|. Ein solcher Verbund kann leicht als \verb|CROSS JOIN| mit Auswahl in der \verb|WHERE|-Bedingung formuliert werden. Dazu entfernen wir den \verb|INNER JOIN| aus dem \verb|FROM|-Teil und erzeugen einen \verb|CROSS JOIN|. Die Verbundbedingungen werden unter \verb|WHERE| eingefügt.
 
 Ein explizit aufgeschriebener \verb|INNER JOIN| kann auch ein \verb|NATURAL JOIN| sein. Da wir solche Verbunde aber auch als \verb|CROSS JOIN| aufschreiben wollen (siehe oben), müssen wir diesen Spezialfall nicht gesondert betrachten. Das folgende Beispiel soll die Umwandlung von \verb|INNER JOIN| verdeutlichen:
 
-\begin{figure}[h]
+\begin{figure}[H]
 Eingabe:\\
 \verb|SELECT * FROM emp e INNER JOIN dept d ON e.deptno.id = d.deptno|\\
 
@@ -933,34 +937,13 @@ Umwandlung:\\
 
 \subsubsection{JOIN-Eliminierung}
 
-Im vorherigem Abschnitt haben wir bereits alle üblichen Verbunde betrachtet und gezeigt, wie wir diese äquivalent umformen können. Wir haben erreicht, dass alle Verbunde unter \verb|FROM| ersetzt wurden zu \verb|CROSS JOIN| mit Auswahlkriterien unter \verb|WHERE|. Wir möchten daher in diesem Abschnitt klären, welche Möglichkeiten es gibt, die so entstandenen Verbunde zu eliminieren, wenn sich herausstellt, dass sie überflüssig sind.
+Im vorherigem Abschnitt haben wir bereits alle üblichen Verbunde betrachtet und gezeigt, wie wir diese äquivalent umformen können. Wir haben erreicht, dass alle Verbunde unter \verb|FROM| ersetzt wurden zu \verb|CROSS JOIN| mit Auswahlkriterien unter \verb|WHERE|. Wir möchten daher in diesem Abschnitt auf eine Methode verweisen, mit der es möglich ist überflüssige \verb|INNER JOIN| zu erkennen und zu eliminieren.
 
-Wenn nur Schlüsselattribute einer Tupelvariable X benutzt werden und diese mit \hyphenation{Fremd-schlüs-sel-at-tri-but-en} einer anderen Tupelvariable Y verglichen werden, dann ist X überflüssig.
+Die Methode selbst ist detailliert in \cite{joinelem2} beschrieben und würde den Rahmen dieser Arbeit überschreiten. Daher wollen wir hier nur ein Beispiel hernehmen und es mit der Methode bearbeiten, um zu sehen was die Methode leisten kann.
 
-Ziel dieses Abschnittes ist es, eine Idee vorzustellen, wie redundante Verbunde mit Hilfe von referentiellen Integritätsbedingungen (RI) gefunden werden können. 
-Die mögliche Anwendung ist natürlicherweise die Entfernung einer Relation bei dem der Verbund aus Tabellen besteht, die durch eine RI-Bedingung verbunden ist (nachfolgend als RI-Joins bezeichnet) und bei der die Tabelle, die den Primärschlüssel enthält nur im Join referenziert wird. Ein RI-Join besteht natürlicherweise aus einem Primärschlüssel- und einem Fremdschlüsselattribut.
+Der Algorithmus aus \cite{joinelem2} findet redundante Verbunde mit Hilfe von referentiellen Integritätsbedingungen (RI). Dann folgt die Entfernung einer Relation bei dem der Verbund aus Tabellen besteht, die durch eine RI-Bedingung verbunden ist (nachfolgend als RI-Joins bezeichnet) und bei der die Tabelle, die den Primärschlüssel enthält nur im Join referenziert wird. Ein RI-Join besteht natürlicherweise aus einem Primärschlüssel- und einem Fremdschlüsselattribut.
 
-Das Verfahren wird in der Arbeit \cite{joinelem2} näher vorgestellt und läuft im wesentlichen in 4 Schritten ab.
-
-\begin{enumerate}
-\item Wir bilden zunächst transitive Spaltenäquivalenzklassen von allen Joinprädikaten. Ist also \verb|A=B| und \verb|B=C|, dann können wir transitiv ableiten, dass ebenso \verb|A=C| gilt. Alle drei Spalten, \verb|A,B,C| befinden sich dann in einer Äquivalenzklasse.
-
-\item Alle Tabellen unter \verb|FROM|, die mit RI-Joins verknüpft sind, werden in zwei Gruppen eingeteilt. Tabellen in der R-Gruppe sind entfernbar (removable) und Tabellen in der N-Gruppe sind nicht entfernbar (non-removable). Die notwendige Bedingung, die bestimmt, wann eine Tabelle in die R-Gruppe gehört ist, dass die Tabelle eine parent-table für irgendeine RI ist. Dies ist jedoch nicht die einzige notwendige Bedingung. Andere, zu erfüllende Bedingung, sind weitaus komplexer und sind für die Präsentation des Ansatzes dieser Methode zu umfangreich. Nachzulesen ist das detaillierte Verfahren in der Arbeit \cite{joinelem2}.
-
-\item Alle Tabellen in der R-Gruppe werden entfernt.
-
-\item Da es Fremdschlüssel geben kann, die \verb|NULL|-Werte erlauben, ist es notwendig, ein \verb|IS NOT NULL|-Prädikat dort hinzuzufügen, wo die parents einer RI entfernt wurden und \verb|NULL|-Werte erlaubt sind.
-\end{enumerate}
-
-Als visuelles Hilfsmittel verwendet das Verfahren sogenannte Joingraphen $G=(V,E)$. Die Knotenmenge $V$ besteht aus Joinattributen. Eine Kante zwischen zwei Knoten $u,v$ existiert genau dann, wenn $u$ und $v$ Teil eines Joinprädikates sind. Handelt es sich bei dem Join um einen RI-Join, also ein Primär-/ Fremdschlüssel Join, dann sind $u,v$ durch eine gerichtete Kante verbunden, wobei der Pfeil dann vom Fremdschlüsselattribut/Kind zum Primärschlüsselattribut/Eltern geht.
-
-Nimmt man sich diese Joingraphen zur Hilfe gibt es drei auszuführende Schritte. Im ersten Schritt wird der Joingraph erzeugt, nach oben genannten Regeln. Dabei werden RI-Joins noch nicht gerichtet dargestellt. Wir erhalten $G_1$.
-
-Im zweiten Schritt fügt man alle transitiv-implizierten Joins als nicht RI-Joins hinzu und markiert die echten RI-Joins entsprechend mit Pfeilen. Wir erhalten $G_2=(V_2,E_2)$
-
-Im dritten Schritt werden unnötige (redundante) Joins entfernt. Ein Knoten $v\in V_2$ ist entfernbar, wenn $v$ Teil eines RI-Joins ist und $v$ nur als Joinkriterium in der Anfrage vorkommt, also weder im \verb|SELECT-, WHERE-| oder \verb|GROUP BY-|Statement vorkommt. Wir erhalten $G_3$, aus dem wir auch ablesen können welche Joins noch notwendig sind. 
-
-Folgendes Beispiel soll das eben Erwähnte verdeutlichen.
+Als visuelles Hilfsmittel verwendet das Verfahren sogenannte Joingraphen $G=(V,E)$. Die Knotenmenge $V$ besteht aus Joinattributen. Eine Kante zwischen zwei Knoten $u,v$ existiert genau dann, wenn $u$ und $v$ Teil eines Joinprädikates sind. Handelt es sich bei dem Join um einen RI-Join, also ein Primär-/ Fremdschlüssel Join, dann sind $u,v$ durch eine gerichtete Kante verbunden, wobei der Pfeil dann vom Fremdschlüsselattribut/Kind zum Primärschlüsselattribut/Eltern geht. Das Bearbeiten der folgenden Beispielanfrage soll zeigen, wie das Verfahren vorgeht. Die Datenbankschemata sind dem TCP-H entnommen und in \cite{partsuppdb} zu finden.
 
 \begin{lstlisting}[mathescape]
 SELECT ps.partkey, avg(ps.supplycost)
@@ -972,28 +955,29 @@ AND    o.totalprice >= 100
 GROUP BY ps.partkey
 \end{lstlisting}
 
-Wir erzeugen zunächst den ersten Joingraphen $G_1$, in dem wir jede Joinbedingug als verbundes Paar in den Graphen einfügen:
+Wir erzeugen zunächst den ersten Joingraphen $G_1$, in dem wir jede Joinbedingung als verbundenes Paar in den Graphen einfügen:
 
-\begin{figure}[h]
+\begin{figure}[H]
+\centering
 \includegraphics[scale=0.4]{Bilder/joinelem_g1.png}
 \caption{$G_1$}
 \end{figure}
 
-Im zweiten Schritt fügen wir nun alle transitiv-implizierten Joins als nicht RI-Joins hinzu, also als ungerichtete Kanten. Wir weisen dann die RI-Joins aus, in dem wir sie als gerichtete Kanten markieren und erhalten damit $G_2$:
+Wir weisen die RI-Joins aus, in dem wir sie als gerichtete Kanten markieren. Weiterhin fügen wir nun alle transitiv-implizierten Joins als nicht RI-Joins hinzu, also als ungerichtete Kanten und erhalten damit $G_2$:
 
-\begin{figure}[h]
+\begin{figure}[H]
+\centering
 \includegraphics[scale=0.4]{Bilder/joinelem_g2.png}
 \caption{$G_2$}
 \end{figure}
 
-Im letzten Schritt gehen wir alle Knoten sukzessive durch. Da jeder Knoten ein Attribut repräsentiert, prüfen wir ob das repräsentierte Attribut in einem Nicht-Join Prädikat unter \verb|WHERE|, im \verb|GROUP BY|- oder im \verb|SELECT|-Teil vorkommt. Ist dies nicht der Fall, eliminieren wir den Knoten und alle zugehörigen Kanten. In unserem Beispiel kommt weder \verb|s.suppkey| noch \verb|c.custkey| in den genannten Teilen der Anfrage vor. Wir löschen diese Attribute aus $G_2$ und erhalten $G_3$ mit nur noch einem, notwendigen Join:
+Im letzten Schritt gehen wir alle Knoten sukzessive durch. Da jeder Knoten ein Attribut repräsentiert, prüfen wir ob das repräsentierte Attribut in einem Nicht-Join Prädikat unter \verb|WHERE|, im \verb|GROUP BY|- oder im \verb|SELECT|-Teil vorkommt. Falls ja, ersetzen wir das Attribut mit einem Attribut eines Verbundspartners, der noch im Graphen existiert. Dann eliminieren wir den Knoten und alle zugehörigen Kanten. In unserem Beispiel kommt weder \verb|s.suppkey| noch \verb|c.custkey| in den genannten Teilen der Anfrage vor und damit können wir diese Entfernen ohne Attributsreferenzen ersetzen zu müssen. Wir löschen diese Attribute aus $G_2$ und erhalten $G_3$ mit nur noch einem, notwendigen Join:
 
-\begin{figure}[h]
+\begin{figure}[H]
+\centering
 \includegraphics[scale=0.4]{Bilder/joinelem_g3.png}
 \caption{$G_3$}
 \end{figure}
-
-Durch die Entfernung von Joinprädikaten kann es nun sein, dass auf einige Tabellen, die unter \verb|FROM| stehen, nicht mehr zugegriffen wird. Ist dies der Fall und sind weitere Bedingungen erfüllt, die detailliert in \cite{joinelem2} aufgeführt sind, so müssen diese Tabellen entfernt werden, da sonst ein ungewollter \verb|CROSS JOIN| entsteht, der u.a. zu vielen ungewollten Duplikaten führen kann.
 
 Wir erhalten also folgende SQL-Anfrage:
 
@@ -1005,14 +989,6 @@ AND    o.totalprice >= 100
 GROUP BY ps.partkey
 \end{lstlisting}
 
-Zu Bemerken ist, dass es noch mehr Fälle gibt, die der Algorithmus in \cite{joinelem2} behandelt. Der vorgestellte Ansatz entfernt nur eine Art von redundanten Joins. 
-
-Redundante Joins zu finden ist keine triviale Aufgabe. Es gibt viele verschiedene Bedingungen die geprüft werden müssen und selbst dann gibt es keinen universellen Ansatz, der sämtliche redundante Joins entdeckt. Aufgrund dieser Komplexität, wird die Joineleminierung nicht in den Prototypen, der im Rahmen dieser Arbeit entsteht, Einzug halten. Für eine zukünftige Erweiterung des Programms um mehr semantic-checks, wäre dieser Ansatz aber gut geeignet.
-
-
-\subsubsection*{OUTER JOIN-Eliminierung}
-
-Innere Joins sind einfacher zu handhaben als äußere Joins. In der Arbeit \cite{outer2inner} wird ein Verfahren vorgestellt, welches \verb|OUTER JOIN| äquivalent in \verb|INNER JOIN| umwandelt. Das Verfahren ist komplex und mehrstufig, kann aber mit allen \verb|OUTER JOIN| umgehen. Der entstandene \verb|INNER JOIN| ist allerdings aufgebläht und nicht mehr lesbar, da er künstlich konstruiert ist. Im Rahmen unserer Arbeit interessiert dieser Fakt nur am Rande, im Zuge einer Erweiterung der semantischen Funktionen unseres Programmes, ist dieser Ansatz aber sicherlich erwähnenswert und interessant.
 
 %\section{Komplexität von SQL-Anfragen}
 
@@ -1038,9 +1014,7 @@ Innere Joins sind einfacher zu handhaben als äußere Joins. In der Arbeit \cite
 
 Eine interessante Frage ist, ob ein \verb|DISTINCT| wirklich notwendig ist. Dies ist natürlich wichtig für den Vergleich zweier SQL-Anfragen. In \cite{brass2} wurde im Rahmen des SQLLint-Projektes bereits in dem Prototypen ein Checker eingebaut, der prüft ob \verb|DISTINCT| wirklich notwendig ist. Aber auch im Rahmen dieser Arbeit ist es notwendig zu wissen, ob das \verb|DISTINCT| notwendig ist. 
 
-Auf den ersten Blick reicht es aus zu prüfen, ob die Musterlösung ein \verb|DISTINCT| enthält. Ist dies der Fall, so muss die Lösung des Lernenden das offensichtlich auch enthalten. Allerdings setzt dieser Denkansatz voraus, dass die eingetragene Musterlösung stets perfekt ist. Um Fehler vorzubeugen ist es besser, alle Anfragen auf unnötige \verb|DISTINCT| zu prüfen. So kann dem Korrektor beim Eintragen der Musterlösung bereits angezeigt werden, dass sein angegebenes \verb|DISTINCT| unnötig ist oder ob ein \verb|DISTINCT| notwendig wäre um Duplikate zu eliminieren. Auch wenn man sich weg bewegt vom Modell der Musterlösung und dem Vergleich mit dem Lernenden, ist dieser Check durchaus wichtig. Im Folgenden stellen wir daher einen Algorithmus vor, der erkennt ob die Lösung Duplikate enthalten kann oder nicht.
-
-Dabei muss angemerkt werden, dass der nachfolgende Algorithmus die hinreichende Bedingung für ein unnötiges \verb|DISTINCT| prüft. Das bedeutet, dass wenn der Algorithmus sagt >>ja, \verb|DISTINCT| ist unnötig<<, können wir sicher sein, dass es tatsächlich unnötig ist. Sagt der Algorithmus allerdings >>nein<< bedeutet dies, nicht notwendigerweise, dass das \verb|DISTINCT| wirklich unnötig ist. Gewisse Sachverhalte findet der Algorithmus nicht.
+Auf den ersten Blick reicht es aus zu prüfen, ob die Musterlösung ein \verb|DISTINCT| enthält. Allerdings kann es Fälle geben, in denen man anstatt eines \verb|DISTINCT| eine \verb|EXISTS|-Unterabfrage benutzt und daher benötigen wir einen Ansatz, der unabhängig von der Musterlösung entscheidet ob ein \verb|DISTINCT| notwendig ist.  Im Folgenden stellen wir daher einen Algorithmus vor, der erkennt ob die Lösung Duplikate enthalten kann oder nicht. Das allgemeine Frage, ob ein \verb|DISTINCT| notwendig ist, ist unentscheidbar. Deswegen prüft der nachfolgende Algorithmus die hinreichende Bedingung für ein unnötiges \verb|DISTINCT|. Das bedeutet, dass wenn der Algorithmus sagt >>ja, \verb|DISTINCT| ist unnötig<<, können wir sicher sein, dass es tatsächlich unnötig ist. Sagt der Algorithmus allerdings >>nein<< bedeutet dies, nicht notwendigerweise, dass das \verb|DISTINCT| wirklich unnötig ist. 
 
 Der Algorithmus ist nicht in unserem Programm implementiert. Wir beschreibe ihn aber im Folgenden so, dass er in einer Überarbeitung ohne Probleme integriert werden könnte. Der Algorithmus müsste dann in jedem Fall nach der Umwandlung des \verb|WHERE|-Teils in die KNF erfolgen, da dies eine Voraussetzung für den Algorithmus ist.
 
@@ -1055,9 +1029,9 @@ Solange eine der folgenden Aktionen zu einer Veränderung unseres Zustands führ
 \item Enthält $\mathcal{K}$ einen Schlüssel einer Tupelvariable, so fügen wir alle Attribute dieser Variable hinzu.
 \end{itemize}
 
-Enthält $\mathcal{K}$ nun von jeder Tupelvariable unter \verb|FROM| einen Schlüssel, so ist das \verb|DISTINCT| sicher überflüssig. Haben wir ein \verb|GROUP BY|-Statement so prüfen wir anstelle dessen, ob alle \verb|GROUP BY|-Spalten in $\mathcal{K}$ enthalten sind.
+Enthält $\mathcal{K}$ nun von jeder Tupelvariable unter \verb|FROM| einen Schlüssel, so ist das \verb|DISTINCT| sicher überflüssig. Haben wir ein \verb|GROUP BY|-Statement so prüfen wir anstelle dessen, ob alle \verb|GROUP BY|-Spalten in $\mathcal{K}$ enthalten sind. Der folgende Algorithmus ist \cite{sql1folien} entnommen.
 
-\subsection{Algorithmus aus \cite{sql1folien}}
+\subsection{Algorithmus}
 
 Es sei unsere SQL-Anfrage der Form:
 
