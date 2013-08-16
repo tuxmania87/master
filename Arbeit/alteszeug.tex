@@ -87,7 +87,7 @@ Wenn es endlich viele mögliche Werte für einen Knoten gibt, dann können Ungle
 
 \subsection{Unteranfragen}
 
-Um unnötige Betrachtungen zu vermeiden, beschäftigt sich das SQLLint-Projekt nur mit \verb|EXISTS|-Unterabfragen. Alle anderen Unteranfragen (\verb|IN,>=ALL,| etc.) können auf die \verb|EXISTS|-Unteranfrage reduziert werden. Oracle führt solche Umwandlungen durch, bevor der Optimierer beginnt an der Anfrage zu arbeiten.
+Um unnötige Betrachtungen zu vermeiden, beschäftigt sich das SQLLint-Projekt nur mit \verb|EXISTS|-Unterabfragen. Alle anderen Unteranfragen (\verb|IN,>=ALL,| etc.) können auf \verb|EXISTS|-Unteranfragen reduziert werden. Oracle führt solche Umwandlungen durch, bevor der Optimierer beginnt an der Anfrage zu arbeiten.
 
 Die Idee zur Behandlung von Unteranfragen stammt aus bekannten Methoden der automatischen Beweiser. Hierzu wird in der Arbeit \cite{brass1} eine Variante der Skolemisierung vorgestellt. Das genaue Vorgehen wird in in jenem Artikel erklärt.
 

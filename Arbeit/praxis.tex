@@ -27,10 +27,6 @@ Im folgendem Abschnitt beschreiben wir die Struktur des Programms und gehen, in 
 
 Wir benutzen eine Datenbank um Aufgabenstellungen, Nutzer, Lösungsversuche und vieles mehr abzuspeichern. Im folgenden werden die einzelnen Tabellen erläutert. Wir verwenden dazu bewusst eine abstraktere Form der Beschreibung. Begründet ist dies, durch die Vielfalt der verschiedenen DBMS und ihrer verschiedenen Auslegung der Data Defintion Language. Im Prototypen verwenden wir das DBMS MySQL, man könnte aber alle DBMS verwenden, die einen JDBC Connector haben.
 
-\textbf{attempts} (\underline{id}, userid $\to$ user(id), taskid $\to$ tasks(id), timeat ,sqlstatement ,correct)
-
-Die Tabelle \verb|attempts| speichert je einen Lösungsversuch eines Benutzers. Dabei wird die SQL-Anfrage (\verb|sqlstatement|) eines Benutzers (mit der ID \verb|userid|) mit der Uhrzeit (\verb|timeat|) abgespeichert. Weiterhin wird vermerkt, welche Aufgabe (\verb|taskid|) der Student lösen wollte und, ob dieser Korrekt war.
-
 \textbf{dbschema} (\underline{id}, name, schema)
 
 In der Tabelle \verb|dbschema| speichern wir zu jeder Aufgabe \verb|taskid|, wie die Struktur der Tabelle dafür aussieht. Wir speichern dazu, möglichst SQL-92 konforme, \verb|CREATE TABLE|-Anweisungen im Attribut \verb|schema|, mit Semikolon getrennt. Wir ordnen dem Schema außerdem einen Namen zu, damit es später einfach wiederzufinden ist.
@@ -41,30 +37,34 @@ Die Tabelle \verb|external_database| speichert die Zugriffsdaten (\verb|username
 
 \textbf{samplesolutions} (\underline{id}, taskid$\to$tasks(id), sqlstatement)
 
-Die Musterlösung für eine Aufgabe, wird in der Tabelle \verb|samplesolutions| gespeichert. Wir erfassen dabei die Aufgabennummer (\verb|taskid|), sowie die Musterlösung als SQL-Anfrage (\verb|sqlstatement|). Wir verwenden einen künstlichen Schlüssel \verb|id|, da es unter Umständen mehrere Musterlösungen zu einer Aufgabe geben kann.
+Die Musterlösung für eine Aufgabe, wird in der Tabelle \verb|samplesolutions| gespeichert. Wir erfassen dabei die Aufgabennummer (\verb|taskid|), sowie die Musterlösung als SQL-Anfrage. Wir verwenden einen künstlichen Schlüssel \verb|id|, da es unter Umständen mehrere Musterlösungen zu einer Aufgabe geben kann.
+
+\textbf{tasks\_db} ( \underline{taskid} $\to$ tasks(id), \underline{dbid} $\to$ external\_database(id))
+
+Es kann unter Umständen möglich sein, pro Aufgabe mehrere externe Datenbanken anzugeben. Daher speichern wir die Zuordnung einer Datenbank zu einer Aufgabe in der Tabelle \verb|tasks_db|. Hierzu verwenden wir den Fremdschlüssel zur Aufgabentabelle (\verb|taskid|) und den zur externen Datenbank (\verb|dbid|).
 
 \textbf{tasks} (\underline{id}, description, respectColumnOrder, schemaid, createdAt$^0$)
 
 Die Aufgaben werden in der Tabelle \verb|tasks| gespeichert. Wir versehen jede Aufgabe mit einer \verb|id| und einer Beschreibung, in Form eines Sachtextes (\verb|description|). Wir speichern, ob die Reihenfolge der Spalten (im \verb|SELECT|-Teil) eingehalten werden muss und, erfassen außerdem, welches Datenbankschema zu dieser Aufgabe zugeordnet werden soll. Optional können wir noch vermerken, wann die Aufgabe eingetragen wurde.
 
-\textbf{tasks\_db} (taskid $\to$ tasks(id), dbid $\to$ external\_database(id))
-
-Es kann unter Umständen möglich sein, pro Aufgabe mehrere externe Datenbanken anzugeben. Daher speichern wir die Zuordnung einer Datenbank zu einer Aufgabe in der Tabelle \verb|tasks_db|. Hierzu verwenden wir den Fremdschlüssel zur Aufgabentabelle (\verb|taskid|) und den zur externen Datenbank (\verb|dbid|).
-
 \textbf{users} (\underline{id}, name, password, isDozent)
 
 Einzelne Benutzer werden in der Tabelle \verb|users| erfasst. Neben den üblichen Kontoinformationen, wie \verb|name, password| speichern wir auch, ob der Nutzer ein Dozent ist. Diese Information ist wichtig, um zu entscheiden, ob ein Nutzer auch Aufgaben einpflegen darf.
+
+\textbf{attempts} (\underline{id}, userid $\to$ user(id), taskid $\to$ tasks(id), timeat ,sqlstatement ,correct)
+
+Die Tabelle \verb|attempts| speichert je einen Lösungsversuch eines Benutzers. Dabei wird die SQL-Anfrage (\verb|sqlstatement|) eines Benutzers (mit der ID \verb|userid|) mit der Uhrzeit (\verb|timeat|) abgespeichert. Weiterhin wird vermerkt, welche Aufgabe (\verb|taskid|) der Student lösen wollte und, ob dieser Korrekt war. Dabei bedeutet 0, dass die Lösung nicht korrekt war. 1 bedeutet, sie war korrekt und 2 bedeutet, dass sowohl Schritt 1 und Schritt 2 unseres Programmes fehlgeschlagen sind. Es ist also unklar, ob diese Lösung falsch oder richtig ist.
 
 \section{Programmstruktur}
 
 In diesem Abschnitt werden wir die wichtigsten Klassen und Funktionen auflisten und erläutern. Eine vollständige Dokumentation aller Klassen, ist im Quellcode als Javadocs-Kommentare vorhanden. 
 
-Das Programm beinhaltet mehrere Prozesse, die sich aus der Abfolge mehrere Funktionen zusammensetzen. Im Folgenden werden alle wesentlichen Prozesse und deren Zusammensetzung erläutert. Wir gehen dabei auch auf Möglichkeiten zur Anpassung des Programms ein.
+Das Programm beinhaltet mehrere Arbeitsschritte, die sich aus der Abfolge mehrere Funktionen zusammensetzen. Im Folgenden werden alle wesentlichen Arbeitsschritte und deren Zusammensetzung erläutert. Wir gehen dabei auch auf Möglichkeiten zur Anpassung des Programms ein.
 
-\subsubsection{Prozess: Standardisieren einer SQL-Anfrage} 
+\subsubsection{Arbeitsschritt: Standardisieren einer SQL-Anfrage} 
 
 Wir beschäftigen uns zu erst mit einer der Hauptfunktionen: das Standardisieren einer SQL-Anfrage. Die Klasse \verb|QueryHandler| kümmert sich um das Standardisieren einer SQL-Anfrage. Für jede SQL-Anfrage wird ein separates Objekt dieser Klasse erzeugt. Anschließend importieren wir das, zu Grunde liegende, Datenbankschema in das Objekt. Dies geschieht mit der Methode: \\\verb|boolean createTable(String createTableStatement)|\\
-Die Methode erwartet pro Aufruf ein, wenn möglich SQL-92 konformes, \verb|CREATE TABLE|-Statement. Nachdem wir das Datenbankschema eingelesen haben, importieren wir noch die zu standardisierende Anfrage. Dies geschieht mit der Methode:\\\verb|setOriginalStatement(String s)|\\ Das eingegebene Statement wird dann mit Hilfe des ZQL-Parsers eingelesen. Etwaige Fehler beim Parsen werden per Exception an den Nutzer weitergereicht. Mehr dazu im Abschnitt >>Webinterface<<. Wir kopieren das Statement außerdem, so dass wir intern zwei ZQuery-Objekte speichern, zum einen die Originalanfrage im Objekt \textbf{original}, die niemals verändert wird, zum Anderen eine Arbeitskopie im Objekt \textbf{workingCopy}, welche wir dann standardisieren. Nun ist das Datenbankschema eingelesen und die, zu verarbeitende, Anfrage liegt vor. Wir können den Standardisierungsprozess nun starten, mit der Methode: \\\verb|ZQuery[] equalize(boolean respect)|\\ 
+Die Methode erwartet pro Aufruf ein, wenn möglich SQL-92 konformes, \verb|CREATE TABLE| Statement. Nachdem wir das Datenbankschema eingelesen haben, importieren wir noch die zu standardisierende Anfrage. Dies geschieht mit der Methode:\\\verb|setOriginalStatement(String s)|\\ Das eingegebene Statement wird dann mit Hilfe des ZQL-Parsers eingelesen. Etwaige Fehler beim Parsen werden per Exception an den Nutzer weitergereicht. Mehr dazu im Abschnitt >>Webinterface<<. Wir kopieren das Statement außerdem, so dass wir intern zwei ZQuery-Objekte speichern, zum einen die Originalanfrage im Objekt \textbf{original}, die niemals verändert wird, zum Anderen eine Arbeitskopie im Objekt \textbf{workingCopy}, welche wir dann standardisieren. Nun ist das Datenbankschema eingelesen und die, zu verarbeitende, Anfrage liegt vor. Wir können den Standardisierungsprozess nun starten, mit der Methode: \\\verb|ZQuery[] equalize(boolean respect)|\\ 
 Als Eingabeparameter erhält sie die Information, ob die Reihenfolge im \verb|SELECT| respektiert werden soll, oder nicht. Im Abschnitt >>externe Datenbanken<< haben wir bereits darüber diskutiert, dass diese Funktion durchaus interessant sein kann. Weiterhin beobachten wir, dass die Methode nicht eine Anfrage, sondern ein Array von Anfragen zurückliefert. Wir erinnern uns an die Problematik der Selbstverbunde. Dort werden mehrere Permutationen der Tabellen unter \verb|FROM| auf die Anfrage angewandt. Es entstehen dann mehrere Anfragen, die alle semantisch äquivalent sind, aber Aufgrund ihrer unterschiedlichen Struktur alle, mit der Lösung des Lernenden abgeglichen werden müssen.
 
 Die Funktion \verb|equalize| startet die Funktion:\\
@@ -95,23 +95,23 @@ Der entstandene SQL-Ausdruck, in Form eines \verb|ZQuery|-Objektes, wird von \ve
 \label{fig:execPlan}
 \end{figure}
 
-\subsection*{Prozess: Verwenden von externen Datenbanken} 
+\subsection*{Arbeitsschritt: Verwenden von externen Datenbanken} 
 
-Nachdem wir den Prozess der Standardisierung ausführlich betrachtet haben, kommen wir nun zum zweiten, großen Prozess. Es handelt sich hierbei um das Ausführen der zwei Anfragen auf externen Datenbanken und dem Vergleich der Ergebnismengen. Hierfür verwenden wir hauptsächlich die Klasse \verb|QueryUtils|, welche eine Sammlung von nützlichen Funktionen zum Behandeln der SQL-Anfragen beinhaltet. Doch zunächst beginnen wir mit dem Ausführen einer SQL-Anfrage auf einer externen Datenbank. Grundsätzlich können zu jeder Aufgabe beliebig viele externe Datenbanken angegeben werden. Die Lösungen würden dann auf allen diesen Datenbanken ausgeführt werden. Dies ist nützlich, um verschiedene Datenbankzustände zu testen. Weiterhin können so Eigenheiten unterschiedlicher DBMS aufgezeigt werden. 
+Nachdem wir den Arbeitsschritt der Standardisierung ausführlich betrachtet haben, kommen wir nun zum zweiten, großen Arbeitsschritt. Es handelt sich hierbei um das Ausführen der zwei Anfragen auf externen Datenbanken und dem Vergleich der Ergebnismengen. Hierfür verwenden wir hauptsächlich die Klasse \verb|QueryUtils|, welche eine Sammlung von nützlichen Funktionen zum Behandeln der SQL-Anfragen beinhaltet. Doch zunächst beginnen wir mit dem Ausführen einer SQL-Anfrage auf einer externen Datenbank. Grundsätzlich können zu jeder Aufgabe beliebig viele externe Datenbanken angegeben werden. Die Lösungen würden dann auf allen diesen Datenbanken ausgeführt werden. Dies ist nützlich, um verschiedene Datenbankzustände zu testen. Weiterhin können so Eigenheiten unterschiedlicher DBMS aufgezeigt werden. 
 
 Alle, uns zur Verfügung stehende, externe Datenbanken sind wiederum in unserer internen Datenbank abgespeichert, in Form von ID, Hostname, Port, Datenbankname, Benutzername, Passwort und Typ. Unterstützte Typen sind zur Zeit MySQL, PostgreSQL und Oracle. Allerdings kann die Funktionalität jederzeit erweitert werden. Notwendig ist dazu lediglich das Einpflegen des jeweiligen JDBC-Connectors. Die statische Klasse \verb|externalDB| regelt nun das Ausführen einer eingegebene SQL-Anfrage \verb|q| auf der externen Datenbank mit der ID \verb|dbid|. \\
 \verb|static ResultSet executeQueryOn(String q, int dbid)|\\
 Die Methode \verb|executeQueryOn| liefert ein \verb|ResultSet| zurück. Dabei extrahiert sie zunächst die Zugangsdaten für die externe Datenbank mit Hilfe der \verb|dbid|. Im zweiten Schritt wird der korrekte JDBC-Connector geladen und eine Datenbankverbindung geöffnet. Nach dem Ausführen der Anfrage \verb|q|, wird die Ergebnismenge in Form eines \verb|ResultSet| zurückgegeben. Möchte man weitere DBMS unterstützen, so müssen in dieser Methode die JDBC-Connector eingepflegt werden.
 
-Wie bereits im Kapitel \ref{chap:theorie} besprochen, entfernen wir ,vor dem Ausführen der Anfragen auf externen Datenbanken, das \verb|ORDER BY|-Statement von der Lösung des Lernenden, wenn die Musterlösung kein solches Statement enthält.
+Wie bereits im Kapitel \ref{chap:theorie} besprochen, entfernen wir ,vor dem Ausführen der Anfragen auf externen Datenbanken, die \verb|ORDER BY|-Klausel von der Lösung des Lernenden, wenn die Musterlösung kein solches Statement enthält. 
 
 Nach dem Ausführen der Anfragen erhalten wir zwei Objekte vom Typ \verb|ResultSet|, nämlich \verb|r1| und \verb|r2|. Um zu prüfen, ob beide Ergebnismengen identisch sind, bedienen wir uns eine Funktion aus der Klasse \verb|QueryUtils|.\\
 \verb|boolean isIdenticalResultSets(ResultSet r1, ResultSet r2)|\\
 Die Methode geht recht intuitiv vor. Wir gehen iterativ alle Tupel durch und für jedes Tupel prüfen wir, Schritt für Schritt, ob alle Spalteneinträge identisch sind. Sind Spaltenlängen, Zeilenlängen oder Inhalte der Spalten nicht identisch, so sind beide Ergebnismengen ebenfalls nicht identisch. Die Reihenfolge der Tupel ist vorgegeben durch die \verb|ORDER BY|-Statements beider Anfragen. Die Reihenfolge der Spalten ist vorgegeben durch das \verb|SELECT|-Statement. Bereits im Schritt der Standardisierung wurden die \verb|SELECT|-Einträge sortiert, wenn ausdrücklich in der Aufgabenstellung notiert war, dass die Spaltenreihenfolge keine Rolle spielt. Aus diesen Gründen ist es legitim, die Ergebnismengen in dieser Art zu vergleichen.
 
-\subsection*{Prozess: Auswerten von Metainformationen} 
+\subsection*{Arbeitsschritt: Auswerten von Metainformationen} 
 
-Im Prozess 'Standardisierung' haben wir bereits erfahren, dass vor dem Anpassen der SQL-Anfrage, Metainformationen über diese abgespeichert werden. Dazu wird ein Objekt der Klasse \verb|MetaQueryInfo| erstellt. Dem Konstruktor wird die zu analysierende SQL-Anfrage in Form eines \verb|ZQuery| übergeben. Mit Hilfe verschiedener Hilfsfunktionen werden dann Informationen über die SQL-Anfrage gesammelt und gespeichert. Beispiele für diese Informationen sind: Anzahl der Verbunde, Größe der \verb|SELECT|-Liste, Anzahl der Tabellen unter \verb|FROM|, Anzahl von Unterabfragen, e.t.c. 
+Im Arbeitsschritt 'Standardisierung' haben wir bereits erfahren, dass vor dem Anpassen der SQL-Anfrage, Metainformationen über diese abgespeichert werden. Dazu wird ein Objekt der Klasse \verb|MetaQueryInfo| erstellt. Dem Konstruktor wird die zu analysierende SQL-Anfrage in Form eines \verb|ZQuery| übergeben. Mit Hilfe verschiedener Hilfsfunktionen werden dann Informationen über die SQL-Anfrage gesammelt und gespeichert. Beispiele für diese Informationen sind: Anzahl der Verbunde, Größe der \verb|SELECT|-Liste, Anzahl der Tabellen unter \verb|FROM|, Anzahl von Unterabfragen, etc.
 
 Die Informationen sind einzeln nicht interessant. Nur der Vergleich der Metainformationen von der Musterlösung mit der Lösung des Lernenden, geben Aufschluss über etwaige Fehler. Diesen Vergleich übernimmt eine statische Funktion aus der Klasse \verb|QueryUtils|.\\
 \verb|static String compareMetaInfos(MetaQueryInfo m1, MetaQueryInfo m2)|\\
@@ -150,11 +150,11 @@ Die JSP dienen dazu die erstellten Java-Klassen zu verbinden und zu steuern. Sie
 
 Zunächst sieht der Nutzer die Aufgabenstellung in Textform. Anschließend kann er erkennen, welche Tabellen für die Lösung der Aufgabe zur Verfügung stehen. Darunter befindet sich ein Eingabefeld (1), in dem der Nutzer nun seine Lösung in Form einer SQL-Anfrage stellen kann.
 
-Nachdem der Nutzer seine Lösung eingetragen und durch betätigen des \textit{submit}-Knopfes eingereicht hat, werden die Daten per POST-Methode wieder an die task.jsp gesendet. Die Seite wird wieder aufgebaut und nun um mehrere Ausgaben erweitert. Unter dem Textfeld zur Eingabe der Lösung findet der Nutzer nun seine geparste Eingabe (2). Weiterhin stößt die \textbf{task.jsp} den \verb|equalize| Prozess an. Unter der geparsten Eingabe sieht der Nutzer jetzt auch die standardisierte Eingabe (3). Ein Beispiel ist in Abbildung \ref{fig:screen_prog1} dargestellt.
+Nachdem der Nutzer seine Lösung eingetragen und durch betätigen des \textit{submit}-Knopfes eingereicht hat, werden die Daten per POST-Methode wieder an die task.jsp gesendet. Die Seite wird wieder aufgebaut und nun um mehrere Ausgaben erweitert. Unter dem Textfeld zur Eingabe der Lösung findet der Nutzer nun seine geparste Eingabe (2). Weiterhin stößt die \textbf{task.jsp} den \verb|equalize| Algorithmus an. Unter der geparsten Eingabe sieht der Nutzer jetzt auch - optional - die standardisierte Eingabe (3). Ein Beispiel ist in Abbildung \ref{fig:screen_prog1} dargestellt.
 
-\begin{figure}[h]
+\begin{figure}[H]
 \centering
-\includegraphics[scale=0.7]{Bilder/screen_prog1}
+\includegraphics[scale=0.6]{Bilder/screen_prog1}
 \caption{Eingabe (1), geparste Eingabe (2) und standardisierte Eingabe (3)}
 \label{fig:screen_prog1}
 \end{figure}
@@ -165,9 +165,9 @@ Im zweiten Block (5) lässt die \textbf{task.jsp} beide Anfragen auf der externe
 
 Im letzten und dritten Block (6) wird der Vergleich der Metainformationen ausgegeben. Außerdem wird dem Nutzer mitgeteilt, welche Teile seiner Anfrage mit denen der Musterlösung übereinstimmen. Diese Informationen erhält der Nutzer auch wenn bereits Schritt 1 zum Erfolg geführt hat. Mit diesen Informationen sollte es dem Nutzer möglich sein, einen neuen -- hoffentlich erfolgreichen -- Versuch zu starten.
 
-\begin{figure}[h]
+\begin{figure}[H]
 \centering
-\includegraphics[scale=0.7]{Bilder/screen_prog2}
+\includegraphics[scale=0.6]{Bilder/screen_prog2}
 \caption{Matchingstatus (4), Ergebnistupelvergleich (5) und Hinweise (6)}
 \label{fig:screen_prog2}
 \end{figure}

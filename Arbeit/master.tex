@@ -79,7 +79,18 @@
 \input{titlepage}
 %\include{dedication}
 
+
+
+\onehalfspacing
+\vspace*{10mm}
+{\huge \textbf{Zusammenfassung}}\\\\
+In der Lehre möchte man häufig SQL-Anfragen des Lernenden mit einer hinterlegten Musterlösung vergleichen, um deren Äquivalenz zu zeigen. Diese Arbeit beschäftigt sich mit dem semantischen Vergleich zweier SQL-Anfragen. Dabei wird ein Standardisierungsverfahren für SQL-Anfragen entwickelt, welches mit Hilfe des Datenbankschemas SQL-Anfragen legal umformt und dabei erreicht, dass semantisch gleiche Anfragen nach der Umformung auch syntaktisch gleich sind. Schlägt dieses Verfahren fehl so wird in einem weiteren Verfahren mit realen Daten geprüft, ob die Anfragen tatsächlich Ungleich sind. Diese Verfahren werden in einem Prototypen in Java implementiert und bilden eine Lernplattform, die dem Nutzer per Java Server Pages in einem Webbrowser zur Verfügung gestellt wird. Metadaten und Struktur der beiden SQL-Anfragen werden ausgewertet und der Nutzer erhält dadurch detailliertes Feedback, um so seine Fehler leichter zu bemerken.\newline\newline\newline\newline\newline
+{\huge \textbf{Abstract}}\\\\
+In university teaching one often want to compare a students sql query to a sample solution to show the equivalence of them. This thesis is about the semantic comparison of two SQL queries. We develop a method of standardization that legally rewrites a SQL query with the help of the database schema. If two SQL queries are semantically equal they shall be syntactically equal as well after the standardization. If this method fails we try to prove that the two queries are not semantically equal. Therefore we execute both queries on a real database and check their results. These methods are implemented in a Java prototype and form a learning platform that contains an interface built with Java Server Pages so the user can access it via web browser. The structure and meta information of the user query and the sample solution query are being compared and evaluated to give the user a detailed feedback on his query.
+
 \pagestyle{plain}
+
+\singlespacing
 \tableofcontents
 
 \onehalfspacing

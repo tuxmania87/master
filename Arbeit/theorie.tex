@@ -196,9 +196,9 @@ Da wir im \verb|SELECT|-Teil jegliche Wildcards durch Spaltennamen ersetzt haben
 Hatten die vorkommenden Tabellen im \verb|FROM|-Teil keine Tupelvariablen, so werden künstliche eingeführt.
 
 \begin{figure}[H]
-Eingabe: \\\verb|SELECT e.id, e.name, d.region FROM emp e, dep d WHERE e.depid = d.id|\\
+Eingabe: \\\verb|SELECT e.id, e.name, d.region FROM emp e, dep d|\\\verb|WHERE e.depid = d.id|\\
 
-Anpassung: \\\verb|SELECT a2.id, a2.name, a1.region FROM dep a1, emp a2 WHERE a2.depid = a1.id|\\
+Anpassung: \\\verb|SELECT a2.id, a2.name, a1.region FROM dep a1, emp a2|\\\verb|WHERE a2.depid = a1.id|\\
 \caption{Beispiel: Umwandlung des FROM-Teils einer SQL-Anfrage}
 \end{figure}
 
@@ -246,13 +246,13 @@ Im nächsten Schritt möchten wir auftretende \verb|NOT|-Operatoren entfernen. D
 \begin{tabular}{ll}
 Eingabe: & Umwandlung Teil 1:\\
 \verb|not ((a > 5)  and ((b > 5) or (c > 5)))| & \verb|(not(a > 5) or not((b > 5) or (c > 5)))|\\
-\includegraphics[scale=0.5]{Bilder/not_graph1.png} & \includegraphics[scale=0.5]{Bilder/not_graph2.png}\\
+\includegraphics[scale=0.45]{Bilder/not_graph1.png} & \includegraphics[scale=0.45]{Bilder/not_graph2.png}\\
 \end{tabular}
 
 \begin{tabular}{ll}
 Umwandlung Teil 2: & Umwandlung Teil 3:\\
 \verb|((a <= 5) or (not(b > 5) and not(c > 5)))| & \verb|((a <= 5) or ((b <= 5) and (c <= 5)))|\\
-\includegraphics[scale=0.5]{Bilder/not_graph3.png} & \includegraphics[scale=0.5]{Bilder/not_graph4.png}\\
+\includegraphics[scale=0.45]{Bilder/not_graph3.png} & \includegraphics[scale=0.45]{Bilder/not_graph4.png}\\
 \end{tabular}
 
 
@@ -315,7 +315,7 @@ Für alle folgenden Umwandlungen müssen bestimmte Voraussetzungen erfüllt werd
 
 \subsubsection*{ALL-Unterabfragen}
 
-\verb|ALL|-Unterabfragen haben immer das Muster: \verb|operand comparison_operator ALL (subquery)|. Dabei handelt es sich bei einem \verb|comparision_operator| um einen Operator aus der Menge: \verb|{=,<>,>,<,>=,<=}|. Die Unterabfrage \verb|subquery| liefert ein Attributen. Dann wird so verfahren wie bereits im letzten Abschnitt erklärt. Unser Ziel ist es, diese Unterabfrage, wenn möglich, zu ersetzen durch eine \verb|EXISTS|-Unterabfrage. Um diese Umwandlung nachzuvollziehen, wandeln wir zunächst die Unterabfrage mit \verb|ALL| in eine Unterabfrage mit \verb|ANY| um. Dazu ersetzen wir den \verb|comparison_operator| mit seinem gegenteiligem Operator. Folgende Paare sind jeweils voneinander gegenteilige Operatoren: \verb|{ {<,>=}, {>,<=}, {=,<>} }|. Danach ersetzen wir \verb|ALL| mit \verb|ANY| und kapseln die gesamte Unterabfrage mit einem \verb|NOT|. 
+\verb|ALL|-Unterabfragen haben immer das Muster:\\ \verb|operand comparison_operator ALL (subquery)|.\\ Dabei handelt es sich bei einem \verb|comparision_operator| um einen Operator aus der Menge: \verb|{=,<>,>,<,>=,<=}|. Die Unterabfrage \verb|subquery| liefert ein Attributen. Dann wird so verfahren wie bereits im letzten Abschnitt erklärt. Unser Ziel ist es, diese Unterabfrage, wenn möglich, zu ersetzen durch eine \verb|EXISTS|-Unterabfrage. Um diese Umwandlung nachzuvollziehen, wandeln wir zunächst die Unterabfrage mit \verb|ALL| in eine Unterabfrage mit \verb|ANY| um. Dazu ersetzen wir den \verb|comparison_operator| mit seinem gegenteiligem Operator. Folgende Paare sind jeweils voneinander gegenteilige Operatoren: \verb|{ {<,>=}, {>,<=}, {=,<>} }|. Danach ersetzen wir \verb|ALL| mit \verb|ANY| und kapseln die gesamte Unterabfrage mit einem \verb|NOT|. \newpage
 
 %\begin{figure}
 \begin{lstlisting}[mathescape]
@@ -439,10 +439,10 @@ $M_8$ & $\{\ A<X, A\leq X-\mathit{adjust}(A) \}$\\
 
 Beim Vergleich mit $>$ und $<$ ist es wichtig zu wissen, wie viele Nachkommastellen die numerischen Variablen $A$ und $B$ besitzen. Es sei $\mathit{places}(A)$ die Anzahl der Nachkommastellen der Zahl $A$. Dann bezeichnen wir mit $\mathit{adjust}(A) = 1 / (10^{\mathit{places}(A)})$, einen angepassten Wert, der sich nach der Stelligkeit der Variable A richtet.
 
-Betrachten wir als Beispiel ein Attribut \verb|salary|, welches als \verb|NUMERIC(4,2)| definiert ist. Wir wissen also, dass \verb|salary| zwei Nachkommastellen hat. Betrachten wir nun die Aussage \verb|salary >= 5|.
+Betrachten wir als Beispiel ein Attribut \verb|salary|, welches als \verb|NUMERIC(4,2)| definiert ist. Wir wissen also, dass \verb|salary| zwei Nachkommastellen hat. Betrachten wir nun die Aussage\\ \verb|salary >= 5|.
 Wir haben auf einer Seite eine Variable (\verb|salary|) und auf der anderen Seite eine numerische Konstante (\verb|5|). Dieses Muster passt also auf $M_7$ und auf $M_6$. In $M_7$ heißt es $A\geq X+\mathit{adjust}(A)$. Bezogen auf unser Beispiel ist \verb|A=salary| und \verb|x+adjust(salary)=5|. Wir berechnen also: 
 $$\mathit{adjust}(\mathit{salary}) = 1 / (10^{2}) = 1/100 = 0,01$$
-Wir erhalten also \verb|x=4,99|, weil \verb|x+0,01=5|. Somit ergänzen wir unsere Ausgangsformel \verb|salary >= 5| konjunktiv mit \verb|salary > 4,99|. Weiterhin muss jetzt wegen $M_6$, \verb|5 <= salary|, und wegen $M_5$, \verb|4,99 < salary|, hinzugefügt werden.
+Wir erhalten also \verb|x=4,99|, weil \verb|x+0,01=5|. Somit ergänzen wir unsere Ausgangsformel\\ \verb|salary >= 5| konjunktiv mit \verb|salary > 4,99|. Weiterhin muss jetzt wegen $M_6$, \verb|5 <= salary|, und wegen $M_5$, \verb|4,99 < salary|, hinzugefügt werden.
 
 Finden wir Ausdrücke mit $>,<,\leq,\geq$, welche als Argumente Variablen oder Konstanten haben, so unterscheiden wir also grundsätzlich drei Fälle.
 
@@ -800,7 +800,7 @@ SELECT t1.col1 FROM table1 t1, table2 t2 WHERE t1.id=t2.id
 
 \subsubsection*{OUTER JOIN}
 
-Bei einem \verb|OUTER JOIN| unterscheiden wir zwischen einem \verb|LEFT OUTER JOIN| und einem \verb|RIGHT OUTER JOIN|. Ein \verb|FULL OUTER JOIN| ist die Verbindung, also ein \verb|UNION| vom linken und rechten \verb|OUTER JOIN|. Wir betrachten daher exemplarisch zunächst den \verb|LEFT OUTER JOIN|, da sich die Betrachtungen dann äquivalent auf den rechten Verbund und damit auf den \verb|FULL OUTER JOIN| übertragen lassen.
+Bei einem \verb|OUTER JOIN| unterscheiden wir zwischen einem \verb|LEFT OUTER JOIN| und einem \\\verb|RIGHT OUTER JOIN|. Ein \verb|FULL OUTER JOIN| ist die Verbindung, also ein \verb|UNION| vom linken und rechten \verb|OUTER JOIN|. Wir betrachten daher exemplarisch zunächst den \verb|LEFT OUTER JOIN|, da sich die Betrachtungen dann äquivalent auf den rechten Verbund und damit auf den \\\verb|FULL OUTER JOIN| übertragen lassen.
 
 Zunächst ist zu klären, wie der \verb|OUTER JOIN| alternativ formuliert werden kann. Dazu gehen wir kurz darauf ein, was ein \verb|LEFT OUTER JOIN| genau macht. Die ``linke'' Tabelle wird vollständig aufgeführt. Dann wird jeder Eintrag der Tabelle sukzessive betrachtet. Gibt es im aktuellen Eintrag einen Verbundspartner in der ``rechten'' Tabelle (vorgegeben durch das Verbundskriterium), dann werden die Daten der ``rechten'' Tabelle an den Eintrag angehangen. Ist dies nicht der Fall, wird der Eintrag mit \textit{NULL} Einträgen aufgefüllt. 
 
@@ -1020,16 +1020,15 @@ Der Algorithmus ist nicht in unserem Programm implementiert. Wir beschreibe ihn 
 
 \subsection{verbale Beschreibung}
 
-Es sei $\mathcal{K}$ die Menge aller Attribute, die als Ausgabespalten unter \verb|SELECT| vorkommen.
-Wir fügen im nächsten Schritt nun alle Attribute $A$ zu $\mathcal{K}$ hinzu, für die $A=c$ bzw. $c=A$ in der \verb|WHERE|-Bedingung auftaucht. Hierbei wird, wie bereits erwähnt, vorausgesetzt, dass die Bedingung eine Konjunktion ist. Weiterhin ist zu bemerken, dass Unterabfragen vom Algorithmus ignoriert werden.
+Es sei $\mathcal{K}$ die Menge von Attributen, die für eine Ausgabezeile eindeutig definiert sind. Wir initialisieren diese Menge daher mit allen Ausgabespalten unter \verb|SELECT|. Ziel des Algorithmus ist es, für jede Tabelle unter \verb|FROM| einen Schlüssel zu haben, der sich in $\mathcal{K}$ befindet. Ist dies der Fall, so wissen wir sicher, dass keine Duplikate auftreten können, da jede Spalte durch ihren Schlüssel eindeutig identifiziert wird. 
 
-Solange eine der folgenden Aktionen zu einer Veränderung unseres Zustands führt, machen wir Folgendes:
-\begin{itemize}
-\item Wir fügen zur Menge $\mathcal{K}$ Attribute $A$ hinzu, wenn $A=B$ Teil der \verb|WHERE|-Bedingung ist und $B\in \mathcal{K}$ gilt.
-\item Enthält $\mathcal{K}$ einen Schlüssel einer Tupelvariable, so fügen wir alle Attribute dieser Variable hinzu.
-\end{itemize}
+Für fügen der Menge $\mathcal{K}$ zunächst alle Attribute A hinzu, wenn A an eine Konstante gebunden ist, also wenn im \verb|WHERE|-Teil $A=c$ oder $c=A$ auftaucht. Dabei gehen wir davon aus, dass unsere \verb|WHERE|-Formel eine Konjunktion ist. Das deckt sich gut mit unserem Programm, da wir eine KNF erzeugen.
 
-Enthält $\mathcal{K}$ nun von jeder Tupelvariable unter \verb|FROM| einen Schlüssel, so ist das \verb|DISTINCT| sicher überflüssig. Haben wir ein \verb|GROUP BY|-Statement so prüfen wir anstelle dessen, ob alle \verb|GROUP BY|-Spalten in $\mathcal{K}$ enthalten sind. Der folgende Algorithmus ist \cite{sql1folien} entnommen.
+Danach fügen wir alle Attribute $B$ der Menge $\mathcal{K}$ hinzu, wenn $B$ mit einem Attribut aus unserer Menge übereinstimmt, also $A=B$ und $A\in\mathcal{K}$. Haben wir nun einen Schlüssel einer Tupelvariable in $\mathcal{K}$, so ist klar, dass Ausgabezeilen für diese Tupelvariable immer eindeutig bestimmt sind und wir fügen alle Attribute dieser Tupelvariable hinzu. Diesen Prozess wiederholen wir solange bis sich $\mathcal{K}$ nicht mehr ändert. 
+
+Haben wir kein \verb|GROUP BY|-Statement, dann prüfen wir, ob von jeder Tupelvariable ein Schlüssel in $\mathcal{K}$ enthalten ist. Haben wir allerdings ein \verb|GROUP BY|-Statement, so prüfen wir ob alle \verb|GRPUP BY|-Spalten in $\mathcal{K}$ enthalten sind.
+
+Der folgende Algorithmus ist \cite{sql1folien} entnommen.
 
 \subsection{Algorithmus}
 
@@ -1083,17 +1082,19 @@ Im Detail gibt es allerdings einige Feinheiten zu beachten, wenn man die Anfrage
 
 \subsection{unterschiedliche DBMS}
 
-Obwohl es, in gewissen Abständen, zur Herausgabe eines Standards für SQL durch die ISO kommt, unterscheiden sich die existierenden DBMS bei der Handhabung und Implementation von SQL-Features. Die aktuellste Version des SQL-Standards ist zur Zeit: SQL:2008. Die verschiedenen Hersteller variieren diesen Standard allerdings, durch Entfernung oder Hinzufügen von Funktionalitäten. Diese Änderungen sind sowohl in der Data Definiton Langauge (DDL), der Data Manipulation Language (DML) als auch der Data Control Language (DCL) zu finden. Wir gehen im Folgenden auf einige Unterschiede ein. Da wir im Hinblick auf diese Arbeit gerne unabhängig von den Herstellern verschiedner DBMS sein wollen, ist für uns Interessant, welche Schnittmenge von Funktionalitäten alle DBMS gemeinsam haben. Nach heutigem Stand können wir sagen, dass DB2, MSSQL, MySQL, Oracle und Informix mindestens den SQL-92 Standard erfüllen. PostgreSQL hat zusätzlich noch das Konzept der Sichten, erlaubt aber nicht diese zu aktualisieren (update). Um diese Restriktion zu umgehen, führt PostgreSQL ein, nicht vom Standard vorgesehenes, Konzept von Regeln ein, auf das wir nicht näher eingehen wollen. Ist unsere Anfrage also SQL-92 konform, so können wir diese ohne Probleme auf allen gängigen DBMS ausführen.
+Obwohl es, in gewissen Abständen, zur Herausgabe eines Standards für SQL durch die ISO kommt, unterscheiden sich die existierenden DBMS bei der Handhabung und Implementation von SQL-Features. Die aktuellste Version des SQL-Standards ist zur Zeit: SQL:2008. Die verschiedenen Hersteller variieren diesen Standard allerdings, durch Entfernung oder Hinzufügen von Funktionalitäten. Diese Änderungen sind sowohl in der Data Definiton Langauge (DDL), der Data Manipulation Language (DML) als auch der Data Control Language (DCL) zu finden. Wir gehen im Folgenden auf einige Unterschiede ein. Da wir im Hinblick auf diese Arbeit gerne unabhängig von den Herstellern verschiedner DBMS sein wollen, ist für uns Interessant, welche Schnittmenge von Funktionalitäten alle DBMS gemeinsam haben. Nach heutigem Stand können wir sagen, dass DB2, MSSQL, MySQL, Oracle und Informix mindestens den SQL-92 Entry Level-Standard erfüllen. PostgreSQL hat zusätzlich noch das Konzept der Sichten, erlaubt aber nicht diese zu aktualisieren (update). Um diese Restriktion zu umgehen, führt PostgreSQL ein, nicht vom Standard vorgesehenes, Konzept von Regeln ein, auf das wir nicht näher eingehen wollen. Ist unsere Anfrage also SQL-92 konform, so können wir diese ohne Probleme auf allen gängigen DBMS ausführen.
 
 Betrachten wir nun ein paar Unterschiede im Detail. Von den, oben genannten, DBMS verstehen nur PostgreSQL, MySQL und Oracle das Schlüsselwort \verb|NATURAL JOIN| unter \verb|FROM|. \verb|FULL JOIN|, also die Vereinigung eines \verb|LEFT OUTER| und \verb|RIGHT OUTER| Join verstehen alle DBMS, bis auf MySQL. Alle DBMS verstehen aber das explizite kartesische  Produkt, \verb|CROSS JOIN|. Dieser Sachverhalt kommt uns entgegen, da wir versuchen im ersten Teil, der Standardisierung, alle Joins als kartesisches Produkt mit Auswahl zu formulieren, falls das möglich ist. Können wir bestimmte Joins nicht umschreiben, kann es zu Laufzeitfehlern kommen, welche später in diesem Kapitel behandelt werden.
 
-Unterschiede in der DDL behandeln wir nicht, da wir uns im, Rahmen dieser Arbeit, nur mit dem \verb|SELECT|-Statement beschäftigen. Ein wesentlicher Unterschied hierbei besteht in der Sortierung von Werten. Der Standard trifft keine Aussage darüber, wie \verb|NULL|-Werte im Verlgeich zu nicht-\verb|NULL|-Werten sortiert werden sollen. Der Standard beschreibt lediglich die Schlüsselwörter \verb|NULLS FIRST| sowie \verb|NULLS LAST|, um das Verhalten dementsprechend zu erzwingen. In der Implementation haben die Hersteller sich allerdings entscheiden müssen, was im default-Fall zu tun ist. In den Systemen PostgreSQL, DB2 und Oracle werden \verb|NULL|-Werte mit höherer Priorität als nicht-\verb|NULL|-Werte behandelt. Dementsprechend behandeln MSSQL, Informix und MySQL die \verb|NULL|-Werte niedriger, als die nicht-\verb|NULL|-Werte. Bei Oracle tritt zusätzlich die Besonderheit auf, dass ein leerer String die gleiche Priorität hat, wie ein \verb|NULL|-Wert. 
+Unterschiede in der DDL behandeln wir nicht, da wir uns im, Rahmen dieser Arbeit, nur mit dem \verb|SELECT|-Statement beschäftigen. Ein wesentlicher Unterschied hierbei besteht in der Sortierung von Werten. Der Standard trifft keine Aussage darüber, wie \verb|NULL|-Werte im Verlgeich zu nicht-\verb|NULL|-Werten sortiert werden sollen. Der Standard beschreibt lediglich die Schlüsselwörter \verb|NULLS FIRST| sowie \verb|NULLS LAST|, um das Verhalten dementsprechend zu erzwingen. In der Implementation haben die Hersteller sich allerdings entscheiden müssen, was im default-Fall zu tun ist. In den Systemen PostgreSQL, DB2 und Oracle werden \verb|NULL|-Werte mit höherer Priorität als nicht-\verb|NULL|-Werte behandelt. Dementsprechend behandeln MSSQL, Informix und MySQL die \verb|NULL|-Werte niedriger, als die nicht-\verb|NULL|-Werte. Bei Oracle tritt zusätzlich die Besonderheit auf, dass ein leerer String identifiziert wird mit einem \verb|NULL|-Wert.
 
 Weitere Unterschiede zwischen den DBMS treten auf in Bezug auf das Schlüsselwort \verb|LIMIT n|, welches bewirkt, dass nur die ersten $n$ Datensätze ausgegeben werden. Lediglich MySQL und PostgreSQL kennen dieses Schlüsselwort. Bei allen anderen DBMS muss diese Anforderung durch Verwendung der \textit{row-number} umgesetzt werden. 
 
-Weitere Unterschiede haben die DBMS bei Verwendung vom \verb|BOOLEAN|-Datentyp, dem \verb|UNIQUE|-Constraint, der Konkatenation von Strings, dem Schlüsselwort \verb|LOCALTIMESTAMP|, der Funktion \verb|SUBSTRING| und dem Datentyp \verb|TIMESTAMP|. Es würde zu weit führen alle Unterschiede genau zu betrachten. Nachzulesen sind die genauen Unterschiede unter \cite{sqldiff1}
+Weitere Unterschiede haben die DBMS bei Verwendung vom \verb|BOOLEAN|-Datentyp, dem \verb|UNIQUE|-Constraint, der Konkatenation von Strings, dem Schlüsselwort \verb|LOCALTIMESTAMP|, der Funktion \verb|SUBSTRING| und dem Datentyp \verb|TIMESTAMP|. Es würde zu weit führen alle Unterschiede genau zu betrachten. Nachzulesen sind die genauen Unterschiede unter \cite{sqldiff1}.
 
-Wichtig für unsere Arbeit ist, dass wir keine Probleme zu erwarten haben, wenn eine Anfrage SQL-92 konform ist. Sollte dies nicht der Fall sein werden wir, mit großer Wahrscheinlichkeit, einen Laufzeitfehler oder einen Fehler beim Parsen der Anfrage erhalten.
+Wichtig für unsere Arbeit ist, dass wir keine Probleme zu erwarten haben, wenn eine Anfrage SQL-92 Entry Level konform ist. Sollte dies nicht der Fall sein werden wir, mit großer Wahrscheinlichkeit, einen Laufzeitfehler oder einen Fehler beim Parsen der Anfrage erhalten.
+
+Haben wir dennoch eine SQL-Anfrage, die nicht von allen DBMS gleichartig verstanden wird, so können wir die Unterschiede mit unserem Programm gut beobachten. Aufgrund der Programmstruktur, die in Kapitel \ref{chap:praxis} erläutert ist, senden wir die Anfrage an alle angeschlossen externen DBMS. Tritt dabei ein Laufzeitfehler auf, so wird dieser an den Nutzer weitergereicht. So können wir testen, auf welchen DBMS unsere Anfrage ausgeführt werden kann und auf welchen nicht. Weiterhin kann es möglich sein, dass eine Anfrage von keinem der angeschlossenen DBMS verstanden wird. Dann erhält der Nutzer die Fehlermeldungen aller DBMS. Dabei ist es möglich, dass bestimmte DBMS exaktere oder verständlichere Fehlermeldungen liefert als andere und somit wird potentiell das Verständnis der Fehlermeldungen für den Nutzer erhöht.
 
 \subsection{Visualisierung von Ergebnistupeln}
 
@@ -1105,11 +1106,13 @@ Interessant sind dabei sowohl die Reihenfolge der Spalten, als auch die Sortieru
 
 Für eine eindeutige Reihenfolge der Tupel haben wir allerdings bisher nicht gesorgt. Wir müssen hier mehrere Fälle betrachten. 
 
-Enthält die Musterlösung und die Lösung des Lernenden kein \verb|ORDER BY|, müssen wir uns um die Reihenfolge nicht weiter kümmern, da jedes DBMS deterministisch eine Reihenfolge auswählen wird. Diese Reihenfolge ist dann insbesondere für beide Anfragen identisch, da deterministisch.
+Enthält die Musterlösung und die Lösung des Lernenden kein \verb|ORDER BY|, müssen wir künstlich für eine Sortierreihenfolge sorgen, da der Optimierer des DBMS entscheidet in welcher Reihenfolge er die Spalten ausgibt. In eine solchen Fall sortieren wir jede Anfrage inkrementell nach deren Spalten, dass bedeutet wir sortieren in erster Instanz nach Spalte 1, dann nach Spalte 2 und so weiter. Da die Spalten jeweils in korrekter Reihenfolge vorliegen, erhalten wir genau dann einen Treffer, wenn in beiden Anfragen jeweils die gleiche Tupel vorhanden sind.
 
 Der zweite Fall zeichnet sich dadurch aus, dass die Musterlösung kein \verb|ORDER BY| enthält, die Lösung des Lernenden enthält aber ein solches. Wir können dann davon ausgehen, dass die Reihenfolge nicht von Bedeutung ist, denn sonst würde die Musterlösung ein \verb|ORDER BY| enthalten. Wir könnten nun entweder das \verb|ORDER BY| aus der Lösung des Lernenden entfernen, oder das \verb|ORDER BY| des Lernenden in die Musterlösung einfügen. Im letzten Fall kann es Probleme geben, wenn die Lösung des Lernenden Spalten im \verb|ORDER BY| enthält, die in der Musterlösung nicht vorkommen. Wir entscheiden uns daher zur Entfernung des \verb|ORDER BY| aus der Lösung des Lernenden, bevor wir die Anfragen auf der realen Datenbank ausführen. Der Lernende erhält natürlich dennoch einen Hinweis, dass er ein \verb|ORDER BY| verwendet, die Musterlösung aber nicht. Solche Informationen werden ja bereits im Preprocessing gesammelt und gehen dadurch nicht verloren.
 
-Der dritte Fall wäre dann genau umgekehrt. Hier hat also die Musterlösung ein \verb|ORDER BY|-Statement, die Lösung des Lernenden aber nicht. Hier ist offensichtlich eine Reihenfolge gewünscht. Wir werden daher keine Anpassung in einem solchen Fall durchführen. Unterscheiden sich die Musterlösung und die Lösung des Lernenden nur durch das \verb|ORDER BY|-Statement, erhält der Lernende ohnehin eine Meldung, dass der Rest der Anfrage übereinstimmt, so wie im Bereich Preprocessing erläutert.
+Im dritten Fall haben wir in der Musterlösung ein \verb|ORDER BY| und in der Lösung des Lernenden keines. Wir wollen in diesem Schritt herausfinden, ob die beiden Anfragen unterschiedliche Lösungen erzeugen. Uns ist also nicht wichtig, ob sie gleich sind sondern ob sie nicht gleich sind. Dazu ist zu sagen, dass wir im dritten Fall dem Lernenden immer melden müssen, dass seine Anfrage nicht passt und auch nicht die gleichen Tupel liefert, da das \verb|ORDER BY| offensichtlich erwünscht war. Es kann durch Zufall sein, dass der Optimierer genau die Reihenfolge der Zeilen wählt, die die Musterlösung explizit wählt. Dies ist aber nicht vom Lernenden explizit angegeben, daher muss hier ein Hinweis erscheinen.
+
+Der dritte Fall wäre dann genau umgekehrt. Hier hat also die Musterlösung eine \verb|ORDER BY| Klausel, die Lösung des Lernenden aber nicht. Hier ist offensichtlich eine Reihenfolge gewünscht. Wir werden daher keine Anpassung in einem solchen Fall durchführen. Unterscheiden sich die Musterlösung und die Lösung des Lernenden nur durch das \verb|ORDER BY|-Statement, erhält der Lernende ohnehin eine Meldung, dass der Rest der Anfrage übereinstimmt, so wie im Bereich Preprocessing erläutert.
 
 Der letzte Fall ist für uns nicht relevant. In beiden Anfragen befindet sich dann ein \verb|ORDER BY| und daher können wir auch keine Anpassungen vornehmen. 
 
@@ -1123,10 +1126,10 @@ Bei der Ausführung von SQL-Anfragen auf realen Datenbanken können verschieden 
 
 Einer der typischsten Fehler ist der Syntaxfehler. Der Lernende hat also eine Lösung angegeben, die nicht in das Syntaxschema einer SQL-Anfrage passt. Die Hauptursachen für solche Fehler sind falsche Anordnung von Schlüsselwörtern oder gar >>Rechtschreibfehler<<. Jedoch kann es auch sein, dass der Lernende Syntax benutzt hat, welche nur ein bestimmtes SQL-System versteht, \mbox{z. B.} PostgreSQL. Wird die Anfrage aber auf einer Oracle Datenbank ausgeführt, versteht das DBMS diese Anfrage eventuell nicht und es kommt zu einem Syntaxfehler, der auf einem anderen DBMS keiner wäre. Wir könnten den Fehler verhindern, in dem wir in einem vorherigen Schritt prüfen, ob die Anfrage SQL-92 konform ist. Eine andere Lösung ist es, zu jeder Anfrage zu speichern, für welches konkretes DBMS sie gedacht ist. Dann könnte man sich sicher sein, dass der Syntaxfehler auch einen Fehler für alle SQL-Systeme darstellt. Wenn man keine gesonderte Behandlung in Betracht zieht, so kann man den Fehler, wie üblich, dem Nutzer anzeigen mit dem Vermerk, dass der Syntaxfehler eventuell zu DBMS spezifisch ist. In unserem Prototypen reichen wir derartige Syntaxfehler an den Nutzer weiter.
 
-Ein weiterer Fehlertyp ist der semantische Fehler. Wie bereits, in der Einführung dieser Arbeit, erwähnt, ist dies ein Fehlertyp, der schwer zu entdecken ist. Typische Vertreter sind inkonsistente Bedingungen, also \verb|WHERE|-Bedingungen, die entweder immer die leere Menge liefern, oder die immer die gesamten Tabellen als Ergebnistupel liefern, da die \verb|WHERE|-Bedingung allgemeingültig ist (Tautologie). Die eben genannten Fälle erkennt unser Programm, da es mit der Methode \verb|eval| die Ausdrücke so weit möglich auswertet. Andere semantische Fehler, wie unnötige JOINs und unnötiges DISTINCT wurden bereits im Kapitel \ref{chap:theorie} behandelt. Unser Programm wird davon allerdings nichts umsetzen, da es einen größeren Aufwand darstellt diese Methoden zu implementieren. Es gibt weitere semantische Fehler, die unser Programm nicht berücksichtigt. Hier sei verwiesen auf die Arbeit \cite{brass2}. 
+Ein weiterer Fehlertyp ist der semantische Fehler. Wie bereits, in der Einführung dieser Arbeit, erwähnt, ist dies ein Fehlertyp, der schwer zu entdecken ist. Typische Vertreter sind inkonsistente Bedingungen, also \verb|WHERE|-Bedingungen, die entweder immer die leere Menge liefern, oder die immer die gesamten Tabellen als Ergebnistupel liefern, da die \verb|WHERE|-Bedingung allgemeingültig ist (Tautologie). Die eben genannten Fälle erkennt unser Programm im Allgemeinen nicht, da diese Probleme unentscheidbar sind. Mit der Methode \verb|eval| werten wir dennoch die Ausdrücke in unserem Parserbaum so weit wie möglich aus und erhalten eventuell so auch eine leere oder unerfüllbare \verb|WHERE|-Klausel. Andere semantische Fehler, wie unnötige JOINs und unnötiges DISTINCT wurden bereits im Kapitel \ref{chap:theorie} behandelt, finden aber nicht Einzug in unser Programm. Es gibt weitere semantische Fehler, die unser Programm nicht berücksichtigt. Hier sei verwiesen auf die Arbeit \cite{brass2}. 
 
 In Hinblick auf syntaktische und semantische Fehler sollten wir uns fragen, welche Anfrage wir, zur Ausführung auf der realen Datenbank, einsetzen wollen. Zur Wahl stehen dabei die Anfrage, die der Lernende eingibt und die Anfrage, die unser Programm im ersten Schritt durch Standardisierung erzeugt. 
 
-Da wir, bei der Ausführung der Anfragen auf realen Datenbanken, darauf bedacht sind, so wenig Fehler wie möglich zu erzeugen, ist es am sinnvollsten, die standardisierte Anfrage zu verwenden. Der Lernende bekommt in jedem Fall Hinweise, wenn bei der Standardisierung semantische oder syntaktische Besonderheiten gefunden wurden. hat der Student \mbox{z. B.} eine Tautologie als \verb|WHERE|-Bedingung aufgeschrieben, so kann das unser Programm erkennen. Der Lernende erhält den Hinweis, dass seine Bedingung überflüssig ist und auf der realen Datenbank lassen wir dann, die schon verkürzte Fassung laufen. 
+Da wir, bei der Ausführung der Anfragen auf realen Datenbanken, darauf bedacht sind, so wenig Fehler wie möglich zu erzeugen, ist es am sinnvollsten, die standardisierte Anfrage zu verwenden. Der Lernende bekommt in jedem Fall Hinweise, wenn bei der Standardisierung semantische oder syntaktische Besonderheiten gefunden wurden. Hat der Student \mbox{z. B.} eine Tautologie als \verb|WHERE|-Bedingung aufgeschrieben und kann unser Programm das erkennen, so erhält der Lernende einen Hinweis, dass seine Bedingung überflüssig ist und auf der realen Datenbank lassen wir dann, die schon verkürzte Fassung laufen. 
 
 Ein letzter Fehlertyp bilden die Laufzeitfehler. Da wir solche Fehler nur schwer oder gar nicht im Vorfeld erkennen können, sind wir gezwungen die Fehlermeldung an den Lernenden weiterzugeben. Diese Fehlermeldung werden vom konkreten DBMS erzeugt und können mitunter unverständlich sein. Jedes DBMS hat dabei auch eine eigene Formulierung für die gleichen Laufzeitfehler. Es bietet sich daher an, eine Art Wörterbuch für Fehlermeldungen zu verwenden. Tritt ein bestimmter Fehler in einem DBMS auf, so wird dieser >>übersetzt<< in eine, von uns standardisierte, Fehlermeldung. So können wir sicher sein, dass der Student beim gleichen Fehler, die gleiche Meldung erhält, unabhängig vom DBMS.
