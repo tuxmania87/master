@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.3-1.40.12 (MiKTeX 2.9) (preloaded format=pdflatex 2012.8.27)  16 AUG 2013 15:23
+This is pdfTeX, Version 3.1415926-2.3-1.40.12 (MiKTeX 2.9) (preloaded format=pdflatex 2012.8.27)  16 AUG 2013 15:33
 entering extended mode
 **master.tex
 (E:\Users\Robert\Desktop\Arbeit\master\Arbeit\master.tex
@@ -1914,25 +1914,21 @@ Underfull \hbox (badness 10000) in paragraph at lines 932--934
 
  []
 
-[66]
-
-LaTeX Warning: Citation 'partsuppdb' on page 67 undefined on input line 946.
-
-<Bilder/joinelem_g1.png, id=870, 611.28375pt x 354.32375pt>
+[66] <Bilder/joinelem_g1.png, id=871, 611.28375pt x 354.32375pt>
 File: Bilder/joinelem_g1.png Graphic file (type png)
 
 <use Bilder/joinelem_g1.png>
 Package pdftex.def Info: Bilder/joinelem_g1.png used on input line 962.
 (pdftex.def)             Requested size: 244.50917pt x 141.72697pt.
  [67]
-<Bilder/joinelem_g2.png, id=885, 644.4075pt x 351.3125pt>
+<Bilder/joinelem_g2.png, id=887, 644.4075pt x 351.3125pt>
 File: Bilder/joinelem_g2.png Graphic file (type png)
 
 <use Bilder/joinelem_g2.png>
 Package pdftex.def Info: Bilder/joinelem_g2.png used on input line 970.
 (pdftex.def)             Requested size: 257.75844pt x 140.5225pt.
 
-<Bilder/joinelem_g3.png, id=886, 271.0125pt x 344.28625pt>
+<Bilder/joinelem_g3.png, id=888, 271.0125pt x 344.28625pt>
 File: Bilder/joinelem_g3.png Graphic file (type png)
 
 <use Bilder/joinelem_g3.png>
@@ -1951,7 +1947,7 @@ Kapitel 5.
 (E:\Users\Robert\Desktop\Arbeit\master\Arbeit\praxis.tex [77
 
 ] [78] [79]
-<Bilder/execPlan.png, id=987, 784.9325pt x 590.205pt>
+<Bilder/execPlan.png, id=989, 784.9325pt x 590.205pt>
 File: Bilder/execPlan.png Graphic file (type png)
 
 <use Bilder/execPlan.png>
@@ -1959,7 +1955,7 @@ Package pdftex.def Info: Bilder/execPlan.png used on input line 93.
 (pdftex.def)             Requested size: 306.12244pt x 230.17902pt.
  [80] [81 <E:/Users/Robert/Desktop/Arbeit/master/Arbeit/Bilder/execPlan.png>] [
 82] [83]
-<Bilder/screen_prog1.png, id=1028, 747.79375pt x 323.2075pt>
+<Bilder/screen_prog1.png, id=1030, 747.79375pt x 323.2075pt>
 File: Bilder/screen_prog1.png Graphic file (type png)
 
 <use Bilder/screen_prog1.png>
@@ -1967,7 +1963,7 @@ Package pdftex.def Info: Bilder/screen_prog1.png used on input line 157.
 (pdftex.def)             Requested size: 448.6797pt x 193.926pt.
  [84 <E:/Users/Robert/Desktop/Arbeit/master/Arbeit/Bilder/screen_prog1.png (PNG
  copy)>]
-<Bilder/screen_prog2.png, id=1034, 734.745pt x 773.89125pt>
+<Bilder/screen_prog2.png, id=1036, 734.745pt x 773.89125pt>
 File: Bilder/screen_prog2.png Graphic file (type png)
 
 <use Bilder/screen_prog2.png>
@@ -2002,23 +1998,14 @@ Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 135.
 Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 135.
 Package rerunfilecheck Info: File `master.out' has not changed.
 (rerunfilecheck)             Checksum: D14746B69CC61A9574A67C9C0C859A34;4349.
-
-
-LaTeX Warning: There were undefined references.
-
-
-Package biblatex Warning: Please (re)run BibTeX on the file(s):
-(biblatex)                master
-(biblatex)                and rerun LaTeX afterwards.
-
 Package logreq Info: Writing requests to 'master.run.xml'.
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 135.
  ) 
 Here is how much of TeX's memory you used:
- 28555 strings out of 494045
- 511838 string characters out of 3145966
+ 28557 strings out of 494045
+ 511874 string characters out of 3145966
  756860 words of memory out of 3000000
- 30820 multiletter control sequences out of 15000+200000
+ 30821 multiletter control sequences out of 15000+200000
  84523 words of font info for 115 fonts, out of 3000000 for 9000
  719 hyphenation exceptions out of 8191
  65i,12n,71p,1941b,1823s stack positions out of 5000i,500n,10000p,200000b,50000s
@@ -2038,9 +2025,9 @@ fb><E:/Users/Robert/AppData/Roaming/MiKTeX/2.9/fonts/type1/public/txfonts/txsyc
  Files (x86)/MiKTeX 2.9/fonts/type1/urw/times/utmb8a.pfb><C:/Program Files (x86
 )/MiKTeX 2.9/fonts/type1/urw/times/utmr8a.pfb><C:/Program Files (x86)/MiKTeX 2.
 9/fonts/type1/urw/times/utmri8a.pfb>
-Output written on master.pdf (91 pages, 958201 bytes).
+Output written on master.pdf (91 pages, 959022 bytes).
 PDF statistics:
- 1207 PDF objects out of 1440 (max. 8388607)
- 394 named destinations out of 1000 (max. 500000)
+ 1211 PDF objects out of 1440 (max. 8388607)
+ 395 named destinations out of 1000 (max. 500000)
  625 words of extra memory for PDF output out of 10000 (max. 10000000)
 
