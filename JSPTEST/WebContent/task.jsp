@@ -94,7 +94,7 @@
 				}
 		%>
 		<h2>
-			your parsed statement
+			your parsed statement - <span style="text-decoration: underline; cursor: pointer;" onclick="togglediv();">details</a>
 		</h2>
 		<div class="description">
 			<%
@@ -107,8 +107,9 @@
 		</div>
 
 
-		<h2>your equalized statement</h2>
-		<div class="description">
+		<div id="equalized">
+		<h2>your standardized statement</h2>
+		<div class="description" >
 			<%
 				if (q != null) {
 						out.println(q);
@@ -116,6 +117,7 @@
 						out.println("Error while parsing your statement. Check warnings below.");
 					}
 			%>
+		</div>
 		</div>
 
 
@@ -176,7 +178,7 @@
 				if (firststep_matching) {
 					out.println("<span style=\"color:green;font-weight:bold;font-size:large;\">SQL-Equalizer could already match your solution with the sample solutin. No need for test real data.</span><br>");
 				} else if (t.externalDbs.length > 0){
-					out.println("Your sql query will be checked with real data now. proceeding.....<br>");
+					out.println("Your sql query will be checked with real data now. In progress.....<br>");
 					
 					//check on real data
 					for (int i = 0; i < t.externalDbs.length; i++) {
@@ -226,7 +228,7 @@
 										t.externalDbs[i]);
 							} catch (Exception e) {
 								out.println("Error while executing your query on databse with real data:<br>"
-										+ "<span style='color:red;font-weight:bold;>"+ e.toString() + "</span>");
+										+ "<span style='color:red;font-weight:bold;'>"+ e.toString() + "</span>");
 							}
 							if (r1 != null && r2 != null) {
 								try {
@@ -316,20 +318,19 @@
 				}
 			%>
 		
-		<% if(error == null) { %>
+		<% if(error == null) { 
 			
-		<h3>Important Notifications</h3>
-		SQL-Equalizer compared each single part of the queries and detected some problems:<br>
-		<% out.println(compareAfter+"<br>"+compare); %>
+		out.println("<h3>Important Notifications</h3>");
+		out.println("SQL-Equalizer compared each single part of the queries and detected some problems:<br>");
+		out.println(compareAfter+"<br>"+compare); 
 		
-		<% } %>
+		if(request.getSession().getAttribute("dozent") != null)
+			out.println(qh_ss.after.currentQuery);
+		
+		
+		 }
 				
-				<%
-				
-				if(request.getSession().getAttribute("dozent") != null)
-					out.println(qh_ss.after.currentQuery);
-				
-				%>
+		%>
 					
 		</div>
 		

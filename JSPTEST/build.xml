@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<project name="sqlequalizer-compileanddeploy" default="default" basedir="."> 
+
+<property name="tomcat.deploydir" value="E:/Users/Robert/Downloads/apache-tomcat-6.0.37-windows-x64/apache-tomcat-6.0.37/webapps"/>
+
+<target name="default" depends="setup,compile,buildwar,deploy"></target>
+<path id="sqlequalizer.classpath">
+		<pathelement location="${basedir}/WebContent/WEB-INF/classes/"/> 
+		<fileset dir="${basedir}/WebContent/WEB-INF/lib">
+        <include name="*.jar"/>
+      </fileset>
+ </path>
+ 
+ 
+<target name="setup">
+    <mkdir dir="dist" />
+    <echo>Copying web into dist</echo>
+    <!--<copydir dest="dist/WebContent" src="WebContent" />-->
+	<copy todir="dist/WebContent" force="true">
+	  <fileset dir="WebContent" />
+	</copy>
+	<copy todir="dist/WebContent/WEB-INF/lib" force="true">
+	  <fileset dir="${basedir}/WebContent/WEB-INF/lib" />
+	</copy>
+
+</target>
+
+
+
+
+<target name="compile">
+    <delete dir="dist/WebContent/WEB-INF/classes" />
+    <mkdir dir="dist/WebContent/WEB-INF/classes" />
+    <javac destdir="dist/WebContent/WEB-INF/classes" srcdir="src">
+        <classpath refid="sqlequalizer.classpath" />
+           
+    </javac>
+    <copy todir="dist/WebContent/WEB-INF/classes">
+        <fileset dir="src">
+            <include name="**/*.properties" />
+            <include name="**/*.xml" />
+        </fileset>
+    </copy>
+</target>
+
+<target name="buildwar">
+    <copy file="${basedir}/WebContent/WEB-INF/classes/dbsettings.txt" todir="dist/WebContent/WEB-INF/classes/" />
+	<copy todir="dist/WebContent/WEB-INF/classes" >  
+        <fileset dir="${basedir}/WebContent/WEB-INF/classes" includes="**"/>  
+	</copy>
+    <war basedir="${basedir}/dist/WebContent" destfile="My.war"
+     webxml="${basedir}/dist/WebContent/WEB-INF/web.xml">
+        <!--<exclude name="WEB-INF/**" />-->
+        <webinf dir="${basedir}/dist/WebContent/WEB-INF/">
+            <include name="**/*.jar" />
+        </webinf>
+    </war>
+</target>
+
+<target name="deploy">
+    <copy file="My.war" todir="${tomcat.deploydir}" />
+</target>
+
+</project>

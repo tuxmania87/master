@@ -27,20 +27,22 @@ if( !request.getRequestURI().split("/")[request.getRequestURI().split("/").lengt
 <link rel="stylesheet" type="text/css" href="style.css" />
 <script type="text/javascript">
 
-function toggle(elem) {
-	alert(elem.parentNode.innerHTML);
-	alert(elem.parentNode.nextSibiling.nodeType);
-	
-	if(elem.style.visibility == "none") {
-		elem.style.visibility = "visible";
+var displayed = true;
+
+function togglediv() {
+	if(displayed) {
+		document.getElementById("equalized").style.display = "none";
 	} else {
-		elem.style.visibility = "none";
+		document.getElementById("equalized").style.display = "block";
 	}
+	displayed = !displayed;
 }
 
 function schemaNameChanged(elem) {
 	var id = elem.parentNode.parentNode.firstChild.innerHTML;
 	
 }
+
+window.onload=function(){ togglediv(); };
 
 </script>

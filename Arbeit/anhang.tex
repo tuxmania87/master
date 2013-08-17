@@ -1,1 +1,70 @@
- 
+\section{Benutzerhandbuch} 
+
+Das Benutzerhandbuch ist für sowohl für Linux als auch für Windows geeignet. Befolgen Sie bitte strikt die Installationsanweisungen um einen korrekten Ablauf der Software zu gewährleisten.\\
+
+Entpacken Sie das Paket sqlequalizer.zip in ein beliebiges Verzeichnis. Wir bezeichnen dieses Verzeichnis im Folgenden als \textbf{basedir}\\
+
+\subsection{Installation}
+
+\subsubsection{Vorbereitung}
+
+Der SQL-Equalizer benötigt verschiedene Software um korrekt zu funktionieren. Installieren Sie bitte zunächst einen aktuellen Tomcat-Server. Die Software und Installationsanleitung für einen Tomcat-Server finden Sie unter \url{http://tomcat.apache.org/}.\\
+
+Um die Software zu übersetzen benötigen Sie außerdem ein Java Development Kit, zu finden unter \url{http://www.oracle.com/technetwork/java/javase/downloads/index.html}. Um einen automatisierten Ablauf zu gewährleisten, installieren Sie bitte Apache Ant, zu finden unter \url{http://ant.apache.org/}.\\
+
+\subsubsection{Installation der Datenbank}
+
+Der SQL-Equalizer unterstützt MySQL, PostgreSQL und Oracle DB. Wir gehen davon aus, dass die von ihnen präferierte Datenbank bereits zur Verfügung steht.\\
+
+Um die interne Datenbank für den SQL-Equalizer zu installieren, verwenden sie die Datei \verb|database.sql| im basedir-Verzeichnis.\\
+
+öffnen Sie die Datei \verb|Connector.java|, die sie unter \url{BASEDIR/src/de/unihalle/sqlequalizer} finden. Ab Zeile 44 finden Sie jeweils kommentierte Bereich, die für PostgreSQL und Oracle DB stehen. Wenn sie MySQL verwenden wollen, dann müssen sie nichts ändern. Möchten sie eine der anderen Datenbanken verwenden, so kommentieren sie die entsprechenden Bereich aus.\\
+
+\subsubsection{Installation der Software}
+
+Wir nennen das Verzeichnis, in dem der Tomcat-Server installiert ist, als \textbf{tomcatdir}.
+Öffnen Sie Datei \verb|build.xml| im basedir-Verzeichnis und ändern Sie die Zeile 4. Tragen sie dort unter \verb|value| das Verzeichnis \verb|tomcatdir/webapps| ein. Achten Sie darauf, dass die Zeichenkette tomcatdir, durch das korrekte Verzeichnis ersetzt worden ist.\\
+
+Öffnen Sie ein Terminal.\\
+Windows: Drücken Sie die Windows-Taste und 'r' gleichzeitig. Tippen Sie das Wort 'cmd' ein und drücken Enter.\\
+Linux: Benutzen Sie die Shell.\\
+
+Navigieren Sie in das basedir-Verzeichnis durch Verwendung des 'cd'-Kommandos. Dort angekommen, tippen sie 'ant' in das Terminal ein und bestätigen den Befehl mit Enter. Haben sie Apache Ant korrekt installiert, dann startet nun der Installationsprozess. Am Ende des Prozesses sollte eine sqlequalizer.war Datei erstellt worden sein. Diese wurde auch automatisch in das tomcatdir/webapps Verzeichnis kopiert, so dass sie bereits 'deployed' ist. 
+
+Navigieren sie mit ihrem Webbrowser folgende URL an: \url{http://hostname:8080/sqlequalizer/}. Sie sehen jetzt einen Loginbildschirm. Loggen sie sich mit den Daten: admin/secure1234 ein. Wenn sie sich einloggen konnten, ist die Softwareinstallation abgeschlossen.
+
+\subsection{Admin Control Panel}
+
+Im folgenden wir beschrieben, wie neue Aufgaben in die Datenbank eingepflegt werden können. Dabei sind die einzelnen Schritte bereits in der korrekten Reihenfolge aufgeführt.
+
+\subsection{Datenbankschema erstellen}
+
+Navigieren Sie auf das 'admin control panel'. Betätigen Sie den Link 'add database schema'. Daraufhin erhält die Tabelle ein weiteres Schema, was mit \verb|Empty, Empty| markiert ist. Klicken Sie auf 'edit', um das Schema anzupassn. Die erste Spalte bezeichnet den Namen des Datenbankschemas. Damit lässt es sich bei der Zuordnung zu einer Aufgabe leichter zuordnen. In der zweiten Spalte befindet sich ein Eingabefeld. Tragen sie hier das Schema ein. Verwenden Sie Dabei \verb|CREATE TABLE|-Anweisungen, die mit Semikolon (;) abgetrennt sind. Betätigen Sie danach den 'save'-Knopf.
+
+\subsection{Externe Datenbank anbinden}
+
+Die SQL-Anfragen des Lernenden und die Musterlösung werden auf externen Datenbanken zur Kontrolle ausgeführt. Um eine externe Datenbank anzubinden, navigieren sie im Admin Control Panel auf den Link 'external databases'. Klicken Sie nun auf 'add external database' und anschließend auf 'edit'.  Tragen Sie Daten entsprechend der folgenden Tabelle in die Felder ein.
+
+\begin{tabular}{|l|p{14cm}|}\hline
+Spatel 1 & Tragen Sie hier den Hostnamen und den Port des DBMS getrennt mit Doppelpunkt (:) ein. Der Port muss auch angegeben werden, wenn es der Standard-Port ist.\\\hline
+Spatel 2 & Hier wird der Name der Datenbank eingetragen.\\\hline
+Spatel 3 & Tragen Sie hier ein, was sie für ein DBMS benutzen. Zur Auswahl stehen MySQL, PostgreSQL und Oracle DB.\\\hline
+Spatel 4 & Hier tragen sie den Benutzernamen für den Zugriff auf die Datenbank ein.\\\hline
+Spatel 5 & Hier tragen sie das Passwort für den Zugriff auf die Datenbank ein.\\\hline
+\end{tabular}
+
+Es muss darauf geachtet werden, dass die externe Datenbank bereits Tabellen mit Daten enthalten muss. Der SQL-Equalizer legt auf externen Datenbanken keine Tabellen oder Datensätze an.
+
+\subsection{Aufgabe erstellen}
+
+Um eine neue Aufgabe einzupflegen, navigieren sie im Admin Control Panel auf den Link 'add task' und anschließend auf 'edit'. Sie sehen nun eine neue Eingabemaske. Tragen Sie die Daten entsprechend der folgenden Tabelle ein.
+
+\begin{tabular}{|l|p{12cm}|}\hline
+description & Tragen Sie hier die Aufgabenstellung als Textform ein. Beschreiben Sie, welche Spalten welcher Tabelle in was für einer Sortierung (falls gewünscht) ausgegeben werden sollen, so dass der Student möglichst genau weiß, was er zu tun hat.\\\hline
+sample solutions & Tragen Sie hier die Musterlösung in Form einer SQL-Anfrage ein. Der Student kann diese Anfrage nicht sehen. Möchten Sie mehrere Musterlösungen verwenden, weil sie sich strukturell stark unterscheiden, so verwenden Sie den Link 'add another sample solution', um mehrere Eingabefelder zu erzeugen.\\\hline
+database schema & Verwenden Sie das dropdown-Menü, um ihr erstelltes Datenbankschema hier anzugeben.\\\hline
+respect column order & Haken Sie das Kästchen an, wenn die Spalten genau die angegebene Reihenfolge einhalten sollen.\\\hline
+external database & Haken Sie hier die externen Datenbanken an, auf denen die Musterlösung und die Lösung des Lernenden ausgeführt werden sollen.\\\hline
+\end{tabular}
+
+Nachdem Sie den 'save'-Knopf betätigt haben, ist die Aufgabe im System eingepflegt.

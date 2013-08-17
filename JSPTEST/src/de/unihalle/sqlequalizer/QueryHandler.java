@@ -49,7 +49,10 @@ public class QueryHandler {
 
 				while (iterator != null) {
 					if (iterator.Zuordnung.get(split[0]) != null) {
-						return sub.get(iterator.Zuordnung.get(split[0])) + "."+ split[1];
+						if(sub.get(iterator.Zuordnung.get(split[0])) != null)
+							return sub.get(iterator.Zuordnung.get(split[0])) + "."+ split[1];
+						else 
+							return iterator.Zuordnung.get(split[0]) + "."+ split[1];
 					}
 					iterator = iterator.parent;
 				}
@@ -449,6 +452,7 @@ public class QueryHandler {
 		 * = (ZExpression) QueryUtils.dfs_work(whereCondition);
 		 */
 		whereCondition = QueryUtils.sortedTree(whereCondition);
+		
 
 		return whereCondition;
 	}
