@@ -6,8 +6,17 @@ import java.util.Comparator;
 import org.gibello.zql.ZConstant;
 import org.gibello.zql.ZExp;
 import org.gibello.zql.ZExpression;
-import org.gibello.zql.ZQuery;
 
+/**
+ * Class for Comparing to Expressions that implemented ZExp. These are
+ * ZExpression, ZConstant and ZQuery
+ * 
+ * @see Master thesis in chapter 4, section "Sort"
+ * 
+ * 
+ * @author Robert Hartmann
+ *
+ */
 public class OperatorComparer implements Comparator<ZExp> {
 
 	@Override
@@ -63,15 +72,18 @@ public class OperatorComparer implements Comparator<ZExp> {
 		
 		
 		
-		//if subqueries have same depth we have to decide their depth
-		
+	
+		//both Items are ZExpression
 		if(z1 != null && z2 != null) {
+			
+			//if Operator of one of them has less value than the other we can decide the order directly
 			if(Arrays.asList(QueryUtils.orderList).indexOf(z1.getOperator()) < Arrays.asList(QueryUtils.orderList).indexOf(z2.getOperator()))
 				return -1;
 			
 			if(Arrays.asList(QueryUtils.orderList).indexOf(z2.getOperator()) < Arrays.asList(QueryUtils.orderList).indexOf(z1.getOperator()))
 				return 1;
 			
+			//Both Operators are the same. we have to evalueted the first difference in both trees by investigate them via DFS.
 			if(Arrays.asList(QueryUtils.orderList).indexOf(z2.getOperator()) == Arrays.asList(QueryUtils.orderList).indexOf(z1.getOperator())) {
 				//iterate both trees and as soon as structure differs
 				return QueryUtils.DFSFirstDifferentNodeValue(z1, z2);

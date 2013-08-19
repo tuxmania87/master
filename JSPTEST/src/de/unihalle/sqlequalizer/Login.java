@@ -1,13 +1,30 @@
 package de.unihalle.sqlequalizer;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLWarning;
 
+/**
+ * Class handles login for sql-equalizer. Login data are 
+ * saved in internal database.
+ * 
+ * default is: 
+ * login: admin
+ * password: secure1234
+ * 
+ * @author Robert Hartmann
+ *
+ */
 public class Login {
 
+	/**
+	 * Attempt to login with username u and password p
+	 * 
+	 * @param u username
+	 * @param p password 
+	 * @return id if user could be loged in, 0 otherwise
+	 */
 	public static int login(String u, String p) {
 		try {
 		
@@ -42,6 +59,12 @@ public class Login {
 		}
 	}
 	
+	/**
+	 * Check if user is admin 
+	 * 
+	 * @param u username
+	 * @return true if user is admin, false otherwise
+	 */
 	public static boolean isDozent(String u) {
 		try {
 		

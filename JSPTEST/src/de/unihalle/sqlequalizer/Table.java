@@ -5,6 +5,11 @@ import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Stores Information of a certain Table by storing the including columns
+ * @author Robert Hartmann
+ *
+ */
 public class Table {
 
 	
@@ -27,6 +32,11 @@ public class Table {
 		return -1;
 	}
 
+	/**
+	 * Standard constructor parsed Table Informations from sql statement
+	 * 
+	 * @param sqlStatement SQL-Statement
+	 */
 	Table(String sqlStatement) {
 		//TODO: Parse if valid statement
 		

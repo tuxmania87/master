@@ -22,8 +22,16 @@ import org.gibello.zql.ZFromItem;
 import org.gibello.zql.ZQuery;
 import org.gibello.zql.ZSelectItem;
 
+/**
+ * Class is a useful collection of static functions helping to handle queries
+ * 
+ * @author Robert Hartmann
+ *
+ */
 public class QueryUtils {
 
+	//mes is a Hasmap containg output strings when Metainfo of queries are compared
+	// it maps class attributes to output strings
 	static {
 		HashMap<String, String> mes = new HashMap<String, String>();
 		mes.put("numberJoins", "Joins");
@@ -52,14 +60,24 @@ public class QueryUtils {
 
 	public static HashMap<String, String> messages;
 
+	//An operator with lesser index has a higher priority
+	// there is no AND because in KNF, AND only occures as Root Node
 	public static String orderList[] = { "OR", "<=", ">=", "<", ">", "=", "+", "-",
 			"IS NULL", "IS NOT NULL", "EXISTS", "ANY", "ALL" };
 
+	//supported database types for external database
 	public static String validDBtypes[] = { "mysql", "postgresql", "oracle" };
+	
 	public static String commutativeOperators[] = { "=", "OR", "AND", "+" };
 	public static String comparisonOperators[] = { "<", "<=", ">", ">=", "=" };
 	public static String subQueryOperators[] = { "EXISTS", "ANY", "SOME", "ALL" };
 
+	/**
+	 * Checks if table exist in FROM Clause
+	 * @param table Table to be checked
+	 * @param fromClause FromClause 
+	 * @return true if table is in fromClause, false otherwise
+	 */
 	public static boolean isTableInFromClause(String table,
 			Vector<ZFromItem> fromClause) {
 		Iterator<ZFromItem> it = fromClause.iterator();
@@ -100,6 +118,13 @@ public class QueryUtils {
 		return response;
 	}
 
+	/**
+	 * Returns flipped operator as in 
+	 * a OPERATOR b equals b FLIPPED_OPERATOR a
+	 * 
+	 * @param op Operator to be flipped
+	 * @return Flipped Operator
+	 */
 	public static String getFlippedOperator(String op) {
 		if (op.equals(">=")) {
 			return "<=";
@@ -116,6 +141,13 @@ public class QueryUtils {
 		return op;
 	}
 
+	/**
+	 * Returns opposite Operator as in
+	 * Not( a OPERATOR B) equals a OPPOSITE_OPERATOR b
+	 * 
+	 * @param op Operator 
+	 * @return Opposite operator of op
+	 */
 	public static String getOppositeOperator(String op) {
 		if (op.equals(">=")) {
 			return "<";
@@ -150,30 +182,16 @@ public class QueryUtils {
 		return op;
 	}
 
-	public static String[] getLeafes(ZExp root) {
-
-		ArrayList<String> list = new ArrayList<String>();
-		traverseDFSAndGatherLeafs(root, list);
-
-		return list.toArray(new String[list.size()]);
-
-	}
-
-	private static void traverseDFSAndGatherLeafs(ZExp node,
-			ArrayList<String> leafs) {
-		if (node instanceof ZConstant) {
-			leafs.add(node.toString());
-			return;
-		}
-
-		if (node instanceof ZExpression) {
-			ZExpression e = (ZExpression) node;
-			for (int i = 0; i < e.getOperands().size(); i++)
-				traverseDFSAndGatherLeafs(e.getOperand(i), leafs);
-		}
-
-	}
-
+	
+	/**
+	 * Executes a DFS stepwise on two trees represented by rootnode r1 and rootnode r2.
+	 * If the two current nodes differ we check their Values with OperatorComparer() and 
+	 * return the result
+	 * 
+	 * @param r1 rootnode of tree 1
+	 * @param r2 rootnode of tree 2
+	 * @return 1 if r2 is less than r1, -1 the other way around, 0 if both trees are equal
+	 */
 	public static int DFSFirstDifferentNodeValue(ZExp r1, ZExp r2) {
 
 		if (r1 instanceof ZExpression && r2 instanceof ZExpression) {
@@ -232,12 +250,7 @@ public class QueryUtils {
 		}*/
 		
 		return new OperatorComparer().compare(r1, r2);
-		
-		
-		
-
-		
-
+	
 	}
 
 	public static ZExp negate(ZExp exp) {
@@ -266,6 +279,14 @@ public class QueryUtils {
 		return -1;
 	}
 
+	/**
+	 * Checks if the ResultSets of two sql queries are identical
+	 * 
+	 * @param r1 ResultSet of query 1
+	 * @param r2 ResultSet of query 2
+	 * @return true if r1 equals r2, false otherwise
+	 * @throws SQLException
+	 */
 	public static boolean isIdenticalResultSets(ResultSet r1, ResultSet r2)
 			throws SQLException {
 
@@ -308,6 +329,7 @@ public class QueryUtils {
 
 	}
 
+	
 	public static boolean isLesserThan(ZExp a, ZExp b) {
 		if (b instanceof ZConstant)
 			return true;
@@ -327,6 +349,12 @@ public class QueryUtils {
 
 	}
 
+	/**
+	 * gets Depth of a tree represented by exp
+	 * 
+	 * @param exp RootNode of tree
+	 * @return Depth of Tree
+	 */
 	public static int depth(ZExp exp) {
 		if (!(exp instanceof ZExpression)) {
 			return 1;
@@ -342,6 +370,12 @@ public class QueryUtils {
 		return max + 1;
 	}
 
+	/**
+	 * Applies the distribution law so that we can form a CNF
+	 * 
+	 * @param r rootnode of formula
+	 * @return CNF of formula represented by r
+	 */
 	public static ZExp distribute(ZExp r) {
 		if (r instanceof ZConstant)
 			return r;
@@ -418,12 +452,27 @@ public class QueryUtils {
 
 	}
 
+	/**
+	 * Adjust Funtion as it is presented in master thesis
+	 * 
+	 * @param attribute 
+	 * @param q
+	 * @return adjusted value
+	 */
 	public static double adjust(String attribute, QueryHandler q) {
 		int places1 = places(attribute, q);
 
 		return 1 / Math.pow(10, places1);
 	}
 
+	/**
+	 * If attribute is a numeric value, returns the places after the colon by using tables saved in QueryHandler q Object
+	 * e.g.  2.34 has two places (34) after the colon
+	 * 
+	 * @param attribute
+	 * @param q
+	 * @return Number of places after point/colon
+	 */
 	public static int places(String attribute, QueryHandler q) {
 		// attribte has the form tablealias.varname
 		String table = attribute.split("\\.")[0];
@@ -451,6 +500,12 @@ public class QueryUtils {
 		return 0;
 	}
 
+	/**
+	 * Sorts the tree represented by root node exp
+	 * 
+	 * @param exp rootnode representing a tree
+	 * @return sorted trees rootnode
+	 */
 	public static ZExp sortTree(ZExp exp) {
 		if (exp instanceof ZConstant)
 			return exp;
@@ -477,171 +532,14 @@ public class QueryUtils {
 
 	}
 
-	public static ZExp sortLeafs(ZExp node) {
 
-		if (node instanceof ZConstant)
-			return node;
-
-		if (node instanceof ZExpression) {
-			ZExpression z = (ZExpression) node;
-			ZExpression ret = new ZExpression(z.getOperator());
-
-			for (int i = 0; i < z.getOperands().size(); i++) {
-				ret.addOperand(sortLeafs(z.getOperand(i)));
-			}
-
-			// untersuche kinder
-			HashMap<String, ArrayList<ZExp>> masterlist = new HashMap<String, ArrayList<ZExp>>();
-			ArrayList<ZExp> restList = new ArrayList<ZExp>();
-
-			for (int i = 0; i < ret.getOperands().size(); i++) {
-				if (ret.getOperand(i) instanceof ZExpression) {
-					ZExpression z0 = (ZExpression) ret.getOperand(i);
-					if (masterlist.containsKey(z0.getOperator())) {
-						masterlist.get(z0.getOperator()).add(z0);
-					} else {
-						ArrayList<ZExp> tlist = new ArrayList<ZExp>();
-						tlist.add(z0);
-						masterlist.put(z0.getOperator(), tlist);
-					}
-
-				} else {
-					restList.add(z.getOperand(i));
-				}
-			}
-
-			// if hasmap empty or has only entrys with size 1 we do not have to
-			// do anything
-			if (masterlist.isEmpty())
-				return ret;
-
-			Set<String> keys = masterlist.keySet();
-			Iterator<String> it = keys.iterator();
-
-			boolean abbort = true;
-			while (it.hasNext()) {
-				if (masterlist.get(it.next()).size() > 1)
-					abbort = false;
-			}
-
-			if (abbort)
-				return ret;
-
-			it = keys.iterator();
-			while (it.hasNext()) {
-				String current = it.next();
-				ArrayList<ZExp> tl = masterlist.get(current);
-				Collections.sort(tl, new LeafOrder());
-
-			}
-			ZExpression zret = new ZExpression(z.getOperator());
-
-			it = keys.iterator();
-			while (it.hasNext()) {
-				String current = it.next();
-				ArrayList<ZExp> tl = masterlist.get(current);
-
-				for (int i = 0; i < tl.size(); i++)
-					zret.addOperand(tl.get(i));
-
-			}
-
-			Iterator<ZExp> it2 = restList.iterator();
-			while (it2.hasNext()) {
-				zret.addOperand(it2.next());
-			}
-
-			return zret;
-		}
-
-		return node;
-	}
-
-	public static boolean sortTreeEqualOperators(ZExp node, ZExp parent) {
-
-		if (node instanceof ZExpression) {
-			ZExpression z = (ZExpression) node;
-
-			HashMap<String, ArrayList<ZExp>> masterlist = new HashMap<String, ArrayList<ZExp>>();
-			ArrayList<ZExp> restList = new ArrayList<ZExp>();
-
-			for (int i = 0; i < z.getOperands().size(); i++) {
-				if (z.getOperand(i) instanceof ZExpression) {
-					ZExpression z0 = (ZExpression) z.getOperand(i);
-					if (masterlist.containsKey(z0.getOperator())) {
-						masterlist.get(z0.getOperator()).add(z0);
-					} else {
-						ArrayList<ZExp> tlist = new ArrayList<ZExp>();
-						tlist.add(z0);
-						masterlist.put(z0.getOperator(), tlist);
-					}
-
-				} else {
-					restList.add(z.getOperand(i));
-				}
-			}
-
-			// if hasmap empty or has only entrys with size 1 we do not have to
-			// do anything
-			if (masterlist.isEmpty())
-				return true;
-
-			Set<String> keys = masterlist.keySet();
-			Iterator<String> it = keys.iterator();
-
-			boolean abbort = true;
-			while (it.hasNext()) {
-				if (masterlist.get(it.next()).size() > 1)
-					abbort = false;
-			}
-
-			if (abbort)
-				return true;
-
-			it = keys.iterator();
-			while (it.hasNext()) {
-				String current = it.next();
-				boolean checker = true;
-				ArrayList<ZExp> tl = masterlist.get(current);
-
-				for (int i = 0; i < tl.size(); i++) {
-					checker &= sortTreeEqualOperators(tl.get(i), z);
-				}
-
-				if (checker) {
-					// all subtrees are in the last possible layer
-					// so we have to sort with leafsets
-					System.out.println("sortieren von " + current
-							+ " und Vater: " + z);
-
-					Collections.sort(tl, new LeafOrder());
-
-				}
-			}
-
-			z = new ZExpression(z.getOperator());
-
-			it = keys.iterator();
-			while (it.hasNext()) {
-				String current = it.next();
-				ArrayList<ZExp> tl = masterlist.get(current);
-
-				for (int i = 0; i < tl.size(); i++)
-					z.addOperand(tl.get(i));
-
-			}
-
-			Iterator<ZExp> it2 = restList.iterator();
-			while (it2.hasNext()) {
-				z.addOperand(it2.next());
-			}
-
-			node = z;
-		}
-		return false;
-
-	}
-
+	
+	/**
+	 * Meta function controlling the sort process that is sorting and elimation of duplicates
+	 * 
+	 * @param exp rootnode representing a tree
+	 * @return sorted trees rootnode
+	 */
 	public static ZExp sortedTree(ZExp exp) {
 
 		if (exp == null)
@@ -651,7 +549,6 @@ public class QueryUtils {
 		ZExp ret = exp;
 		do {
 			old = ret.toString();
-			//ret = sortTree(sortLeafs(ret));
 			ret = sortTree(ret);
 			ret = evaluateArithmetic(ret);
 			
@@ -663,6 +560,12 @@ public class QueryUtils {
 		return ret;
 	}
 
+	/**
+	 * After parser Tree is sorted we can find Duplicates of AND and OR nodes easily by investigate the neighbour nodes
+	 * 
+	 * @param exp rootnode representing a tree
+	 * @return duplicate free tree (considering AND and OR)
+	 */
 	public static ZExp removeDuplicates(ZExp exp) {
 
 		if (exp instanceof ZExpression) {
@@ -692,6 +595,16 @@ public class QueryUtils {
 
 	}
 
+	/**
+	 * Compares two MetaInfoQuery Objects coming from two queries.
+	 * Formulates a String containing every difference from the two queries.
+	 * 
+	 * @param m1 Metainfo of Query 1
+	 * @param m2 Metainfo of Query 2
+	 * @return All diferences in String
+	 * @throws IllegalArgumentException
+	 * @throws IllegalAccessException
+	 */
 	public static String compareMetaInfos(MetaQueryInfo m1, MetaQueryInfo m2)
 			throws IllegalArgumentException, IllegalAccessException {
 		// we go through every attribute and compare number or false/true
@@ -760,6 +673,7 @@ public class QueryUtils {
 
 	}
 
+	
 	public static ArrayList<String[]> createPermutations(String[][] right,
 			String[][] data, int i) {
 		if (i == data.length) {
@@ -834,6 +748,14 @@ public class QueryUtils {
 
 	}
 
+	/**
+	 * Compares two standardized queries by comparing each part of the queries.
+	 * Formulates a String containg all none matching parts of the two queries
+	 * 
+	 * @param q1 
+	 * @param q2
+	 * @return All Diferences in a String
+	 */
 	public static String compareStandardizedQueries(ZQuery q1, ZQuery q2) {
 		// additionally we want to compare single parts of the queries
 		// (select,from,where,group by, having, order by)
@@ -879,6 +801,13 @@ public class QueryUtils {
 		return res;
 	}
 
+	/**
+	 * Operator Compression as explained in @see master thesis
+	 * 
+	 * @param exp Current Node
+	 * @param parent Parent Node
+	 * @return Tree without unnecessary parenthesis
+	 */
 	public static ZExp operatorCompression(ZExp exp, ZExp parent) {
 
 		if (exp instanceof ZConstant) {
@@ -941,6 +870,7 @@ public class QueryUtils {
 		return null;
 	}
 
+	
 	public static ZExp pushDownNegate(ZExp exp) {
 		if (exp instanceof ZExpression) {
 			ZExpression z = (ZExpression) exp;
@@ -971,64 +901,9 @@ public class QueryUtils {
 
 		return exp;
 
-		/*
-		 * if (exp instanceof ZExpression) { ZExpression ret = new
-		 * ZExpression(((ZExpression) exp).getOperator()); Iterator<ZExp> it =
-		 * ((ZExpression) exp).getOperands().iterator();
-		 * 
-		 * while (it.hasNext()) { ZExp cur = it.next(); if (cur instanceof
-		 * ZExpression && ((ZExpression) cur).getOperator().equals("NOT")) {
-		 * ret.addOperand(negate(cur)); } else { ret.addOperand(cur); } } return
-		 * ret; } return exp;
-		 */
 	}
 
-	public static ZExp dfs_orderPairs(ZExp exp) {
-		// filter all pairs one layer before leaf layer
-		// and sort them so that a ? b or a ? 4
-		if (exp instanceof ZExpression) {
-			ZExpression casted = (ZExpression) exp;
-			if (casted.getOperands().size() == 2
-					&& casted.getOperand(0) instanceof ZConstant
-					&& casted.getOperand(1) instanceof ZConstant) {
-				ZConstant arg0 = (ZConstant) casted.getOperand(0);
-				ZConstant arg1 = (ZConstant) casted.getOperand(1);
-				if (arg0.getType() == ZConstant.NUMBER
-						&& arg1.getType() == ZConstant.COLUMNNAME) {
-					ZExpression ret = new ZExpression(
-							getFlippedOperator(casted.getOperator()));
-					ret.addOperand(arg1);
-					ret.addOperand(arg0);
-					return ret;
-				}
-				if (arg0.getType() == ZConstant.COLUMNNAME
-						&& arg1.getType() == ZConstant.COLUMNNAME
-						&& arg1.toString().compareTo(arg0.toString()) < 0) {
-					ZExpression ret = new ZExpression(
-							getFlippedOperator(casted.getOperator()));
-					ret.addOperand(arg1);
-					ret.addOperand(arg0);
-					return ret;
-				}
-				// TODO: könnte man zusammenfassen, da bei beiden das gleiche
-				// gemacht wird. Sieht dann nur unübersichtlich auf, weil alles
-				// in einer if
-				return casted;
-			}
-			// ELSE, we dont have 2 ZConstant Childs, but we are in a
-			// ZExpression
-			ZExpression ret = new ZExpression(casted.getOperator());
-			Iterator it = casted.getOperands().iterator();
-			while (it.hasNext()) {
-				ZExp arg = (ZExp) it.next();
-				ret.addOperand(dfs_orderPairs(arg));
-			}
-			return ret;
-		}
-
-		return exp;
-	}
-
+	
 	private static boolean areChildsNumeric(Vector<ZExp> childs) {
 		Iterator<ZExp> it = childs.iterator();
 
@@ -1093,6 +968,14 @@ public class QueryUtils {
 		return root;
 	}
 
+	/**
+	 * Rounds the numeric constants to their correct places after colon
+	 * 
+	 * @param exp Arithmetic Expression
+	 * @param fromList Tables under FROM
+	 * @param qh QueryHandler with Information about data types 
+	 * @return rootnode of tree with correct decimal places
+	 */
 	public static ZExp correctDecimalPlaces(ZExp exp,
 			Vector<ZFromItem> fromList, QueryHandler qh) {
 		if (exp instanceof ZExpression) {
@@ -1166,6 +1049,12 @@ public class QueryUtils {
 		return exp;
 	}
 
+	/**
+	 * Evaluate all Arithmetic and logic Expressions if they only contain constants
+	 * 
+	 * @param exp rootnode of arithmetic expression
+	 * @return rootnode of evaluated arithmetic expression
+	 */
 	public static ZExp evaluateArithmetic(ZExp exp) {
 
 		if (exp instanceof ZConstant)
@@ -1384,10 +1273,10 @@ public class QueryUtils {
 	}
 
 	/**
-	 * Adds implicit formulas warning! after this funtion one have to recall the
+	 * Adds implicit formulas warning! after this function one have to recall the
 	 * KNF function because its structure will be destroyed in this function.
 	 * 
-	 * @return
+	 * @return Rootnode of tree with added implicit formulas as stated in master thesis
 	 */
 	public static ZExp addImplicitFormulas(ZExp exp, QueryHandler q) {
 
@@ -1569,6 +1458,13 @@ public class QueryUtils {
 		return exp;
 	}
 
+	/**
+	 * Replaces Subqueries as Stated in Master Thesis
+	 * 
+	 * @param exp rootnode representing tree where the subqueries should be replaced
+	 * @param tables All used Tables under FROM for evaluating if a column can be null
+	 * @return Rootnode of tree with replaced subqueries
+	 */
 	public static ZExp replaceSubqueries(ZExp exp, ArrayList<Table> tables) {
 
 		if (exp instanceof ZExpression) {
@@ -1744,6 +1640,7 @@ public class QueryUtils {
 		return exp;
 	}
 
+	
 	public static ZExp replaceSyntacticVariantes(ZExp exp) {
 
 		if (exp instanceof ZQuery) {
@@ -1842,7 +1739,7 @@ public class QueryUtils {
 		return exp;
 	}
 
-	public static int getLevenshteinDistance(String s, String t) {
+	private static int getLevenshteinDistance(String s, String t) {
 		if (s == null || t == null) {
 			throw new IllegalArgumentException("Strings must not be null");
 		}

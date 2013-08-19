@@ -20,6 +20,13 @@ import org.gibello.zql.ZSelectItem;
 import org.gibello.zql.ZStatement;
 import org.gibello.zql.ZqlParser;
 
+/**
+ * Class handles exaclty one SQL-Query by parsing him with ZQL-Engine.
+ * Afterwards equalize() starts the equalizing/standardization process.
+ * 
+ * @author Robert Hartmann
+ *
+ */
 public class QueryHandler {
 
 	public HashMap<String, String> Zuordnung;
@@ -34,6 +41,19 @@ public class QueryHandler {
 
 	private boolean respectColumnOrder = false;
 
+	
+	/**
+	 * Function gets an Attribute with or without tuple variable 
+	 * and maps this with the correct, automatically generated, tuple variable
+	 * 
+	 * Used by makeAlias()
+	 * 
+	 * @param data Attribute that we want to label with the tuple variable
+	 * @param fromItems All From Tables with their automatically generated tuple variables
+	 * @param sub HashMap of former renamed tuplevariables to trace back to origin, in case we have an old tuplevariable that was already substituted with the new automatically ones
+	 * @return Correct tuple variable and attribute as tuplevariable.attribute
+	 * @throws Exception
+	 */
 	public String getCorrectAlias(String data, Vector<ZFromItem> fromItems, HashMap<String, String> sub) throws Exception{
 		
 		String[] split = data.split("\\.");
@@ -110,6 +130,18 @@ public class QueryHandler {
 		return data;
 	}
 	
+	/**
+	 * Basically just does a dfs on the where clause and calling getCorrectAlias().
+	 * Also handles Subqueries as it calls the equalize process recursively for each subquery.
+	 * 
+	 * Used by handleWHEREClause
+	 * 
+	 * @param exp Root node for current subtree
+	 * @param fromItems List of all Tables including tuple variables 
+	 * @param sub @see above
+	 * @return Subtree under exp with correct Aliases all over including subqueries.
+	 * @throws Exception
+	 */
 	public ZExp makeAliases(ZExp exp, Vector<ZFromItem> fromItems, HashMap<String, String> sub)
 			throws Exception {
 
@@ -118,9 +150,13 @@ public class QueryHandler {
 			return new ZConstant(getCorrectAlias(((ZConstant) exp).getValue(), fromItems, sub), ((ZConstant) exp).getType());
 			
 		}
+		
+		//ZConstants that are no COLUMNNAMES are real constants 
+		//and cannot contain tuple variables
 		if (exp instanceof ZConstant)
 			return exp;
 
+		//recursively call a QueryHandler for each sub query
 		if (exp instanceof ZQuery) {
 			// new
 			QueryHandler qh = new QueryHandler();
@@ -133,6 +169,7 @@ public class QueryHandler {
 			// return handleQUERY((ZQuery)exp);
 		}
 
+		//recursively call makeAlias() for all child nodes 
 		if (exp instanceof ZExpression) {
 			ZExpression zexp = (ZExpression) exp;
 			Iterator<ZExp> it = zexp.getOperands().iterator();
@@ -146,6 +183,14 @@ public class QueryHandler {
 		return null;
 	}
 
+	/**
+	 * Handles group by Statement by Sorting Group By List.
+	 * TODO: Handles having Statement by calling handleWHEREClause() explained
+	 * in Master Thesis.
+	 * 
+	 * @param z Group by Statement to be handled
+	 * @return Standardized Group by Statement
+	 */
 	public ZGroupBy handleGROUPBYStatement(ZGroupBy z) {
 		if (z == null)
 			return null;
@@ -167,17 +212,27 @@ public class QueryHandler {
 		return ret;
 	}
 
+	/**
+	 * Basically handles the whole Query by dividing the work 
+	 * into several pieces, handling them over to helper functions
+	 * 
+	 * @param q Zquery Object containing the (parsed) SQL-Statement
+	 * @return List of Standardized ZQuery Objects. Because of self joins can contain more than one.
+	 * @throws Exception
+	 */
 	public ZQuery[] handleQUERY(ZQuery q) throws Exception {
 
+		/**
+		 * temporary subclass sorting two ZSelectItems by their columnname
+		 * @author Robert Hartmann
+		 *
+		 */
 		class tempSorter implements Comparator<ZSelectItem> {
 
 			@Override
 			public int compare(ZSelectItem o1, ZSelectItem o2) {
-
 				return o1.getColumn().compareTo(o2.getColumn());
-
 			}
-
 		}
 
 		if (!this.respectColumnOrder) {
@@ -240,13 +295,12 @@ public class QueryHandler {
 			
 			HashMap<String, String> substis = new HashMap<String, String>();
 			
+			//if we substituted some Aliases we have to store that
 			for(int y = 0; y < v1.size(); y++) {
 				substis.put(v1.get(y).getAlias(), permutation[y]);
 			}
 			
-			
-			
-			
+			//using helper functions to handle other parts of query
 			ZExp newWHEREClause = handleWHEREClause(q.getWhere(), q.getFrom(),
 					this,  substis);
 			ZGroupBy newGROUPBYClause = handleGROUPBYStatement(q.getGroupBy());
@@ -255,6 +309,9 @@ public class QueryHandler {
 			newQ.addFrom(q.getFrom());
 			newQ.addWhere(newWHEREClause);
 
+			//in seldom cases we can solve the WHERE Clause to "false",
+			//so that it can never be fulfilled 
+			
 			if (newWHEREClause instanceof ZConstant
 					&& ((ZConstant) newWHEREClause).getValue().equals("false"))
 				throw new Exception(
@@ -271,6 +328,11 @@ public class QueryHandler {
 
 	}
 
+	/**
+	 * Helper Function to handle FROM Clause by sorting all tables and
+	 * creating new tuplevariables for each table (iteratively)
+	 * @param from
+	 */
 	public void handleFROMClause(Vector<ZFromItem> from) {
 		String aliasname = "a";
 		Iterator<ZFromItem> zfrom = from.iterator();
@@ -289,6 +351,7 @@ public class QueryHandler {
 			Collections.sort(from, new t_sorter());
 		}
 		
+		//Generate new Tuple Variables
 		while (zfrom.hasNext()) {
 			ZFromItem z = zfrom.next();
 			if (z.getAlias() != null) {
@@ -309,6 +372,14 @@ public class QueryHandler {
 		}
 	}
 
+	/**
+	 * Handle Select Clause by replacing * to all attributes of tables under FROM.
+	 * Continues with assigning new tuple variables to each columns
+	 * 
+	 * @param sel Vector of ZSelectItems forming SELECT Clause
+	 * @return Standardized SELECT Clause as Vector
+	 * @throws Exception
+	 */
 	public Vector<ZSelectItem> handleSELECTClause(Vector<ZSelectItem> sel)
 			throws Exception {
 		Iterator<ZSelectItem> it = sel.iterator();
@@ -388,6 +459,14 @@ public class QueryHandler {
 		return ret;
 	}
 
+	/**
+	 * Transforms a Formula to conjunctive normal form (CNF, in german: KNF)
+	 * 
+	 * Uses OperatorCompression, pushDownNegate, and use distribute law
+	 * 
+	 * @param root Root node of Formula representing Root Node of WHERE Clause
+	 * @return Root Node of Formula in CNF
+	 */
 	public ZExp tranformToKNF(ZExp root) {
 
 		if (root == null)
@@ -396,6 +475,7 @@ public class QueryHandler {
 		ZExp step = root;
 		String old = "";
 
+		// as long as something changes do
 		do {
 			old = step.toString();
 			step = QueryUtils.operatorCompression(step, null);
@@ -406,6 +486,18 @@ public class QueryHandler {
 		return step;
 	}
 
+	/**
+	 *  Handles WHERE Clause.
+	 *  
+	 *  Basically done by helper functions. See Master Thesis for detailed explanation of standardization process
+	 * 
+	 * @param zexp Root Node representing WHERE formula
+	 * @param from All Tables under FROM with Tuplevariables
+	 * @param q Whole QueryHandler object of current Query
+	 * @param substis @see above
+	 * @return Standardized WHERE formulas root node
+	 * @throws Exception
+	 */
 	public ZExp handleWHEREClause(ZExp zexp, Vector<ZFromItem> from,
 			QueryHandler q, HashMap<String, String> substis) throws Exception {
 
@@ -417,9 +509,8 @@ public class QueryHandler {
 		// ZExp whereCondition = null;
 		ZExp whereCondition = zexp;
 
+		//assign correct tuplevariables and handle subqueries
 		whereCondition = (ZExpression) makeAliases(zexp, from, substis);
-
-		// recursvie for subqueries TODO
 
 		whereCondition = tranformToKNF(whereCondition);
 
@@ -443,20 +534,17 @@ public class QueryHandler {
 		// the tree
 		whereCondition = tranformToKNF(whereCondition);
 
-		/*
-		 * whereCondition = (ZExpression) QueryUtils
-		 * .dfs_orderPairs(whereCondition); whereCondition = (ZExpression)
-		 * QueryUtils.dfs_work(whereCondition); whereCondition = (ZExpression)
-		 * QueryUtils.dfs_work(whereCondition); whereCondition = (ZExpression)
-		 * QueryUtils.operatorCompression( whereCondition, null); whereCondition
-		 * = (ZExpression) QueryUtils.dfs_work(whereCondition);
-		 */
 		whereCondition = QueryUtils.sortedTree(whereCondition);
 		
 
 		return whereCondition;
 	}
 
+	/**
+	 * Sets the start query to be handled by parsing it with ZQL-Parser Engine and setting a working copy as well that will be changed throughout the process
+	 * @param s String representing the SQL-Query
+	 * @throws ParseException
+	 */
 	public void setOriginalStatement(String s) throws ParseException {
 
 		if (s.trim().charAt(s.trim().length() - 1) != ';')
@@ -477,31 +565,6 @@ public class QueryHandler {
 
 	}
 
-	public QueryHandler(String s) {
-		Zuordnung = new HashMap<String, String>();
-		tables = new ArrayList<Table>();
-
-		ZqlParser zp = new ZqlParser();
-		zp.initParser(new ByteArrayInputStream(s.getBytes()));
-
-		ZStatement zs;
-		try {
-			zs = zp.readStatement();
-		} catch (ParseException e) {
-			return;
-		}
-		ZQuery q = (ZQuery) zs;
-		this.original = q;
-
-	}
-
-	public QueryHandler(ZQuery z) {
-		Zuordnung = new HashMap<String, String>();
-		tables = new ArrayList<Table>();
-
-		this.original = z;
-	}
-
 	public QueryHandler() {
 		Zuordnung = new HashMap<String, String>();
 		tables = new ArrayList<Table>();
@@ -513,6 +576,13 @@ public class QueryHandler {
 		return true;
 	}
 
+	/**
+	 * Starts the whole equalization/standardization 
+	 *  
+	 * @param respect Shall the Columnorder in SELECT Clause be respected?
+	 * @return Array of ZQueries that are standardized. Can be more than one, when self joins are used. @see Master Thesis for detailed information.
+	 * @throws Exception
+	 */
 	public ZQuery[] equalize(boolean respect) throws Exception {
 		
 		if(original == null) {
@@ -528,17 +598,5 @@ public class QueryHandler {
 			aliascount = parent.aliascount;
 		return handleQUERY(workingCopy);
 	}
-
-	/*
-	 * public ZQuery equalize(String sqlStatement) throws Exception { ZqlParser
-	 * zp = new ZqlParser(); zp.initParser(new
-	 * ByteArrayInputStream(sqlStatement.getBytes()));
-	 * 
-	 * ZStatement zs = zp.readStatement(); ZQuery q = (ZQuery) zs;
-	 * 
-	 * System.out.println("original: "+ q.toString());
-	 * 
-	 * return (ZQuery) handleQUERY(q); }
-	 */
 
 }

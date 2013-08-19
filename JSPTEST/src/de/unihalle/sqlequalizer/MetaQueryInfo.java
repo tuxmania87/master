@@ -10,7 +10,13 @@ import org.gibello.zql.ZExpression;
 import org.gibello.zql.ZQuery;
 import org.gibello.zql.ZSelectItem;
 
-
+/**
+ * Class collects and maintains meta information
+ * about onee single query, hold in attribute currentQuery
+ * 
+ * @author Robert Hartmann
+ *
+ */
 public class MetaQueryInfo {
 
 	int numberJoins = 0;
@@ -29,11 +35,20 @@ public class MetaQueryInfo {
 	
 	public ZQuery currentQuery;
 	
+	/**
+	 * Common constructor that awaits the query from 
+	 * which the information should be get.
+	 * @param q SQL-Query
+	 */
 	public MetaQueryInfo(ZQuery q) {
 		currentQuery = q;
 		handleQuery();
 	}
 	
+
+	/**
+	 * Concat all Metainformation name and values with colon.
+	 */
 	@Override
 	public String toString() {
 	  StringBuilder sb = new StringBuilder();
@@ -52,6 +67,11 @@ public class MetaQueryInfo {
 	  return sb.toString();
 	}
 	
+	/**
+	 * Check query for every attribute saved in this class 
+	 * using helper functions
+	 *
+	 */
 	public void handleQuery() {
 		existsDISTINCT = currentQuery.isDistinct();
 		existsGROUPBY = currentQuery.getGroupBy() != null;
@@ -104,6 +124,11 @@ public class MetaQueryInfo {
 		numberSubquery = countSubqueries(currentQuery.getWhere());
 	}
 	
+	/**
+	 * counts the amounts of subqueries in a query
+	 * @param root root node for dfs. Usually begins with surrounding query root node
+	 * @return number of subqueries under root
+	 */
 	public int countSubqueries(ZExp root) {
 		if(root instanceof ZConstant)
 			return 0;
@@ -125,6 +150,11 @@ public class MetaQueryInfo {
 		return 0;
 	}
 	
+	/**
+	 * Counts the amount of atomic formulas under root
+	 * @param root Root node of applied dfs.
+	 * @return Number of atomic formuas under root node.
+	 */
 	public int countAtomicFormulas(ZExp root) {
 		if(root instanceof ZConstant)
 			return 0;
@@ -155,12 +185,20 @@ public class MetaQueryInfo {
 		return 0;
 	}
 	
+	/**
+	 * Counts Joins under root node
+	 * @param root Root node for applied dfs.
+	 * @return Number of Joins
+	 */
 	public int countJOINS(ZExp root) {
 		if(root instanceof ZConstant)
 			return 0;
 		
 		if(root instanceof ZExpression) {
 			ZExpression z = (ZExpression) root;
+			
+			//a join is always between two tupelvariables
+			//here named table1 and table2
 			String table1 = null;
 			String table2 = null;
 			
@@ -201,6 +239,7 @@ public class MetaQueryInfo {
 		}
 		return 0;
 	}
+	
 	
 	private static boolean isInVector(Vector<ZSelectItem> v, String s) {
 		Iterator<ZSelectItem> i = v.iterator();

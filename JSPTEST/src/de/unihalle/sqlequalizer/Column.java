@@ -1,6 +1,16 @@
 package de.unihalle.sqlequalizer;
 
-
+/**
+ *
+ * saves information about a column  
+ * 
+ * type is either Number, Varchar, DateTime or Other
+ * refrences_to is setting a foreign key
+ * if type == 0 (NUMBER) then digitsAfterColon is used
+ * 
+ * @author Robert Hartmann
+ *
+ */
 public class Column {
 
 	static int NUMBER = 0;

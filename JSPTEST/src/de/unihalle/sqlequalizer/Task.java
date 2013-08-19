@@ -9,6 +9,11 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/**
+ * Storing all information about a task
+ * @author Robert Hartmann
+ *
+ */
 public class Task {
 
 	private Connection conn = null;
@@ -22,6 +27,13 @@ public class Task {
 	public boolean respectColumn = false;
 	public int schemaid = 0;
 	
+	/**
+	 * Constructor stores all important information such as
+	 * samplesolutions, external dbs, dbschema, text description of task
+	 * 
+	 * @param c Open Connection to internal database
+	 * @param id Taskid
+	 */
 	public Task(Connection c, int id) {
 		try {
 			PreparedStatement ps = c
@@ -85,6 +97,11 @@ public class Task {
 
 	}
 
+	/**
+	 * 
+	 * @return Array of all Tasks as Objects
+	 * @throws Exception
+	 */
 	public static Task[] getAllTasks() throws Exception {
 		Connection c = connect();
 		Statement s = c.createStatement();
@@ -101,22 +118,6 @@ public class Task {
 		return alist.toArray(new Task[alist.size()]);
 	}
 
-	public static void createTables(Connection conn) throws Exception {
-		Statement stat = conn.createStatement();
-		stat.execute("drop table if exists tasks;");
-		stat.execute("drop table if exists samplesolutions;");
-		stat.execute("drop table if exists users;");
-		stat.execute("drop table if exists attempts;");
-		stat.execute("create table tasks (" + "id int, "
-				+ "description varchar(500), " + "createdAt datetime);");
-		stat.execute("create table samplesolutions (" + "id int, "
-				+ "taskid int, " + "sqlstatement varchar(500));");
-		stat.execute("create table users (" + "id int, " + "name varchar(50), "
-				+ "password varchar(50), " + "isDozent tinyint(1) " + ");");
-		stat.execute("create table attempts (" + "id int, " + "userid int,"
-				+ "taskid int," + "timeat datetime,"
-				+ "sqlstatement varchar(200)," + "correct tinyint(1));");
 
-	}
 
 }

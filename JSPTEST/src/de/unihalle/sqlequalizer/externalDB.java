@@ -6,8 +6,23 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
+/**
+ * Class manages the execution of an sql query on an external database.
+ * 
+ * @author Robert Hartmann
+ *
+ */
 public class externalDB {
 	
+	/**
+	 * Executes q on DB with id 'dbid' that is saved in 
+	 * the internal database.
+	 * 
+	 * @param q SQL-Query to be executed
+	 * @param dbid Database where q is executed on
+	 * @return ResultSet of query execution
+	 * @throws Exception 
+	 */
 	public static ResultSet executeQueryOn(String q, int dbid) throws Exception{
 	
 			
