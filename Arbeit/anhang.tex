@@ -16,7 +16,7 @@ Um die Software zu übersetzen benötigen Sie außerdem ein Java Development Kit
 
 Der SQL-Equalizer unterstützt MySQL, PostgreSQL und Oracle DB. Wir gehen davon aus, dass die von ihnen präferierte Datenbank bereits zur Verfügung steht.\\
 
-Um die interne Datenbank für den SQL-Equalizer zu installieren, verwenden sie die Datei \verb|database.sql| im basedir-Verzeichnis.\\
+Um die interne Datenbank für den SQL-Equalizer zu installieren, verwenden sie die Datei\\\verb|sqlequalizer.sql| im basedir-Verzeichnis. Achten Sie darauf, dass die Datei MySQL kompatibel ist. Wenn sie ein anderes DBMS verwenden wollen, ändern sie die Datei nach ihren Wünschen ab. Achten Sie dabei auf die Typen \verb|DATETIME| und \verb|TEXT|.\\
 
 öffnen Sie die Datei \verb|Connector.java|, die sie unter \url{BASEDIR/src/de/unihalle/sqlequalizer} finden. Ab Zeile 44 finden Sie jeweils kommentierte Bereich, die für PostgreSQL und Oracle DB stehen. Wenn sie MySQL verwenden wollen, dann müssen sie nichts ändern. Möchten sie eine der anderen Datenbanken verwenden, so kommentieren sie die entsprechenden Bereich aus.\\
 
