@@ -35,7 +35,7 @@
 <h2>Login</h2>
 <table>
 <tr><td>Name: </td><td><input type="text" name="pname" /></td></tr>
-<tr><td>Password: </td><td><input type="text" name="ppassword" /></td></tr>
+<tr><td>Password: </td><td><input type="password" name="ppassword" /></td></tr>
 </table>
 <input type="submit" value="submit" name="submit" />
 </form>

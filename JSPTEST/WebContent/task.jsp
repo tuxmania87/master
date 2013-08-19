@@ -324,8 +324,6 @@
 		out.println("SQL-Equalizer compared each single part of the queries and detected some problems:<br>");
 		out.println(compareAfter+"<br>"+compare); 
 		
-		if(request.getSession().getAttribute("dozent") != null)
-			out.println(qh_ss.after.currentQuery);
 		
 		
 		 }
@@ -337,6 +335,13 @@
 	
 		
 		<%
+		
+		if(request.getSession().getAttribute("dozent") != null) {
+			out.println("<h2>Sample solution (only admins can see this)</h2>");
+			out.println("<div class=\"description\">");
+			out.println(qh_ss.after.currentQuery);
+			out.println("</div>");
+		}
 		
 		
 		c = Connector.getConnection();
