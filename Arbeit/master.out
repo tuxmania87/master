@@ -19,7 +19,7 @@
 \BOOKMARK [2][-]{subsection.2.5.5}{Laufzeitfehler}{section.2.5}% 19
 \BOOKMARK [0][-]{chapter.3}{Verwendete Software}{}% 20
 \BOOKMARK [1][-]{section.3.1}{SQL-Parser}{chapter.3}% 21
-\BOOKMARK [2][-]{subsection.3.1.1}{\374ber den SQL-Parser: ZQL}{section.3.1}% 22
+\BOOKMARK [2][-]{subsection.3.1.1}{\334ber den SQL-Parser: ZQL}{section.3.1}% 22
 \BOOKMARK [2][-]{subsection.3.1.2}{Funktionsweise des Parsers}{section.3.1}% 23
 \BOOKMARK [2][-]{subsection.3.1.3}{Grenzen des Parsers}{section.3.1}% 24
 \BOOKMARK [1][-]{section.3.2}{JavaServer Pages}{chapter.3}% 25
@@ -46,11 +46,11 @@
 \BOOKMARK [2][-]{subsection.4.3.12}{Abschluss}{section.4.3}% 46
 \BOOKMARK [1][-]{section.4.4}{Weitere Betrachtungen}{chapter.4}% 47
 \BOOKMARK [2][-]{subsection.4.4.1}{JOINS}{section.4.4}% 48
-\BOOKMARK [2][-]{subsection.4.4.2}{unn\366tiges DISTINCT}{section.4.4}% 49
-\BOOKMARK [2][-]{subsection.4.4.3}{verbale Beschreibung}{section.4.4}% 50
+\BOOKMARK [2][-]{subsection.4.4.2}{Unn\366tiges DISTINCT}{section.4.4}% 49
+\BOOKMARK [2][-]{subsection.4.4.3}{Verbale Beschreibung}{section.4.4}% 50
 \BOOKMARK [2][-]{subsection.4.4.4}{Algorithmus}{section.4.4}% 51
 \BOOKMARK [1][-]{section.4.5}{SQL-Anfragen auf externen Datenbanken}{chapter.4}% 52
-\BOOKMARK [2][-]{subsection.4.5.1}{unterschiedliche DBMS}{section.4.5}% 53
+\BOOKMARK [2][-]{subsection.4.5.1}{Unterschiedliche DBMS}{section.4.5}% 53
 \BOOKMARK [2][-]{subsection.4.5.2}{Visualisierung von Ergebnistupeln}{section.4.5}% 54
 \BOOKMARK [2][-]{subsection.4.5.3}{Behandeln von Fehlern}{section.4.5}% 55
 \BOOKMARK [0][-]{chapter.5}{Praktische Umsetzung}{}% 56
