@@ -158,18 +158,18 @@ Der \verb|ORDER BY|-Teil wird wiederum als \textit{Vector} von \textit{ZOrderBy}
 
 Der Parser kann keine \verb|CREATE TABLE|-Statements parsen. Somit ist es im Rahmen dieser Arbeit notwendig, den Parser zu erweitern, damit Tabellen in eigene Datenstrukturen geparst werden können. Für die Arbeit ist es zunächst nur notwendig Name, Datentyp, Fremdschlüsselbeziehungen und NULL-Informationen der Spalten in eine interne Datenstruktur zu überführen. Dabei wird beim Typ nur zwischen Zahlen und Sonstigem (Text) unterschieden. Wir speichern außerdem, wie viele Nachkommastellen ein Attribut haben kann. Unser Programm soll in der Lage sein, einfache arithmetische Operationen durchzuführen. Dazu ist das Wissen um Datentypen der Variablen von Nöten.
 
-Der ZQL-Parser versteht das \verb|FROM|-Statement als Liste von Relationen mit optionalen Tupelvariablen. Dadurch leiten sich mehrere Einschränkungen ab. ZQL ist dadurch nicht in der Lage \verb|JOINS| über die Schlüsselworte \\\verb#  ON [LEFT OUTER|RIGHT OUTER|INNER] JOIN# \\zu erkennen. Der Parser erkennt nur innere \verb|JOINS|, die im \verb|WHERE|-Teil formuliert wurden. Der ZQL-Parser unterstützt daher auch keine Unterabfragen unter \verb|FROM|. Eine Möglichkeit diesem Problem zu begegnen ist es, solche Unterabfragen vor dem Parsen zu Entfernen und danach unverändert wieder einzufügen. Es wäre allerdings wünschenswerter wenn der ZQL-Parser erweitert würde, so dass auch ein \verb|ZQuery| als \verb|ZFromItem| benutzt werden kann.
+Der ZQL-Parser versteht das \verb|FROM|-Statement als Liste von Relationen mit optionalen Tupelvariablen. Dadurch leiten sich mehrere Einschränkungen ab. ZQL ist dadurch nicht in der Lage, \verb|JOINS| über die Schlüsselworte \\\verb#  ON [LEFT OUTER|RIGHT OUTER|INNER] JOIN# \\zu erkennen. Der Parser erkennt nur innere \verb|JOINS|, die im \verb|WHERE|-Teil formuliert wurden. Der ZQL-Parser unterstützt daher auch keine Unterabfragen unter \verb|FROM|. Möchte man dieses Problem umgehen, ist es möglich solche Unterabfragen vor dem Parsen zu Entfernen und danach unverändert wieder einzufügen. Es wäre allerdings wünschenswerter wenn der ZQL-Parser erweitert würde, so dass auch ein \verb|ZQuery| als \verb|ZFromItem| benutzt werden kann.
 
 Trotz dieser Einschränkungen sind alle Konzepte, die in dieser Arbeit vorgestellt werden einfach auf jedweden SQL-Parser übertragbar.
 
 
 \subsubsection*{Beurteilung des Parsers}
 
-Vorteile des Parsers sind seine leichte und intuitive Bedienung. Man benötigt nur wenig Einarbeitungszeit, um zu verstehen wie der Parser funktioniert und zu bedienen ist. Weiterhin positiv anzumerken ist, dass er quelloffen ist und mit einem freien Parsergenerator \cite{javacc1} entworfen ist. Dadurch ist er leicht erweiterbar.
+Vorteile des Parsers sind seine leichte und intuitive Bedienung. Man benötigt nur wenig Einarbeitungszeit, um zu verstehen, wie der Parser funktioniert und zu bedienen ist. Weiterhin positiv anzumerken ist, dass er quelloffen ist und mit einem freien Parsergenerator \cite{javacc1} entworfen ist. Dadurch ist er leicht erweiterbar.
 
 Nachteile des Parsers sind seine schwache Dokumentation. Zur Verfügung steht lediglich ein Beispiel und die API-Beschreibung als Javadocs. Kompensiert wird diese Schwäche zwar durch die leichte Einarbeitung, weitere Mängel des Parsers findet man so aber erst in seinem Betrieb heraus. Die wohl größten Probleme hat der Parser damit, dass wichtige und handelsübliche SQL-Konstrukte nicht unterstützt werden. Die fehlende Unterstützung für Unterabfragen unter \verb|FROM| sowie das fehlende Parsen von \verb|CREATE TABLE|-Statements, schränken die Benutzbarkeit des Parsers stark ein. 
 
-Für eine Weiterentwicklung unseres Programms bietet es sich an, den Parser von genannten Schwächen zu befreien, indem er erweitert wird. Eine Alternativlösung ist es stattdessen einen neuen Parser zu benutzen. Hier muss allerdings darauf hingewiesen werden, dass andere Parser deutlich komplizierter sind.
+Für eine Weiterentwicklung unseres Programms bietet es sich an, den Parser von genannten Schwächen zu befreien, indem er erweitert wird. Eine Alternativlösung ist die Verwendung eines neuen Parsers. Hier muss allerdings darauf hingewiesen werden, dass andere Parser deutlich komplizierter sind.
 
 %TODO: CREATE TABLE
 
@@ -203,7 +203,7 @@ exception & java.lang.Throwable \\\hline
 \end{figure}
 
 
-Man könnte die JSP als Erweiterung der Servlets ansehen, da die JSP alle Funktionen dieser übernehmen. Zusätzlich können auch eigene Tag-Libraries erstellt werden. JSP funktioniert ähnlich wie ASP oder PHP. Sowohl Java-Servlets, als auch die JSP, haben die Aufgabe die Ausführung von Javacode dem Nutzer  per HTML verfügbar zu machen. Im Gegensatz zu den Java-Servlets, die komplett aus Javacode bestehen, bestehen JSP-Dateien aus HTML mit kurzen Einschüben von Javacode. Während man also bei den Servlets HTML-Ausgaben nur innerhalb einer Funktion bewerkstelligen kann, ist es möglich bei den JSP direkt HTML auszuschreiben.
+Man könnte die JSP als Erweiterung der Servlets ansehen, da die JSP alle Funktionen dieser übernehmen. Zusätzlich können auch eigene Tag-Libraries erstellt werden. JSP funktioniert ähnlich wie ASP oder PHP. Sowohl Java-Servlets als auch die JSP haben die Aufgabe, die Ausführung von Javacode dem Nutzer per HTML verfügbar zu machen. Im Gegensatz zu den Java-Servlets, die komplett aus Javacode bestehen, bestehen JSP-Dateien aus HTML mit kurzen Einschüben von Javacode. Während man also bei den Servlets HTML-Ausgaben nur innerhalb einer Funktion bewerkstelligen kann, ist es möglich bei den JSP direkt HTML auszuschreiben.
 
 \subsection{Funktionsweise}
 
@@ -233,7 +233,7 @@ Cookies gespeichert.
 
 \section{Auflistung der Software}
 
-Um die Programmierung nachzuvollziehen wird im Folgenden die verwendete Software aufgelistet. Wir vermerken dabei Name, Version, Kurzbeschreibung sowie die Webpräsenz der Software.
+Um die Programmierung nachzuvollziehen, wird im Folgenden die verwendete Software aufgelistet. Wir vermerken dabei Name, Version, Kurzbeschreibung sowie die Webpräsenz der Software.
 
 \begin{tabular}{p{9cm}r}
 \textbf{Software}: ZQL-Parser & \textbf{Version}: 2011-08-26\\

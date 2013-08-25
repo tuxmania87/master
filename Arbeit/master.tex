@@ -127,9 +127,9 @@ In university teaching one often want to compare a students sql query to a sampl
 \chapter{Anhang}
 \section{Benutzerhandbuch} 
 
-Das Benutzerhandbuch ist für sowohl für Linux als auch für Windows geeignet. Befolgen Sie bitte strikt die Installationsanweisungen, um einen korrekten Ablauf der Software zu gewährleisten.\\
+Das Benutzerhandbuch ist sowohl für Linux als auch für Windows geeignet. Befolgen Sie bitte strikt die Installationsanweisungen, um einen korrekten Ablauf der Software zu gewährleisten.\\
 
-Entpacken Sie das Paket sqlequalizer.zip in ein beliebiges Verzeichnis. Wir bezeichnen dieses Verzeichnis im Folgenden als \textbf{basedir}\\
+Entpacken Sie das Paket sqlequalizer.zip in ein beliebiges Verzeichnis. Wir bezeichnen dieses Verzeichnis im Folgenden als \textbf{basedir}.
 
 \subsection{Installation}
 
@@ -141,65 +141,65 @@ Um die Software zu übersetzen benötigen Sie außerdem ein Java Development Kit
 
 \subsubsection{Installation der Datenbank}
 
-Der SQL-Equalizer unterstützt MySQL, PostgreSQL und Oracle DB. Wir gehen davon aus, dass die von ihnen präferierte Datenbank bereits zur Verfügung steht.\\
+Der SQL-Equalizer unterstützt MySQL, PostgreSQL und Oracle DB. Wir gehen davon aus, dass die von Ihnen präferierte Datenbank bereits zur Verfügung steht.\\
 
-Um die interne Datenbank für den SQL-Equalizer zu installieren, verwenden sie die Datei\\\verb|sqlequalizer.sql| im basedir-Verzeichnis. Achten Sie darauf, dass die Datei MySQL kompatibel ist. Wenn sie ein anderes DBMS verwenden wollen, ändern sie die Datei nach ihren Wünschen ab. Achten Sie dabei auf die Typen \verb|DATETIME| und \verb|TEXT|.\\
+Um die interne Datenbank für den SQL-Equalizer zu installieren, verwenden Sie die Datei\\\verb|sqlequalizer.sql| im basedir-Verzeichnis. Achten Sie darauf, dass die Datei MySQL kompatibel ist. Wenn Sie ein anderes DBMS verwenden wollen, ändern Sie die Datei nach ihren Wünschen ab. Achten Sie dabei auf die Typen \verb|DATETIME| und \verb|TEXT|.\\
 
-öffnen Sie die Datei \verb|Connector.java|, die sie unter \url{BASEDIR/src/de/unihalle/sqlequalizer} finden. Ab Zeile 44 finden Sie jeweils kommentierte Bereich, die für PostgreSQL und Oracle DB stehen. Wenn sie MySQL verwenden wollen, dann müssen sie nichts ändern. Möchten sie eine der anderen Datenbanken verwenden, so kommentieren sie die entsprechenden Bereich aus.\\
+Öffnen Sie die Datei \verb|Connector.java|, die Sie unter \url{BASEDIR/src/de/unihalle/sqlequalizer} finden. Ab Zeile 44 finden Sie jeweils kommentierte Bereiche, die für PostgreSQL und Oracle DB stehen. Wenn Sie MySQL verwenden wollen, dann muss nichts geändert werden. Möchten Sie eine der anderen Datenbanken verwenden, so kommentieren Sie die entsprechenden Bereiche aus.\\
 
 \subsubsection{Installation der Software}
 
-Wir nennen das Verzeichnis, in dem der Tomcat-Server installiert ist, als \textbf{tomcatdir}.
-Öffnen Sie Datei \verb|build.xml| im basedir-Verzeichnis und ändern Sie die Zeile 4. Tragen sie dort unter \verb|value| das Verzeichnis \verb|tomcatdir/webapps| ein. Achten Sie darauf, dass die Zeichenkette tomcatdir, durch das korrekte Verzeichnis ersetzt worden ist.\\
+Wir nennen das Verzeichnis, in dem der Tomcat-Server installiert ist, \textbf{tomcatdir}.
+Öffnen Sie die Datei \verb|build.xml| im basedir-Verzeichnis und ändern Sie die Zeile 4. Tragen Sie dort unter \verb|value| das Verzeichnis \verb|tomcatdir/webapps| ein. Achten Sie darauf, dass die Zeichenkette tomcatdir durch das korrekte Verzeichnis ersetzt worden ist.\\
 
 Öffnen Sie ein Terminal.\\
 Windows: Drücken Sie die Windows-Taste und 'r' gleichzeitig. Tippen Sie das Wort 'cmd' ein und drücken Enter.\\
 Linux: Benutzen Sie die Shell.\\
 
-Navigieren Sie in das basedir-Verzeichnis durch Verwendung des 'cd'-Kommandos. Dort angekommen, tippen sie 'ant' in das Terminal ein und bestätigen den Befehl mit Enter. Haben sie Apache Ant korrekt installiert, dann startet nun der Installationsprozess. Am Ende des Prozesses sollte eine sqlequalizer.war Datei erstellt worden sein. Diese wurde auch automatisch in das tomcatdir/webapps Verzeichnis kopiert, so dass sie bereits 'deployed' ist. 
+Navigieren Sie in das basedir-Verzeichnis durch Verwendung des 'cd'-Kommandos. Dort angekommen, tippen Sie 'ant' in das Terminal ein und bestätigen den Befehl mit Enter. Haben Sie Apache Ant korrekt installiert, dann startet nun der Installationsprozess. Am Ende des Prozesses sollte eine sqlequalizer.war-Datei erstellt worden sein. Diese wurde auch automatisch in das tomcatdir/webapps Verzeichnis kopiert, so dass sie bereits 'deployed' ist. 
 
-Navigieren sie mit ihrem Webbrowser folgende URL an: \url{http://hostname:8080/sqlequalizer/}. Sie sehen jetzt einen Loginbildschirm. Loggen sie sich mit den Daten: admin/secure1234 ein. Wenn sie sich einloggen konnten, ist die Softwareinstallation abgeschlossen.
+Navigieren sie mit ihrem Webbrowser folgende URL an: \url{http://hostname:8080/sqlequalizer/}. Sie sehen jetzt einen Loginbildschirm. Loggen Sie sich mit den Daten: admin/secure1234 ein. Wenn Sie sich einloggen konnten, ist die Softwareinstallation abgeschlossen.
 
 \subsection{Admin Control Panel}
 
-Im folgenden wir beschrieben, wie neue Aufgaben in die Datenbank eingepflegt werden können. Dabei sind die einzelnen Schritte bereits in der korrekten Reihenfolge aufgeführt. Eine Übersicht über das Admin Control Panel sehen wir in Abbildung \ref{fig:acp}.
+Im Folgenden wird beschrieben, wie neue Aufgaben in die Datenbank eingepflegt werden können. Dabei sind die einzelnen Schritte bereits in der korrekten Reihenfolge aufgeführt. Eine Übersicht über das Admin Control Panel sehen wir in Abbildung \ref{fig:acp}.
 
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.51]{Bilder/screen_acp_2.png}
-\caption{Übersicht über das Admin-Control-Panel}
+\caption{Übersicht über das Admin Control Panel}
 \label{fig:acp}
 \end{figure}
 
 \subsection{Datenbankschema erstellen}
 
-Navigieren Sie auf das 'admin control panel'. Betätigen Sie den Link 'add database schema'. Daraufhin erhält die Tabelle ein weiteres Schema, was mit \verb|Empty, Empty| markiert ist. Klicken Sie auf 'edit', um das Schema anzupassn. Die erste Spalte bezeichnet den Namen des Datenbankschemas. Damit lässt es sich bei der Zuordnung zu einer Aufgabe leichter zuordnen. In der zweiten Spalte befindet sich ein Eingabefeld. Tragen sie hier das Schema ein. Verwenden Sie Dabei \verb|CREATE TABLE|-Anweisungen, die mit Semikolon (;) abgetrennt sind. Betätigen Sie danach den 'save'-Knopf.
+Navigieren Sie auf das Admin Control Panel. Betätigen Sie den Link 'add database schema'. Daraufhin erhält die Tabelle ein weiteres Schema, was mit \verb|Empty, Empty| markiert ist. Klicken Sie auf 'edit', um das Schema anzupassen. Die erste Spalte bezeichnet den Namen des Datenbankschemas. Damit lässt es sich bei der Zuordnung zu einer Aufgabe leichter wiederfinden. In der zweiten Spalte befindet sich ein Eingabefeld. Tragen Sie hier das Schema ein. Verwenden Sie Dabei \verb|CREATE TABLE|-Anweisungen, die mit Semikolon (;) abgetrennt sind. Betätigen Sie danach den 'save'-Knopf.
 
 \subsection{Externe Datenbank anbinden}
 
-Die SQL-Anfragen des Lernenden und die Musterlösung werden auf externen Datenbanken zur Kontrolle ausgeführt. Um eine externe Datenbank anzubinden, navigieren sie im Admin Control Panel auf den Link 'external databases'. Klicken Sie nun auf 'add external database' und anschließend auf 'edit'.  Tragen Sie Daten entsprechend der folgenden Tabelle in die Felder ein.
+Die SQL-Anfragen des Lernenden und die Musterlösung werden auf externen Datenbanken zur Kontrolle ausgeführt. Um eine externe Datenbank anzubinden, navigieren Sie im Admin Control Panel auf den Link 'external databases'. Klicken Sie nun auf 'add external database' und anschließend auf 'edit'.  Tragen Sie Daten entsprechend der folgenden Tabelle in die Felder ein.
 
 \begin{tabular}{|l|p{14cm}|}\hline
 Spatel 1 & Tragen Sie hier den Hostnamen und den Port des DBMS getrennt mit Doppelpunkt (:) ein. Der Port muss auch angegeben werden, wenn es der Standard-Port ist.\\\hline
 Spatel 2 & Hier wird der Name der Datenbank eingetragen.\\\hline
 Spatel 3 & Tragen Sie hier ein, was sie für ein DBMS benutzen. Zur Auswahl stehen MySQL, PostgreSQL und Oracle DB.\\\hline
-Spatel 4 & Hier tragen sie den Benutzernamen für den Zugriff auf die Datenbank ein.\\\hline
-Spatel 5 & Hier tragen sie das Passwort für den Zugriff auf die Datenbank ein.\\\hline
+Spatel 4 & Hier tragen Sie den Benutzernamen für den Zugriff auf die Datenbank ein.\\\hline
+Spatel 5 & Hier tragen Sie das Passwort für den Zugriff auf die Datenbank ein.\\\hline
 \end{tabular}
 
 
 
-Es muss darauf geachtet werden, dass die externe Datenbank bereits Tabellen mit Daten enthalten muss. Der SQL-Equalizer legt auf externen Datenbanken keine Tabellen oder Datensätze an.
+Es muss darauf geachtet werden, dass die externe Datenbank bereits Tabellen mit Daten enthält. Der SQL-Equalizer legt auf externen Datenbanken keine Tabellen oder Datensätze an.
 
 \subsection{Aufgabe erstellen}
 
-Um eine neue Aufgabe einzupflegen, navigieren sie im Admin Control Panel auf den Link 'add task' und anschließend auf 'edit'. Sie sehen nun eine neue Eingabemaske, wie sie auch in Abbildung \ref{fig:acp2} zu sehen ist. Tragen Sie die Daten entsprechend der folgenden Tabelle ein.
+Um eine neue Aufgabe einzupflegen, navigieren Sie im Admin Control Panel auf den Link 'add task' und anschließend auf 'edit'. Sie sehen nun eine neue Eingabemaske, wie sie auch in Abbildung \ref{fig:acp2} zu sehen ist. Tragen Sie die Daten entsprechend der folgenden Tabelle ein.
 
 \begin{figure}
 \centering
 \includegraphics[scale=0.61]{Bilder/screen_acp_1.png}
 \caption{Erstellen einer Aufgabe im ACP}
-\label{fig:acp}
+\label{fig:acp2}
 \end{figure}
 
 \begin{tabular}{|l|p{12cm}|}\hline
@@ -207,7 +207,7 @@ description & Tragen Sie hier die Aufgabenstellung als Textform ein. Beschreiben
 sample solutions & Tragen Sie hier die Musterlösung in Form einer SQL-Anfrage ein. Der Student kann diese Anfrage nicht sehen. Möchten Sie mehrere Musterlösungen verwenden, weil sie sich strukturell stark unterscheiden, so verwenden Sie den Link 'add another sample solution', um mehrere Eingabefelder zu erzeugen.\\\hline
 database schema & Verwenden Sie das dropdown-Menü, um ihr erstelltes Datenbankschema hier anzugeben.\\\hline
 respect column order & Haken Sie das Kästchen an, wenn die Spalten genau die angegebene Reihenfolge einhalten sollen.\\\hline
-external database & Haken Sie hier die externen Datenbanken an, auf denen die Musterlösung und die Lösung des Lernenden ausgeführt werden sollen.\\\hline
+external database & Markieren Sie hier die externen Datenbanken, auf denen die Musterlösung und die Lösung des Lernenden ausgeführt werden sollen.\\\hline
 \end{tabular}
 
 Nachdem Sie den 'save'-Knopf betätigt haben, ist die Aufgabe im System eingepflegt.
@@ -215,18 +215,18 @@ Nachdem Sie den 'save'-Knopf betätigt haben, ist die Aufgabe im System eingepfl
 
 \subsection{Handbuch für Anwender}
 
-Der SQL-Equalizer ermöglicht es, das formulieren von SQL-Anfragen zu üben. Dabei melden sie sich als Nutzer mit ihrem Browser beim SQL-Equalizer an. Sie können dann Aufgaben lösen und erhalten vom System Rückmeldungen, ob ihre Lösung korrekt war oder nicht. Dabei zeigt ihnen der SQL-Equalizer in welchem Bereich ihrer SQL-Anfrage Probleme aufgetaucht sind. Sie haben dann die Möglichkeit erneute Lösungsversuche einzureichen. 
+Der SQL-Equalizer ermöglicht es, das formulieren von SQL-Anfragen zu üben. Dabei melden Sie sich als Nutzer mit ihrem Browser beim SQL-Equalizer an. Sie können dann Aufgaben lösen und erhalten vom System Rückmeldung, ob ihre Lösung korrekt war oder nicht. Dabei zeigt ihnen der SQL-Equalizer in welchem Bereich ihrer SQL-Anfrage Probleme aufgetaucht sind. Sie haben dann die Möglichkeit erneute Lösungsversuche einzureichen. 
 
 \subsubsection{Übersicht}
 
-Nachdem sie sich angemeldet haben, sehen sie den Startbildschirm. Dieser ist in drei Bereich geteilt: Im ersten Bereich sehen sie ihre fünf letzten Einsendungen. In einer Tabelle wird ihnen dabei das Datum der Einsendung (time), die Aufgabennummer (task), ihr SQL-Statement (sql statement) sowie die Korrektheit der Lösung (correct?) angezeigt.
+Nachdem Sie sich angemeldet haben, sehen Sie den Startbildschirm. Dieser ist in drei Bereiche geteilt: Im ersten Bereich sehen Sie ihre fünf letzten Einsendungen. In einer Tabelle wird Ihnen dabei das Datum der Einsendung (time), die Aufgabennummer (task), ihr SQL-Statement (sql statement) sowie die Korrektheit der Lösung (correct?) angezeigt.
 
-Im Feld 'correct?' gibt es drei mögliche Werte: Konnte ihr SQL-Statement durch das Standardisierungsverfahren an die Musterlösung angepasst werden, so erhalten sie dort die Ausgabe \textbf{yes}. Ist dies nicht gelungen und ihre Lösung liefert beim Ausführen auf einer externen Datenbank mit realen Daten nicht die gleichen Ergebnisse wie die Musterlösung, so erhalten sie die Ausgabe \textbf{no}. Ansonsten erhalten sie die Antwort \textbf{unknown}. Dabei ist zu beachten, dass ihre Lösung im dritten Fall dennoch korrekt sein kann. Dem Dozenten werden solche Lösungen angezeigt, damit dieser dann entscheiden kann, ob ihre Lösung korrekt ist oder nicht.
+Im Feld 'correct?' gibt es drei mögliche Werte: Konnte ihr SQL-Statement durch das Standardisierungsverfahren an die Musterlösung angepasst werden, so erhalten Sie dort die Ausgabe \textbf{yes}. Ist dies nicht gelungen und ihre Lösung liefert beim Ausführen auf einer externen Datenbank mit realen Daten nicht die gleichen Ergebnisse wie die Musterlösung, so erhalten Sie die Ausgabe \textbf{no}. Ansonsten erhalten Sie die Antwort \textbf{unknown}. Dabei ist zu beachten, dass ihre Lösung im dritten Fall dennoch korrekt sein kann. Dem Dozenten werden solche Lösungen angezeigt, damit dieser dann entscheiden kann, ob ihre Lösung korrekt ist oder nicht.
 
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.7]{Bilder/screen_user_1.png}
-\caption{Informationen über die letzten fünf Lösungsversuche.}
+\caption{Informationen über die letzten fünf Lösungsversuche}
 \end{figure}
 
 Im nächsten Bereich, sehen Sie eine Statistik über alle Aufgaben. Dabei wird in einer Tabelle angezeigt, wie viele Lösungsversuche sie pro Aufgabe bisher benötigt haben (\#solutions). Weiterhin wird angezeigt, wie viele von diesen Lösungsversuchen korrekt waren (correct). Eine Erfolgsrate (ratio) und der Zeitpunkt des letzten Lösungsversuches vervollständigen die Anzeige.
@@ -247,7 +247,7 @@ Im dritten und letzten Bereich, finden Sie eine Übersicht über alle bisher ung
 
 \subsubsection{Einsenden einer Lösung}
 
-Nachdem eine Aufgabe zum Lösen ausgewählt wurde, öffnet sich eine Eingabemaske. Oben sehen Sie die Aufgabenstellung in Textform. Diese enthält Informationen welche Spalten im Ergebnis angezeigt werden sollen. Darunter befindet sich das Datenbankschema in Form von \verb|CREATE TABLE|-Anweisungen. Diesem Schema kann entnommen werden welche Spalten in welcher Art und Weise definiert sind. Darunter befindet sich ein Eingabefeld, in das die Lösung eingetragen werden kann. Der Aufbau der Eingabemaske ist in Abbildung \ref{fig:maske1} zu sehen.
+Nachdem eine Aufgabe zum Lösen ausgewählt wurde, öffnet sich eine Eingabemaske. Oben sehen Sie die Aufgabenstellung in Textform. Diese enthält Informationen, welche Spalten im Ergebnis angezeigt werden sollen. Darunter befindet sich das Datenbankschema in Form von \verb|CREATE TABLE|-Anweisungen. Diesem Schema kann entnommen werden, welche Spalten in welcher Art und Weise definiert sind. Darunter befindet sich ein Eingabefeld, in das die Lösung eingetragen werden kann. Der Aufbau der Eingabemaske ist in Abbildung \ref{fig:maske1} zu sehen.
 
 \begin{figure}[h]
 \centering
@@ -257,7 +257,7 @@ Nachdem eine Aufgabe zum Lösen ausgewählt wurde, öffnet sich eine Eingabemask
 \end{figure}
 
 
-Nachdem Sie die Lösung abgeschickt haben, gibt ihnen der SQL-Equalizer ein detailliertes Feedback dazu. Zunächst wird die geparste Eingabe sowie - auf Wunsch - die standardisierte Eingabe angezeigt.
+Nachdem Sie die Lösung abgeschickt haben, gibt Ihnen der SQL-Equalizer ein detailliertes Feedback dazu. Zunächst wird die geparste Eingabe sowie - auf Wunsch - die standardisierte Eingabe angezeigt.
 
 \begin{figure}[H]
 \centering
@@ -267,9 +267,9 @@ Nachdem Sie die Lösung abgeschickt haben, gibt ihnen der SQL-Equalizer ein deta
 
 Darunter befinden sich die Kommentare des SQL-Equalizer in drei Abschnitten. Im ersten Abschnitt wird angezeigt, ob die eingesandte Lösung durch Standardisierung mit der Musterlösung übereinstimmt. Ist dies der Fall, werden alle weiteren Ausgaben unterbunden und Sie erhalten die Meldung, dass ihre Lösung korrekt ist.
 
-Im zweiten Abschnitt werden die zwei Ergebnismengen, die die eingesandte und die Musterlösung erzeugen, verglichen. Geben beide Anfragen die gleichen Ergebnisse zurück, wird Ihnen dies angezeigt, zusammen mit der Meldung, dass der SQL-Equalizer nicht sagen kann, ob ihre Lösung korrekt ist oder nicht. Unterscheiden Sich die Ergebnismengen jedoch, wird Ihnen angezeigt, dass ihr Lösungsversuch nicht korrekt war.
+Im zweiten Abschnitt werden die zwei Ergebnismengen, die von der eingesandten und der Musterlösung erzeugt worden sind, verglichen. Geben beide Anfragen die gleichen Ergebnisse zurück, wird Ihnen dies angezeigt, zusammen mit der Meldung, dass der SQL-Equalizer nicht sagen kann, ob ihre Lösung korrekt ist oder nicht. Unterscheiden sich die Ergebnismengen jedoch, wird Ihnen angezeigt, dass ihr Lösungsversuch nicht korrekt war.
 
-Im letzten Abschnitt weist Sie der SQL-Equalizer auf Abweichungen in ihrer Lösung hin. Dabei vergleicht der SQL-Equalizer die einzelnen Teile ihrer Anfrage mit den entsprechenden Teilen der Musterlösung. Auch andere Eigenheiten ihrer beiden Anfragen werden verglichen. Das Ergebnis dieser Anzeige wird ihnen dann in diesem Abschnitt angezeigt.
+Im letzten Abschnitt weist Sie der SQL-Equalizer auf Abweichungen in ihrer Lösung hin. Dabei vergleicht der SQL-Equalizer die einzelnen Teile ihrer Anfrage mit den entsprechenden Teilen der Musterlösung. Auch andere Eigenheiten ihrer beiden Anfragen werden verglichen. Das Ergebnis dieser Anzeige wird Ihnen dann in diesem Abschnitt angezeigt.
 
 Ein Beispiel für eine solche Ausgabe sehen Sie in Abbildung \ref{fig:screen_user_1}
 
