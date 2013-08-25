@@ -4,7 +4,7 @@
 
 	Auf der Webseite vom \cite{zql1} Projekt ist der Open-Source-Parser ZQL zu finden, welcher in der Lage ist SQL zu parsen und in Datenstrukturen zu überführen. Der Parser selbst ist mit \cite{javacc1} geschrieben, einem  Java-Parsergenerator (zu vergleichen mit dem populärem Unix yacc Generator).
 
-ZQL bietet Unterstützung für \verb|SELECT-|, \verb|INSERT-|, \verb|DELETE-|, \verb|COMMIT-|, \verb|ROLLBACK-|, \verb|UPDATE-|, \verb|SET|- und \verb|TRANSACTION-|Ausdrücke. Wichtig für diese Arbeit sind dabei insbesondere \verb|SELECT-| und \verb|UPDATE-|Ausdrücke, sowie -- die leider nicht enthaltenen -- \verb|CREATE TABLE-|Ausdrücke.
+ZQL bietet Unterstützung für \verb|SELECT-|, \verb|INSERT-|, \verb|DELETE-|, \verb|COMMIT-|, \verb|ROLLBACK-|, \verb|UPDATE-|, \verb|SET|- und \verb|TRANSACTION-|Ausdrücke. Wichtig für diese Arbeit sind dabei insbesondere \verb|SELECT-| und \verb|UPDATE-|Ausdrücke sowie -- die leider nicht enthaltenen -- \verb|CREATE TABLE-|Ausdrücke.
 
 \subsection{Funktionsweise des Parsers}
 \label{subsec:funktionparser}
@@ -209,7 +209,7 @@ Man könnte die JSP als Erweiterung der Servlets ansehen, da die JSP alle Funkti
 
 Wie bereits erwähnt, handelt es sich bei einer JSP-Seite um ein HTML-Dokument. Daher gibt es hier keine expliziten Funktionen oder Klassen, die die Ausgabe eines Javaprogrammes steuern. Stattdessen stehen dem Programmierer unter JSP mehrere implizite Objekte zur Verfügung, um deren Konstruktion er sich nicht kümmern muss. Eine Übersicht der impliziten Objekte finden wir in Abbildung \ref{fig:implicitObj}. Da eine JSP-Datei im eigentlichem Sinne eine (J)HTML-Seite ist, muss der Javacode abgegrenzt werden. Wir schreiben sämtlichen Javacode daher innerhalb von \verb|<% %>|. Diese funktionieren ähnlich wie \verb|<?php ?>| in PHP.
 
-Wir gehen nun kurz auf wesentliche implizite Objekte ein. Das Objekt \textbf{request} beinhaltet alle Funktionen und Daten, die wir benötigen um die HTTP-Anfrage zu verarbeiten. Wir haben \mbox{z. B.} Zugriff auf: Cookies, HTTP-Header, übertragene POST- oder GET-Variablen (hier Parameter genannt).
+Wir gehen nun kurz auf wesentliche implizite Objekte ein. Das Objekt \textbf{request} beinhaltet alle Funktionen und Daten, die wir benötigen, um die HTTP-Anfrage zu verarbeiten. Wir haben \mbox{z. B.} Zugriff auf: Cookies, HTTP-Header, übertragene POST- oder GET-Variablen (hier Parameter genannt).
 
 Das \textbf{response}-Objekt ist das genaue Gegenstück zum request-Objekt. Es enthält alle Informationen für die HTTP-Response und wird vor allem genutzt, um den Content-Type festzulegen und Response-Header oder Cookies zu setzen. 
 
@@ -249,7 +249,7 @@ Um die Programmierung nachzuvollziehen wird im Folgenden die verwendete Software
 
 \begin{tabular}{p{9cm}r}
 \textbf{Software}: Oracle JDK  & \textbf{Version}:1.6.0\\
-\multicolumn{2}{p{1\textwidth}}{\textbf{Beschreibung}: Das Java-JDK ist notwendig um Programme zu übersetzen und auszuführen. Wir verwenden Version 1.6.0, da im universitären Umfeld, in dessen Rahmen unser Programm entsteht, häufig noch diese Version verwendet wird. Unser Programm ist jedoch auch kompatibel zu JDK 1.7.0.}\\
+\multicolumn{2}{p{1\textwidth}}{\textbf{Beschreibung}: Das Java-JDK ist notwendig, um Programme zu übersetzen und auszuführen. Wir verwenden Version 1.6.0, da im universitären Umfeld, in dessen Rahmen unser Programm entsteht, häufig noch diese Version verwendet wird. Unser Programm ist jedoch auch kompatibel zu JDK 1.7.0.}\\
 \multicolumn{2}{l}{\textbf{URL}: \url{http://www.oracle.com/technetwork/java/javase/downloads/index.html}}
 \end{tabular}\\
 

@@ -84,7 +84,7 @@
 \onehalfspacing
 \vspace*{10mm}
 {\huge \textbf{Zusammenfassung}}\\\\
-In der Lehre möchte man häufig SQL-Anfragen des Lernenden mit einer hinterlegten Musterlösung vergleichen, um deren Äquivalenz zu zeigen. Diese Arbeit beschäftigt sich mit dem semantischen Vergleich zweier SQL-Anfragen. Dabei wird ein Standardisierungsverfahren für SQL-Anfragen entwickelt, welches mit Hilfe des Datenbankschemas SQL-Anfragen legal umformt und dabei erreicht, dass semantisch gleiche Anfragen nach der Umformung auch syntaktisch gleich sind. Schlägt dieses Verfahren fehl so wird in einem weiteren Verfahren mit realen Daten geprüft, ob die Anfragen tatsächlich Ungleich sind. Diese Verfahren werden in einem Prototypen in Java implementiert und bilden eine Lernplattform, die dem Nutzer per Java Server Pages in einem Webbrowser zur Verfügung gestellt wird. Metadaten und Struktur der beiden SQL-Anfragen werden ausgewertet und der Nutzer erhält dadurch detailliertes Feedback, um so seine Fehler leichter zu bemerken.\newline\newline\newline\newline\newline
+In der Lehre möchte man häufig SQL-Anfragen des Lernenden mit einer hinterlegten Musterlösung vergleichen, um deren Äquivalenz zu zeigen. Diese Arbeit beschäftigt sich mit dem semantischen Vergleich zweier SQL-Anfragen. Dabei wird ein Standardisierungsverfahren für SQL-Anfragen entwickelt, welches mit Hilfe des Datenbankschemas SQL-Anfragen legal umformt und dabei erreicht, dass semantisch gleiche Anfragen nach der Umformung auch syntaktisch gleich sind. Schlägt dieses Verfahren fehl, so wird in einem weiteren Verfahren mit realen Daten geprüft, ob die Anfragen tatsächlich ungleich sind. Diese Verfahren werden in einem Prototypen in Java implementiert und bilden eine Lernplattform, die dem Nutzer per Java Server Pages in einem Webbrowser zur Verfügung gestellt wird. Metadaten und Struktur der beiden SQL-Anfragen werden ausgewertet und der Nutzer erhält dadurch detailliertes Feedback, um so seine Fehler leichter zu bemerken.\newline\newline\newline\newline\newline
 {\huge \textbf{Abstract}}\\\\
 In university teaching one often want to compare a students sql query to a sample solution to show the equivalence of them. This thesis is about the semantic comparison of two SQL queries. We develop a method of standardization that legally rewrites a SQL query with the help of the database schema. If two SQL queries are semantically equal they shall be syntactically equal as well after the standardization. If this method fails we try to prove that the two queries are not semantically equal. Therefore we execute both queries on a real database and check their results. These methods are implemented in a Java prototype and form a learning platform that contains an interface built with Java Server Pages so the user can access it via web browser. The structure and meta information of the user query and the sample solution query are being compared and evaluated to give the user a detailed feedback on his query.
 
@@ -127,7 +127,7 @@ In university teaching one often want to compare a students sql query to a sampl
 \chapter{Anhang}
 \section{Benutzerhandbuch} 
 
-Das Benutzerhandbuch ist für sowohl für Linux als auch für Windows geeignet. Befolgen Sie bitte strikt die Installationsanweisungen um einen korrekten Ablauf der Software zu gewährleisten.\\
+Das Benutzerhandbuch ist für sowohl für Linux als auch für Windows geeignet. Befolgen Sie bitte strikt die Installationsanweisungen, um einen korrekten Ablauf der Software zu gewährleisten.\\
 
 Entpacken Sie das Paket sqlequalizer.zip in ein beliebiges Verzeichnis. Wir bezeichnen dieses Verzeichnis im Folgenden als \textbf{basedir}\\
 
@@ -135,7 +135,7 @@ Entpacken Sie das Paket sqlequalizer.zip in ein beliebiges Verzeichnis. Wir beze
 
 \subsubsection{Vorbereitung}
 
-Der SQL-Equalizer benötigt verschiedene Software um korrekt zu funktionieren. Installieren Sie bitte zunächst einen aktuellen Tomcat-Server. Die Software und Installationsanleitung für einen Tomcat-Server finden Sie unter \url{http://tomcat.apache.org/}.\\
+Der SQL-Equalizer benötigt verschiedene Software, um korrekt zu funktionieren. Installieren Sie bitte zunächst einen aktuellen Tomcat-Server. Die Software und Installationsanleitung für einen Tomcat-Server finden Sie unter \url{http://tomcat.apache.org/}.\\
 
 Um die Software zu übersetzen benötigen Sie außerdem ein Java Development Kit, zu finden unter \url{http://www.oracle.com/technetwork/java/javase/downloads/index.html}. Um einen automatisierten Ablauf zu gewährleisten, installieren Sie bitte Apache Ant, zu finden unter \url{http://ant.apache.org/}.\\
 
@@ -162,7 +162,14 @@ Navigieren sie mit ihrem Webbrowser folgende URL an: \url{http://hostname:8080/s
 
 \subsection{Admin Control Panel}
 
-Im folgenden wir beschrieben, wie neue Aufgaben in die Datenbank eingepflegt werden können. Dabei sind die einzelnen Schritte bereits in der korrekten Reihenfolge aufgeführt.
+Im folgenden wir beschrieben, wie neue Aufgaben in die Datenbank eingepflegt werden können. Dabei sind die einzelnen Schritte bereits in der korrekten Reihenfolge aufgeführt. Eine Übersicht über das Admin Control Panel sehen wir in Abbildung \ref{fig:acp}.
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.51]{Bilder/screen_acp_2.png}
+\caption{Übersicht über das Admin-Control-Panel}
+\label{fig:acp}
+\end{figure}
 
 \subsection{Datenbankschema erstellen}
 
@@ -180,11 +187,20 @@ Spatel 4 & Hier tragen sie den Benutzernamen für den Zugriff auf die Datenbank 
 Spatel 5 & Hier tragen sie das Passwort für den Zugriff auf die Datenbank ein.\\\hline
 \end{tabular}
 
+
+
 Es muss darauf geachtet werden, dass die externe Datenbank bereits Tabellen mit Daten enthalten muss. Der SQL-Equalizer legt auf externen Datenbanken keine Tabellen oder Datensätze an.
 
 \subsection{Aufgabe erstellen}
 
-Um eine neue Aufgabe einzupflegen, navigieren sie im Admin Control Panel auf den Link 'add task' und anschließend auf 'edit'. Sie sehen nun eine neue Eingabemaske. Tragen Sie die Daten entsprechend der folgenden Tabelle ein.
+Um eine neue Aufgabe einzupflegen, navigieren sie im Admin Control Panel auf den Link 'add task' und anschließend auf 'edit'. Sie sehen nun eine neue Eingabemaske, wie sie auch in Abbildung \ref{fig:acp2} zu sehen ist. Tragen Sie die Daten entsprechend der folgenden Tabelle ein.
+
+\begin{figure}
+\centering
+\includegraphics[scale=0.61]{Bilder/screen_acp_1.png}
+\caption{Erstellen einer Aufgabe im ACP}
+\label{fig:acp}
+\end{figure}
 
 \begin{tabular}{|l|p{12cm}|}\hline
 description & Tragen Sie hier die Aufgabenstellung als Textform ein. Beschreiben Sie, welche Spalten welcher Tabelle in was für einer Sortierung (falls gewünscht) ausgegeben werden sollen, so dass der Student möglichst genau weiß, was er zu tun hat.\\\hline
@@ -196,6 +212,73 @@ external database & Haken Sie hier die externen Datenbanken an, auf denen die Mu
 
 Nachdem Sie den 'save'-Knopf betätigt haben, ist die Aufgabe im System eingepflegt.
 
+
+\subsection{Handbuch für Anwender}
+
+Der SQL-Equalizer ermöglicht es, das formulieren von SQL-Anfragen zu üben. Dabei melden sie sich als Nutzer mit ihrem Browser beim SQL-Equalizer an. Sie können dann Aufgaben lösen und erhalten vom System Rückmeldungen, ob ihre Lösung korrekt war oder nicht. Dabei zeigt ihnen der SQL-Equalizer in welchem Bereich ihrer SQL-Anfrage Probleme aufgetaucht sind. Sie haben dann die Möglichkeit erneute Lösungsversuche einzureichen. 
+
+\subsubsection{Übersicht}
+
+Nachdem sie sich angemeldet haben, sehen sie den Startbildschirm. Dieser ist in drei Bereich geteilt: Im ersten Bereich sehen sie ihre fünf letzten Einsendungen. In einer Tabelle wird ihnen dabei das Datum der Einsendung (time), die Aufgabennummer (task), ihr SQL-Statement (sql statement) sowie die Korrektheit der Lösung (correct?) angezeigt.
+
+Im Feld 'correct?' gibt es drei mögliche Werte: Konnte ihr SQL-Statement durch das Standardisierungsverfahren an die Musterlösung angepasst werden, so erhalten sie dort die Ausgabe \textbf{yes}. Ist dies nicht gelungen und ihre Lösung liefert beim Ausführen auf einer externen Datenbank mit realen Daten nicht die gleichen Ergebnisse wie die Musterlösung, so erhalten sie die Ausgabe \textbf{no}. Ansonsten erhalten sie die Antwort \textbf{unknown}. Dabei ist zu beachten, dass ihre Lösung im dritten Fall dennoch korrekt sein kann. Dem Dozenten werden solche Lösungen angezeigt, damit dieser dann entscheiden kann, ob ihre Lösung korrekt ist oder nicht.
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.7]{Bilder/screen_user_1.png}
+\caption{Informationen über die letzten fünf Lösungsversuche.}
+\end{figure}
+
+Im nächsten Bereich, sehen Sie eine Statistik über alle Aufgaben. Dabei wird in einer Tabelle angezeigt, wie viele Lösungsversuche sie pro Aufgabe bisher benötigt haben (\#solutions). Weiterhin wird angezeigt, wie viele von diesen Lösungsversuchen korrekt waren (correct). Eine Erfolgsrate (ratio) und der Zeitpunkt des letzten Lösungsversuches vervollständigen die Anzeige.
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.7]{Bilder/screen_user_2.png}
+\caption{Statistik über alle Aufgaben}
+\end{figure}
+
+Im dritten und letzten Bereich, finden Sie eine Übersicht über alle bisher ungelösten Aufgaben. Dort werden Ihnen die Anzahl der Lösungsversuche sowie ein Hyperlink zur Aufgabe angezeigt.
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.7]{Bilder/screen_user_3.png}
+\caption{Ungelöste Aufgaben}
+\end{figure}
+
+\subsubsection{Einsenden einer Lösung}
+
+Nachdem eine Aufgabe zum Lösen ausgewählt wurde, öffnet sich eine Eingabemaske. Oben sehen Sie die Aufgabenstellung in Textform. Diese enthält Informationen welche Spalten im Ergebnis angezeigt werden sollen. Darunter befindet sich das Datenbankschema in Form von \verb|CREATE TABLE|-Anweisungen. Diesem Schema kann entnommen werden welche Spalten in welcher Art und Weise definiert sind. Darunter befindet sich ein Eingabefeld, in das die Lösung eingetragen werden kann. Der Aufbau der Eingabemaske ist in Abbildung \ref{fig:maske1} zu sehen.
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.6]{Bilder/screen_user_4.png}
+\caption{Eingabemaske}
+\label{fig:maske1}
+\end{figure}
+
+
+Nachdem Sie die Lösung abgeschickt haben, gibt ihnen der SQL-Equalizer ein detailliertes Feedback dazu. Zunächst wird die geparste Eingabe sowie - auf Wunsch - die standardisierte Eingabe angezeigt.
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.6]{Bilder/screen_user_5.png}
+\caption{Geparste Eingabe}
+\end{figure}
+
+Darunter befinden sich die Kommentare des SQL-Equalizer in drei Abschnitten. Im ersten Abschnitt wird angezeigt, ob die eingesandte Lösung durch Standardisierung mit der Musterlösung übereinstimmt. Ist dies der Fall, werden alle weiteren Ausgaben unterbunden und Sie erhalten die Meldung, dass ihre Lösung korrekt ist.
+
+Im zweiten Abschnitt werden die zwei Ergebnismengen, die die eingesandte und die Musterlösung erzeugen, verglichen. Geben beide Anfragen die gleichen Ergebnisse zurück, wird Ihnen dies angezeigt, zusammen mit der Meldung, dass der SQL-Equalizer nicht sagen kann, ob ihre Lösung korrekt ist oder nicht. Unterscheiden Sich die Ergebnismengen jedoch, wird Ihnen angezeigt, dass ihr Lösungsversuch nicht korrekt war.
+
+Im letzten Abschnitt weist Sie der SQL-Equalizer auf Abweichungen in ihrer Lösung hin. Dabei vergleicht der SQL-Equalizer die einzelnen Teile ihrer Anfrage mit den entsprechenden Teilen der Musterlösung. Auch andere Eigenheiten ihrer beiden Anfragen werden verglichen. Das Ergebnis dieser Anzeige wird ihnen dann in diesem Abschnitt angezeigt.
+
+Ein Beispiel für eine solche Ausgabe sehen Sie in Abbildung \ref{fig:screen_user_1}
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.61]{Bilder/screen_user_6.png}
+\caption{Rückmeldung vom SQL-Equalizer}
+\label{fig:screen_user_1}
+\end{figure}
 
 \include{erklaerung}
 
