@@ -48,7 +48,7 @@
 	<copy todir="dist/WebContent/WEB-INF/classes" >  
         <fileset dir="${basedir}/WebContent/WEB-INF/classes" includes="**"/>  
 	</copy>
-    <war basedir="${basedir}/dist/WebContent" destfile="My.war"
+    <war basedir="${basedir}/dist/WebContent" destfile="sqlequalizer.war"
      webxml="${basedir}/dist/WebContent/WEB-INF/web.xml">
         <!--<exclude name="WEB-INF/**" />-->
         <webinf dir="${basedir}/dist/WebContent/WEB-INF/">
@@ -58,7 +58,7 @@
 </target>
 
 <target name="deploy">
-    <copy file="My.war" todir="${tomcat.deploydir}" />
+    <copy file="sqlequalizer.war" todir="${tomcat.deploydir}" />
 </target>
 
 </project>
