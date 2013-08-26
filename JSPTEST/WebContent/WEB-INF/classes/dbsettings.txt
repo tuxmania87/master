@@ -1,0 +1,6 @@
+# dburi = hostname:port
+dburi = localhost:3306
+# dbname
+dbname = masterarbeit
+dbuser = root
+dbpw = 82859415
