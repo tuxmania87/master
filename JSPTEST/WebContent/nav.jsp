@@ -6,7 +6,8 @@
 <% 
 
 if(session.getAttribute("dozent") != null) {
-	out.println("<li><a href=\"acp.jsp\">admin control panel</a></li>");
+	out.println("<li><a href=\"acp.jsp\">[admin] control panel</a></li>");
+	out.println("<li><a href=\"acp_solutions.jsp\">[admin] unknown solutions</a></li>");
 }
 
 %>

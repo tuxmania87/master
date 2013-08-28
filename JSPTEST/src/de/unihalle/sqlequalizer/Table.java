@@ -103,7 +103,8 @@ public class Table {
 			//check for notnull
 			boolean nul = true;
 			for(int j = 1; j< temp.length; j++) {
-				if(temp[j].toLowerCase().equals("null") && temp[j-1].toLowerCase().equals("not")) {
+				if((temp[j].toLowerCase().equals("null") && temp[j-1].toLowerCase().equals("not")) ||
+						((temp[j].toLowerCase().equals("key") && temp[j-1].toLowerCase().equals("primary")))) {
 					nul = false;
 				}
 			}

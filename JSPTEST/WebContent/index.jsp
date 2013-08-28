@@ -51,7 +51,7 @@ ResultSet r = prep.executeQuery();
 int i = 0;
 while(r.next() && i < 5) {
 	
-	out.println("<tr><td>"+r.getString("timeat")+"</td><td>"+r.getString("taskid")+"</td><td>"+r.getString("sqlstatement")+"</td><td>"+(r.getInt("correct") == 0 ? "no" : "yes")+"</td></tr>");
+	out.println("<tr><td>"+r.getString("timeat")+"</td><td>"+r.getString("taskid")+"</td><td>"+r.getString("sqlstatement").replaceFirst("where", "where<br>")+"</td><td>"+(r.getInt("correct") == 0 ? "no" : (r.getInt("correct") == 1 ? "yes" : "unknown" ))+"</td></tr>");
 	i++;
 }
 %>

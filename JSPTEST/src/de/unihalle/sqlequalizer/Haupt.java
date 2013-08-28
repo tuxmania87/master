@@ -10,6 +10,7 @@ import org.gibello.zql.ZConstant;
 import org.gibello.zql.ZExp;
 import org.gibello.zql.ZExpression;
 import org.gibello.zql.ZQuery;
+import org.gibello.zql.ZSelectItem;
 
 
 public class Haupt {
@@ -31,10 +32,12 @@ public class Haupt {
 		//q2.setOriginalStatement("select e.a AS \"e.a\", e.a+x.b AS \"spalte2\", d AS \"spalte3\", \"d\" as \"spalte4\", avg(e.sal) as \"Spalte5\" from test e WHERE a+b+c+d = 2 AND a-b-c-d = 5 order by e.a desc, b, c asc");
 		//q2.setOriginalStatement("select * from test e WHERE  ( (b < 2) or (c > 3) ) and ( (d < 4) or (a > 5) )   ;");
 		//q2.setOriginalStatement("select * from test e WHERE  ( ( (a > 5) or (d < 4) ) and  ((c > 3)  or (b < 2)))     ;");
-		q2.setOriginalStatement("select * from test e WHERE  a+2+3+4 = 5  ;");
+		q2.setOriginalStatement("select empno, ename from emp order by deptno, ename desc");
 		System.out.println(q2.original);
 		
-		System.out.println("X: "+QueryUtils.sortTree(q2.original.getWhere()));
+		
+		
+		
 		
 		
 		ZQuery[] moreRes =  q2.equalize(true);
@@ -47,7 +50,7 @@ public class Haupt {
 		q2.createTable("create table dept (deptno int, dname varchar(500), location varchar(500))");
 		q2.createTable("create table test (a int references emp(sal) not null, b int, c int, d int, x int, y int)");
 		
-		q2.setOriginalStatement("select ename, sal from emp a where mgr is null or not exists(select * from emp b where a.mgr = b.empno)");
+		q2.setOriginalStatement("select d.*,emp.* from  dept d,emp e");
 		System.out.println(q2.original);
 		
 		moreRes =  q2.equalize(true);

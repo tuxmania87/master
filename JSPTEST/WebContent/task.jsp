@@ -1,4 +1,5 @@
 
+<%@page import="java.util.ArrayList"%>
 <%@page import="java.util.Date"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="java.sql.PreparedStatement"%>
@@ -27,6 +28,7 @@
 	Connection c = Task.connect();
 	Task t = new Task(c, Integer.parseInt(request.getParameter("t")));
 	boolean firststep_matching = false;
+	boolean secondstep_matching = false;
 %>
 <body>
 	<%@ include file="nav.jsp"%>
@@ -67,10 +69,15 @@
 		<%
 			QueryHandler qh = new QueryHandler();
 				QueryHandler qh_ss = new QueryHandler();
-
+				//create complete array of all equalized strings of all samplesolutions
+				ArrayList<String> completeList = new ArrayList<String>();
+				
 				ZQuery q = null;
-				ZQuery[] q2 = null;
+				ZQuery[] queries_ss = null;
+				ZQuery[] queries_user = null;
 
+				QueryHandler[] qh_setOfss = new QueryHandler[t.samplesolution.length];
+				
 				String compare = null;
 				String compareAfter = null;
 				String error = null;
@@ -78,14 +85,31 @@
 				for (int i = 0; i < t.dbschema.length; i++) {
 					qh.createTable(t.dbschema[i] + ";");
 					qh_ss.createTable(t.dbschema[i] + ";");
+					for(int j=0; j < qh_setOfss.length; j++) {
+						if(qh_setOfss[j] == null)
+							qh_setOfss[j] = new QueryHandler();
+						qh_setOfss[j].createTable(t.dbschema[i]+ ";");
+					}
 				}
 				try {
 					qh.setOriginalStatement(request
 							.getParameter("user_solution"));
 					qh_ss.setOriginalStatement(t.samplesolution[0]);
-					q = qh.equalize(t.respectColumn)[0];
-					q2 = qh_ss.equalize(t.respectColumn);
-					compare = QueryUtils.compareMetaInfos(qh_ss.before,
+					
+					for(int j=0; j < qh_setOfss.length; j++) {
+						qh_setOfss[j].setOriginalStatement(t.samplesolution[j]);
+						ZQuery[] temp_results = qh_setOfss[j].equalize(t.respectColumn);
+						for(int i2 = 0; i2 < temp_results.length; i2++) {
+							completeList.add(temp_results[i2].toString());
+						}
+					}
+					
+					
+					
+					queries_user = qh.equalize(t.respectColumn);
+					queries_ss = qh_ss.equalize(t.respectColumn);
+					q = queries_user[0];
+					compare = QueryUtils.compareMetaInfos(qh_ss.before, 
 							qh.before);
 
 				} catch (Exception e) {
@@ -129,12 +153,17 @@
 			<%
 				if (error == null) {
 						
+					
+						//create array of all first versions of all sample solutions
+						ZQuery[] firstVersionsofSS = new ZQuery[qh_setOfss.length];
+						for(int i=0; i< firstVersionsofSS.length; i++) {
+							firstVersionsofSS[i] = qh_setOfss[i].equalize(t.respectColumn)[0];
+						}
+					
+						compareAfter = QueryUtils.compareStandardizedQueries(q, queries_ss[0]);
 						
-						
-						compareAfter = QueryUtils.compareStandardizedQueries(q, q2[0]);
-						
-						for(int i = 0; i<q2.length; i++) {
-							String temp = QueryUtils.compareStandardizedQueries(q, q2[i]);
+						for(int i = 0; i<queries_ss.length; i++) {
+							String temp = QueryUtils.compareStandardizedQueries(q, queries_ss[i]);
 							if(temp.length() < compareAfter.length())
 								compareAfter = temp;
 						}
@@ -142,19 +171,22 @@
 						//check with equalizer 
 						
 						firststep_matching = false;
-						for(int i = 0; i<q2.length; i++) {
-							System.out.println(i+" "+q2[i].toString());
-							if(q.toString().toLowerCase().equals(q2[i].toString().toLowerCase()))
-								firststep_matching = true;
+						for(int i = 0; i<queries_ss.length; i++) {
+							for(int j = 0; j< completeList.size(); j++) {
+								
+								if(completeList.get(j).toLowerCase().equals(queries_user[i].toString().toLowerCase()))
+									firststep_matching = true;	
+							}
+							
 						}
 						
-						System.out.println("Student: "+q.toString());
+
 						
 						if (firststep_matching) {
 							out.println("<span style=\"color:green;font-weight:bold;font-size:large;\">Your solution could be matched with a sample solution hence it is correct.</span><br>");
 							
 						} else {
-							out.println("<span style=\"color:red;font-weight:bold;font-size:large;\">Your solution could not be matched with a sample solution.</span><br>");
+							out.println("<span style=\"color:red;font-weight:bold;font-size:large;\">Your solution could not be matched with any sample solution.</span><br>");
 
 						}
 
@@ -234,6 +266,7 @@
 								try {
 									
 									if (QueryUtils.isIdenticalResultSets(r1, r2)) {
+										secondstep_matching = true;
 										out.println("<br><span style=\"color:red;font-weight:bold;font-size:large;\">sample-solution and your query returned the same data but your solution could not be matched against any valid sample solution.</span><br>");
 										
 									} else { throw new RuntimeException(); }
@@ -336,7 +369,7 @@
 		
 		<%
 		
-		if(request.getSession().getAttribute("dozent") != null) {
+		if(request.getSession().getAttribute("dozent") != null && qh_ss.after != null) {
 			out.println("<h2>Sample solution (only admins can see this)</h2>");
 			out.println("<div class=\"description\">");
 			out.println(qh_ss.after.currentQuery);
@@ -365,7 +398,7 @@
 		}
 		
 		
-		prep.setInt(6, firststep_matching?1:0);
+		prep.setInt(6, firststep_matching?1:(secondstep_matching?2:0));
 		
 		prep.execute();
 		

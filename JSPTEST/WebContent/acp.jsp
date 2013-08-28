@@ -1,3 +1,6 @@
+<%@page import="java.text.SimpleDateFormat"%>
+<%@page import="java.text.DateFormat"%>
+<%@page import="java.util.Date"%>
 <%@page import="de.unihalle.sqlequalizer.Connector"%>
 <%@page import="de.unihalle.sqlequalizer.QueryUtils"%>
 <%@page import="java.sql.PreparedStatement"%>
@@ -58,10 +61,12 @@ if(request.getParameter("a") != null &&  request.getParameter("a").equals("addta
 	rs.next(); 
 	int newid = rs.getInt("max(id)") +1;
 	
-	String q = "insert into tasks (id,description) values (?,?)";
+	String q = "insert into tasks (id,description,createdAt) values (?,?,?)";
 	PreparedStatement prep = c.prepareStatement(q);
 	prep.setInt(1, newid);
 	prep.setString(2, "EMPTY");
+	DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	prep.setString(3, df.format(new Date())); 
 	
 	prep.execute();
 

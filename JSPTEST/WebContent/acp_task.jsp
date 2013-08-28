@@ -137,6 +137,22 @@ if(request.getParameter("pid") != null) {
 	} 
 }
 
+
+if(request.getParameter("a") != null && request.getParameter("a").equals("addSampleSolution")) {
+	Connection c = Connector.getConnection();
+	Statement st = c.createStatement();
+	ResultSet rs = st.executeQuery("select max(id) from samplesolutions");
+	if(rs.next()) {
+		int maxid = rs.getInt("max(id)");
+		st = c.createStatement();
+		PreparedStatement psmt = c.prepareStatement("insert into samplesolutions (id,taskid,sqlstatement) values (?,?,?)");
+		psmt.setInt(1, maxid + 1);
+		psmt.setInt(2, Integer.valueOf(request.getParameter("i")));
+		psmt.setString(3, "fill in samplesolution");
+		psmt.execute();
+	}
+}
+
 Task t = null;
 if(request.getParameter("i") != null) {
 	t = new Task(Task.connect(),Integer.parseInt(request.getParameter("i")));
@@ -148,6 +164,10 @@ if(request.getParameter("i") != null) {
 
 
 if(t != null) {
+	
+	
+	
+	
 %>
 
 
@@ -179,7 +199,7 @@ if(t.samplesolution == null || t.samplesolution.length == 0) {
 	}
 }
 %>
-<br><a href="acp_task.jsp?i=<% out.print(t.id);%>"><span style="font-size:large; font-weight:bold;">+</span> Add another sample solution</a>
+<br><a href="acp_task.jsp?i=<% out.print(t.id);%>&a=addSampleSolution"><span style="font-size:large; font-weight:bold;">+</span> Add another sample solution</a>
 
 <h3>database schema</h3>
 <select name="pschema">

@@ -25,7 +25,7 @@ import org.gibello.zql.ZqlParser;
  * Afterwards equalize() starts the equalizing/standardization process.
  * 
  * @author Robert Hartmann
- *
+ * 
  */
 public class QueryHandler {
 
@@ -41,21 +41,27 @@ public class QueryHandler {
 
 	private boolean respectColumnOrder = false;
 
-	
 	/**
-	 * Function gets an Attribute with or without tuple variable 
-	 * and maps this with the correct, automatically generated, tuple variable
+	 * Function gets an Attribute with or without tuple variable and maps this
+	 * with the correct, automatically generated, tuple variable
 	 * 
 	 * Used by makeAlias()
 	 * 
-	 * @param data Attribute that we want to label with the tuple variable
-	 * @param fromItems All From Tables with their automatically generated tuple variables
-	 * @param sub HashMap of former renamed tuplevariables to trace back to origin, in case we have an old tuplevariable that was already substituted with the new automatically ones
+	 * @param data
+	 *            Attribute that we want to label with the tuple variable
+	 * @param fromItems
+	 *            All From Tables with their automatically generated tuple
+	 *            variables
+	 * @param sub
+	 *            HashMap of former renamed tuplevariables to trace back to
+	 *            origin, in case we have an old tuplevariable that was already
+	 *            substituted with the new automatically ones
 	 * @return Correct tuple variable and attribute as tuplevariable.attribute
 	 * @throws Exception
 	 */
-	public String getCorrectAlias(String data, Vector<ZFromItem> fromItems, HashMap<String, String> sub) throws Exception{
-		
+	public String getCorrectAlias(String data, Vector<ZFromItem> fromItems,
+			HashMap<String, String> sub) throws Exception {
+
 		String[] split = data.split("\\.");
 
 		// do we already have alias? then just change it!
@@ -69,16 +75,18 @@ public class QueryHandler {
 
 				while (iterator != null) {
 					if (iterator.Zuordnung.get(split[0]) != null) {
-						if(sub.get(iterator.Zuordnung.get(split[0])) != null)
-							return sub.get(iterator.Zuordnung.get(split[0])) + "."+ split[1];
-						else 
-							return iterator.Zuordnung.get(split[0]) + "."+ split[1];
+						if (sub.get(iterator.Zuordnung.get(split[0])) != null)
+							return sub.get(iterator.Zuordnung.get(split[0]))
+									+ "." + split[1];
+						else
+							return iterator.Zuordnung.get(split[0]) + "."
+									+ split[1];
 					}
 					iterator = iterator.parent;
 				}
 
 			} else {
-				return sub.get(Zuordnung.get(split[0])) + "."+ split[1];
+				return sub.get(Zuordnung.get(split[0])) + "." + split[1];
 			}
 
 			throw new Exception("couldnt find matching table!");
@@ -92,8 +100,7 @@ public class QueryHandler {
 				Iterator<Column> it2 = t.columns.iterator();
 				while (it2.hasNext()) {
 					if (split[0].equals(it2.next().name)) {
-						if (QueryUtils.isTableInFromClause(t.name,
-								fromItems)) {
+						if (QueryUtils.isTableInFromClause(t.name, fromItems)) {
 							if (targetTable == null) {
 								// check ob tabelle mehrfach in HashTable
 								// vorkommt
@@ -106,8 +113,7 @@ public class QueryHandler {
 											"Tabelle '"
 													+ t.name
 													+ "' kommt mehrfach in der FROM Klausel vor. Nicht eindeutig auf welche sich '"
-													+ split[0]
-													+ "' bezieht!");
+													+ split[0] + "' bezieht!");
 								}
 								targetTable = t.name;
 							} else {
@@ -125,38 +131,44 @@ public class QueryHandler {
 								+ split[0]
 								+ " konnte in keiner der Tabellen in der FROM Klausel gefunden werden!");
 			}
-			return sub.get(Zuordnung.get(targetTable)) + "."+ split[0];
+			return sub.get(Zuordnung.get(targetTable)) + "." + split[0];
 		}
 		return data;
 	}
-	
+
 	/**
-	 * Basically just does a dfs on the where clause and calling getCorrectAlias().
-	 * Also handles Subqueries as it calls the equalize process recursively for each subquery.
+	 * Basically just does a dfs on the where clause and calling
+	 * getCorrectAlias(). Also handles Subqueries as it calls the equalize
+	 * process recursively for each subquery.
 	 * 
 	 * Used by handleWHEREClause
 	 * 
-	 * @param exp Root node for current subtree
-	 * @param fromItems List of all Tables including tuple variables 
-	 * @param sub @see above
-	 * @return Subtree under exp with correct Aliases all over including subqueries.
+	 * @param exp
+	 *            Root node for current subtree
+	 * @param fromItems
+	 *            List of all Tables including tuple variables
+	 * @param sub
+	 * @see above
+	 * @return Subtree under exp with correct Aliases all over including
+	 *         subqueries.
 	 * @throws Exception
 	 */
-	public ZExp makeAliases(ZExp exp, Vector<ZFromItem> fromItems, HashMap<String, String> sub)
-			throws Exception {
+	public ZExp makeAliases(ZExp exp, Vector<ZFromItem> fromItems,
+			HashMap<String, String> sub) throws Exception {
 
 		if (exp instanceof ZConstant
 				&& ((ZConstant) exp).getType() == ZConstant.COLUMNNAME) {
-			return new ZConstant(getCorrectAlias(((ZConstant) exp).getValue(), fromItems, sub), ((ZConstant) exp).getType());
-			
+			return new ZConstant(getCorrectAlias(((ZConstant) exp).getValue(),
+					fromItems, sub), ((ZConstant) exp).getType());
+
 		}
-		
-		//ZConstants that are no COLUMNNAMES are real constants 
-		//and cannot contain tuple variables
+
+		// ZConstants that are no COLUMNNAMES are real constants
+		// and cannot contain tuple variables
 		if (exp instanceof ZConstant)
 			return exp;
 
-		//recursively call a QueryHandler for each sub query
+		// recursively call a QueryHandler for each sub query
 		if (exp instanceof ZQuery) {
 			// new
 			QueryHandler qh = new QueryHandler();
@@ -169,7 +181,7 @@ public class QueryHandler {
 			// return handleQUERY((ZQuery)exp);
 		}
 
-		//recursively call makeAlias() for all child nodes 
+		// recursively call makeAlias() for all child nodes
 		if (exp instanceof ZExpression) {
 			ZExpression zexp = (ZExpression) exp;
 			Iterator<ZExp> it = zexp.getOperands().iterator();
@@ -184,11 +196,11 @@ public class QueryHandler {
 	}
 
 	/**
-	 * Handles group by Statement by Sorting Group By List.
-	 * TODO: Handles having Statement by calling handleWHEREClause() explained
-	 * in Master Thesis.
+	 * Handles group by Statement by Sorting Group By List. TODO: Handles having
+	 * Statement by calling handleWHEREClause() explained in Master Thesis.
 	 * 
-	 * @param z Group by Statement to be handled
+	 * @param z
+	 *            Group by Statement to be handled
 	 * @return Standardized Group by Statement
 	 */
 	public ZGroupBy handleGROUPBYStatement(ZGroupBy z) {
@@ -213,19 +225,22 @@ public class QueryHandler {
 	}
 
 	/**
-	 * Basically handles the whole Query by dividing the work 
-	 * into several pieces, handling them over to helper functions
+	 * Basically handles the whole Query by dividing the work into several
+	 * pieces, handling them over to helper functions
 	 * 
-	 * @param q Zquery Object containing the (parsed) SQL-Statement
-	 * @return List of Standardized ZQuery Objects. Because of self joins can contain more than one.
+	 * @param q
+	 *            Zquery Object containing the (parsed) SQL-Statement
+	 * @return List of Standardized ZQuery Objects. Because of self joins can
+	 *         contain more than one.
 	 * @throws Exception
 	 */
 	public ZQuery[] handleQUERY(ZQuery q) throws Exception {
 
 		/**
 		 * temporary subclass sorting two ZSelectItems by their columnname
+		 * 
 		 * @author Robert Hartmann
-		 *
+		 * 
 		 */
 		class tempSorter implements Comparator<ZSelectItem> {
 
@@ -235,14 +250,18 @@ public class QueryHandler {
 			}
 		}
 
+		Vector<ZSelectItem> newSelVector = preprocssSELECT(q.getSelect(),
+				q.getFrom());
+
 		if (!this.respectColumnOrder) {
-			Collections.sort(q.getSelect(), new tempSorter());
+			Collections.sort(newSelVector, new tempSorter());
 			Collections.sort(original.getSelect(), new tempSorter());
 		}
 
 		before = new MetaQueryInfo(original);
 		handleFROMClause(q.getFrom());
-		Vector<ZSelectItem> newSELECTClause = handleSELECTClause(q.getSelect());
+		Vector<ZSelectItem> newSELECTClause = handleSELECTClause(newSelVector,
+				q.getFrom());
 
 		// if we got the same table several times in FROM
 		// we have to produce permutations and do query handling
@@ -288,30 +307,29 @@ public class QueryHandler {
 		for (int i = 0; i < permutations.size(); i++) {
 
 			ZQuery newQ = new ZQuery();
-			
-			//rename alias, use permutations
+
+			// rename alias, use permutations
 			String[] permutation = permutations.get(i);
 			Vector<ZFromItem> v1 = q.getFrom();
-			
+
 			HashMap<String, String> substis = new HashMap<String, String>();
-			
-			//if we substituted some Aliases we have to store that
-			for(int y = 0; y < v1.size(); y++) {
+
+			// if we substituted some Aliases we have to store that
+			for (int y = 0; y < v1.size(); y++) {
 				substis.put(v1.get(y).getAlias(), permutation[y]);
 			}
-			
-			//using helper functions to handle other parts of query
+
+			// using helper functions to handle other parts of query
 			ZExp newWHEREClause = handleWHEREClause(q.getWhere(), q.getFrom(),
-					this,  substis);
+					this, substis);
 			ZGroupBy newGROUPBYClause = handleGROUPBYStatement(q.getGroupBy());
 
-			
 			newQ.addFrom(q.getFrom());
 			newQ.addWhere(newWHEREClause);
 
-			//in seldom cases we can solve the WHERE Clause to "false",
-			//so that it can never be fulfilled 
-			
+			// in seldom cases we can solve the WHERE Clause to "false",
+			// so that it can never be fulfilled
+
 			if (newWHEREClause instanceof ZConstant
 					&& ((ZConstant) newWHEREClause).getValue().equals("false"))
 				throw new Exception(
@@ -329,29 +347,29 @@ public class QueryHandler {
 	}
 
 	/**
-	 * Helper Function to handle FROM Clause by sorting all tables and
-	 * creating new tuplevariables for each table (iteratively)
+	 * Helper Function to handle FROM Clause by sorting all tables and creating
+	 * new tuplevariables for each table (iteratively)
+	 * 
 	 * @param from
 	 */
 	public void handleFROMClause(Vector<ZFromItem> from) {
 		String aliasname = "a";
 		Iterator<ZFromItem> zfrom = from.iterator();
 
-		if(this.original.getSelect().size() > 1 || !((ZSelectItem) this.original.getSelect().get(0)).isWildcard()) {
-			//sort
-			class t_sorter implements Comparator<ZFromItem> {
+		// sort
+		class t_sorter implements Comparator<ZFromItem> {
 
-				@Override
-				public int compare(ZFromItem o1, ZFromItem o2) {
-					return o1.getTable().toString().compareTo(o2.getTable().toString());
-				}
-				
+			@Override
+			public int compare(ZFromItem o1, ZFromItem o2) {
+				return o1.getTable().toString()
+						.compareTo(o2.getTable().toString());
 			}
-			
-			Collections.sort(from, new t_sorter());
+
 		}
-		
-		//Generate new Tuple Variables
+
+		Collections.sort(from, new t_sorter());
+
+		// Generate new Tuple Variables
 		while (zfrom.hasNext()) {
 			ZFromItem z = zfrom.next();
 			if (z.getAlias() != null) {
@@ -372,16 +390,82 @@ public class QueryHandler {
 		}
 	}
 
+	public Vector<ZSelectItem> preprocssSELECT(Vector<ZSelectItem> sel,
+			Vector<ZFromItem> fromlist) {
+		if (sel.size() == 1 && sel.get(0).isWildcard()) {
+			// replace wildcard
+			Vector<ZSelectItem> return_vec = new Vector<ZSelectItem>();
+			Iterator<ZFromItem> it = fromlist.iterator();
+			while (it.hasNext()) {
+				ZFromItem current_item = it.next();
+				for (int i = 0; i < tables.size(); i++) {
+					if (tables.get(i).name.equals(current_item.getTable())) {
+						// add all columns of that table to vector
+						for (int j = 0; j < tables.get(i).columns.size(); j++) {
+							ZSelectItem temp_item = new ZSelectItem(
+									current_item.getTable() + "."
+											+ tables.get(i).columns.get(j).name);
+							return_vec.add(temp_item);
+						}
+					}
+				}
+			}
+			return return_vec;
+		} else {
+			Vector<ZSelectItem> return_vec = new Vector<ZSelectItem>();
+			String targetTable = "";
+			Iterator<ZSelectItem> it = sel.iterator();
+			while (it.hasNext()) {
+				ZSelectItem current_item = it.next();
+				if (current_item.isWildcard()) {
+					// find out what table represents
+					Iterator<ZFromItem> it2 = fromlist.iterator();
+					while (it2.hasNext()) {
+						ZFromItem current_fromitem = it2.next();
+						if (current_item.getTable().equals(
+								current_fromitem.getTable())
+								|| current_item.getTable().equals(
+										current_fromitem.getAlias())) {
+							targetTable = current_fromitem.getTable();
+						}
+					}
+
+					// now replace current_item with all columns of
+					// targettable
+					for (int i = 0; i < tables.size(); i++) {
+						if (tables.get(i).name.equals(targetTable)) {
+							for (int j = 0; j < tables.get(i).columns.size(); j++) {
+								ZSelectItem temp_item = new ZSelectItem(
+										targetTable
+												+ "."
+												+ tables.get(i).columns.get(j).name);
+								return_vec.add(temp_item);
+							}
+						}
+					}
+
+				} else {
+					return_vec.add(current_item);
+				}
+			}
+
+			//
+			return return_vec;
+		}
+
+	}
+
 	/**
-	 * Handle Select Clause by replacing * to all attributes of tables under FROM.
-	 * Continues with assigning new tuple variables to each columns
+	 * Handle Select Clause by replacing * to all attributes of tables under
+	 * FROM. Continues with assigning new tuple variables to each columns
 	 * 
-	 * @param sel Vector of ZSelectItems forming SELECT Clause
+	 * @param sel
+	 *            Vector of ZSelectItems forming SELECT Clause
 	 * @return Standardized SELECT Clause as Vector
 	 * @throws Exception
 	 */
-	public Vector<ZSelectItem> handleSELECTClause(Vector<ZSelectItem> sel)
-			throws Exception {
+	public Vector<ZSelectItem> handleSELECTClause(Vector<ZSelectItem> sel,
+			Vector<ZFromItem> fromlist) throws Exception {
 		Iterator<ZSelectItem> it = sel.iterator();
 
 		Vector<ZSelectItem> ret = new Vector<ZSelectItem>();
@@ -391,17 +475,20 @@ public class QueryHandler {
 
 			// Exceptions like *
 			if (z.isWildcard()) {
-				if(sel.size() == 1)
+				if (sel.size() == 1)
 					ret.add(z);
 				else {
-					if(z.getTable() == null) {
-						throw new Exception("The wildcard * can only appear alone or with a table prefix.");
+					if (z.getTable() == null) {
+						throw new Exception(
+								"The wildcard * can only appear alone or with a table prefix.");
 					} else {
 						String prefix = Zuordnung.get(z.getTable());
-						if(prefix == null) {
-							throw new Exception("There is no table alias named: "+z.getTable());
+						if (prefix == null) {
+							throw new Exception(
+									"There is no table alias named: "
+											+ z.getTable());
 						} else {
-							ZSelectItem newItem = new ZSelectItem(prefix+".*");
+							ZSelectItem newItem = new ZSelectItem(prefix + ".*");
 							ret.add(newItem);
 						}
 					}
@@ -409,31 +496,39 @@ public class QueryHandler {
 				continue;
 			}
 
-			
 			// if there is already an alias, replace it
 			// else look table up and set correct alias
 			if (z.getTable() != null) {
-				String addString = Zuordnung.get(z.getTable()) + "." + z.getColumn();
+				String addString = Zuordnung.get(z.getTable()) + "."
+						+ z.getColumn();
 				if (z.getAggregate() != null) {
 					addString = z.getAggregate() + "(" + addString + ")";
 				}
 				ret.add(new ZSelectItem(addString));
-			} else  {
+			} else {
 				String targetTable = null;
-				Iterator<Table> i = tables.iterator();
-				while (i.hasNext()) {
-					Table tab = i.next();
-					Iterator<Column> j = tab.columns.iterator();
-					while (j.hasNext()) {
-						Column c = j.next();
-						if (c.name.equals(z.getColumn())) {
-							if (targetTable == null) {
-								targetTable = tab.name;
-							} else {
-								throw new Exception(
-										"Ambiguous column name: "
-												+ c.name
-												+ " is contained by more than one tables you mentioned in FROM.");
+
+				Iterator<ZFromItem> from_it = fromlist.iterator();
+				while (from_it.hasNext()) {
+					ZFromItem cur_fi = from_it.next();
+
+					Iterator<Table> i = tables.iterator();
+					while (i.hasNext()) {
+						Table tab = i.next();
+						if (cur_fi.getTable().equals(tab.name)) {
+							Iterator<Column> j = tab.columns.iterator();
+							while (j.hasNext()) {
+								Column c = j.next();
+								if (c.name.equals(z.getColumn())) {
+									if (targetTable == null) {
+										targetTable = tab.name;
+									} else {
+										throw new Exception(
+												"Ambiguous column name: "
+														+ c.name
+														+ " is contained by more than one tables you mentioned in FROM.");
+									}
+								}
 							}
 						}
 					}
@@ -464,7 +559,8 @@ public class QueryHandler {
 	 * 
 	 * Uses OperatorCompression, pushDownNegate, and use distribute law
 	 * 
-	 * @param root Root node of Formula representing Root Node of WHERE Clause
+	 * @param root
+	 *            Root node of Formula representing Root Node of WHERE Clause
 	 * @return Root Node of Formula in CNF
 	 */
 	public ZExp tranformToKNF(ZExp root) {
@@ -487,14 +583,19 @@ public class QueryHandler {
 	}
 
 	/**
-	 *  Handles WHERE Clause.
-	 *  
-	 *  Basically done by helper functions. See Master Thesis for detailed explanation of standardization process
+	 * Handles WHERE Clause.
 	 * 
-	 * @param zexp Root Node representing WHERE formula
-	 * @param from All Tables under FROM with Tuplevariables
-	 * @param q Whole QueryHandler object of current Query
-	 * @param substis @see above
+	 * Basically done by helper functions. See Master Thesis for detailed
+	 * explanation of standardization process
+	 * 
+	 * @param zexp
+	 *            Root Node representing WHERE formula
+	 * @param from
+	 *            All Tables under FROM with Tuplevariables
+	 * @param q
+	 *            Whole QueryHandler object of current Query
+	 * @param substis
+	 * @see above
 	 * @return Standardized WHERE formulas root node
 	 * @throws Exception
 	 */
@@ -509,7 +610,7 @@ public class QueryHandler {
 		// ZExp whereCondition = null;
 		ZExp whereCondition = zexp;
 
-		//assign correct tuplevariables and handle subqueries
+		// assign correct tuplevariables and handle subqueries
 		whereCondition = (ZExpression) makeAliases(zexp, from, substis);
 
 		whereCondition = tranformToKNF(whereCondition);
@@ -526,23 +627,26 @@ public class QueryHandler {
 
 		whereCondition = QueryUtils.addImplicitFormulas(whereCondition, q);
 		whereCondition = QueryUtils.evaluateArithmetic(whereCondition);
-		
-		whereCondition = QueryUtils.correctDecimalPlaces(whereCondition, from, q);
 
-		
+		whereCondition = QueryUtils.correctDecimalPlaces(whereCondition, from,
+				q);
+
 		// KNF must be restored because we added possibly and nodes in between
 		// the tree
 		whereCondition = tranformToKNF(whereCondition);
 
 		whereCondition = QueryUtils.sortedTree(whereCondition);
-		
 
 		return whereCondition;
 	}
 
 	/**
-	 * Sets the start query to be handled by parsing it with ZQL-Parser Engine and setting a working copy as well that will be changed throughout the process
-	 * @param s String representing the SQL-Query
+	 * Sets the start query to be handled by parsing it with ZQL-Parser Engine
+	 * and setting a working copy as well that will be changed throughout the
+	 * process
+	 * 
+	 * @param s
+	 *            String representing the SQL-Query
 	 * @throws ParseException
 	 */
 	public void setOriginalStatement(String s) throws ParseException {
@@ -577,22 +681,27 @@ public class QueryHandler {
 	}
 
 	/**
-	 * Starts the whole equalization/standardization 
-	 *  
-	 * @param respect Shall the Columnorder in SELECT Clause be respected?
-	 * @return Array of ZQueries that are standardized. Can be more than one, when self joins are used. @see Master Thesis for detailed information.
+	 * Starts the whole equalization/standardization
+	 * 
+	 * @param respect
+	 *            Shall the Columnorder in SELECT Clause be respected?
+	 * @return Array of ZQueries that are standardized. Can be more than one,
+	 *         when self joins are used. @see Master Thesis for detailed
+	 *         information.
 	 * @throws Exception
 	 */
 	public ZQuery[] equalize(boolean respect) throws Exception {
-		
-		if(original == null) {
-			throw new Exception("There is no SQL-Statement to process. Make sure you set the statement before equalizing!");
+
+		if (original == null) {
+			throw new Exception(
+					"There is no SQL-Statement to process. Make sure you set the statement before equalizing!");
 		}
-		
-		if(tables.size() == 0) {
-			throw new Exception("There is no database schema set. SQL-Equalizer has to know about schema!");
+
+		if (tables.size() == 0) {
+			throw new Exception(
+					"There is no database schema set. SQL-Equalizer has to know about schema!");
 		}
-		
+
 		this.respectColumnOrder = respect;
 		if (parent != null)
 			aliascount = parent.aliascount;

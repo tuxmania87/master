@@ -595,6 +595,12 @@ public class QueryUtils {
 
 	}
 
+	
+	public static String compareMetaInfos2(QueryHandler[] ss, MetaQueryInfo m2) {
+		
+		return "";
+	}
+	
 	/**
 	 * Compares two MetaInfoQuery Objects coming from two queries.
 	 * Formulates a String containing every difference from the two queries.
