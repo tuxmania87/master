@@ -89,6 +89,72 @@ if(request.getParameter("a") != null &&  request.getParameter("a").equals("addsc
 
 }
 
+%>
+<div id="main_center">
+<%
+
+if(request.getParameter("a") != null &&  request.getParameter("a").equals("deltask")) {
+	try {
+		int taskid = Integer.parseInt(request.getParameter("i"));
+		Connection c = Connector.getConnection();
+		PreparedStatement psmt = c.prepareStatement("delete from tasks where id = ?");
+		psmt.setInt(1, taskid);
+		psmt.execute();
+		psmt = c.prepareStatement("delete from samplesolutions where taskid = ?");
+		psmt.setInt(1, taskid);
+		psmt.execute();psmt = c.prepareStatement("delete from tasks_db where taskid = ?");
+		psmt.setInt(1, taskid);
+		psmt.execute();psmt = c.prepareStatement("delete from attempts where taskid = ?");
+		psmt.setInt(1, taskid);
+		psmt.execute();
+	}
+	catch (Exception e) {
+		out.println("<span style=\"color:red\">error while deleting task:<br>"+e.getMessage()+"</span>");
+	}
+}
+
+
+if(request.getParameter("a") != null &&  request.getParameter("a").equals("delschema")) {
+	try {
+		int schemaid = Integer.parseInt(request.getParameter("i"));
+		Connection c = Connector.getConnection();
+		//check if schema is still in use
+		PreparedStatement psmt = c.prepareStatement("select 1 from tasks where schemaid = ?");
+		psmt.setInt(1, schemaid);
+		ResultSet rs = psmt.executeQuery();
+		if(rs.next()) {
+			out.println("<span style=\"color:red\">There are still tasks that use this schema. Make sure to unassign this schema from any task before you delete it.</span>");
+		} else {
+			psmt = c.prepareStatement("delete from dbschema where id = ?");
+			psmt.setInt(1, schemaid);
+			psmt.execute();
+		}
+		
+	}
+	catch (Exception e) {
+		out.println("<span style=\"color:red\">error while deleting schema:<br>"+e.getMessage()+"</span>");
+	}
+}
+
+if(request.getParameter("a") != null &&  request.getParameter("a").equals("delextdb")) {
+	try {
+		int extdbid = Integer.parseInt(request.getParameter("i"));
+		Connection c = Connector.getConnection();
+		//check if schema is still in use
+		PreparedStatement psmt = c.prepareStatement("delete from external_database where id = ?");
+		psmt.setInt(1, extdbid);
+		psmt.execute();
+		psmt = c.prepareStatement("delete from tasks_db where dbid = ?");
+		psmt.setInt(1, extdbid);
+		psmt.execute();
+		
+		
+	}
+	catch (Exception e) {
+		out.println("<span style=\"color:red\">error while deleting schema:<br>"+e.getMessage()+"</span>");
+	}
+}
+
 if(request.getParameter("a") != null &&  request.getParameter("a").equals("addexterndb")) {
 	Connection c = Task.connect();
 	Statement s = c.createStatement();
@@ -112,7 +178,7 @@ if(request.getParameter("a") != null &&  request.getParameter("a").equals("addex
 %>
 
 
-<div id="main_center">
+
 
 <h2>Admin Control Panel</h2>
 
@@ -123,7 +189,7 @@ if(request.getParameter("a") != null &&  request.getParameter("a").equals("addex
 <%
 Task[] t = Task.getAllTasks();
 for(int i=0; i<t.length; i++) {
-	out.println("<tr><td>"+t[i].id+"</td><td>"+t[i].text+"</td><td><a href=\"acp_task.jsp?i="+t[i].id+"\">edit</a></td><td></td></tr>");
+	out.println("<tr><td>"+t[i].id+"</td><td>"+t[i].text+"</td><td><a href=\"acp_task.jsp?i="+t[i].id+"\">edit</a></td><td><a href=\"acp.jsp?i="+t[i].id+"&a=deltask\" onclick=\"return confirmbox('Are you sure you want to delete task number "+t[i].id+"?')\">delete</a></td></tr>");
 }
 %>
 </table>
@@ -145,7 +211,7 @@ while(r.next()) {
 	if(request.getParameter("a") != null && request.getParameter("a").equals("editschema") && request.getParameter("i") != null && request.getParameter("i").equals(id)) {
 		out.println("<form action=\"acp.jsp\" method=\"post\"><tr><td>"+r.getString("id")+"</td><td><input type=\"text\" name=\"pschemaname\" value=\""+r.getString("name")+"\" /></td><td><textarea cols=\"80\" name=\"pschema\" rows=\"5\">"+r.getString("schem")+"</textarea><td><input type=\"hidden\" name=\"pschemaid\" value=\""+id+"\"><input type=\"submit\" value=\"save\"></td><td></td></tr></form>");
 	} else
-		out.println("<tr><td>"+r.getString("id")+"</td><td>"+r.getString("name")+"</td><td>"+r.getString("schem").replaceAll("\\n", "<br>")+"</td><td><a href=\"acp.jsp?a=editschema&i="+r.getString("id")+"\">edit</a></td><td></td></tr>");
+		out.println("<tr><td>"+r.getString("id")+"</td><td>"+r.getString("name")+"</td><td>"+r.getString("schem").replaceAll("\\n", "<br>")+"</td><td><a href=\"acp.jsp?a=editschema&i="+r.getString("id")+"\">edit</a></td><td><a href=\"acp.jsp?a=delschema&i="+r.getString("id")+"\" onclick=\"return confirmbox('Are you sure you want to delete schema number "+r.getString("id")+"')\" >delete</a></td></tr>");
 }
 
 
@@ -178,7 +244,7 @@ while(r.next()) {
 		out.println("</select></td>");
 		out.println("<td><input type=\"hidden\" name=\"pdbid\" value=\""+r.getString("id")+"\"><input type=\"text\" name=\"pdbusername\" value=\""+r.getString("username")+"\"></td><td><input type=\"text\" name=\"pdbpassword\" value=\""+r.getString("password")+"\"></td><td><input type=\"submit\" value=\"save\"></td><td></td></tr>");
 	} else
-		out.print("<tr><td>"+id+"<td>"+r.getString("uri")+"</td><td>"+r.getString("dbname")+"</td><td>"+r.getString("typ")+"</td><td><a href=\"acp.jsp?a=editexterndb&i="+r.getString("id")+"\">edit</a></td><td>delete</td></tr>");
+		out.print("<tr><td>"+id+"<td>"+r.getString("uri")+"</td><td>"+r.getString("dbname")+"</td><td>"+r.getString("typ")+"</td><td><a href=\"acp.jsp?a=editexterndb&i="+r.getString("id")+"\">edit</a></td><td><a href=\"acp.jsp?a=delextdb&i="+r.getString("id")+"\" onclick=\"return confirmbox('Are you sure you want to delete externa database "+r.getString("uri")+"')\">delete</a></td></tr>");
 }
 %>
 </table>

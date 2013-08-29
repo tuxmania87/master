@@ -15,6 +15,7 @@ import org.gibello.zql.ZExp;
 import org.gibello.zql.ZExpression;
 import org.gibello.zql.ZFromItem;
 import org.gibello.zql.ZGroupBy;
+import org.gibello.zql.ZOrderBy;
 import org.gibello.zql.ZQuery;
 import org.gibello.zql.ZSelectItem;
 import org.gibello.zql.ZStatement;
@@ -223,6 +224,59 @@ public class QueryHandler {
 		ret.setHaving(z.getHaving());
 		return ret;
 	}
+	
+	
+	public Vector<ZOrderBy> handleORDERBY(Vector<ZOrderBy> input, Vector<ZFromItem> fromlist, HashMap<String,String> sub) {
+		
+		Vector<ZOrderBy> response = new Vector<ZOrderBy>();
+		
+		Iterator<ZOrderBy> it = input.iterator();
+		while(it.hasNext()) {
+			ZOrderBy cur_item = it.next();
+			
+			if(cur_item.getExpression() instanceof ZConstant) {
+				ZConstant z1 = (ZConstant) cur_item.getExpression();
+				try {
+					String newExp = getCorrectAlias(z1.getValue(), fromlist, sub);
+					ZExp ret_exp = new ZConstant(newExp, z1.getType());
+					ZOrderBy ret_order = new ZOrderBy(ret_exp);
+					ret_order.setAscOrder(cur_item.getAscOrder());
+					response.add(ret_order);
+				} catch(Exception e){
+					e.printStackTrace();
+					response.add(cur_item);
+				}
+			} else if(cur_item.getExpression() instanceof ZExpression) {
+				ZExpression z1 = (ZExpression) cur_item.getExpression();
+				try {
+					Iterator<ZExp> operands = z1.getOperands().iterator();
+					Vector<ZExp> ret_operands = new Vector<ZExp>();
+					while(operands.hasNext()) {
+						ZConstant z2 = (ZConstant) operands.next();
+						String newExp = getCorrectAlias(z2.getValue(), fromlist, sub);
+						ZExp ret_exp = new ZConstant(newExp, z2.getType());
+						ret_operands.add(ret_exp);
+					}
+					
+					ZExpression ret_exp = new ZExpression(z1.getOperator());
+					ret_exp.setOperands(ret_operands);
+					ZOrderBy ret_order = new ZOrderBy(ret_exp);
+					ret_order.setAscOrder(cur_item.getAscOrder());
+					response.add(ret_order);
+					
+				} catch(Exception e) {
+					e.printStackTrace();
+					response.add(cur_item);
+				}
+			} else {
+				response.add(cur_item);
+			}
+			
+		}
+		
+		
+		return response;
+	}
 
 	/**
 	 * Basically handles the whole Query by dividing the work into several
@@ -253,6 +307,8 @@ public class QueryHandler {
 		Vector<ZSelectItem> newSelVector = preprocssSELECT(q.getSelect(),
 				q.getFrom());
 
+		Vector<ZOrderBy> newORDERBy = preprocssORDERBY(newSelVector, q.getOrderBy());
+		
 		if (!this.respectColumnOrder) {
 			Collections.sort(newSelVector, new tempSorter());
 			Collections.sort(original.getSelect(), new tempSorter());
@@ -337,7 +393,9 @@ public class QueryHandler {
 
 			newQ.addSelect(newSELECTClause);
 			newQ.addGroupBy(newGROUPBYClause);
-			newQ.addOrderBy(q.getOrderBy());
+			
+			newQ.addOrderBy(handleORDERBY(newORDERBy, q.getFrom(), substis));
+			//newQ.addOrderBy(q.getOrderBy());
 
 			after = new MetaQueryInfo(newQ);
 			newQueries[i] = newQ;
@@ -390,6 +448,28 @@ public class QueryHandler {
 		}
 	}
 
+	public Vector<ZOrderBy> preprocssORDERBY(Vector<ZSelectItem> sel,
+			Vector<ZOrderBy> order) {
+		
+		Vector<ZOrderBy> response = new Vector<ZOrderBy>();
+		
+		Iterator<ZOrderBy> it = order.iterator();
+		while(it.hasNext()) {
+			ZOrderBy current = it.next();
+			try {
+				int number = Integer.parseInt(current.getExpression().toString());
+				ZOrderBy newOrder = new ZOrderBy(sel.get(number-1).getExpression());
+				newOrder.setAscOrder(current.getAscOrder());
+				response.add(newOrder);
+			} catch(Exception e) {
+				response.add(current);
+			}
+		}
+		
+		
+		return response;
+	}
+	
 	public Vector<ZSelectItem> preprocssSELECT(Vector<ZSelectItem> sel,
 			Vector<ZFromItem> fromlist) {
 		if (sel.size() == 1 && sel.get(0).isWildcard()) {

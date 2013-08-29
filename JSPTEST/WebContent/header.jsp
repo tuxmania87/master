@@ -43,6 +43,10 @@ function schemaNameChanged(elem) {
 	
 }
 
+function confirmbox(text) {
+	return confirm(text);
+}
+
 window.onload=function(){ togglediv(); };
 
 </script>

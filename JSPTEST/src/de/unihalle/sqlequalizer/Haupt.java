@@ -50,7 +50,7 @@ public class Haupt {
 		q2.createTable("create table dept (deptno int, dname varchar(500), location varchar(500))");
 		q2.createTable("create table test (a int references emp(sal) not null, b int, c int, d int, x int, y int)");
 		
-		q2.setOriginalStatement("select d.*,emp.* from  dept d,emp e");
+		q2.setOriginalStatement("select d.*,emp.* from  dept d,emp e order by d.deptno desc, ename desc, 2 desc, avg(sal) desc");
 		System.out.println(q2.original);
 		
 		moreRes =  q2.equalize(true);
