@@ -1,5 +1,6 @@
 package de.unihalle.sqlequalizer;
 
+import java.io.ByteArrayInputStream;
 import java.lang.reflect.Field;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -15,12 +16,15 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.Vector;
 
+import org.gibello.zql.ParseException;
 import org.gibello.zql.ZConstant;
 import org.gibello.zql.ZExp;
 import org.gibello.zql.ZExpression;
 import org.gibello.zql.ZFromItem;
 import org.gibello.zql.ZQuery;
 import org.gibello.zql.ZSelectItem;
+import org.gibello.zql.ZStatement;
+import org.gibello.zql.ZqlParser;
 
 /**
  * Class is a useful collection of static functions helping to handle queries
@@ -87,6 +91,24 @@ public class QueryUtils {
 				return true;
 		}
 		return false;
+	}
+	
+	public static ZQuery cloneQuery(ZQuery i) {
+		ZqlParser zp = new ZqlParser();
+		
+		String qstring = i.toString()+";";
+		zp.initParser(new ByteArrayInputStream(qstring.getBytes()));
+
+		ZStatement zs = null;
+		try {
+			zs = zp.readStatement();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		ZQuery q = (ZQuery) zs;
+	
+		return q;
 	}
 
 	public static String formatDBSchema(String schema) {

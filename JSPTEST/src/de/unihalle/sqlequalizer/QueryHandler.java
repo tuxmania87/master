@@ -228,6 +228,9 @@ public class QueryHandler {
 	
 	public Vector<ZOrderBy> handleORDERBY(Vector<ZOrderBy> input, Vector<ZFromItem> fromlist, HashMap<String,String> sub) {
 		
+		if(input == null)
+			return null;
+		
 		Vector<ZOrderBy> response = new Vector<ZOrderBy>();
 		
 		Iterator<ZOrderBy> it = input.iterator();
@@ -451,6 +454,9 @@ public class QueryHandler {
 	public Vector<ZOrderBy> preprocssORDERBY(Vector<ZSelectItem> sel,
 			Vector<ZOrderBy> order) {
 		
+		if(order == null)
+			return null;
+		
 		Vector<ZOrderBy> response = new Vector<ZOrderBy>();
 		
 		Iterator<ZOrderBy> it = order.iterator();
@@ -463,7 +469,7 @@ public class QueryHandler {
 				response.add(newOrder);
 			} catch(Exception e) {
 				response.add(current);
-			}
+			} 
 		}
 		
 		

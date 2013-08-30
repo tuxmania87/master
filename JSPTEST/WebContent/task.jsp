@@ -1,4 +1,5 @@
 
+<%@page import="org.gibello.zql.ZConstant"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.util.Date"%>
 <%@page import="java.text.SimpleDateFormat"%>
@@ -219,44 +220,56 @@
 							ResultSet r2 = null;
 							
 							
-							String sampleSolutionQuery = "";
-							String studentSolutionQuery = "";
+							ZQuery sampleSolutionQuery = QueryUtils.cloneQuery(qh_ss.original); 
+							ZQuery studentSolutionQuery = QueryUtils.cloneQuery(qh.original);
 							
 							//preprocess queries
-							//if student solution contains order by but sample doesnt, we add order by temorary
-							if(qh.original.getOrderBy() != null && qh_ss.original.getOrderBy() == null) {
-								sampleSolutionQuery = qh_ss.before.currentQuery.toString();
+							//if student solution contains order by but sample doesnt, we delete order from student solutions
+							if(studentSolutionQuery.getOrderBy() != null && sampleSolutionQuery.getOrderBy() == null) {
 								
-								Vector<ZOrderBy> vec = qh.before.currentQuery.getOrderBy();	
-								Iterator<ZOrderBy> it = vec.iterator();
+								ZQuery studentQueryWOOrderBy = new ZQuery();
+								studentQueryWOOrderBy.addSelect(qh.original.getSelect());
+								studentQueryWOOrderBy.addFrom(qh.original.getFrom());
+								studentQueryWOOrderBy.addWhere(qh.original.getWhere());
+								studentQueryWOOrderBy.addGroupBy(qh.original.getGroupBy());
+								studentQueryWOOrderBy.addSet(qh.original.getSet());
 								
-								sampleSolutionQuery +=  " ORDER BY ";
+								studentSolutionQuery = studentQueryWOOrderBy;
 								
-								while(it.hasNext()) {
-									ZOrderBy obj = it.next();
-									sampleSolutionQuery += obj.getExpression().toString();
-									if(!obj.getAscOrder()) 
-										sampleSolutionQuery += " DESC";
-									sampleSolutionQuery += ",";
-									
+							} 
+							
+							//if both contain no order by we add order by according to sel items
+							// in ascending order
+							
+							if(studentSolutionQuery.getOrderBy() == null && sampleSolutionQuery.getOrderBy() == null) {
+								Vector<ZOrderBy> studentOrderBy  = new Vector<ZOrderBy>();
+								for(int ix = 1; ix <= studentSolutionQuery.getSelect().size(); ix++) {
+									ZOrderBy cur = new ZOrderBy(new ZConstant(String.valueOf(ix), ZConstant.COLUMNNAME));
+									studentOrderBy.add(cur);
 								}
 								
-								sampleSolutionQuery = sampleSolutionQuery.substring(0, sampleSolutionQuery.length()-1);
+								Vector<ZOrderBy> sampleOrderBy  = new Vector<ZOrderBy>();
+								for(int ix = 1; ix <= sampleSolutionQuery.getSelect().size(); ix++) {
+									ZOrderBy cur = new ZOrderBy(new ZConstant(String.valueOf(ix), ZConstant.COLUMNNAME));
+									sampleOrderBy.add(cur);
+								}
 								
+								studentSolutionQuery.addOrderBy(studentOrderBy);
+								sampleSolutionQuery.addOrderBy(sampleOrderBy);
+								
+								System.out.println("Executing:" + new Date());
+								System.out.println(studentSolutionQuery);
 								System.out.println(sampleSolutionQuery);
+								System.out.println("EO Executing");
 								
-								studentSolutionQuery = qh.before.currentQuery.toString();
-							} else {
-								sampleSolutionQuery = qh_ss.before.currentQuery.toString();
-								studentSolutionQuery = qh.before.currentQuery.toString();
 							}
 							
 							try {
 								r1 = externalDB.executeQueryOn(
-										studentSolutionQuery,
+										studentSolutionQuery.toString(),
 										t.externalDbs[i]);
 								r2 = externalDB.executeQueryOn(
-										sampleSolutionQuery,
+										sampleSolutionQuery.toString(),
 										t.externalDbs[i]);
 							} catch (Exception e) {
 								out.println("Error while executing your query on databse with real data:<br>"
@@ -267,7 +280,7 @@
 									
 									if (QueryUtils.isIdenticalResultSets(r1, r2)) {
 										secondstep_matching = true;
-										out.println("<br><span style=\"color:red;font-weight:bold;font-size:large;\">sample-solution and your query returned the same data but your solution could not be matched against any valid sample solution.</span><br>");
+										out.println("<br>Check on real database "+(i+1)+"<br><span style=\"color:orange;font-weight:bold;font-size:large;\">sample-solution and your query returned the same data but your solution could not be matched against any valid sample solution.</span><br>");
 										
 									} else { throw new RuntimeException(); }
 								} catch (RuntimeException e) {
