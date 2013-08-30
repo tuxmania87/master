@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <project name="sqlequalizer-compileanddeploy" default="default" basedir="."> 
 
-<property name="tomcat.deploydir" value="E:/Users/Robert/Downloads/apache-tomcat-6.0.37-windows-x64/apache-tomcat-6.0.37/webapps"/>
+<property name="tomcat.deploydir" value="/var/lib/tomcat6/webapps"/>
 
 <target name="default" depends="setup,compile,buildwar,deploy"></target>
 <path id="sqlequalizer.classpath">
@@ -16,10 +16,10 @@
     <mkdir dir="dist" />
     <echo>Copying web into dist</echo>
     <!--<copydir dest="dist/WebContent" src="WebContent" />-->
-	<copy todir="dist/WebContent" force="true">
+	<copy todir="dist/WebContent">
 	  <fileset dir="WebContent" />
 	</copy>
-	<copy todir="dist/WebContent/WEB-INF/lib" force="true">
+	<copy todir="dist/WebContent/WEB-INF/lib">
 	  <fileset dir="${basedir}/WebContent/WEB-INF/lib" />
 	</copy>
 
@@ -48,7 +48,7 @@
 	<copy todir="dist/WebContent/WEB-INF/classes" >  
         <fileset dir="${basedir}/WebContent/WEB-INF/classes" includes="**"/>  
 	</copy>
-    <war basedir="${basedir}/dist/WebContent" destfile="My.war"
+    <war basedir="${basedir}/dist/WebContent" destfile="sqlequalizer.war"
      webxml="${basedir}/dist/WebContent/WEB-INF/web.xml">
         <!--<exclude name="WEB-INF/**" />-->
         <webinf dir="${basedir}/dist/WebContent/WEB-INF/">
@@ -58,7 +58,7 @@
 </target>
 
 <target name="deploy">
-    <copy file="My.war" todir="${tomcat.deploydir}" />
+    <copy file="sqlequalizer.war" todir="${tomcat.deploydir}" />
 </target>
 
 </project>
