@@ -702,6 +702,41 @@ public class QueryUtils {
 	}
 
 	
+	public static ArrayList<String[]> createPermutationsSetClause(String[][] right,
+			String[][] data, int i) {
+		if (i == data.length) {
+			
+			String[] t_res = new String[right.length];
+			
+			for(int ix=0; ix<right.length; ix++) {
+				t_res[ix] = right[ix][0];
+			}
+			
+			ArrayList<String[]> t_res2 = new ArrayList<String[]>();
+			t_res2.add(t_res);
+			return t_res2;
+		}
+
+		ArrayList<String[]> perms = new ArrayList<String[]>();
+		permute(data[i], new String[0], perms);
+
+		ArrayList<String[]> erg = new ArrayList<String[]>();
+
+		for (int j = 0; j < perms.size(); j++) {
+			String[][] t_feld = new String[right.length + 1][];
+			int ty = 0;
+			for (; ty < right.length; ty++) {
+				t_feld[ty] = right[ty].clone();
+			}
+			t_feld[ty] = perms.get(j).clone();
+
+			erg.addAll(createPermutationsSetClause(t_feld, data, i + 1));
+			System.out.println("BREAK");
+
+		}
+		return erg;
+	}
+	
 	public static ArrayList<String[]> createPermutations(String[][] right,
 			String[][] data, int i) {
 		if (i == data.length) {

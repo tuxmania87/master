@@ -224,60 +224,61 @@ public class QueryHandler {
 		ret.setHaving(z.getHaving());
 		return ret;
 	}
-	
-	
-	public Vector<ZOrderBy> handleORDERBY(Vector<ZOrderBy> input, Vector<ZFromItem> fromlist, HashMap<String,String> sub) {
-		
-		if(input == null)
+
+	public Vector<ZOrderBy> handleORDERBY(Vector<ZOrderBy> input,
+			Vector<ZFromItem> fromlist, HashMap<String, String> sub) {
+
+		if (input == null)
 			return null;
-		
+
 		Vector<ZOrderBy> response = new Vector<ZOrderBy>();
-		
+
 		Iterator<ZOrderBy> it = input.iterator();
-		while(it.hasNext()) {
+		while (it.hasNext()) {
 			ZOrderBy cur_item = it.next();
-			
-			if(cur_item.getExpression() instanceof ZConstant) {
+
+			if (cur_item.getExpression() instanceof ZConstant) {
 				ZConstant z1 = (ZConstant) cur_item.getExpression();
 				try {
-					String newExp = getCorrectAlias(z1.getValue(), fromlist, sub);
+					String newExp = getCorrectAlias(z1.getValue(), fromlist,
+							sub);
 					ZExp ret_exp = new ZConstant(newExp, z1.getType());
 					ZOrderBy ret_order = new ZOrderBy(ret_exp);
 					ret_order.setAscOrder(cur_item.getAscOrder());
 					response.add(ret_order);
-				} catch(Exception e){
+				} catch (Exception e) {
 					e.printStackTrace();
 					response.add(cur_item);
 				}
-			} else if(cur_item.getExpression() instanceof ZExpression) {
+			} else if (cur_item.getExpression() instanceof ZExpression) {
 				ZExpression z1 = (ZExpression) cur_item.getExpression();
 				try {
 					Iterator<ZExp> operands = z1.getOperands().iterator();
 					Vector<ZExp> ret_operands = new Vector<ZExp>();
-					while(operands.hasNext()) {
+					while (operands.hasNext()) {
 						ZConstant z2 = (ZConstant) operands.next();
-						String newExp = getCorrectAlias(z2.getValue(), fromlist, sub);
+						String newExp = getCorrectAlias(z2.getValue(),
+								fromlist, sub);
 						ZExp ret_exp = new ZConstant(newExp, z2.getType());
 						ret_operands.add(ret_exp);
 					}
-					
+
 					ZExpression ret_exp = new ZExpression(z1.getOperator());
 					ret_exp.setOperands(ret_operands);
 					ZOrderBy ret_order = new ZOrderBy(ret_exp);
 					ret_order.setAscOrder(cur_item.getAscOrder());
 					response.add(ret_order);
-					
-				} catch(Exception e) {
+
+				} catch (Exception e) {
 					e.printStackTrace();
 					response.add(cur_item);
 				}
 			} else {
 				response.add(cur_item);
 			}
-			
+
 		}
-		
-		
+
 		return response;
 	}
 
@@ -310,8 +311,9 @@ public class QueryHandler {
 		Vector<ZSelectItem> newSelVector = preprocssSELECT(q.getSelect(),
 				q.getFrom());
 
-		Vector<ZOrderBy> newORDERBy = preprocssORDERBY(newSelVector, q.getOrderBy());
-		
+		Vector<ZOrderBy> newORDERBy = preprocssORDERBY(newSelVector,
+				q.getOrderBy());
+
 		if (!this.respectColumnOrder) {
 			Collections.sort(newSelVector, new tempSorter());
 			Collections.sort(original.getSelect(), new tempSorter());
@@ -396,9 +398,9 @@ public class QueryHandler {
 
 			newQ.addSelect(newSELECTClause);
 			newQ.addGroupBy(newGROUPBYClause);
-			
+
 			newQ.addOrderBy(handleORDERBY(newORDERBy, q.getFrom(), substis));
-			//newQ.addOrderBy(q.getOrderBy());
+			// newQ.addOrderBy(q.getOrderBy());
 
 			after = new MetaQueryInfo(newQ);
 			newQueries[i] = newQ;
@@ -453,29 +455,30 @@ public class QueryHandler {
 
 	public Vector<ZOrderBy> preprocssORDERBY(Vector<ZSelectItem> sel,
 			Vector<ZOrderBy> order) {
-		
-		if(order == null)
+
+		if (order == null)
 			return null;
-		
+
 		Vector<ZOrderBy> response = new Vector<ZOrderBy>();
-		
+
 		Iterator<ZOrderBy> it = order.iterator();
-		while(it.hasNext()) {
+		while (it.hasNext()) {
 			ZOrderBy current = it.next();
 			try {
-				int number = Integer.parseInt(current.getExpression().toString());
-				ZOrderBy newOrder = new ZOrderBy(sel.get(number-1).getExpression());
+				int number = Integer.parseInt(current.getExpression()
+						.toString());
+				ZOrderBy newOrder = new ZOrderBy(sel.get(number - 1)
+						.getExpression());
 				newOrder.setAscOrder(current.getAscOrder());
 				response.add(newOrder);
-			} catch(Exception e) {
+			} catch (Exception e) {
 				response.add(current);
-			} 
+			}
 		}
-		
-		
+
 		return response;
 	}
-	
+
 	public Vector<ZSelectItem> preprocssSELECT(Vector<ZSelectItem> sel,
 			Vector<ZFromItem> fromlist) {
 		if (sel.size() == 1 && sel.get(0).isWildcard()) {
@@ -623,16 +626,34 @@ public class QueryHandler {
 
 				String foundTable = Zuordnung.get(targetTable);
 
-				if (foundTable == null) {
-					throw new Exception("Column name unknown: " + z.getColumn()
-							+ " is not contained by any table in FROM!");
+				if (z.getColumn().toString().toLowerCase().equals("null")) {
+					ret.add(new ZSelectItem("NULL"));
+				} else {
+
+					int numberval;
+					try {
+						numberval = Integer.parseInt(z.getColumn().toString());
+						ret.add(new ZSelectItem(String.valueOf(numberval)));
+					} catch (Exception e) {
+
+						if (foundTable == null
+								&& !z.getColumn().toString().toLowerCase()
+										.equals("null")) {
+							throw new Exception("Column name unknown: "
+									+ z.getColumn()
+									+ " is not contained by any table in FROM!");
+						}
+
+						String addString = foundTable + "." + z.getColumn();
+						if (z.getAggregate() != null) {
+							addString = z.getAggregate() + "(" + addString
+									+ ")";
+						}
+						ret.add(new ZSelectItem(addString));
+
+					}
 				}
 
-				String addString = foundTable + "." + z.getColumn();
-				if (z.getAggregate() != null) {
-					addString = z.getAggregate() + "(" + addString + ")";
-				}
-				ret.add(new ZSelectItem(addString));
 			}
 
 		}
@@ -766,6 +787,60 @@ public class QueryHandler {
 		return true;
 	}
 
+	private ZQuery[] getQueriesFromSetClause(ZQuery q) {
+		ArrayList<ZQuery> queries = new ArrayList<ZQuery>();
+		ZQuery t_q = new ZQuery();
+		t_q.addSelect(q.getSelect());
+		t_q.addFrom(q.getFrom());
+		t_q.addWhere(q.getWhere());
+		t_q.addGroupBy(q.getGroupBy());
+		t_q.addOrderBy(q.getOrderBy());
+
+		queries.add(t_q);
+
+		if (q.getSet() != null) {
+			ZQuery[] t_res = getQueriesFromSetClause((ZQuery) q.getSet()
+					.getOperand(0));
+			for (int i = 0; i < t_res.length; i++) {
+				queries.add(t_res[i]);
+			}
+		}
+
+		ZQuery[] real_result = queries.toArray(new ZQuery[queries.size()]);
+		return real_result;
+
+	}
+
+	private String getOperatorFromSetClause(ZQuery q, String op) {
+
+		if (q.getSet() != null && op == null) {
+			op = q.getSet().getOperator();
+		}
+
+		if (q.getSet() != null && op != null
+				&& !q.getSet().getOperator().equals(op)) {
+			return null;
+		}
+
+		if (q.getSet() == null)
+			return op;
+
+		return getOperatorFromSetClause((ZQuery) q.getSet().getOperand(0), op);
+	}
+	
+	private ArrayList<String> getOperandListFromSetClause(ZQuery q) {
+		if(((ZQuery) q.getSet().getOperand(0)).getSet() == null) { 
+			ArrayList<String> ret = new ArrayList<String>();
+			ret.add(q.getSet().getOperator());
+			return ret;
+		}
+		
+		ArrayList<String> ret = new ArrayList<String>();
+		ret.addAll(getOperandListFromSetClause((ZQuery) q.getSet().getOperand(0)));
+		ret.add(q.getSet().getOperator());
+		return ret;
+	}
+
 	/**
 	 * Starts the whole equalization/standardization
 	 * 
@@ -791,7 +866,102 @@ public class QueryHandler {
 		this.respectColumnOrder = respect;
 		if (parent != null)
 			aliascount = parent.aliascount;
-		return handleQUERY(workingCopy);
+
+		// if we have set operators we have to assemble everything
+		if (workingCopy.getSet() != null) {
+			
+			ArrayList<ZQuery> real_result = new ArrayList<ZQuery>();
+			
+			ZQuery[] setOperands = getQueriesFromSetClause(workingCopy);
+			
+			String setOperator = getOperatorFromSetClause(workingCopy,
+					workingCopy.getSet().getOperator());
+
+			ZQuery[][] variantes = new ZQuery[setOperands.length][];
+			for (int i = 0; i < setOperands.length; i++) {
+				QueryHandler qh = new QueryHandler();
+				qh.tables = (ArrayList<Table>) this.tables.clone();
+				qh.setOriginalStatement(setOperands[i].toString());
+				variantes[i] = qh.equalize(respectColumnOrder);
+			}
+
+			int[] iterators = new int[variantes.length];
+
+			
+			String[][] permutePrep = new String[variantes.length][];
+			for(int i = 0; i< permutePrep.length; i++) {
+				permutePrep[i] = new String[variantes[i].length];
+				for(int j=0; j< permutePrep[i].length; j++) {
+					permutePrep[i][j] = variantes[i][j].toString();
+				}
+			}
+			
+			
+		ArrayList<String[]> permutations = QueryUtils.createPermutationsSetClause(
+				new String[0][], permutePrep, 0);
+			
+
+			//assemble queries now
+			if(setOperator != null) {
+				
+				//we have the same set operator so lets sort them
+				for(int i=0; i< permutations.size(); i++) {
+					Arrays.sort(permutations.get(i));
+				}
+				
+				for(int i=0; i< permutations.size(); i++) {
+					String result = "";
+					for(int j = 0; j<permutations.get(i).length; j++) {
+						result += permutations.get(i)[j];
+						if(j < permutations.get(i).length -1)
+							result += " union ";
+					}
+					//transform result string to query
+					result += ";";
+
+					ZqlParser zp = new ZqlParser();
+					zp.initParser(new ByteArrayInputStream(result.getBytes()));
+
+					ZStatement zs = zp.readStatement();
+					ZQuery q = (ZQuery) zs;
+					real_result.add(q);
+				}
+				
+				//transform real_result to Array
+				ZQuery[] real_result_array = real_result.toArray(new ZQuery[real_result.size()]);
+				return real_result_array;
+				
+			} else {
+				
+				//get setoperand list
+				ArrayList<String> operandList = getOperandListFromSetClause(workingCopy);
+				Collections.reverse(operandList);
+				
+				for(int i=0; i< permutations.size(); i++) {
+					String result = "";
+					for(int j = 0; j<permutations.get(i).length; j++) {
+						result += permutations.get(i)[j];
+						if(j < permutations.get(i).length -1)
+							result += " "+operandList.get(j)+" ";
+					}
+					//transform result string to query
+					result += ";";
+
+					ZqlParser zp = new ZqlParser();
+					zp.initParser(new ByteArrayInputStream(result.getBytes()));
+
+					ZStatement zs = zp.readStatement();
+					ZQuery q = (ZQuery) zs;
+					real_result.add(q);
+				}
+				//transform real_result to Array
+				ZQuery[] real_result_array = real_result.toArray(new ZQuery[real_result.size()]);
+				return real_result_array;
+				
+			}
+
+		} else 
+			return handleQUERY(workingCopy);
 	}
 
 }

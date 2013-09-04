@@ -32,7 +32,7 @@ public class Haupt {
 		//q2.setOriginalStatement("select e.a AS \"e.a\", e.a+x.b AS \"spalte2\", d AS \"spalte3\", \"d\" as \"spalte4\", avg(e.sal) as \"Spalte5\" from test e WHERE a+b+c+d = 2 AND a-b-c-d = 5 order by e.a desc, b, c asc");
 		//q2.setOriginalStatement("select * from test e WHERE  ( (b < 2) or (c > 3) ) and ( (d < 4) or (a > 5) )   ;");
 		//q2.setOriginalStatement("select * from test e WHERE  ( ( (a > 5) or (d < 4) ) and  ((c > 3)  or (b < 2)))     ;");
-		q2.setOriginalStatement("select empno, ename from emp order by deptno, ename desc");
+		q2.setOriginalStatement("select 1 from emp e, emp f, dept d where f.sal < 1000 and e.id = f.id union select empno, null from emp union all select 2,3 from emp intersect select empno, null from emp");
 		System.out.println(q2.original);
 		
 		
@@ -50,7 +50,7 @@ public class Haupt {
 		q2.createTable("create table dept (deptno int, dname varchar(500), location varchar(500))");
 		q2.createTable("create table test (a int references emp(sal) not null, b int, c int, d int, x int, y int)");
 		
-		q2.setOriginalStatement("select d.*,emp.* from  dept d,emp e order by d.deptno desc, ename desc, 2 desc, avg(sal) desc");
+		q2.setOriginalStatement("select 1 from emp e, emp f, dept d where f.sal < 1000 and e.id = f.id");
 		System.out.println(q2.original);
 		
 		moreRes =  q2.equalize(true);
