@@ -54,13 +54,13 @@ public class OperatorComparer implements Comparator<ZExp> {
 			
 			// c1 is columnname and c2 is constant => columname has to be firts
 			if(c1.getType() == ZConstant.COLUMNNAME && c2.getType() != ZConstant.COLUMNNAME)
-				//return -1;
-				return 1;
+				return -1;
+				//return 1;
 			
 			// c1 is constant and c2 is columnanme => columname has to be firts			
 			if(c1.getType() != ZConstant.COLUMNNAME && c2.getType() == ZConstant.COLUMNNAME)
-				//return 1;
-				return -1;
+				return 1;
+				//return -1;
 			
 			// c1 is columname and c2 is columname
 			//if(c1.getType() == ZConstant.COLUMNNAME && c2.getType() == ZConstant.COLUMNNAME)
