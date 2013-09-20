@@ -318,6 +318,7 @@ public class QueryUtils {
 		if (m1.getColumnCount() != m2.getColumnCount())
 			return false;
 
+		int k = 0;
 		try {
 
 			while (r1.next() && r2.next()) {
@@ -342,11 +343,16 @@ public class QueryUtils {
 					}
 
 				}
-
+				k++;
 			}
 		} catch (SQLException e) {
 			return false;
 		}
+
+		if(k == 0) {
+			return false;
+		}
+
 		return true;
 
 	}
