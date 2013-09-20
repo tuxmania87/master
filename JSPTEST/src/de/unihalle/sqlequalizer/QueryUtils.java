@@ -322,6 +322,7 @@ public class QueryUtils {
 		try {
 
 			while (r1.next() && r2.next()) {
+				k++;
 				for (int i = 1; i <= m1.getColumnCount(); i++) {
 
 					Object res1 = r1.getObject(i);
@@ -343,7 +344,6 @@ public class QueryUtils {
 					}
 
 				}
-				k++;
 			}
 		} catch (SQLException e) {
 			return false;
