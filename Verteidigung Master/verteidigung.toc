@@ -1,0 +1,10 @@
+\beamer@endinputifotherversion {3.12pt}
+\select@language {german}
+\beamer@sectionintoc {1}{Einleitung}{3}{0}{1}
+\beamer@subsectionintoc {1}{1}{Motivation}{4}{0}{1}
+\beamer@subsectionintoc {1}{2}{\IeC {\"U}berblick des neuen Ansatzes}{7}{0}{1}
+\beamer@sectionintoc {2}{Standardisierung}{10}{0}{2}
+\beamer@sectionintoc {3}{Vergleich mit realen Daten}{29}{0}{3}
+\beamer@sectionintoc {4}{Hinweismeldungen}{34}{0}{4}
+\beamer@sectionintoc {5}{Implementierung}{36}{0}{5}
+\beamer@sectionintoc {6}{Live Pr\IeC {\"a}sentation}{40}{0}{6}

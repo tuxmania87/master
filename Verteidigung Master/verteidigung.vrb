@@ -1,0 +1,10 @@
+\frametitle{Fortsetzung}
+\begin{itemize}
+\item Erweitern des Parsers
+\item[$\to$] Umsetzen der Verbundskonzepte
+\item komplexe arithmetische Ausdrücke
+\item Erkennen von unnötigem \verb|DISTINCT|
+\item Ausweitung auf Behandlung aller SQL-Ausdrücke (\verb|UPDATE, DELETE|)
+\item Ausarbeitung und Implementierung weiterer Konzepte (zB: unnötige Verbunde, ...)
+\item Ausbau der Webseite: Gruppierung von Aufgaben, Einfügen von Kategorien, ...
+\end{itemize}

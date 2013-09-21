@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.3-1.40.12 (MiKTeX 2.9) (preloaded format=pdflatex 2012.8.27)  28 AUG 2013 23:56
+This is pdfTeX, Version 3.1415926-2.3-1.40.12 (MiKTeX 2.9) (preloaded format=pdflatex 2012.8.27)  20 SEP 2013 12:00
 entering extended mode
 **master.tex
 (E:\Users\Robert\Desktop\Arbeit\master\Arbeit\master.tex
@@ -2126,10 +2126,6 @@ Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 290.
 Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 290.
 Package rerunfilecheck Info: File `master.out' has not changed.
 (rerunfilecheck)             Checksum: 58A4C3139190ECD67B2D020810B5E103;4866.
-
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
 Package logreq Info: Writing requests to 'master.run.xml'.
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 290.
  ) 
@@ -2157,7 +2153,7 @@ fb><E:/Users/Robert/AppData/Roaming/MiKTeX/2.9/fonts/type1/public/txfonts/txsyc
  Files (x86)/MiKTeX 2.9/fonts/type1/urw/times/utmb8a.pfb><C:/Program Files (x86
 )/MiKTeX 2.9/fonts/type1/urw/times/utmr8a.pfb><C:/Program Files (x86)/MiKTeX 2.
 9/fonts/type1/urw/times/utmri8a.pfb>
-Output written on master.pdf (100 pages, 1090263 bytes).
+Output written on master.pdf (100 pages, 1090262 bytes).
 PDF statistics:
  1323 PDF objects out of 1440 (max. 8388607)
  424 named destinations out of 1000 (max. 500000)

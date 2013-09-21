@@ -1,0 +1,567 @@
+\documentclass{beamer}
+\mode<presentation>
+% {
+%   \usetheme{lankton-keynote}% oder CambridgeUS Darmstadt Singapore
+%   \setbeamercovered{transparent}
+% }
+\usetheme{CambridgeUS} %Darmstadt
+%\usetheme{Warsaw} %Darmstadt
+\usepackage{color}
+\usepackage[utf8]{inputenc}
+\usepackage[german]{babel}
+\usepackage{times}
+
+\usepackage{graphicx}
+\usepackage{multimedia}
+\usefonttheme{serif}
+%\usepackage{floatflt}
+%\usepackage{float}
+\usepackage{listings}
+\definecolor{green}{rgb}{0,.5,0}  
+\definecolor{darkblue}{rgb}{0,0,.6}
+\definecolor{darkred}{rgb}{.6,0,0}
+\definecolor{darkgreen}{rgb}{0,.6,0}
+\definecolor{red}{rgb}{.98,0,0}
+\definecolor{lightblue}{rgb}{0.8,0.85,1}
+
+%silvio anfang
+\definecolor{dunkelrot}{rgb}{0.4,0.0,0.0}
+\definecolor{dunkelgreen}{rgb}{0.0,0.4,0.0}
+\definecolor{blue}{rgb}{0.6,0.6,0.7}
+\definecolor{black}{rgb}{0.01,0.01,0.01}
+\definecolor{grau}{rgb}{0.2,0.2,0.2}
+\definecolor{white}{rgb}{1.0,1.0,1.0}
+\definecolor{blocktitle}{rgb}{0.2, 1.0, 0.1}
+\definecolor{blockbody}{rgb}{0.9, 0.9, 0.9}
+\definecolor{ablocktitle}{rgb}{0.6, 0.1, 0.1}
+\definecolor{ablockbody}{rgb}{0.9, 0.9, 0.9}
+\definecolor{eblocktitle}{rgb}{0.1, 0.5, 0.1}
+\definecolor{eblockbody}{rgb}{0.9, 1.0, 0.9}
+\definecolor{itemfront}{rgb}{0.7, 0.2, 0.2}
+\definecolor{itemback}{rgb}{0.0, 0.0, 0.0}
+\setbeamercolor{palette primary}{use=structure,fg=dunkelrot,bg=blue}%ueberschrift schrift, ueberschrift hintergrund 
+%\setbeamercolor{palette secondary}{use=structure,fg=black,bg=dunkelgreen}%??, frametitle rechts
+%\setbeamercolor{palette tertiary}{use=structure,fg=black,bg=magenta}%ohne
+\setbeamercolor{palette quaternary}{use=structure,fg=dunkelgreen,bg=black}%schrift headline+framtitle, hintergrund headline + framtitle links
+\setbeamercolor{title}{bg=blockbody}
+\setbeamercolor*{block title}{bg=blocktitle}
+\setbeamercolor*{block body}{bg=blockbody}
+\setbeamercolor*{block title alerted}{bg=ablocktitle}
+\setbeamercolor*{block body alerted}{bg=ablockbody}
+\setbeamercolor*{block title example}{bg=eblocktitle}
+\setbeamercolor*{block body example}{bg=eblockbody}
+\setbeamercolor*{item}{bg=itemback}
+\setbeamercolor*{item}{fg=itemfront}
+\setbeamerfont{frametitle}{size=\large}
+\setbeamerfont{normal text}{size=\small}
+%silvio ende
+
+\lstloadlanguages{SQL}
+\lstset{%
+  language=SQL,
+  basicstyle=\footnotesize\ttfamily,
+  commentstyle=\itshape\color{darkgreen},
+  keywordstyle=\bfseries\color{darkblue},
+  stringstyle=\color{darkred},
+  showstringspaces=false,
+  breaklines=true
+}%
+
+\setbeamersize{text margin left=5mm}
+
+\AtBeginSection[]
+{
+  \begin{frame}<beamer>{}
+    \tableofcontents[currentsection,currentsubsection,hideothersections,hideothersubsections]
+  \end{frame}
+}
+
+\title[Vergleich von SQL-Anfragen]{Vergleich von SQL-Anfragen:\\Theorie und Implementierung in Java}
+
+%\subtitle{sub} % ()
+
+\author[Robert Hartmann]{Robert Hartmann}
+
+\institute[] % (optional)
+{
+  Martin-Luther-Universität Halle-Wittenberg\\
+  Naturwissenschaftliche Fakultät III\\
+  Institut für Informatik
+}
+
+\date[]{26. September 2013}
+
+\subject{Informatik}
+
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}{}
+  \tableofcontents
+\end{frame}
+
+\section{Einleitung}
+\subsection{Motivation}
+
+\begin{frame}
+\begin{itemize}
+\item Vergleich von SQL-Anfragen üblicherweise in der Lehre
+\item Übungsaufgaben notwendig für praktisches Verständnis von SQL
+\item Bestehend aus Sachaufgabe und Datenbankschema
+\item Lösung des Lernenden formuliert als SQL-Statement
+\item Allgemein: Nicht entscheidbar
+\item Korrektur der Aufgabe auf zwei Arten: manuell oder automatisch
+\item Beide Ansätze haben signifikante Nachteile 
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Manueller Vergleich}
+\begin{block}{Vorteile}
+\begin{itemize}
+\item Korrektur zuverlässig 
+\item Syntaktische Varianten der Lösung werden erkannt
+\item Lernender erhält (potentiell) detailliertes Feedback
+\end{itemize}
+\end{block}
+
+\begin{alertblock}{Nachteile}
+\begin{itemize}
+\item Korrektur langsam
+\item Wenig Geld und Kürzungen in Lehre $\to$ Wenig Zeit zur Verfügung
+\item Unter Zeitdruck: Mehr Fehler, wenig detailliertes Feedback
+\end{itemize}
+\end{alertblock}
+
+\textbf{Fazit}: Manuelles Vergleichen funktioniert nur, wenn genug Mitarbeiter/ Hilfskräfte zur Verfügung stehen.
+\end{frame}
+
+\begin{frame}{Automatischer Vergleich}
+Automatischer Vergleich zweier SQL-Anfragen wird üblicherweise durch den Vergleich der Ergebnistupel realisiert.
+\begin{block}{Vorteile}
+\begin{itemize}
+\item Korrektur in Echtzeit
+\item Keine Mitarbeiter oder Hilfskräfte benötigt
+\end{itemize}
+\end{block}
+
+\begin{alertblock}{Nachteile}
+\begin{itemize}
+\item Für jedes Datenbankschema sind Daten notwendig
+\item Feedback für Lernenden oft unzureichend um Fehler zu identifizieren
+\item \textit{false positive} leicht zu erstellen, System kann ausgehebelt werden
+\item \textit{false positive} auch unabsichtlich problematisch: Lernender bemerkt Fehler nicht
+\end{itemize}
+\end{alertblock}
+
+\textbf{Fazit}: Automatisches Vergleichen durch bloßes Vergleichen von Ergebnistupeln nicht zuverlässig
+\end{frame}
+
+\subsection{Überblick des neuen Ansatzes}
+
+\begin{frame}{Neuer Ansatz (1)}
+\begin{itemize}
+\item automatischer Vergleich mit Datenbankschema und Musterlösung
+\item sichere Rückmeldung benötigt Daten, Hauptteil aber ohne möglich
+\end{itemize}
+
+Erster Schritt: \textbf{Standardisierung}
+\begin{itemize}
+\item Entfernung von syntaktischen Details
+\item Vereinheitlichen von syntaktischen Varianten
+\item Sortieren des SQL-Ausdrucks
+\end{itemize}
+\vspace{5mm}
+\textbf{Ziel}: Semantisch äquivalente Anfragen sollen nach der Standardisierung auch syntaktisch gleich sein.
+\end{frame}
+
+\begin{frame}[fragile]{Neuer Ansatz (2)}
+Sind beide Anfragen nach der Standardisierung nicht syntaktisch gleich, so wird versucht die Ungleichheit beider Anfragen zu zeigen.
+
+Zweiter Schritt: \textbf{Vergleich von Ergebnismengen}
+\begin{itemize}
+\item Wird benutzt um \textbf{Ungleichheit} zu zeigen, Unterschied zum üblichen Vorgehen
+\item \textit{false positive} dadurch nicht möglich
+\item Versagt Schritt zwei so ist der Status der Lösung: unbekannt (Diese sollten zum großen Teil korrekt sein)
+\end{itemize}
+
+Gründe für \textit{unbekannte} Lösungen:
+
+\begin{itemize}
+\item Programmfehler
+\item unnötige Bedingungen in \verb|WHERE|-Klausel
+\item Verwendung von syntaktisch unterschiedlichen Konzepten 
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]{Neuer Ansatz (3)}
+Aus besagten Schwächen leiten sich weitere Anforderungen ab:
+\begin{itemize}
+\item Ausdrücke auswerten
+\item Standardisierungskonzept für Verbunde
+\item Standardisierungskonzept für Unterabfragen
+\item Anzahl von \textit{unbekannten} Lösungen minimieren durch Zulassen mehrerer Musterlösungen
+\end{itemize}
+\vspace{5mm}
+Dritter Schritt: \textbf{Struktureller Vergleich der Anfragen}
+\begin{itemize}
+\item Vergleich der einzelnen Teile der SQL-Anfragen $\to$ genaue Lokalisierung des Fehlers
+\item Vergleich der Anzahl verschiedener Komponenten (Tabellen, Formeln, Verbunde, Unterabfragen)
+\end{itemize}
+
+\end{frame}
+
+\section{Standardisierung}
+
+\begin{frame}[fragile]{Überblick}
+\begin{itemize}
+\item Standardisierung bildet ersten Schritt 
+\item Entfernen von syntaktischen Details und Einlesen von Anfrage in Datenstruktur durch Parser
+\item Behandeln von einzelnen Teilen der SQL-Anfrage (\verb|SELECT, FROM, WHERE, GROUP BY, ORDER BY|)
+\item Abarbeitung nicht streng hintereinander, da einige Teile abhängig sind
+\item Zusammensetzen der behandelten Teile zur standardisierten SQL-Anfrage
+\end{itemize}
+\end{frame}
+
+
+
+
+%subsection einzelne teile 
+
+\begin{frame}[fragile]{FROM-Teil}
+\begin{itemize}
+\item Lexikographisches Sortieren der Tabellen
+\item Sortierung: (1) Tabellen, (2) Unterabfragen, (3) Verbunde
+\item Einführung künstlicher Tupelvariablen (TV) mit fortlaufender Nummerierung (a1,a2,...)
+\item TV auf gleicher Ebene erhalten gleichen Startwert für Iteration
+\end{itemize}
+
+\begin{verbatim}
+SELECT ename FROM emp
+WHERE sal > (SELECT AVG(sal) FROM emp)
+AND empno > (SELECT AVG(empno) FROM emp)
+
+SELECT ename FROM emp a1
+WHERE sal > (SELECT AVG(sal) FROM emp a2)
+AND empno > (SELECT AVG(empno) FROM emp a2)
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{SELECT-Teil}
+\begin{itemize}
+\item Ersetzen von Wildcard (*) zu konkreten Spalten (vor Sortieren in \verb|FROM|
+\item Einführen der künstlichen TV als Aliase
+\item Wenn Spaltenreihenfolge unwichtig: lexikographisches Sortieren der Spalten
+\end{itemize}
+
+\begin{verbatim}
+SELECT ename FROM emp a1
+WHERE sal > (SELECT AVG(sal) FROM emp a2)
+AND empno > (SELECT AVG(empno) FROM emp a2)
+
+SELECT a1.ename FROM emp a1
+WHERE a1.sal > (SELECT AVG(a2.sal) FROM emp a2)
+AND a1.empno > (SELECT AVG(a2.empno) FROM emp a2)
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{WHERE-Teil - Überblick}
+\begin{itemize}
+\item Umwandeln des \verb|WHERE|-Ausdrucks in KNF (konjunktive Normalform) 
+\item[$\to$] Erhöhung der Lesbarkeit, Eliminierung von unnötig tiefen Teilbäumen
+\item[] \begin{itemize}
+		\item (Entfernen von unnötigen Klammern)
+		\item Auflösen von \verb|NOT| 
+		\item Anwendung des Distributivgesetzes
+	  \end{itemize}
+
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}[fragile]{WHERE-Teil - syntaktische Varianten}
+Entfernung von syntaktischen Varianten:
+\begin{itemize}
+\item \verb|a BETWEEN l AND u| zu \verb|a >= l AND a <= u|
+\item \verb|a IN (c1, c2, c3)| zu \verb|a = c1 OR a = c2 OR a = c3|
+\item \verb|a >= ALL(c1, c2, c3)| zu \verb|a >= c1 AND a >= c2 AND a >= c2|
+\item \verb|a >= ANY(c1, c2, c3)| zu \verb|a >= c1 OR a >= c2 OR a >= c2|
+\item \verb|EXISTS (SELECT expr FROM ...)| zu \verb|EXISTS (SELECT 1 FROM ...)|
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{WHERE-Teil - Operatorenvielfalt (1)}
+\textbf{Problem:} Ausdrücke können unterschiedlich aufgeschrieben werden. Es ist nicht klar, welche Schreibweise der Lernende verwenden wird.\\
+\textbf{Beispiel:} \verb|a > 3| äquivalent zu \verb|3 < a| und mit Zusatzwissen auch zu \verb|a >= 2| und \verb|2 <= a|\\
+\vspace{5mm}
+\textbf{Ansatz 1:} Hinzufügen aller äquivalenten Ausdrücke\\
+\textbf{Ansatz 2:} Zulassen einer Repräsentation und Verbieten der restlichen Schreibweisen\\
+\vspace{5mm}
+Wir verfolgen den implementierten Ansatz 1.
+\end{frame}
+
+
+\begin{frame}[fragile]{WHERE-Teil - Operatorenvielfalt (2)}
+\begin{itemize}
+\item Mengen $M_i$ enthalten Muster, die äquivalente Schreibweisen beinhalten
+\item Passt atomare Formel $A$ auf $m\in M_i \to$ Hinzufügen aller $m'\in M_i$ mit $m\neq m'$
+\item Vorgang wiederholen bis keine neuen Formeln hinzugefügt wurden
+\item Beispiel: \verb|salary >= 5| mit \verb|salary NUMERIC(4,2)|
+\item $A,B$: Konstanten oder Attribute, $X$: numerische Konstante
+\item $M_6:$  $\{\ A\geq B, B\leq A \}$\\ 
+$M_7:$  $\{\ A>X, A\geq X+\mathit{adjust}(A) \}$\\
+\item $\mathit{adjust}(A) = 1 / (10^{\mathit{places}(A)})$
+\item  $\{$ \only<1->{$salary >= 5,$}  \only<2->{$5 <= salary,$} \only<3>{$salary >= 4.99 + 0.01,$} \only<4->{$salary > 4.99,$} \only<5->{$4.99 < salary$} $\}$ 
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}[fragile]{WHERE-Teil - Sortierung (1)}
+\begin{itemize}
+\item Baum $T(x)$ mit Wurzel $x$. $children(x) = (c_1,c_2,...,c_n)$
+\item Eindeutige Repräsentation erfordert Ordnung von $children(x)$
+\item Ist $x$ nicht-kommutativer Operator $\to$ Hinzufügen aller Schreibweisen
+\item Sonst: Ordnung von $children(x)$ beliebig veränderbar
+\item[$\to$] Ordnung muss definiert werden! 
+\item $order: children \to \mathbb{N}$
+\item Nach Sortieren gilt: $order(c_1) \leq order(c_2) \leq ... order(c_n)$
+\end{itemize}
+\begin{tabular}{|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|}
+\hline
+$r$ & Variable & Konstante & OR & $\le$ & $\ge$ & $<$ & $>$ & $=$ & $+$\\\hline
+$\textit{order}(r)$ & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9\\ 
+\hline
+\end{tabular}\newline
+\begin{tabular}{|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|}
+\hline
+$r$  & $-$  & IS NULL & IS NOT NULL & EXISTS & ANY & ALL  \\\hline
+$\textit{order}(r)$ &   10 & 11& 12 & 13 & 14 & 15 \\ 
+\hline
+\end{tabular}
+\begin{itemize}
+\item Vorgehen: BOTTOM-UP durch Rekursion
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{WHERE-Teil - Sortierung (2)}
+Beispiel:\\
+\verb|d = 5 OR a < 6| $\ \ \to\ \ $ \verb|a < 6 OR d = 5|\\
+\begin{center}
+\includegraphics[scale=0.3]{sort_step1.png}
+\end{center}
+\textbf{Problem: }Was passiert, wenn zwei Kinder den gleichen Operator bezeichnen / beides Variablen / beides Konstanten sind?
+\end{frame}
+
+\begin{frame}[fragile]{WHERE-Teil - Sortierung (3)}
+Es sei $T(x)$ ein Parserbaum mit $children(x) = (c_1,c_2,...,c_n)$. Haben wir $order(c_i) = order(c_{i+1})$ benötigen wir weiteres Kriterium für Bestimmung eindeutiger Ordnung.
+Wir benutzen schrittweise Tiefensuche, da alle Bäume unter $c_i$ und $c_j$ bereits sortiert sind.
+\begin{itemize}
+\item Es sei $order(c_i) = order(c_j)$ mit $j = i + 1$ und $c_i,c_j$ sind beides keine Konstanten oder Variablen
+\item $DFS_i(x)$ bezeichnet aktuellen Knoten bei Tiefensuche auf Wurzelknoten $x$ im Schritt $i$.
+\item \begin{lstlisting}[mathescape]
+for k=1 to n
+   if ($DFS_k(c_j)$ == NULL) AND ($DFS_k(c_i)$ != NULL)
+   	  swap(c_j,c_i);
+   else if $order(DFS_k(c_j)) < order(DFS_k(c_i))$
+      swap(c_j,c_i);
+      return;
+   endif
+endfor
+   
+\end{lstlisting}
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}[fragile]{WHERE-Teil - Sortierung (4)}
+Gilt $order(c_i) = order(c_j)$ mit $j = i + 1$ und $c_i,c_j$ sind beides Konstanten oder Variablen, dann entscheidet lexikographische Sortierung.\\
+\vspace{5mm}
+\textbf{Beispiel}:\\
+
+\verb|b = 2 OR c IS NULL and a < 6 OR d = 5 AND a > 5|
+\begin{center}
+\includegraphics[scale=0.27]{sort_step2.png}
+\end{center}
+
+$\to$ Tauschen, da $order(=) = 8 > 6 = order(<) $\\
+\textbf{Letzter Schritt der Sortierung}: Entfernung von Duplikaten.
+\end{frame}
+
+\begin{frame}[fragile]{GROUP BY und ORDER BY}
+\textbf{GROUP BY:}
+\begin{itemize}
+\item Einführen der künstlichen TV
+\item Lexik. Sortierung der \verb|GROUP BY|-Items
+\item \verb|HAVING BY| wie \verb|WHERE| behandelt
+\end{itemize}
+\textbf{ORDER BY:}
+\begin{itemize}
+\item Ersetzen von Selektionsnummern 
+\item Einführen der künstlichen TV
+\item ASC bereits durch Parser eingeführt
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Verbunde und Unterabfragen}
+\begin{itemize}
+\item Äußere Verbunde ersetzt durch inneren Verbund verknüpft mit \verb|UNION ALL|
+\item Natürliche Verbunde unter \verb|FROM| als innere Verbunde unter \verb|WHERE|
+\item Entfernen von Schlüsselwort \verb|CROSS|
+\item Innere Verbunde unter \verb|FROM| werden unter \verb|WHERE| formuliert
+\item Selbstverbunde: Erstellen von gültigen Permutationen und Hinzufügen zur standardisierten Lösung (i)
+\item Umwandeln sämtlicher Unterabfragen zu \verb|EXISTS|-Unterabfragen (i)
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Ausblick}
+Folie verschieben!
+\begin{itemize}
+\item Erkennen von unnötigem \verb|DISTINCT|
+\item transitiv-implizierte Formeln: \verb|a = b AND a = 5| $\to$ \verb|b = 5|
+\item Beschränkung der Domänen: \verb|a > 2 AND a > 0| $\to$ \verb|a > 2|
+\item Behandlung von komplexeren arithmetischen Ausdrücken
+\item Erweiterung des Parsers um Unterabfragen und Verbund unter \verb|FROM|
+\end{itemize}
+\end{frame}
+
+\section{Vergleich mit realen Daten}
+
+\begin{frame}[fragile]{Allgemeines}
+\begin{itemize}
+\item Schritt nur notwendig, wenn Standardisierung fehlschlägt
+\item Prüfen der notwendigen Bedingung einer Äquivalenz zweier Anfragen
+\item Soll Ungleichheit nachweisen
+\item \textit{false positive} nicht möglich
+\item reale Daten notwendig
+\item Vorgehen: Ausführen von Anfragen, Vergleich der Ergebnisse 
+\item Unterstützte DBMS: abhängig von JDBC-Connector
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}[fragile]{Idee}
+\begin{itemize}
+\item iterativer Vergleich beider Ergebnismengen nicht ohne weiteres möglich
+\item Problem: Optimierer des DBMS übernimmt Sortierung, wenn nicht explizit angegeben
+\item selbst mit expliziter Angabe: Sortierung nicht notwendigerweise eindeutig
+\item Beispiel: \\\verb|SELECT surname, firstname|\\\verb|FROM people ORDER BY surname|
+\item[$\to$] Fallunterscheidung: Enthält Musterlösung (ML)/ Lösung des Lernenden (LL) \verb|ORDER BY|?
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Fallunterscheidung (1)}
+ML enthält kein \verb|ORDER BY|, LL enthält \verb|ORDER BY|
+\begin{itemize}
+\item Sortierung offensichtlich egal $\to$ zunächst Entfernung von \verb|ORDER BY| von LL
+\end{itemize}
+
+ML enthält ein \verb|ORDER BY|, LL enthält kein \verb|ORDER BY|
+\begin{itemize}
+\item Sortierung von Bedeutung
+\item Lernende ist Sortierung offensichtlich egal
+\item Ziel: Nachweisen der Ungleichheit $\to$ keine Anpassungen
+\item Problem: zufällige Übereinstimmung
+\end{itemize}
+
+ML enthält kein \verb|ORDER BY|, LL enthält \verb|ORDER BY|
+\begin{itemize}
+\item keine Anpassung
+\item Problem: zufällige Übereinstimmung
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Fallunterscheidung (2)}
+ML enthält kein \verb|ORDER BY|, LL enthält kein \verb|ORDER BY|
+\begin{itemize}
+\item Sortierung unwichtig, aber Optimierer bestimmt Ausgabe $\to$ kann Falschmeldungen erzeugen
+\item Lösung: Sortieren der Lösungen nach den Ausgabespalten (iterativ)
+\item Beispiel: \verb|SELECT surname, firstname FROM people|\\
+zu:\\\verb|SELECT surname, firstname|\\\verb|FROM people ORDER BY 1,2|
+\end{itemize}
+Bei Fall 2 und 3 muss nachträglich nach allen unbenutzten Ausgabespalten sortiert werden. Selbst dann ist keine Eindeutigkeit gewährleistet. $\to$ offenes Problem.
+\end{frame}
+
+\section{Hinweismeldungen}
+
+\begin{frame}[fragile]{Vergleich der Anfragen}
+\begin{itemize}
+\item Vergleich einzelner Teile der Anfrage (\verb|SELECT, FROM, ...|)
+\item[$\to$] Hinweis an Nutzer, welche Teile identisch mit ML sind (WO ist der Fehler?)
+\item Vergleich von Anzahl verschiedener Komponenten (Tabellen, Formeln, Verbunde, Unterabfragen)
+\item[$\to$] konkreter Hinweis, WAS an der eigenen Lösung fehlt/überflüssig ist
+\item Vergleich mit Realdaten (Schritt 2) unterstützt verschiedene DBMS $\to$ verschiedene Fehlermeldung der DBMS beim Parsen mit DBMS-Parser
+\item[$\to$] Kompatibilitätstest 
+\end{itemize}
+\end{frame}
+
+
+\section{Implementierung}
+
+
+\begin{frame}[fragile]{Technische Details}
+Ergebnisse der Arbeit sollen in Form einer Lernplattform umgesetzt werden.
+\vspace{5mm}
+\begin{itemize}
+\item Javaklassen per JSP als HTML-Seiten nutzbar
+\item automatisches Build- und Deployskript per \textit{ant}
+\item Parser: ZQL (Open Source)
+\item DBMS für Schritt 2: alle mit JDBC-Connector 
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Einschränkungen in der Praxis / Probleme}
+\begin{itemize}
+\item Nur Tabellen in \verb|FROM| zugelassen (keine Verbunde, Unterabfragen)
+\item[$\to$] keine Implementierung von (bereits ausgearbeiteten) Verbundskonzepten
+\item Parser versteht keine \verb|CREATE TABLE|-Anweisungen
+\item[$\to$] Kenntnis über Spalten (Name, Datentyp, Eigenschaften) notwendig
+\item[$\to$] rudimentäres Parsen von \verb|CREATE TABLE|-Anweisungen implementiert 
+\item JDBC-Connector für DBMS zum Teil sehr unterschiedlich
+\item[$\to$] Anbinden von neuen DBMS-Typen muss getestet werden
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]{Fortsetzung}
+\begin{itemize}
+\item Erweitern des Parsers 
+\item[$\to$] Umsetzen der Verbundskonzepte
+\item komplexe arithmetische Ausdrücke
+\item Erkennen von unnötigem \verb|DISTINCT|
+\item Ausweitung auf Behandlung aller SQL-Ausdrücke (\verb|UPDATE, DELETE|)
+\item Ausarbeitung und Implementierung weiterer Konzepte (zB: unnötige Verbunde, ...)
+\item Ausbau der Webseite: Gruppierung von Aufgaben, Einfügen von Kategorien, ...
+\end{itemize}
+\end{frame}
+
+%\begin{frame}[fragile]{Parser}
+%\begin{itemize}
+%\item Verwendung des Parsers ZQL (Open Source)
+%\item einfach bedienbar und leicht erweiterbar
+%\item Parser erzeugt Listen von \textit{Items} (\verb|SELECT, FROM, ORDER BY, GROUP BY|)
+%\item und Parserbäume als (nicht binäre) Bäume (\verb|WHERE, HAVING|)
+%\item arithmetische Ausdrücke als Binärbäume geparst
+%\end{itemize}
+%\end{frame}
+
+%\begin{frame}[fragile]{Beispiel Parser (WHERE)}
+%\begin{verbatim}
+%SELECT * FROM test 
+%WHERE a > 2 AND b = 3 AND c IS NULL
+%\end{verbatim}
+%\begin{center}
+%\includegraphics[scale=0.48]{bsp_parser.png}
+%\end{center}
+%\end{frame}
+
+
+\section{Live Präsentation}
+
+\end{document}
+
+
