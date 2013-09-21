@@ -169,52 +169,16 @@ Automatischer Vergleich zweier SQL-Anfragen wird üblicherweise durch den Vergle
 \item sichere Rückmeldung benötigt Daten, Hauptteil aber ohne möglich
 \end{itemize}
 
-Erster Schritt: \textbf{Standardisierung}
-\begin{itemize}
-\item Entfernung von syntaktischen Details
-\item Vereinheitlichen von syntaktischen Varianten
-\item Sortieren des SQL-Ausdrucks
-\end{itemize}
-\vspace{5mm}
-\textbf{Ziel}: Semantisch äquivalente Anfragen sollen nach der Standardisierung auch syntaktisch gleich sein.
+Erster Schritt: \textbf{Standardisierung}\\
+\textbf{Ziel}: Semantisch äquivalente Anfragen sollen nach der Standardisierung auch syntaktisch gleich sein.\\
+\vspace{4mm}
+Zweiter Schritt: \textbf{Vergleich von Ergebnismengen}\\
+\textbf{Ziel}: Nachweis der Ungleichheit beider Anfragen
+\vspace{4mm}
+Dritter Schritt: \textbf{Struktureller Vergleich der Anfragen}\\
+\textbf{Ziel}: genauere Lokalisierung von Fehlern des Lernenden
 \end{frame}
 
-\begin{frame}[fragile]{Neuer Ansatz (2)}
-Sind beide Anfragen nach der Standardisierung nicht syntaktisch gleich, so wird versucht die Ungleichheit beider Anfragen zu zeigen.
-
-Zweiter Schritt: \textbf{Vergleich von Ergebnismengen}
-\begin{itemize}
-\item Wird benutzt um \textbf{Ungleichheit} zu zeigen, Unterschied zum üblichen Vorgehen
-\item \textit{false positive} dadurch nicht möglich
-\item Versagt Schritt zwei so ist der Status der Lösung: unbekannt (Diese sollten zum großen Teil korrekt sein)
-\end{itemize}
-
-Gründe für \textit{unbekannte} Lösungen:
-
-\begin{itemize}
-\item Programmfehler
-\item unnötige Bedingungen in \verb|WHERE|-Klausel
-\item Verwendung von syntaktisch unterschiedlichen Konzepten 
-\end{itemize}
-
-\end{frame}
-
-\begin{frame}[fragile]{Neuer Ansatz (3)}
-Aus besagten Schwächen leiten sich weitere Anforderungen ab:
-\begin{itemize}
-\item Ausdrücke auswerten
-\item Standardisierungskonzept für Verbunde
-\item Standardisierungskonzept für Unterabfragen
-\item Anzahl von \textit{unbekannten} Lösungen minimieren durch Zulassen mehrerer Musterlösungen
-\end{itemize}
-\vspace{5mm}
-Dritter Schritt: \textbf{Struktureller Vergleich der Anfragen}
-\begin{itemize}
-\item Vergleich der einzelnen Teile der SQL-Anfragen $\to$ genaue Lokalisierung des Fehlers
-\item Vergleich der Anzahl verschiedener Komponenten (Tabellen, Formeln, Verbunde, Unterabfragen)
-\end{itemize}
-
-\end{frame}
 
 \section{Standardisierung}
 
@@ -270,21 +234,12 @@ AND a1.empno > (SELECT AVG(a2.empno) FROM emp a2)
 \end{verbatim}
 \end{frame}
 
-\begin{frame}[fragile]{WHERE-Teil - Überblick}
+
+\begin{frame}[fragile]{WHERE-Teil - syntaktische Varianten}
 \begin{itemize}
 \item Umwandeln des \verb|WHERE|-Ausdrucks in KNF (konjunktive Normalform) 
 \item[$\to$] Erhöhung der Lesbarkeit, Eliminierung von unnötig tiefen Teilbäumen
-\item[] \begin{itemize}
-		\item (Entfernen von unnötigen Klammern)
-		\item Auflösen von \verb|NOT| 
-		\item Anwendung des Distributivgesetzes
-	  \end{itemize}
-
 \end{itemize}
-\end{frame}
-
-
-\begin{frame}[fragile]{WHERE-Teil - syntaktische Varianten}
 Entfernung von syntaktischen Varianten:
 \begin{itemize}
 \item \verb|a BETWEEN l AND u| zu \verb|a >= l AND a <= u|
@@ -311,12 +266,10 @@ Wir verfolgen den implementierten Ansatz 1.
 \item Mengen $M_i$ enthalten Muster, die äquivalente Schreibweisen beinhalten
 \item Passt atomare Formel $A$ auf $m\in M_i \to$ Hinzufügen aller $m'\in M_i$ mit $m\neq m'$
 \item Vorgang wiederholen bis keine neuen Formeln hinzugefügt wurden
-\item Beispiel: \verb|salary >= 5| mit \verb|salary NUMERIC(4,2)|
+\item Beispiel: \verb|salary >= minsal|
 \item $A,B$: Konstanten oder Attribute, $X$: numerische Konstante
-\item $M_6:$  $\{\ A\geq B, B\leq A \}$\\ 
-$M_7:$  $\{\ A>X, A\geq X+\mathit{adjust}(A) \}$\\
-\item $\mathit{adjust}(A) = 1 / (10^{\mathit{places}(A)})$
-\item  $\{$ \only<1->{$salary >= 5,$}  \only<2->{$5 <= salary,$} \only<3>{$salary >= 4.99 + 0.01,$} \only<4->{$salary > 4.99,$} \only<5->{$4.99 < salary$} $\}$ 
+\item $M_6:$  $\{\ A\geq B, B\leq A \}$
+\item  $\{$ \only<2->{$salary >= minsal,$}  \only<3->{$minsal <= salary,$} $\}$ 
 \end{itemize}
 \end{frame}
 
@@ -403,7 +356,6 @@ $\to$ Tauschen, da $order(=) = 8 > 6 = order(<) $\\
 \begin{itemize}
 \item Ersetzen von Selektionsnummern 
 \item Einführen der künstlichen TV
-\item ASC bereits durch Parser eingeführt
 \end{itemize}
 \end{frame}
 
@@ -415,17 +367,6 @@ $\to$ Tauschen, da $order(=) = 8 > 6 = order(<) $\\
 \item Innere Verbunde unter \verb|FROM| werden unter \verb|WHERE| formuliert
 \item Selbstverbunde: Erstellen von gültigen Permutationen und Hinzufügen zur standardisierten Lösung (i)
 \item Umwandeln sämtlicher Unterabfragen zu \verb|EXISTS|-Unterabfragen (i)
-\end{itemize}
-\end{frame}
-
-\begin{frame}[fragile]{Ausblick}
-Folie verschieben!
-\begin{itemize}
-\item Erkennen von unnötigem \verb|DISTINCT|
-\item transitiv-implizierte Formeln: \verb|a = b AND a = 5| $\to$ \verb|b = 5|
-\item Beschränkung der Domänen: \verb|a > 2 AND a > 0| $\to$ \verb|a > 2|
-\item Behandlung von komplexeren arithmetischen Ausdrücken
-\item Erweiterung des Parsers um Unterabfragen und Verbund unter \verb|FROM|
 \end{itemize}
 \end{frame}
 
@@ -535,7 +476,9 @@ Ergebnisse der Arbeit sollen in Form einer Lernplattform umgesetzt werden.
 \item Erkennen von unnötigem \verb|DISTINCT|
 \item Ausweitung auf Behandlung aller SQL-Ausdrücke (\verb|UPDATE, DELETE|)
 \item Ausarbeitung und Implementierung weiterer Konzepte (zB: unnötige Verbunde, ...)
-\item Ausbau der Webseite: Gruppierung von Aufgaben, Einfügen von Kategorien, ...
+\item transitiv-implizierte Formeln: \verb|a = b AND a = 5| $\to$ \verb|b = 5|
+\item Beschränkung der Domänen: \verb|a > 2 AND a > 0| $\to$ \verb|a > 2|
+%\item Ausbau der Webseite: Gruppierung von Aufgaben, Einfügen von Kategorien, ...
 \end{itemize}
 \end{frame}
 

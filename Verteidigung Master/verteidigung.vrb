@@ -6,5 +6,7 @@
 \item Erkennen von unnötigem \verb|DISTINCT|
 \item Ausweitung auf Behandlung aller SQL-Ausdrücke (\verb|UPDATE, DELETE|)
 \item Ausarbeitung und Implementierung weiterer Konzepte (zB: unnötige Verbunde, ...)
-\item Ausbau der Webseite: Gruppierung von Aufgaben, Einfügen von Kategorien, ...
+\item transitiv-implizierte Formeln: \verb|a = b AND a = 5| $\to$ \verb|b = 5|
+\item Beschränkung der Domänen: \verb|a > 2 AND a > 0| $\to$ \verb|a > 2|
+%\item Ausbau der Webseite: Gruppierung von Aufgaben, Einfügen von Kategorien, ...
 \end{itemize}
