@@ -66,7 +66,7 @@ public class QueryUtils {
 
 	//An operator with lesser index has a higher priority
 	// there is no AND because in KNF, AND only occures as Root Node
-	public static String orderList[] = { "OR", "<=", ">=", "<", ">", "=", "+", "-",
+	public static String orderList[] = { "OR", "<=", ">=", "<", ">", "=", "+", "-", "*", "/",
 			"IS NULL", "IS NOT NULL", "EXISTS", "ANY", "ALL" };
 
 	//supported database types for external database
