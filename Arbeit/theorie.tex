@@ -554,14 +554,14 @@ Es sei $T(r)$ unser ZQL-Parserbaum. Ist der Operator, mit dem $r$ markiert ist, 
 \begin{figure}[H]\
 \begin{tabular}{|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|}
 \hline
-$r\in \textit{Relation}$ & Variable & Konstante & OR & $\le$ & $\ge$ & $<$ & $>$ & $=$& $+$ & $-$  & IS NULL\\\hline
-$\textit{order}(r)$ & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11\\ 
+$r\in \textit{Relation}$ & Variable & Konstante & OR & $\le$ & $\ge$ & $<$ & $>$ & $=$& $<>$ & $+$ & $-$ & $*$ & $/$\\\hline
+$\textit{order}(r)$ & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12 & 13\\ 
 \hline
 \end{tabular}\newline
 \begin{tabular}{|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|}
-\hline
-$r\in \textit{Relation}$ & IS NOT NULL & EXISTS & ANY & ALL  \\\hline
-$\textit{order}(r)$ & 12 & 13 & 14 & 15 \\ 
+\hline 
+$r\in \textit{Relation}$ & IS NULL &  IS NOT NULL & EXISTS & ANY & ALL & IN & NOT \\\hline
+$\textit{order}(r)$ & 14 & 15 & 16 & 17 & 18 & 19 & 20\\ 
 \hline
 \end{tabular}
 \caption{Reihenfolge der Sortierung eines WHERE-Ausdrucks}
