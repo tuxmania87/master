@@ -66,13 +66,13 @@ public class QueryUtils {
 
 	//An operator with lesser index has a higher priority
 	// there is no AND because in KNF, AND only occures as Root Node
-	public static String orderList[] = { "OR", "<=", ">=", "<", ">", "=", "+", "-", "*", "/",
-			"IS NULL", "IS NOT NULL", "EXISTS", "ANY", "ALL" };
+	public static String orderList[] = { "OR", "<=", ">=", "<", ">", "=", "<>", "+", "-", "/", "*",
+			"IS NULL", "IS NOT NULL", "EXISTS", "ANY", "ALL", "IN", "NOT IN" , "LIKE" };
 
 	//supported database types for external database
 	public static String validDBtypes[] = { "mysql", "postgresql", "oracle" };
 	
-	public static String commutativeOperators[] = { "=", "OR", "AND", "+" };
+	public static String commutativeOperators[] = { "=", "OR", "AND", "+", "*" };
 	public static String comparisonOperators[] = { "<", "<=", ">", ">=", "=" };
 	public static String subQueryOperators[] = { "EXISTS", "ANY", "SOME", "ALL" };
 
@@ -201,6 +201,12 @@ public class QueryUtils {
 		if (op.equals("IS NULL")) {
 			return "IS NOT NULL";
 		}
+		if (op.equals("IN")) {
+			return "NOT IN";
+		}
+		if (op.equals("NOT IN")) {
+			return "IN";
+		}
 		return op;
 	}
 
@@ -318,11 +324,12 @@ public class QueryUtils {
 		if (m1.getColumnCount() != m2.getColumnCount())
 			return false;
 
+		
 		int k = 0;
 		try {
 
 			while (r1.next() && r2.next()) {
-				k++;
+				
 				for (int i = 1; i <= m1.getColumnCount(); i++) {
 
 					Object res1 = r1.getObject(i);
@@ -344,15 +351,15 @@ public class QueryUtils {
 					}
 
 				}
+				k++;
 			}
 		} catch (SQLException e) {
 			return false;
 		}
+		
 
-		if(k == 0) {
+		if(k==0)
 			return false;
-		}
-
 		return true;
 
 	}
