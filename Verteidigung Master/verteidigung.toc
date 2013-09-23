@@ -7,4 +7,4 @@
 \beamer@sectionintoc {3}{Vergleich mit realen Daten}{23}{0}{3}
 \beamer@sectionintoc {4}{Hinweismeldungen}{28}{0}{4}
 \beamer@sectionintoc {5}{Implementierung}{30}{0}{5}
-\beamer@sectionintoc {6}{Live Pr\IeC {\"a}sentation}{34}{0}{6}
+\beamer@sectionintoc {6}{Live Pr\IeC {\"a}sentation}{35}{0}{6}

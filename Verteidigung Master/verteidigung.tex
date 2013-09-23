@@ -107,7 +107,7 @@
 \section{Einleitung}
 \subsection{Motivation}
 
-\begin{frame}
+\begin{frame}{Motivation}
 \begin{itemize}
 \item Vergleich von SQL-Anfragen üblicherweise in der Lehre
 \item Übungsaufgaben notwendig für praktisches Verständnis von SQL
@@ -115,7 +115,7 @@
 \item Lösung des Lernenden formuliert als SQL-Statement
 \item Allgemein: Nicht entscheidbar
 \item Korrektur der Aufgabe auf zwei Arten: manuell oder automatisch
-\item Beide Ansätze haben signifikante Nachteile 
+\item Beide Ansätze haben wesentliche Probleme
 \end{itemize}
 
 \end{frame}
@@ -163,17 +163,17 @@ Automatischer Vergleich zweier SQL-Anfragen wird üblicherweise durch den Vergle
 
 \subsection{Überblick des neuen Ansatzes}
 
-\begin{frame}{Neuer Ansatz (1)}
+\begin{frame}{Neuer Ansatz}
 \begin{itemize}
 \item automatischer Vergleich mit Datenbankschema und Musterlösung
 \item sichere Rückmeldung benötigt Daten, Hauptteil aber ohne möglich
 \end{itemize}
 
-Erster Schritt: \textbf{Standardisierung}\\
-\textbf{Ziel}: Semantisch äquivalente Anfragen sollen nach der Standardisierung auch syntaktisch gleich sein.\\
+Erster Schritt: \textbf{Standardisierung} (Prüfung: hinreichende Bedingung) \\
+\textbf{Ziel}: Semantisch äquivalente Anfragen sollen nach der Standardisierung auch syntaktisch gleich sein \\
 \vspace{4mm}
-Zweiter Schritt: \textbf{Vergleich von Ergebnismengen}\\
-\textbf{Ziel}: Nachweis der Ungleichheit beider Anfragen
+Zweiter Schritt: \textbf{Vergleich von Ergebnismengen} (Prüfung: notwendige Bedingung)\\
+\textbf{Ziel}: Nachweis der Ungleichheit beider Anfragen \\
 \vspace{4mm}
 Dritter Schritt: \textbf{Struktureller Vergleich der Anfragen}\\
 \textbf{Ziel}: genauere Lokalisierung von Fehlern des Lernenden
@@ -200,7 +200,6 @@ Dritter Schritt: \textbf{Struktureller Vergleich der Anfragen}\\
 \begin{frame}[fragile]{FROM-Teil}
 \begin{itemize}
 \item Lexikographisches Sortieren der Tabellen
-\item Sortierung: (1) Tabellen, (2) Unterabfragen, (3) Verbunde
 \item Einführung künstlicher Tupelvariablen (TV) mit fortlaufender Nummerierung (a1,a2,...)
 \item TV auf gleicher Ebene erhalten gleichen Startwert für Iteration
 \end{itemize}
@@ -250,52 +249,71 @@ Entfernung von syntaktischen Varianten:
 \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{WHERE-Teil - Operatorenvielfalt (1)}
-\textbf{Problem:} Ausdrücke können unterschiedlich aufgeschrieben werden. Es ist nicht klar, welche Schreibweise der Lernende verwenden wird.\\
-\textbf{Beispiel:} \verb|a > 3| äquivalent zu \verb|3 < a| und mit Zusatzwissen auch zu \verb|a >= 2| und \verb|2 <= a|\\
-\vspace{5mm}
-\textbf{Ansatz 1:} Hinzufügen aller äquivalenten Ausdrücke\\
-\textbf{Ansatz 2:} Zulassen einer Repräsentation und Verbieten der restlichen Schreibweisen\\
-\vspace{5mm}
-Wir verfolgen den implementierten Ansatz 1.
+\begin{frame}[fragile]{WHERE-Teil - Arten von Operatoren}
+\begin{itemize}
+\item \verb|WHERE|-Ausdruck besteht im wesentlichen aus Operatoren, Konstanten und Spaltennamen
+\item Ordnung wird benötigt, damit semantisch äquivalente Anfragen auch syntaktisch gleich sind
+\end{itemize}
+\textbf{Arten von Operatoren:}
+\begin{itemize}
+\item Operatoren: \verb|IS NULL, IS NOT NULL, EXISTS, ANY/SOME, ALL, IN, NOT|
+\item[$\to$] keine syntaktischen Varianten möglich
+\item nicht-kommutative Operatoren: $\leq,\geq,<,>,-,/$
+\item[$\to$] Hinzufügen aller Schreibweisen
+\item kommutative Operatoren: $=,+,*,AND,OR$
+\item[$\to$] Alle Permutationen der Operanden sind gültig $\to$ Festlegung einer Ordnung
+\end{itemize}
+
 \end{frame}
 
 
-\begin{frame}[fragile]{WHERE-Teil - Operatorenvielfalt (2)}
+
+%\begin{frame}[fragile]{WHERE-Teil - Operatorenvielfalt (1)}
+%\textbf{Problem:} Ausdrücke können unterschiedlich aufgeschrieben werden. Es ist nicht klar, welche Schreibweise der Lernende verwenden wird.\\
+%\textbf{Beispiel:} \verb|a > 3| äquivalent zu \verb|3 < a| und mit Zusatzwissen auch zu \verb|a >= 2| und \verb|2 <= a|\\
+%\vspace{5mm}
+%\textbf{Ansatz 1:} Hinzufügen aller äquivalenten Ausdrücke\\
+%\textbf{Ansatz 2:} Zulassen einer Repräsentation und Verbieten der restlichen Schreibweisen\\
+%\vspace{5mm}
+%Wir verfolgen den implementierten Ansatz 1.
+%\end{frame}
+
+
+\begin{frame}[fragile]{Hinzufügen aller Schreibweisen}
 \begin{itemize}
 \item Mengen $M_i$ enthalten Muster, die äquivalente Schreibweisen beinhalten
-\item Passt atomare Formel $A$ auf $m\in M_i \to$ Hinzufügen aller $m'\in M_i$ mit $m\neq m'$
+\item Passt atomare Formel $a$ auf $m\in M_i \to$ Hinzufügen aller $m'\in M_i$ mit $m\neq m'$
 \item Vorgang wiederholen bis keine neuen Formeln hinzugefügt wurden
 \item Beispiel: \verb|salary >= minsal|
-\item $A,B$: Konstanten oder Attribute, $X$: numerische Konstante
+%\item $A,B$: Konstanten oder Attribute
 \item $M_6:$  $\{\ A\geq B, B\leq A \}$
 \item  $\{$ \only<2->{$salary >= minsal,$}  \only<3->{$minsal <= salary,$} $\}$ 
 \end{itemize}
+\textbf{Hinweis:} Nur simple arithmetische Ausdrücke werden betrachtet, also Ausdrücke mit maximaler Operandenzahl 2:\\ $a = b + 2$
 \end{frame}
 
 
-\begin{frame}[fragile]{WHERE-Teil - Sortierung (1)}
+\begin{frame}[fragile]{Ordnung bei kommutativen Op}
 \begin{itemize}
 \item Baum $T(x)$ mit Wurzel $x$. $children(x) = (c_1,c_2,...,c_n)$
-\item Eindeutige Repräsentation erfordert Ordnung von $children(x)$
-\item Ist $x$ nicht-kommutativer Operator $\to$ Hinzufügen aller Schreibweisen
-\item Sonst: Ordnung von $children(x)$ beliebig veränderbar
-\item[$\to$] Ordnung muss definiert werden! 
+\item Reihenfolge von $children(x)$ beliebig veränderbar
+\item[$\to$] Eindeutige Repräsentation erfordert Ordnung von $children(x)$
 \item $order: children \to \mathbb{N}$
 \item Nach Sortieren gilt: $order(c_1) \leq order(c_2) \leq ... order(c_n)$
 \end{itemize}
 \begin{tabular}{|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|}
 \hline
-$r$ & Variable & Konstante & OR & $\le$ & $\ge$ & $<$ & $>$ & $=$ & $+$\\\hline
-$\textit{order}(r)$ & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9\\ 
+$r$ & Spalte & Konstante & OR & $\le$ & $\ge$ & $<$ & $>$ & $=$ & $<>$ & $+$ & ...\\\hline
+$\textit{order}(r)$ & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11\\ 
 \hline
 \end{tabular}\newline
-\begin{tabular}{|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|}
-\hline
-$r$  & $-$  & IS NULL & IS NOT NULL & EXISTS & ANY & ALL  \\\hline
-$\textit{order}(r)$ &   10 & 11& 12 & 13 & 14 & 15 \\ 
-\hline
-\end{tabular}
+%\begin{tabular}{|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|}
+%\hline
+%$r$  & $/$  & IS NULL & IS NOT NULL & EXISTS & ANY & ALL & NOT \\\hline
+%$\textit{order}(r)$ &   12 & 13& 14 & 15 & 16 & 17  & 18\\ 
+%\hline
+%\end{tabular}
+\vspace{3mm}
 \begin{itemize}
 \item Vorgehen: BOTTOM-UP durch Rekursion
 \end{itemize}
@@ -307,33 +325,15 @@ Beispiel:\\
 \begin{center}
 \includegraphics[scale=0.3]{sort_step1.png}
 \end{center}
-\textbf{Problem: }Was passiert, wenn zwei Kinder den gleichen Operator bezeichnen / beides Variablen / beides Konstanten sind?
+\textbf{Problem: }Was passiert, wenn zwei Kinder den gleichen Operator bezeichnen oder beide Kinder Spaltennamen bzw. Konstanten sind?
 \end{frame}
 
-\begin{frame}[fragile]{WHERE-Teil - Sortierung (3)}
-Es sei $T(x)$ ein Parserbaum mit $children(x) = (c_1,c_2,...,c_n)$. Haben wir $order(c_i) = order(c_{i+1})$ benötigen wir weiteres Kriterium für Bestimmung eindeutiger Ordnung.
-Wir benutzen schrittweise Tiefensuche, da alle Bäume unter $c_i$ und $c_j$ bereits sortiert sind.
+\begin{frame}[fragile]{Beide Kindknoten bezeichnen gleichen Operator}
 \begin{itemize}
-\item Es sei $order(c_i) = order(c_j)$ mit $j = i + 1$ und $c_i,c_j$ sind beides keine Konstanten oder Variablen
-\item $DFS_i(x)$ bezeichnet aktuellen Knoten bei Tiefensuche auf Wurzelknoten $x$ im Schritt $i$.
-\item \begin{lstlisting}[mathescape]
-for k=1 to n
-   if ($DFS_k(c_j)$ == NULL) AND ($DFS_k(c_i)$ != NULL)
-   	  swap(c_j,c_i);
-   else if $order(DFS_k(c_j)) < order(DFS_k(c_i))$
-      swap(c_j,c_i);
-      return;
-   endif
-endfor
-   
-\end{lstlisting}
+\item Situation: $order(c_i) = order(c_j)$ und $c_i,c_j$ sind Operatoren ($j = i + 1$)
+\item[$\to$] Schrittweise Tiefensuche auf $T(c_i), T(c_j)\ \ $ Aktuelle Knoten in DFS: $v_i,v_j$
+\item Wenn $v_i \neq v_j$ dann muss gelten: $order(v_i) \leq order(v_j)$, sonst Tauschen von $c_i,c_j$
 \end{itemize}
-\end{frame}
-
-
-\begin{frame}[fragile]{WHERE-Teil - Sortierung (4)}
-Gilt $order(c_i) = order(c_j)$ mit $j = i + 1$ und $c_i,c_j$ sind beides Konstanten oder Variablen, dann entscheidet lexikographische Sortierung.\\
-\vspace{5mm}
 \textbf{Beispiel}:\\
 
 \verb|b = 2 OR c IS NULL and a < 6 OR d = 5 AND a > 5|
@@ -342,15 +342,65 @@ Gilt $order(c_i) = order(c_j)$ mit $j = i + 1$ und $c_i,c_j$ sind beides Konstan
 \end{center}
 
 $\to$ Tauschen, da $order(=) = 8 > 6 = order(<) $\\
-\textbf{Letzter Schritt der Sortierung}: Entfernung von Duplikaten.
 \end{frame}
+
+\begin{frame}[fragile]{Beide Kindknoten bezeichnen Spaltennamen/Konstanten}
+\begin{itemize}
+\item Situation: $order(c_i) = order(c_j)$ und $c_i,c_j$ sind Spaltennamen oder Konstanten mit ($j = i + 1$)
+\item[$\to$] lexikographische Sortierung
+\end{itemize}
+\textbf{Beispiel}:\\
+
+\verb|empno = deptno| wird zu \verb|deptno = empno|\\
+\vspace{4mm}
+\textbf{Abschließend:}
+\begin{itemize}
+\item Wiederherstellen der KNF 
+\item Entfernung von Duplikaten 
+\end{itemize}
+\end{frame}
+
+%\begin{frame}[fragile]
+%Es sei $T(x)$ ein Parserbaum mit $children(x) = (c_1,c_2,...,c_n)$. Haben wir $order(c_i) = order(c_{i+1})$ %benötigen wir weiteres Kriterium für Bestimmung eindeutiger Ordnung.
+%Wir benutzen schrittweise Tiefensuche, da alle Bäume unter $c_i$ und $c_j$ bereits sortiert sind.
+%\begin{itemize}
+%\item Es sei $order(c_i) = order(c_j)$ mit $j = i + 1$ und $c_i,c_j$ sind beides keine Konstanten oder Variablen
+%\item $DFS_i(x)$ bezeichnet aktuellen Knoten bei Tiefensuche auf Wurzelknoten $x$ im Schritt $i$.
+%\item \begin{lstlisting}[mathescape]
+%for k=1 to n
+%   if ($DFS_k(c_j)$ == NULL) AND ($DFS_k(c_i)$ != NULL)
+%   	  swap(c_j,c_i);
+%   else if $order(DFS_k(c_j)) < order(DFS_k(c_i))$
+%      swap(c_j,c_i);
+%      return;
+%   endif
+%endfor
+   
+%\end{lstlisting}
+%\end{itemize}
+%\end{frame}
+
+
+%\begin{frame}[fragile]{WHERE-Teil - Sortierung (4)}
+%Gilt $order(c_i) = order(c_j)$ mit $j = i + 1$ und $c_i,c_j$ sind beides Konstanten oder Variablen, dann %entscheidet lexikographische Sortierung.\\
+%\vspace{5mm}
+%\textbf{Beispiel}:\\
+%
+%\verb|b = 2 OR c IS NULL and a < 6 OR d = 5 AND a > 5|
+%\begin{center}
+%\includegraphics[scale=0.27]{sort_step2.png}
+%\end{center}
+%
+%$\to$ Tauschen, da $order(=) = 8 > 6 = order(<) $\\
+%\textbf{Letzter Schritt der Sortierung}: Entfernung von Duplikaten.
+%\end{frame}
 
 \begin{frame}[fragile]{GROUP BY und ORDER BY}
 \textbf{GROUP BY:}
 \begin{itemize}
 \item Einführen der künstlichen TV
 \item Lexik. Sortierung der \verb|GROUP BY|-Items
-\item \verb|HAVING BY| wie \verb|WHERE| behandelt
+\item \verb|HAVING| wie \verb|WHERE| behandelt
 \end{itemize}
 \textbf{ORDER BY:}
 \begin{itemize}
@@ -363,7 +413,7 @@ $\to$ Tauschen, da $order(=) = 8 > 6 = order(<) $\\
 \begin{itemize}
 \item Äußere Verbunde ersetzt durch inneren Verbund verknüpft mit \verb|UNION ALL|
 \item Natürliche Verbunde unter \verb|FROM| als innere Verbunde unter \verb|WHERE|
-\item Entfernen von Schlüsselwort \verb|CROSS|
+\item Entfernen von Schlüsselwort \verb|CROSS JOIN|
 \item Innere Verbunde unter \verb|FROM| werden unter \verb|WHERE| formuliert
 \item Selbstverbunde: Erstellen von gültigen Permutationen und Hinzufügen zur standardisierten Lösung (i)
 \item Umwandeln sämtlicher Unterabfragen zu \verb|EXISTS|-Unterabfragen (i)
@@ -380,7 +430,6 @@ $\to$ Tauschen, da $order(=) = 8 > 6 = order(<) $\\
 \item \textit{false positive} nicht möglich
 \item reale Daten notwendig
 \item Vorgehen: Ausführen von Anfragen, Vergleich der Ergebnisse 
-\item Unterstützte DBMS: abhängig von JDBC-Connector
 \end{itemize}
 \end{frame}
 
@@ -449,10 +498,17 @@ Ergebnisse der Arbeit sollen in Form einer Lernplattform umgesetzt werden.
 \vspace{5mm}
 \begin{itemize}
 \item Javaklassen per JSP als HTML-Seiten nutzbar
+\item[$\to$] plattformunabhängig
 \item automatisches Build- und Deployskript per \textit{ant}
 \item Parser: ZQL (Open Source)
-\item DBMS für Schritt 2: alle mit JDBC-Connector 
+\item mögliche DBMS für Schritt 2: alle mit JDBC-Connector 
 \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Aufbau des Programms}
+\begin{center}
+\includegraphics[scale=0.4]{schema.png}
+\end{center}
 \end{frame}
 
 \begin{frame}[fragile]{Einschränkungen in der Praxis / Probleme}
