@@ -2,9 +2,9 @@
 \select@language {german}
 \beamer@sectionintoc {1}{Einleitung}{3}{0}{1}
 \beamer@subsectionintoc {1}{1}{Motivation}{4}{0}{1}
-\beamer@subsectionintoc {1}{2}{\IeC {\"U}berblick des neuen Ansatzes}{7}{0}{1}
-\beamer@sectionintoc {2}{Standardisierung}{8}{0}{2}
-\beamer@sectionintoc {3}{Vergleich mit realen Daten}{22}{0}{3}
-\beamer@sectionintoc {4}{Hinweismeldungen}{25}{0}{4}
-\beamer@sectionintoc {5}{Implementierung}{27}{0}{5}
-\beamer@sectionintoc {6}{Live Pr\IeC {\"a}sentation}{32}{0}{6}
+\beamer@subsectionintoc {1}{2}{\IeC {\"U}berblick des neuen Ansatzes}{8}{0}{1}
+\beamer@sectionintoc {2}{Standardisierung}{12}{0}{2}
+\beamer@sectionintoc {3}{Vergleich mit realen Daten}{35}{0}{3}
+\beamer@sectionintoc {4}{Hinweismeldungen}{40}{0}{4}
+\beamer@sectionintoc {5}{Implementierung}{42}{0}{5}
+\beamer@sectionintoc {6}{Live Pr\IeC {\"a}sentation}{47}{0}{6}

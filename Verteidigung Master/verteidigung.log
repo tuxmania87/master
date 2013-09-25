@@ -1,7 +1,7 @@
-This is pdfTeX, Version 3.1415926-2.3-1.40.12 (MiKTeX 2.9) (preloaded format=pdflatex 2012.8.27)  25 SEP 2013 15:22
+This is pdfTeX, Version 3.1415926-2.3-1.40.12 (MiKTeX 2.9) (preloaded format=pdflatex 2012.8.27)  25 SEP 2013 19:52
 entering extended mode
 **verteidigung.tex
-("E:\Users\Robert\Documents\Verteidigung Master\verteidigung.tex"
+("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigung.tex"
 LaTeX2e <2011/06/27>
 Babel <v3.8m> and hyphenation patterns for english, afrikaans, ancientgreek, ar
 abic, armenian, assamese, basque, bengali, bokmal, bulgarian, catalan, coptic, 
@@ -1026,7 +1026,7 @@ Package: listings 2007/02/22 1.4 (Carsten Heinz)
 (E:\Users\Robert\AppData\Roaming\MiKTeX\2.9\tex\latex\listings\lstlang1.sty
 File: lstlang1.sty 2004/09/05 1.3 listings language file
 )
-("E:\Users\Robert\Documents\Verteidigung Master\verteidigung.aux")
+("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigung.aux")
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 97.
 LaTeX Font Info:    ... okay on input line 97.
 LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 97.
@@ -1109,8 +1109,8 @@ LaTeX Info: Redefining \ref on input line 97.
 LaTeX Info: Redefining \pageref on input line 97.
 LaTeX Info: Redefining \nameref on input line 97.
 
-("E:\Users\Robert\Documents\Verteidigung Master\verteidigung.out")
-("E:\Users\Robert\Documents\Verteidigung Master\verteidigung.out")
+("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigung.out")
+("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigung.out")
 \@outlinefile=\write5
 \symnumbers=\mathgroup6
 \sympureletters=\mathgroup7
@@ -1177,157 +1177,247 @@ Dictionary: translator-theorem-dictionary, Language: English
 )
 \c@lstlisting=\count170
 
-("E:\Users\Robert\Documents\Verteidigung Master\verteidigung.nav") [1
+("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigung.nav")
+[1
 
 {E:/Users/Robert/AppData/Local/MiKTeX/2.9/pdftex/config/pdftex.map}]
-("E:\Users\Robert\Documents\Verteidigung Master\verteidigung.toc") [2
+("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigung.toc")
+[2
 
-]
-("E:\Users\Robert\Documents\Verteidigung Master\verteidigung.toc") [3
+] ("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigung.toc"
+) [3
 
 ] [4
 
-]
-LaTeX Font Info:    Try loading font information for U+msa on input line 148.
+] [5
 
-("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\amsfonts\umsa.fd"
+]
+LaTeX Font Info:    Try loading font information for U+msa on input line 147.
+ ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\amsfonts\umsa.fd"
 File: umsa.fd 2009/06/22 v3.00 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 148.
-
-("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\amsfonts\umsb.fd"
+LaTeX Font Info:    Try loading font information for U+msb on input line 147.
+ ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\amsfonts\umsb.fd"
 File: umsb.fd 2009/06/22 v3.00 AMS symbols B
 )
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <10.95> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 148.
- [5
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 147.
+ [6
 
-] [6
-
-]
-[7
-
-] ("E:\Users\Robert\Documents\Verteidigung Master\verteidigung.toc") [8
+] [7
 
 ]
-("E:\Users\Robert\Documents\Verteidigung Master\verteidigung.vrb"
+[8
+
+] [9
+
+] [10
+
+] [11
+
+]
+("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigung.toc")
+[12
+
+]
+("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigung.vrb"
 LaTeX Font Info:    Try loading font information for OT1+pcr on input line 5.
 
 ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\psnfss\ot1pcr.fd"
 File: ot1pcr.fd 2001/06/04 font definitions for OT1/pcr.
-)) [9
+)) [13
 
 ]
-("E:\Users\Robert\Documents\Verteidigung Master\verteidigung.vrb") [10
+("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigung.vrb")
+[14
 
 ]
-("E:\Users\Robert\Documents\Verteidigung Master\verteidigung.vrb") [11
+("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigung.vrb")
+[15
 
 ]
-("E:\Users\Robert\Documents\Verteidigung Master\verteidigung.vrb") [12
+("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigung.vrb")
+[16
 
 ]
-("E:\Users\Robert\Documents\Verteidigung Master\verteidigung.vrb") [13
+("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigung.vrb")
+[17
 
 ]
-("E:\Users\Robert\Documents\Verteidigung Master\verteidigung.vrb") [14
+("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigung.vrb")
+[18
 
 ]
-("E:\Users\Robert\Documents\Verteidigung Master\verteidigung.vrb") [15
+("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigung.vrb")
+[19
 
 ]
-("E:\Users\Robert\Documents\Verteidigung Master\verteidigung.vrb") [16
+("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigung.vrb")
+[20
 
 ]
-("E:\Users\Robert\Documents\Verteidigung Master\verteidigung.vrb"
+("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigung.vrb")
+[21
+
+]
+("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigung.vrb")
+[22
+
+]
+("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigung.vrb")
+[23
+
+]
+("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigung.vrb")
+[24
+
+]
+("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigung.vrb")
+[25
+
+]
+("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigung.vrb")
+[26
+
+]
+("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigung.vrb"
 Overfull \hbox (10.05379pt too wide) in paragraph at lines 9--23
 []  
  []
 
-) [17
+) [27
 
-] ("E:\Users\Robert\Documents\Verteidigung Master\verteidigung.vrb"
-<sort_step1.png, id=563, 853.1875pt x 272.01625pt>
+]
+("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigung.vrb"
+Overfull \hbox (10.05379pt too wide) in paragraph at lines 9--23
+[]  
+ []
+
+) [28
+
+]
+("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigung.vrb"
+<sort_step1.png, id=866, 853.1875pt x 272.01625pt>
 File: sort_step1.png Graphic file (type png)
  <use sort_step1.png>
 Package pdftex.def Info: sort_step1.png used on input line 5.
 (pdftex.def)             Requested size: 255.95822pt x 81.6055pt.
 )
-[18
+[29
 
- <E:/Users/Robert/Documents/Verteidigung Master/sort_step1.png (PNG copy)>]
-("E:\Users\Robert\Documents\Verteidigung Master\verteidigung.vrb"
-<sort_step2.png, id=591, 762.85pt x 348.30125pt>
+ <E:/Users/Robert/Desktop/Arbeit/master/Verteidigung Master/sort_step1.png (PNG
+ copy)>]
+("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigung.vrb"
+File: sort_step1.png Graphic file (type png)
+
+<use sort_step1.png>
+Package pdftex.def Info: sort_step1.png used on input line 5.
+(pdftex.def)             Requested size: 255.95822pt x 81.6055pt.
+) [30
+
+]
+("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigung.vrb"
+<sort_step2.png, id=921, 762.85pt x 348.30125pt>
 File: sort_step2.png Graphic file (type png)
  <use sort_step2.png>
-Package pdftex.def Info: sort_step2.png used on input line 11.
+Package pdftex.def Info: sort_step2.png used on input line 12.
 (pdftex.def)             Requested size: 205.97224pt x 94.04259pt.
-) [19
+) [31
 
- <E:/Users/Robert/Documents/Verteidigung Master/sort_step2.png (PNG copy)>]
-("E:\Users\Robert\Documents\Verteidigung Master\verteidigung.vrb") [20
-
-]
-("E:\Users\Robert\Documents\Verteidigung Master\verteidigung.vrb") [21
-
-]
-("E:\Users\Robert\Documents\Verteidigung Master\verteidigung.toc") [22
-
-]
-("E:\Users\Robert\Documents\Verteidigung Master\verteidigung.vrb") [23
+ <E:/Users/Robert/Desktop/Arbeit/master/Verteidigung Master/sort_step2.png (PNG
+ copy)>] ("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigu
+ng.vrb"
+File: sort_step2.png Graphic file (type png)
+ <use sort_step2.png>
+Package pdftex.def Info: sort_step2.png used on input line 12.
+(pdftex.def)             Requested size: 205.97224pt x 94.04259pt.
+) [32
 
 ]
-("E:\Users\Robert\Documents\Verteidigung Master\verteidigung.vrb") [24
+("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigung.vrb")
+[33
 
 ]
-("E:\Users\Robert\Documents\Verteidigung Master\verteidigung.toc") [25
+("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigung.vrb")
+[34
 
 ]
-("E:\Users\Robert\Documents\Verteidigung Master\verteidigung.vrb") [26
+("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigung.toc")
+[35
 
 ]
-("E:\Users\Robert\Documents\Verteidigung Master\verteidigung.toc") [27
+("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigung.vrb")
+[36
 
 ]
-("E:\Users\Robert\Documents\Verteidigung Master\verteidigung.vrb") [28
+("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigung.vrb")
+[37
 
 ]
-("E:\Users\Robert\Documents\Verteidigung Master\verteidigung.vrb"
-<schema.png, id=879, 779.91376pt x 528.47438pt>
+("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigung.vrb")
+[38
+
+]
+("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigung.vrb")
+[39
+
+]
+("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigung.toc")
+[40
+
+]
+("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigung.vrb")
+[41
+
+]
+("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigung.toc")
+[42
+
+]
+("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigung.vrb")
+[43
+
+]
+("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigung.vrb"
+<schema.png, id=1291, 779.91376pt x 528.47438pt>
 File: schema.png Graphic file (type png)
  <use schema.png>
 Package pdftex.def Info: schema.png used on input line 3.
 (pdftex.def)             Requested size: 311.95998pt x 211.386pt.
-) [29
+) [44
 
- <E:/Users/Robert/Documents/Verteidigung Master/schema.png (PNG copy)>]
-("E:\Users\Robert\Documents\Verteidigung Master\verteidigung.vrb") [30
+ <E:/Users/Robert/Desktop/Arbeit/master/Verteidigung Master/schema.png (PNG cop
+y)>]
+("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigung.vrb")
+[45
 
 ]
-("E:\Users\Robert\Documents\Verteidigung Master\verteidigung.vrb") [31
+("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigung.vrb")
+[46
 
 ]
-("E:\Users\Robert\Documents\Verteidigung Master\verteidigung.toc") [32
+("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigung.toc")
+[47
 
 ]
 \tf@nav=\write6
 \tf@toc=\write7
 \tf@snm=\write8
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 572.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 572.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 576.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 576.
 
-("E:\Users\Robert\Documents\Verteidigung Master\verteidigung.aux")
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 572.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 572.
+("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigung.aux")
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 576.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 576.
 Package rerunfilecheck Info: File `verteidigung.out' has not changed.
-(rerunfilecheck)             Checksum: 392BA1A200D37E0DEBAD260B46731001;460.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 572.
+(rerunfilecheck)             Checksum: 4C56EA1FA17F25F41B5090065B4E95C9;460.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 576.
  ) 
 Here is how much of TeX's memory you used:
- 17795 strings out of 494045
- 330083 string characters out of 3145966
+ 17848 strings out of 494045
+ 332815 string characters out of 3145966
  428382 words of memory out of 3000000
- 20530 multiletter control sequences out of 15000+200000
+ 20531 multiletter control sequences out of 15000+200000
  23082 words of font info for 53 fonts, out of 3000000 for 9000
  715 hyphenation exceptions out of 8191
  49i,17n,66p,421b,692s stack positions out of 5000i,500n,10000p,200000b,50000s
@@ -1341,9 +1431,9 @@ es (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Program Files
 KTeX 2.9/fonts/type1/urw/times/utmb8a.pfb><C:/Program Files (x86)/MiKTeX 2.9/fo
 nts/type1/urw/times/utmr8a.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/u
 rw/times/utmri8a.pfb>
-Output written on verteidigung.pdf (32 pages, 446245 bytes).
+Output written on verteidigung.pdf (47 pages, 544925 bytes).
 PDF statistics:
- 1041 PDF objects out of 1200 (max. 8388607)
- 73 named destinations out of 1000 (max. 500000)
+ 1459 PDF objects out of 1728 (max. 8388607)
+ 103 named destinations out of 1000 (max. 500000)
  170 words of extra memory for PDF output out of 10000 (max. 10000000)
 

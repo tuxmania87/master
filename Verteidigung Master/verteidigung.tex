@@ -114,7 +114,7 @@
 \item Bestehend aus Sachaufgabe und Datenbankschema
 \item Lösung des Lernenden formuliert als SQL-Statement
 \end{itemize}
-
+\pause
 \begin{alertblock}{semantische Äquivalenz}
 Zwei SQL-Anfragen sind semantisch äquivalent, wenn beide Anfragen auf allen Datenbankzuständen einer Datenbank stets die selben Tupel zurückliefern.
 \end{alertblock}
@@ -122,7 +122,6 @@ Zwei SQL-Anfragen sind semantisch äquivalent, wenn beide Anfragen auf allen Dat
 \begin{itemize}
 \item Allgemein: Nicht entscheidbar
 \item Korrektur der Aufgabe auf zwei Arten: manuell oder automatisch
-\item Beide Ansätze haben wesentliche Probleme
 \end{itemize}
 
 \end{frame}
@@ -175,13 +174,13 @@ Automatischer Vergleich zweier SQL-Anfragen wird üblicherweise durch den Vergle
 \item automatischer Vergleich mit Datenbankschema und Musterlösung
 \item sichere Rückmeldung benötigt Daten, Hauptteil aber ohne möglich
 \end{itemize}
-
+\pause
 Erster Schritt: \textbf{Standardisierung} (Prüfung: hinreichende Bedingung) \\
 \textbf{Ziel}: Semantisch äquivalente Anfragen sollen nach der Standardisierung auch syntaktisch gleich sein \\
-\vspace{4mm}
+\vspace{4mm}\pause
 Zweiter Schritt: \textbf{Vergleich von Ergebnismengen} (Prüfung: notwendige Bedingung)\\
 \textbf{Ziel}: Nachweis der Ungleichheit beider Anfragen \\
-\vspace{4mm}
+\vspace{4mm}\pause
 Dritter Schritt: \textbf{Struktureller Vergleich der Anfragen}\\
 \textbf{Ziel}: genauere Lokalisierung von Fehlern des Lernenden
 \end{frame}
@@ -210,12 +209,14 @@ Dritter Schritt: \textbf{Struktureller Vergleich der Anfragen}\\
 \item Einführung künstlicher Tupelvariablen (TV) mit fortlaufender Nummerierung (a1,a2,...)
 \item TV auf gleicher Ebene erhalten gleichen Startwert für Iteration
 \end{itemize}
-
+\pause
 \begin{verbatim}
 SELECT ename FROM emp
 WHERE sal > (SELECT AVG(sal) FROM emp)
 AND empno > (SELECT AVG(empno) FROM emp)
-
+\end{verbatim}
+\pause
+\begin{verbatim}
 SELECT ename FROM emp a1
 WHERE sal > (SELECT AVG(sal) FROM emp a2)
 AND empno > (SELECT AVG(empno) FROM emp a2)
@@ -228,12 +229,14 @@ AND empno > (SELECT AVG(empno) FROM emp a2)
 \item Einführen der künstlichen TV als Aliase
 \item Wenn Spaltenreihenfolge unwichtig: lexikographisches Sortieren der Spalten
 \end{itemize}
-
+\pause
 \begin{verbatim}
 SELECT ename FROM emp a1
 WHERE sal > (SELECT AVG(sal) FROM emp a2)
 AND empno > (SELECT AVG(empno) FROM emp a2)
-
+\end{verbatim}
+\pause
+\begin{verbatim}
 SELECT a1.ename FROM emp a1
 WHERE a1.sal > (SELECT AVG(a2.sal) FROM emp a2)
 AND a1.empno > (SELECT AVG(a2.empno) FROM emp a2)
@@ -246,7 +249,7 @@ AND a1.empno > (SELECT AVG(a2.empno) FROM emp a2)
 \item Umwandeln des \verb|WHERE|-Ausdrucks in KNF (konjunktive Normalform) 
 \item[$\to$] Erhöhung der Lesbarkeit, Eliminierung von unnötig tiefen Teilbäumen
 \end{itemize}
-Entfernung von syntaktischen Varianten:
+Entfernung von syntaktischen Varianten:\pause
 \begin{itemize}
 \item \verb|a BETWEEN l AND u| zu \verb|a >= l AND a <= u|
 \item \verb|a >= ALL(c1, c2, c3)| zu \verb|a >= c1 AND a >= c2 AND a >= c2|
@@ -259,14 +262,14 @@ Entfernung von syntaktischen Varianten:
 \begin{itemize}
 \item \verb|WHERE|-Ausdruck besteht im wesentlichen aus Operatoren, Konstanten und Spaltennamen
 \item Ordnung wird benötigt, damit semantisch äquivalente Anfragen auch syntaktisch gleich sind
-\end{itemize}
+\end{itemize}\pause
 \textbf{Arten von Operatoren:}
 \begin{itemize}
 \item Operatoren: \verb|IS NULL, IS NOT NULL, EXISTS, ANY/SOME, ALL, ...|
 \item[$\to$] keine syntaktischen Varianten möglich
 \item nicht-kommutative Operatoren: $\leq,\geq,<,>,-,/$
 \item[$\to$] Hinzufügen aller Schreibweisen
-\item kommutative Operatoren: $=,+,*,AND,OR$
+\item kommutative Operatoren: $=,<>,+,*,AND,OR$
 \item[$\to$] Alle Permutationen der Operanden sind gültig $\to$ Festlegung einer Ordnung
 \end{itemize}
 
@@ -302,7 +305,7 @@ Entfernung von syntaktischen Varianten:
 \begin{itemize}
 \item Baum $T(x)$ mit Wurzel $x$. $children(x) = (c_1,c_2,...,c_n)$
 \item Reihenfolge von $children(x)$ beliebig veränderbar
-\item[$\to$] Eindeutige Repräsentation erfordert Ordnung von $children(x)$
+\item[$\to$] Eindeutige Repräsentation erfordert Ordnung von $children(x)$\pause
 \item $order: children \to \mathbb{N}$
 \item Nach Sortieren gilt: $order(c_1) \leq order(c_2) \leq ... order(c_n)$
 \end{itemize}
@@ -329,16 +332,17 @@ Beispiel:\\
 \verb|d = 5 OR a < 6| $\ \ \to\ \ $ \verb|a < 6 OR d = 5|\\
 \begin{center}
 \includegraphics[scale=0.3]{sort_step1.png}
-\end{center}
+\end{center}\pause
 \textbf{Problem: }Was passiert, wenn zwei Kinder den gleichen Operator bezeichnen oder beide Kinder Spaltennamen bzw. Konstanten sind?
 \end{frame}
 
 \begin{frame}[fragile]{Beide Kindknoten bezeichnen gleichen Operator}
+\visible<2->{
 \begin{itemize}
 \item Situation: $order(c_i) = order(c_j)$ und $c_i,c_j$ sind Operatoren ($j = i + 1$)
 \item[$\to$] Schrittweise Tiefensuche auf $T(c_i), T(c_j)\ \ $ Aktuelle Knoten in DFS: $v_i,v_j$
-\item Wenn $v_i \neq v_j$ dann muss gelten: $order(v_i) \leq order(v_j)$, sonst Tauschen von $c_i,c_j$
-\end{itemize}
+\item Wenn $v_i \neq v_j$ dann muss gelten: $order(v_i) < order(v_j)$, sonst Tauschen von $c_i,c_j$
+\end{itemize}}
 \textbf{Beispiel}:\\
 
 \verb|b = 2 OR c IS NULL and a < 6 OR d = 5 AND a > 5|
@@ -435,7 +439,7 @@ $\to$ Tauschen, da $order(=) = 8 > 6 = order(<) $\\
 \item selbst mit expliziter Angabe: Sortierung nicht notwendigerweise eindeutig
 \item Beispiel: \\\verb|SELECT surname, firstname|\\\verb|FROM people ORDER BY surname|
 \end{itemize}
-\textbf{Probleme}:\\
+\textbf{Probleme}:\pause\\
 \begin{itemize}
 \item Falsche Lösung wird zufällig korrekt sortiert $\to$ falsche Übereinstimmung
 \item Korrekte Lösung wird falsch sortiert $\to$ keine Übereinstimmung 
@@ -453,7 +457,7 @@ $\to$ Tauschen, da $order(=) = 8 > 6 = order(<) $\\
 \begin{verbatim}
 SELECT firstname, surname FROM people 
 ORDER BY surname
-\end{verbatim}
+\end{verbatim}\pause
 zu:
 \begin{verbatim}
 SELECT firstname, surname FROM people 
