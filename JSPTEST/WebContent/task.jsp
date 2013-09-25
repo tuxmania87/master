@@ -292,6 +292,9 @@
 									out.println("<tr><th>Your Solution</th><th>Sample Solution</th></tr>");
 									out.println("<tr><td>");
 
+									r1.beforeFirst();
+									r2.beforeFirst();
+
 									// first table is resultset1
 									out.println("<table class=\"inner\">");
 
