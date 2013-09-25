@@ -3,4 +3,4 @@ dburi = localhost:3306
 # dbname
 dbname = masterarbeit
 dbuser = root
-dbpw = 82859415
+dbpw = db82859415

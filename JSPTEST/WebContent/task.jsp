@@ -262,6 +262,7 @@
 								System.out.println(sampleSolutionQuery);
 								System.out.println("EO Executing");
 								
+
 							}
 							
 							try {
@@ -280,6 +281,7 @@
 									
 									if (QueryUtils.isIdenticalResultSets(r1, r2)) {
 										secondstep_matching = true;
+
 										out.println("<br>Check on real database "+(i+1)+"<br><span style=\"color:orange;font-weight:bold;font-size:large;\">sample-solution and your query returned the same data but your solution could not be matched against any valid sample solution.</span><br>");
 										
 									} else { throw new RuntimeException(); }
@@ -304,7 +306,6 @@
 
 									//r1.beforeFirst();
 									//r2.beforeFirst();
-									
 									while (r1.next()) {
 										out.println("<tr>");
 										for (int j = 1; j <= meta.getColumnCount(); j++) {
