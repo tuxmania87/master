@@ -113,6 +113,13 @@
 \item Übungsaufgaben notwendig für praktisches Verständnis von SQL
 \item Bestehend aus Sachaufgabe und Datenbankschema
 \item Lösung des Lernenden formuliert als SQL-Statement
+\end{itemize}
+
+\begin{alertblock}{semantische Äquivalenz}
+Zwei SQL-Anfragen sind semantisch äquivalent, wenn beide Anfragen auf allen Datenbankzuständen einer Datenbank stets die selben Tupel zurückliefern.
+\end{alertblock}
+
+\begin{itemize}
 \item Allgemein: Nicht entscheidbar
 \item Korrektur der Aufgabe auf zwei Arten: manuell oder automatisch
 \item Beide Ansätze haben wesentliche Probleme
@@ -217,7 +224,7 @@ AND empno > (SELECT AVG(empno) FROM emp a2)
 
 \begin{frame}[fragile]{SELECT-Teil}
 \begin{itemize}
-\item Ersetzen von Wildcard (*) zu konkreten Spalten (vor Sortieren in \verb|FROM|
+\item Ersetzen von Wildcard (*) zu konkreten Spalten (vor Sortieren in \verb|FROM|)
 \item Einführen der künstlichen TV als Aliase
 \item Wenn Spaltenreihenfolge unwichtig: lexikographisches Sortieren der Spalten
 \end{itemize}
@@ -242,7 +249,6 @@ AND a1.empno > (SELECT AVG(a2.empno) FROM emp a2)
 Entfernung von syntaktischen Varianten:
 \begin{itemize}
 \item \verb|a BETWEEN l AND u| zu \verb|a >= l AND a <= u|
-\item \verb|a IN (c1, c2, c3)| zu \verb|a = c1 OR a = c2 OR a = c3|
 \item \verb|a >= ALL(c1, c2, c3)| zu \verb|a >= c1 AND a >= c2 AND a >= c2|
 \item \verb|a >= ANY(c1, c2, c3)| zu \verb|a >= c1 OR a >= c2 OR a >= c2|
 \item \verb|EXISTS (SELECT expr FROM ...)| zu \verb|EXISTS (SELECT 1 FROM ...)|
@@ -256,7 +262,7 @@ Entfernung von syntaktischen Varianten:
 \end{itemize}
 \textbf{Arten von Operatoren:}
 \begin{itemize}
-\item Operatoren: \verb|IS NULL, IS NOT NULL, EXISTS, ANY/SOME, ALL, IN, NOT|
+\item Operatoren: \verb|IS NULL, IS NOT NULL, EXISTS, ANY/SOME, ALL, ...|
 \item[$\to$] keine syntaktischen Varianten möglich
 \item nicht-kommutative Operatoren: $\leq,\geq,<,>,-,/$
 \item[$\to$] Hinzufügen aller Schreibweisen
@@ -289,7 +295,6 @@ Entfernung von syntaktischen Varianten:
 \item $M_6:$  $\{\ A\geq B, B\leq A \}$
 \item  $\{$ \only<2->{$salary >= minsal,$}  \only<3->{$minsal <= salary,$} $\}$ 
 \end{itemize}
-\textbf{Hinweis:} Nur simple arithmetische Ausdrücke werden betrachtet, also Ausdrücke mit maximaler Operandenzahl 2:\\ $a = b + 2$
 \end{frame}
 
 
@@ -344,21 +349,21 @@ Beispiel:\\
 $\to$ Tauschen, da $order(=) = 8 > 6 = order(<) $\\
 \end{frame}
 
-\begin{frame}[fragile]{Beide Kindknoten bezeichnen Spaltennamen/Konstanten}
-\begin{itemize}
-\item Situation: $order(c_i) = order(c_j)$ und $c_i,c_j$ sind Spaltennamen oder Konstanten mit ($j = i + 1$)
-\item[$\to$] lexikographische Sortierung
-\end{itemize}
-\textbf{Beispiel}:\\
-
-\verb|empno = deptno| wird zu \verb|deptno = empno|\\
-\vspace{4mm}
-\textbf{Abschließend:}
-\begin{itemize}
-\item Wiederherstellen der KNF 
-\item Entfernung von Duplikaten 
-\end{itemize}
-\end{frame}
+%\begin{frame}[fragile]{Beide Kindknoten bezeichnen Spaltennamen/Konstanten}
+%\begin{itemize}
+%\item Situation: $order(c_i) = order(c_j)$ und $c_i,c_j$ sind Spaltennamen oder Konstanten mit ($j = i + 1$)
+%\item[$\to$] lexikographische Sortierung
+%\end{itemize}
+%\textbf{Beispiel}:\\
+%
+%\verb|empno = deptno| wird zu \verb|deptno = empno|\\
+%\vspace{4mm}
+%\textbf{Abschließend:}
+%\begin{itemize}
+%\item Wiederherstellen der KNF 
+%\item Entfernung von Duplikaten 
+%\end{itemize}
+%\end{frame}
 
 %\begin{frame}[fragile]
 %Es sei $T(x)$ ein Parserbaum mit $children(x) = (c_1,c_2,...,c_n)$. Haben wir $order(c_i) = order(c_{i+1})$ %benötigen wir weiteres Kriterium für Bestimmung eindeutiger Ordnung.
@@ -415,23 +420,12 @@ $\to$ Tauschen, da $order(=) = 8 > 6 = order(<) $\\
 \item Natürliche Verbunde unter \verb|FROM| als innere Verbunde unter \verb|WHERE|
 \item Entfernen von Schlüsselwort \verb|CROSS JOIN|
 \item Innere Verbunde unter \verb|FROM| werden unter \verb|WHERE| formuliert
-\item Selbstverbunde: Erstellen von gültigen Permutationen und Hinzufügen zur standardisierten Lösung (i)
-\item Umwandeln sämtlicher Unterabfragen zu \verb|EXISTS|-Unterabfragen (i)
+\item Umwandeln sämtlicher Unterabfragen zu \verb|EXISTS|-Unterabfragen 
 \end{itemize}
 \end{frame}
 
 \section{Vergleich mit realen Daten}
 
-\begin{frame}[fragile]{Allgemeines}
-\begin{itemize}
-\item Schritt nur notwendig, wenn Standardisierung fehlschlägt
-\item Prüfen der notwendigen Bedingung einer Äquivalenz zweier Anfragen
-\item Soll Ungleichheit nachweisen
-\item \textit{false positive} nicht möglich
-\item reale Daten notwendig
-\item Vorgehen: Ausführen von Anfragen, Vergleich der Ergebnisse 
-\end{itemize}
-\end{frame}
 
 
 \begin{frame}[fragile]{Idee}
@@ -440,45 +434,60 @@ $\to$ Tauschen, da $order(=) = 8 > 6 = order(<) $\\
 \item Problem: Optimierer des DBMS übernimmt Sortierung, wenn nicht explizit angegeben
 \item selbst mit expliziter Angabe: Sortierung nicht notwendigerweise eindeutig
 \item Beispiel: \\\verb|SELECT surname, firstname|\\\verb|FROM people ORDER BY surname|
-\item[$\to$] Fallunterscheidung: Enthält Musterlösung (ML)/ Lösung des Lernenden (LL) \verb|ORDER BY|?
+\end{itemize}
+\textbf{Probleme}:\\
+\begin{itemize}
+\item Falsche Lösung wird zufällig korrekt sortiert $\to$ falsche Übereinstimmung
+\item Korrekte Lösung wird falsch sortiert $\to$ keine Übereinstimmung 
 \end{itemize}
 \end{frame}
+
 
 \begin{frame}[fragile]{Fallunterscheidung (1)}
-ML enthält kein \verb|ORDER BY|, LL enthält \verb|ORDER BY|
 \begin{itemize}
-\item Sortierung offensichtlich egal $\to$ zunächst Entfernung von \verb|ORDER BY| von LL
+\item ML enthält kein \verb|ORDER BY| $\to$ \verb|ORDER BY| von LL streichen
+\item künstliche Sortierung nach Auswahlspalten, die unbenutzt sind
+\item iteratives Vorgehen
 \end{itemize}
-
-ML enthält ein \verb|ORDER BY|, LL enthält kein \verb|ORDER BY|
+\textbf{Beispiel:}\\
+\begin{verbatim}
+SELECT firstname, surname FROM people 
+ORDER BY surname
+\end{verbatim}
+zu:
+\begin{verbatim}
+SELECT firstname, surname FROM people 
+ORDER BY surname, 1, 3
+\end{verbatim}
 \begin{itemize}
-\item Sortierung von Bedeutung
-\item Lernende ist Sortierung offensichtlich egal
-\item Ziel: Nachweisen der Ungleichheit $\to$ keine Anpassungen
-\item Problem: zufällige Übereinstimmung
-\end{itemize}
-
-ML enthält kein \verb|ORDER BY|, LL enthält \verb|ORDER BY|
-\begin{itemize}
-\item keine Anpassung
-\item Problem: zufällige Übereinstimmung
+\item[$\to$] SQL-Anfrage nun auf jedem DBMS immer eindeutige Ausgabereihenfolge
 \end{itemize}
 \end{frame}
+%\begin{frame}[fragile]{Fallunterscheidung (1)}
+%ML enthält kein \verb|ORDER BY|, LL enthält \verb|ORDER BY|
+%\begin{itemize}
+%\item Sortierung offensichtlich egal $\to$ zunächst Entfernung von \verb|ORDER BY| von LL
+%\end{itemize}
+%
+%ML enthält ein \verb|ORDER BY|, LL enthält kein \verb|ORDER BY|
+%\begin{itemize}
+%\item Sortierung von Bedeutung
+%\item Lernende ist Sortierung offensichtlich egal
+%\item Ziel: Nachweisen der Ungleichheit $\to$ keine Anpassungen
+%\item Problem: zufällige Übereinstimmung
+%\end{itemize}
+%
+%ML enthält kein \verb|ORDER BY|, LL enthält \verb|ORDER BY|
+%\begin{itemize}
+%\item keine Anpassung
+%\item Problem: zufällige Übereinstimmung
+%\end{itemize}
+%\end{frame}
 
-\begin{frame}[fragile]{Fallunterscheidung (2)}
-ML enthält kein \verb|ORDER BY|, LL enthält kein \verb|ORDER BY|
-\begin{itemize}
-\item Sortierung unwichtig, aber Optimierer bestimmt Ausgabe $\to$ kann Falschmeldungen erzeugen
-\item Lösung: Sortieren der Lösungen nach den Ausgabespalten (iterativ)
-\item Beispiel: \verb|SELECT surname, firstname FROM people|\\
-zu:\\\verb|SELECT surname, firstname|\\\verb|FROM people ORDER BY 1,2|
-\end{itemize}
-Bei Fall 2 und 3 muss nachträglich nach allen unbenutzten Ausgabespalten sortiert werden. Selbst dann ist keine Eindeutigkeit gewährleistet. $\to$ offenes Problem.
-\end{frame}
 
 \section{Hinweismeldungen}
 
-\begin{frame}[fragile]{Vergleich der Anfragen}
+\begin{frame}[fragile]{Feedback}
 \begin{itemize}
 \item Vergleich einzelner Teile der Anfrage (\verb|SELECT, FROM, ...|)
 \item[$\to$] Hinweis an Nutzer, welche Teile identisch mit ML sind (WO ist der Fehler?)
@@ -528,7 +537,6 @@ Ergebnisse der Arbeit sollen in Form einer Lernplattform umgesetzt werden.
 \begin{itemize}
 \item Erweitern des Parsers 
 \item[$\to$] Umsetzen der Verbundskonzepte
-\item komplexe arithmetische Ausdrücke
 \item Erkennen von unnötigem \verb|DISTINCT|
 \item Ausweitung auf Behandlung aller SQL-Ausdrücke (\verb|UPDATE, DELETE|)
 \item Ausarbeitung und Implementierung weiterer Konzepte (zB: unnötige Verbunde, ...)
