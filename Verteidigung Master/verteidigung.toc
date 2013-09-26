@@ -4,7 +4,7 @@
 \beamer@subsectionintoc {1}{1}{Motivation}{4}{0}{1}
 \beamer@subsectionintoc {1}{2}{\IeC {\"U}berblick des neuen Ansatzes}{8}{0}{1}
 \beamer@sectionintoc {2}{Standardisierung}{12}{0}{2}
-\beamer@sectionintoc {3}{Vergleich mit realen Daten}{35}{0}{3}
-\beamer@sectionintoc {4}{Hinweismeldungen}{40}{0}{4}
-\beamer@sectionintoc {5}{Implementierung}{42}{0}{5}
-\beamer@sectionintoc {6}{Live Pr\IeC {\"a}sentation}{47}{0}{6}
+\beamer@sectionintoc {3}{Vergleich mit realen Daten}{31}{0}{3}
+\beamer@sectionintoc {4}{Hinweismeldungen}{36}{0}{4}
+\beamer@sectionintoc {5}{Implementierung}{38}{0}{5}
+\beamer@sectionintoc {6}{Live Pr\IeC {\"a}sentation}{43}{0}{6}

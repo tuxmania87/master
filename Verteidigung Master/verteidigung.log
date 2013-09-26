@@ -1,7 +1,8 @@
-This is pdfTeX, Version 3.1415926-2.3-1.40.12 (MiKTeX 2.9) (preloaded format=pdflatex 2012.8.27)  25 SEP 2013 19:52
+This is pdfTeX, Version 3.1415926-2.3-1.40.12 (MiKTeX 2.9) (preloaded format=pdflatex 2012.8.27)  26 SEP 2013 11:20
 entering extended mode
 **verteidigung.tex
-("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigung.tex"
+("E:\Users\Robert\Desktop\Neuer Ordner (2)\Verteidigung Master\verteidigung.tex
+"
 LaTeX2e <2011/06/27>
 Babel <v3.8m> and hyphenation patterns for english, afrikaans, ancientgreek, ar
 abic, armenian, assamese, basque, bengali, bokmal, bulgarian, catalan, coptic, 
@@ -1026,7 +1027,8 @@ Package: listings 2007/02/22 1.4 (Carsten Heinz)
 (E:\Users\Robert\AppData\Roaming\MiKTeX\2.9\tex\latex\listings\lstlang1.sty
 File: lstlang1.sty 2004/09/05 1.3 listings language file
 )
-("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigung.aux")
+("E:\Users\Robert\Desktop\Neuer Ordner (2)\Verteidigung Master\verteidigung.aux
+")
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 97.
 LaTeX Font Info:    ... okay on input line 97.
 LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 97.
@@ -1042,8 +1044,7 @@ LaTeX Font Info:    ... okay on input line 97.
 LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 97.
 LaTeX Font Info:    ... okay on input line 97.
 LaTeX Font Info:    Try loading font information for OT1+ptm on input line 97.
-
-("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\psnfss\ot1ptm.fd"
+ ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\psnfss\ot1ptm.fd"
 File: ot1ptm.fd 2001/06/04 font definitions for OT1/ptm.
 )
 *geometry* driver: auto-detecting
@@ -1109,8 +1110,10 @@ LaTeX Info: Redefining \ref on input line 97.
 LaTeX Info: Redefining \pageref on input line 97.
 LaTeX Info: Redefining \nameref on input line 97.
 
-("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigung.out")
-("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigung.out")
+("E:\Users\Robert\Desktop\Neuer Ordner (2)\Verteidigung Master\verteidigung.out
+")
+("E:\Users\Robert\Desktop\Neuer Ordner (2)\Verteidigung Master\verteidigung.out
+")
 \@outlinefile=\write5
 \symnumbers=\mathgroup6
 \sympureletters=\mathgroup7
@@ -1177,15 +1180,16 @@ Dictionary: translator-theorem-dictionary, Language: English
 )
 \c@lstlisting=\count170
 
-("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigung.nav")
-[1
+("E:\Users\Robert\Desktop\Neuer Ordner (2)\Verteidigung Master\verteidigung.nav
+") [1
 
 {E:/Users/Robert/AppData/Local/MiKTeX/2.9/pdftex/config/pdftex.map}]
-("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigung.toc")
-[2
+("E:\Users\Robert\Desktop\Neuer Ordner (2)\Verteidigung Master\verteidigung.toc
+") [2
 
-] ("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigung.toc"
-) [3
+]
+("E:\Users\Robert\Desktop\Neuer Ordner (2)\Verteidigung Master\verteidigung.toc
+") [3
 
 ] [4
 
@@ -1197,7 +1201,7 @@ LaTeX Font Info:    Try loading font information for U+msa on input line 147.
 File: umsa.fd 2009/06/22 v3.00 AMS symbols A
 )
 LaTeX Font Info:    Try loading font information for U+msb on input line 147.
- ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\amsfonts\umsb.fd"
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\amsfonts\umsb.fd"
 File: umsb.fd 2009/06/22 v3.00 AMS symbols B
 )
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <10.95> not available
@@ -1216,208 +1220,196 @@ LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <10.95> not available
 ] [11
 
 ]
-("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigung.toc")
-[12
+("E:\Users\Robert\Desktop\Neuer Ordner (2)\Verteidigung Master\verteidigung.toc
+") [12
 
 ]
-("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigung.vrb"
+("E:\Users\Robert\Desktop\Neuer Ordner (2)\Verteidigung Master\verteidigung.vrb
+"
 LaTeX Font Info:    Try loading font information for OT1+pcr on input line 5.
-
-("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\psnfss\ot1pcr.fd"
+ ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\psnfss\ot1pcr.fd"
 File: ot1pcr.fd 2001/06/04 font definitions for OT1/pcr.
 )) [13
 
 ]
-("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigung.vrb")
-[14
+("E:\Users\Robert\Desktop\Neuer Ordner (2)\Verteidigung Master\verteidigung.vrb
+") [14
 
 ]
-("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigung.vrb")
-[15
+("E:\Users\Robert\Desktop\Neuer Ordner (2)\Verteidigung Master\verteidigung.vrb
+") [15
 
 ]
-("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigung.vrb")
-[16
+("E:\Users\Robert\Desktop\Neuer Ordner (2)\Verteidigung Master\verteidigung.vrb
+") [16
 
 ]
-("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigung.vrb")
-[17
+("E:\Users\Robert\Desktop\Neuer Ordner (2)\Verteidigung Master\verteidigung.vrb
+") [17
 
 ]
-("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigung.vrb")
-[18
+("E:\Users\Robert\Desktop\Neuer Ordner (2)\Verteidigung Master\verteidigung.vrb
+") [18
 
 ]
-("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigung.vrb")
-[19
+("E:\Users\Robert\Desktop\Neuer Ordner (2)\Verteidigung Master\verteidigung.vrb
+") [19
 
 ]
-("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigung.vrb")
-[20
+("E:\Users\Robert\Desktop\Neuer Ordner (2)\Verteidigung Master\verteidigung.vrb
+") [20
 
 ]
-("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigung.vrb")
-[21
+("E:\Users\Robert\Desktop\Neuer Ordner (2)\Verteidigung Master\verteidigung.vrb
+") [21
 
 ]
-("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigung.vrb")
-[22
+("E:\Users\Robert\Desktop\Neuer Ordner (2)\Verteidigung Master\verteidigung.vrb
+") [22
 
 ]
-("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigung.vrb")
-[23
+("E:\Users\Robert\Desktop\Neuer Ordner (2)\Verteidigung Master\verteidigung.vrb
+") [23
 
 ]
-("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigung.vrb")
-[24
-
-]
-("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigung.vrb")
-[25
-
-]
-("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigung.vrb")
-[26
-
-]
-("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigung.vrb"
+("E:\Users\Robert\Desktop\Neuer Ordner (2)\Verteidigung Master\verteidigung.vrb
+"
 Overfull \hbox (10.05379pt too wide) in paragraph at lines 9--23
 []  
  []
 
-) [27
+) [24
 
 ]
-("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigung.vrb"
+("E:\Users\Robert\Desktop\Neuer Ordner (2)\Verteidigung Master\verteidigung.vrb
+"
 Overfull \hbox (10.05379pt too wide) in paragraph at lines 9--23
 []  
  []
 
-) [28
+) [25
 
 ]
-("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigung.vrb"
-<sort_step1.png, id=866, 853.1875pt x 272.01625pt>
+("E:\Users\Robert\Desktop\Neuer Ordner (2)\Verteidigung Master\verteidigung.vrb
+" <sort_step1.png, id=784, 853.1875pt x 272.01625pt>
 File: sort_step1.png Graphic file (type png)
  <use sort_step1.png>
 Package pdftex.def Info: sort_step1.png used on input line 5.
 (pdftex.def)             Requested size: 255.95822pt x 81.6055pt.
 )
-[29
+[26
 
- <E:/Users/Robert/Desktop/Arbeit/master/Verteidigung Master/sort_step1.png (PNG
- copy)>]
-("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigung.vrb"
+ <E:/Users/Robert/Desktop/Neuer Ordner (2)/Verteidigung Master/sort_step1.png (
+PNG copy)>]
+("E:\Users\Robert\Desktop\Neuer Ordner (2)\Verteidigung Master\verteidigung.vrb
+"
 File: sort_step1.png Graphic file (type png)
-
-<use sort_step1.png>
+ <use sort_step1.png>
 Package pdftex.def Info: sort_step1.png used on input line 5.
 (pdftex.def)             Requested size: 255.95822pt x 81.6055pt.
-) [30
+) [27
 
 ]
-("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigung.vrb"
-<sort_step2.png, id=921, 762.85pt x 348.30125pt>
+("E:\Users\Robert\Desktop\Neuer Ordner (2)\Verteidigung Master\verteidigung.vrb
+" <sort_step2.png, id=839, 762.85pt x 348.30125pt>
 File: sort_step2.png Graphic file (type png)
  <use sort_step2.png>
 Package pdftex.def Info: sort_step2.png used on input line 12.
 (pdftex.def)             Requested size: 205.97224pt x 94.04259pt.
-) [31
+)
+[28
 
- <E:/Users/Robert/Desktop/Arbeit/master/Verteidigung Master/sort_step2.png (PNG
- copy)>] ("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigu
-ng.vrb"
+ <E:/Users/Robert/Desktop/Neuer Ordner (2)/Verteidigung Master/sort_step2.png (
+PNG copy)>]
+("E:\Users\Robert\Desktop\Neuer Ordner (2)\Verteidigung Master\verteidigung.vrb
+"
 File: sort_step2.png Graphic file (type png)
  <use sort_step2.png>
 Package pdftex.def Info: sort_step2.png used on input line 12.
 (pdftex.def)             Requested size: 205.97224pt x 94.04259pt.
-) [32
+) [29
 
 ]
-("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigung.vrb")
-[33
+("E:\Users\Robert\Desktop\Neuer Ordner (2)\Verteidigung Master\verteidigung.vrb
+") [30
 
 ]
-("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigung.vrb")
-[34
+("E:\Users\Robert\Desktop\Neuer Ordner (2)\Verteidigung Master\verteidigung.toc
+") [31
 
 ]
-("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigung.toc")
-[35
+("E:\Users\Robert\Desktop\Neuer Ordner (2)\Verteidigung Master\verteidigung.vrb
+") [32
 
 ]
-("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigung.vrb")
-[36
+("E:\Users\Robert\Desktop\Neuer Ordner (2)\Verteidigung Master\verteidigung.vrb
+") [33
 
 ]
-("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigung.vrb")
-[37
+("E:\Users\Robert\Desktop\Neuer Ordner (2)\Verteidigung Master\verteidigung.vrb
+") [34
 
 ]
-("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigung.vrb")
-[38
+("E:\Users\Robert\Desktop\Neuer Ordner (2)\Verteidigung Master\verteidigung.vrb
+") [35
 
 ]
-("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigung.vrb")
-[39
+("E:\Users\Robert\Desktop\Neuer Ordner (2)\Verteidigung Master\verteidigung.toc
+") [36
 
 ]
-("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigung.toc")
-[40
+("E:\Users\Robert\Desktop\Neuer Ordner (2)\Verteidigung Master\verteidigung.vrb
+") [37
 
 ]
-("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigung.vrb")
-[41
+("E:\Users\Robert\Desktop\Neuer Ordner (2)\Verteidigung Master\verteidigung.toc
+") [38
 
 ]
-("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigung.toc")
-[42
+("E:\Users\Robert\Desktop\Neuer Ordner (2)\Verteidigung Master\verteidigung.vrb
+") [39
 
 ]
-("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigung.vrb")
-[43
-
-]
-("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigung.vrb"
-<schema.png, id=1291, 779.91376pt x 528.47438pt>
+("E:\Users\Robert\Desktop\Neuer Ordner (2)\Verteidigung Master\verteidigung.vrb
+" <schema.png, id=1181, 779.91376pt x 528.47438pt>
 File: schema.png Graphic file (type png)
  <use schema.png>
 Package pdftex.def Info: schema.png used on input line 3.
 (pdftex.def)             Requested size: 311.95998pt x 211.386pt.
-) [44
+) [40
 
- <E:/Users/Robert/Desktop/Arbeit/master/Verteidigung Master/schema.png (PNG cop
-y)>]
-("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigung.vrb")
-[45
-
-]
-("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigung.vrb")
-[46
+ <E:/Users/Robert/Desktop/Neuer Ordner (2)/Verteidigung Master/schema.png (PNG 
+copy)>] ("E:\Users\Robert\Desktop\Neuer Ordner (2)\Verteidigung Master\verteidi
+gung.vrb") [41
 
 ]
-("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigung.toc")
-[47
+("E:\Users\Robert\Desktop\Neuer Ordner (2)\Verteidigung Master\verteidigung.vrb
+") [42
+
+]
+("E:\Users\Robert\Desktop\Neuer Ordner (2)\Verteidigung Master\verteidigung.toc
+") [43
 
 ]
 \tf@nav=\write6
 \tf@toc=\write7
 \tf@snm=\write8
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 576.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 576.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 554.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 554.
 
-("E:\Users\Robert\Desktop\Arbeit\master\Verteidigung Master\verteidigung.aux")
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 576.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 576.
+("E:\Users\Robert\Desktop\Neuer Ordner (2)\Verteidigung Master\verteidigung.aux
+")
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 554.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 554.
 Package rerunfilecheck Info: File `verteidigung.out' has not changed.
 (rerunfilecheck)             Checksum: 4C56EA1FA17F25F41B5090065B4E95C9;460.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 576.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 554.
  ) 
 Here is how much of TeX's memory you used:
- 17848 strings out of 494045
- 332815 string characters out of 3145966
+ 17828 strings out of 494045
+ 332358 string characters out of 3145966
  428382 words of memory out of 3000000
- 20531 multiletter control sequences out of 15000+200000
+ 20527 multiletter control sequences out of 15000+200000
  23082 words of font info for 53 fonts, out of 3000000 for 9000
  715 hyphenation exceptions out of 8191
  49i,17n,66p,421b,692s stack positions out of 5000i,500n,10000p,200000b,50000s
@@ -1425,15 +1417,14 @@ Here is how much of TeX's memory you used:
 m Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Program 
 Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Program Fil
 es (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Program Files
- (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy8.pfb><C:/Program Files (x
-86)/MiKTeX 2.9/fonts/type1/public/amsfonts/symbols/msbm10.pfb><C:/Program Files
- (x86)/MiKTeX 2.9/fonts/type1/urw/courier/ucrr8a.pfb><C:/Program Files (x86)/Mi
-KTeX 2.9/fonts/type1/urw/times/utmb8a.pfb><C:/Program Files (x86)/MiKTeX 2.9/fo
-nts/type1/urw/times/utmr8a.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/u
-rw/times/utmri8a.pfb>
-Output written on verteidigung.pdf (47 pages, 544925 bytes).
+ (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/symbols/msbm10.pfb><C:/Program Fi
+les (x86)/MiKTeX 2.9/fonts/type1/urw/courier/ucrr8a.pfb><C:/Program Files (x86)
+/MiKTeX 2.9/fonts/type1/urw/times/utmb8a.pfb><C:/Program Files (x86)/MiKTeX 2.9
+/fonts/type1/urw/times/utmr8a.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type
+1/urw/times/utmri8a.pfb>
+Output written on verteidigung.pdf (43 pages, 508892 bytes).
 PDF statistics:
- 1459 PDF objects out of 1728 (max. 8388607)
- 103 named destinations out of 1000 (max. 500000)
+ 1345 PDF objects out of 1440 (max. 8388607)
+ 95 named destinations out of 1000 (max. 500000)
  170 words of extra memory for PDF output out of 10000 (max. 10000000)
 
